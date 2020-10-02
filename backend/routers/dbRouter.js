@@ -11,10 +11,21 @@ dbRouter.use(bodyParser.urlencoded({extended: true}));
 dbRouter.use(bodyParser.json());
 
 dbRouter.get('/u/:username', (req, res) => {
-    let username = req.params.username
-    User.findOne({ username: username }, (err, foundUsers) => {
-        res.json(foundUsers);
-    })
+    let populate = req.query.populate
+    console.log(populate)
+    // populate = populate ? populate.replace(/[\[\]]/g, '').split(',') : null;
+    let username = req.params.username;
+
+    if (populate) {
+        User.findOne({ username: username }).populate(populate).exec((err, foundUser) => {
+            console.log('populated')
+            res.json(foundUser)
+        })
+    } else {
+        User.findOne({ username: username }, (err, foundUser) => {
+            res.json(foundUser);
+        })
+    }
 })
 
 dbRouter.post('/u/', (req, res) => {

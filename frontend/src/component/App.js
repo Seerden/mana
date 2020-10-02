@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import './App.component.css';
-import CSV from './component/csv'
+import './css/App.component.css';
+import User from './User'
 
 const App = () => {
     return (
@@ -10,8 +10,8 @@ const App = () => {
             <Router>
                 <Switch>
                     <Route exact path='/' >Homepage (TODO: make component)</Route>
-                    <Route path='/u/:username'>User page (TODO: make component)</Route>
-                    <Route path='/csv'><CSV /></Route>
+                    <Route path='/u/:username' component={User}>
+                    </Route>
                 </Switch>
             </Router>
         </div>
