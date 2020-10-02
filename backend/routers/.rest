@@ -1,0 +1,25 @@
+###
+GET http://localhost:5000/db/u/seerden
+
+###
+
+POST http://localhost:5000/db/u
+Content-Type: application/json
+
+{
+    "username": "seerden"
+}
+
+###
+
+POST http://localhost:5000/db/list
+Content-Type: application/json
+
+
+{
+    "listOwner": "Seerden",
+    "listName": "Test list",
+    "listFrom": "English",
+    "listTo": "Japanese",
+    "listContent": [{"front": "hi", "back": "bye"}, {"front": "yes", "back": "no"}]
+}

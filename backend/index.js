@@ -1,18 +1,18 @@
-const express = require('express')
 require('dotenv').config();
 
+const express = require('express');
+const bodyParser = require('body-parser');
+const { dbRouter } = require('./routers/dbRouter');
 const app = express();
 
-const mongoose = require('mongoose');
-mongoose.set('useFindAndModify', false);
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: true}));
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@mana-cluster0.8vpgs.gcp.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-const conn = mongoose.createConnection(uri, {useNewUrlParser: true, useUnifiedTopology: true});
-conn.on('connected', () => console.log('connected to db'));
-conn.on('error', error => console.log('error connecting to db'))
+app.use('/db', dbRouter)
+
 
 app.get('/', (req, res) => {
-    res.send('hi')
+    res.send('Index route')
 })
 
 const port = process.env.PORT || 5000
