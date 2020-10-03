@@ -12,13 +12,10 @@ dbRouter.use(bodyParser.json());
 
 dbRouter.get('/u/:username', (req, res) => {
     let populate = req.query.populate
-    console.log(populate)
-    // populate = populate ? populate.replace(/[\[\]]/g, '').split(',') : null;
     let username = req.params.username;
 
     if (populate) {
         User.findOne({ username: username }).populate(populate).exec((err, foundUser) => {
-            console.log('populated')
             res.json(foundUser)
         })
     } else {

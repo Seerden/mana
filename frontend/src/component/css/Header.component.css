@@ -1,0 +1,16 @@
+.Header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: #111;
+    margin-bottom: 1em;
+}
+
+.NavLink {
+    margin-left: 1em;
+}
+
+.NavLink:visited {
+    color: deepskyblue;
+}

@@ -1,0 +1,13 @@
+input[type=text] {
+    background-color: var(--text-dark);
+    color: var(--text-light);
+    outline: none;
+    border: 1px solid #555;
+    height: 1.5rem;
+    text-indent: var(--indent);
+    font-size: 0.8em;
+}
+
+input[type=text]:focus {
+    background-color: var(--background-secondary);
+}
