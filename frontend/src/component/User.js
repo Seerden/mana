@@ -11,7 +11,7 @@ const User = ({history, location, match}) => {
             console.log(res.lists)
         })
 
-    }, [])
+    })
 
     return (
         

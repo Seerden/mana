@@ -3,12 +3,14 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const { dbRouter } = require('./routers/dbRouter');
+const { testRouter } = require('./routers/testRouter');
 const app = express();
 
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/db', dbRouter)
+app.use('/test', testRouter)
 
 
 app.get('/', (req, res) => {

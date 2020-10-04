@@ -7,7 +7,6 @@ import axios from 'axios';
     might be better to just separate this into getUser and getPopulatedUser like I originally implemented
  */
 export const getUserFromDb = async (username, args) => {
-    let populate = null;
     if (args.populate) {
         const { populate } = args
         // populate needs to be a single space-separated string, e.g. 'following followed'

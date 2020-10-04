@@ -1,15 +1,20 @@
 const mongoose = require('mongoose');
 
+const termSchema = new mongoose.Schema({
+    to: String,
+    from: String
+})
+
 const listSchema = new mongoose.Schema({
-    owner: String,  // username,
+    owner: {
+        type: String,
+        default: 'seerden'
+    },  // username,
     name: String,
     from: String,  // original language
     to: [{type: String}],  // other languages (not just a string since want to be able to do multiple translations/definitions at a time)
     content: [
-        {
-            front: String,  // srs system: cards have a 'front' and 'back' side
-            back: String,
-        }
+        [termSchema]
     ]   
 }, { collation: {locale: 'en', strength: 2}}) 
 

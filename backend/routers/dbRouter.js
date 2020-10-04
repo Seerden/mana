@@ -7,7 +7,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const dbRouter = express.Router();
-dbRouter.use(bodyParser.urlencoded({extended: true}));
+dbRouter.use(bodyParser.urlencoded({ extended: true }));
 dbRouter.use(bodyParser.json());
 
 dbRouter.get('/u/:username', (req, res) => {
@@ -46,28 +46,29 @@ dbRouter.get('/list', (req, res) => {
 })
 
 dbRouter.post('/list', (req, res) => {
-    const { listOwner, listName, listFrom, listTo, listContent } = req.body;
-    console.log(req.body)
+    const { listOwner, listName, listFrom, listTo, listContent } = req.body.newList;
+    console.log(typeof listContent)
 
     // check if this user has a list by this name, else put list in db and add the list to the user's lists in the db
     List.findOne({ owner: listOwner, name: listName }, (err, foundList) => {
         if (err) { throw err }
-        if (foundList) { res.json(foundList) }
+        if (foundList) { 
+            console.log('found list ')
+            res.json(foundList) }
         if (!foundList) {
             const newList = new List({
                 owner: listOwner,
                 name: listName,
                 from: listFrom,
-                to: listTo,
-                content: listContent,
+                to: [listTo],
+                content: [listContent],
             });
-
             newList.save((err, savedList) => {
                 if (err) { throw err };
                 if (savedList) {
                     console.log('new list saved to db:', savedList);
-                    User.findOneAndUpdate({ username: listOwner }, {$push: {lists: savedList}}, {new: true}, (err, updatedUser) => {
-                        console.log(`added list ${savedList.name} to user ${savedList.owner}` );
+                    User.findOneAndUpdate({ username: listOwner }, { $push: { lists: savedList } }, { new: true }, (err, updatedUser) => {
+                        console.log(`added list ${savedList.name} to user ${savedList.owner}`);
                         res.json(savedList)
                     }
                     )
@@ -76,7 +77,6 @@ dbRouter.post('/list', (req, res) => {
             })
         }
     })
-
 
 })
 

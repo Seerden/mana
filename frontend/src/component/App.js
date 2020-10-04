@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './css/App.component.css';
@@ -7,7 +7,7 @@ import ListsByUser from './ListsByUser';
 import Header from './Header';
 import NewList from './NewList';
 
-const App = () => {
+const App = memo(() => {
     return (
         <Router>
             <Header />
@@ -23,6 +23,6 @@ const App = () => {
 
         </Router>
     )
-}
+})
 
 export default App;

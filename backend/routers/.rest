@@ -1,3 +1,5 @@
+@base = http://localhost:5000
+
 ###
 GET http://localhost:5000/db/u/seerden
 
@@ -15,7 +17,6 @@ Content-Type: application/json
 POST http://localhost:5000/db/list
 Content-Type: application/json
 
-
 {
     "listOwner": "Seerden",
     "listName": "Test list",
@@ -23,3 +24,9 @@ Content-Type: application/json
     "listTo": "Japanese",
     "listContent": [{"front": "hi", "back": "bye"}, {"front": "yes", "back": "no"}]
 }
+
+###
+GET {{base}}/test/list?owner=seerden&listName=testlist
+
+###
+GET {{base}}/test/list/drop

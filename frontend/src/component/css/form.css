@@ -6,6 +6,7 @@ input[type=text] {
     height: 1.5rem;
     text-indent: var(--indent);
     font-size: 0.8em;
+    border: 2px solid transparent;
 }
 
 input[type=text]:focus {
