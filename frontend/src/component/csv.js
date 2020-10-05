@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import csvData from './testcsv.csv';
-import './css/csv.component.css'
+import './css/csv.css'
 
 const CSV = () => {
     const [data, setData] = useState(null);

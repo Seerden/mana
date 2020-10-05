@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import './css/App.component.css';
+import './css/App.css';
 import User from './User';
 import ListsByUser from './ListsByUser';
 import Header from './Header';

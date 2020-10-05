@@ -15,6 +15,8 @@ const Review = (props) => {
     // const [currentTerm, setCurrentTerm] = useState(0);  // @TODO: turn this into reducer 'algo'
 
     useEffect(() => {
+        // @TODO: replace this csv import with db call, change all occurrences of data.length and .terms in 
+        // Review and ReviewTerm components
         d3.csv(csv).then(d => {
             setData({
                 ...data,
@@ -23,18 +25,21 @@ const Review = (props) => {
                 terms: [...data.terms, ...d]
             })
         })
-    //eslint-disable-next-line
+
+        window.addEventListener('keyup', handleKeyup);
+        return () => window.removeEventListener('keyup', handleKeyup)
+        
     }, [])
 
     // reducer
-    const [currentTerm, currentTermDispatch] = useReducer(currentTermReducer, { cur: 0 })
+    const [currentTerm, currentTermDispatch] = useReducer(currentTermReducer, 0)
     function currentTermReducer(currentTerm, action) {
         switch (action.type) {
             case 'increment':
-                return { cur: currentTerm.cur + 1 }
+                return currentTerm + 1
             case 'decrement':
-                if (currentTerm.cur !== 0) {
-                    return { cur: currentTerm.cur - 1 }
+                if (currentTerm !== 0) {
+                    return currentTerm - 1
                 }
                 else {
                     return currentTerm
@@ -43,19 +48,6 @@ const Review = (props) => {
                 return currentTerm;
         }
     }
-
-    useEffect(() => {
-        console.log(currentTerm);
-        return () => {
-
-        }
-    }, [currentTerm])
-
-
-    useEffect(() => {
-        window.addEventListener('keyup', handleKeyup);
-        return () => window.removeEventListener('keyup', handleKeyup)
-    }, [])
 
     function handleKeyup(e) {
         e.preventDefault();
@@ -73,7 +65,7 @@ const Review = (props) => {
 
     return (
         <div className="Review">
-            { data.length > 0 && <ReviewTerm term={data.terms[currentTerm.cur]} />}
+            { data.length > 0 && <ReviewTerm term={data.terms[currentTerm]} />}
         </div>
     )
 }

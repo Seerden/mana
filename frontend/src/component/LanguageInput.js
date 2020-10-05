@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import './css/LanguageInput.component.css'
+import './css/LanguageInput.css'
 
 const LanguageInput = memo(({ formOutput, setFormOutput }) => {
     // const languages = ['English', 'Japanese', 'Dutch', 'German', 'Italian', 'Spanish'];  // @TODO: part of autocomplete feature

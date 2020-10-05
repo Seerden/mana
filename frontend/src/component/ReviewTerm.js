@@ -15,7 +15,6 @@ const ReviewTerm = memo(({ term }) => {
 
     useEffect(() => {
         setTimeout(() => {setShownTerm(isFront ? term.EN : term.JA)}, duration)
-        //eslin
     }, [isFront])
 
     const windowKeyup = (e) => {

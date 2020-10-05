@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
 import axios from 'axios';
 
-import './css/NewList.component.css';
+import './css/NewList.css';
 import NewListTerm from './NewListTerm';
 import LanguageInput from './LanguageInput';
 

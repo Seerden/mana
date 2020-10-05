@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 
 import './css/form.css';
 
-import './css/NewList.component.css'
+import './css/NewList.css'
 
 const NewListTerm = memo(({ index, formOutput, setFormOutput }) => {
     const handleTermBlur = (e, idx) => {
