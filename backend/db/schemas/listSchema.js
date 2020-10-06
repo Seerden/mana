@@ -10,11 +10,11 @@ const listSchema = new mongoose.Schema({
         type: String,
         default: 'seerden'
     },  // username,
-    name: String,
-    from: String,  // original language
-    to: [{type: String}],  // other languages (not just a string since want to be able to do multiple translations/definitions at a time)
+    name: {type: String, required: true },
+    from: { type: String, required: true },  // original language
+    to: [{type: String, required: true}],  // other languages (not just a string since want to be able to do multiple translations/definitions at a time)
     content: [
-        [termSchema]
+        [{type: termSchema, required: true}]
     ]   
 }, { collation: {locale: 'en', strength: 2}}) 
 

@@ -44,24 +44,24 @@ dbRouter.post('/u/', (req, res) => {
 dbRouter.get('/listbyid/:id', (req, res) => {
     const id = req.params.id;
 
-    List.findOne({_id: id}, (err, found) => {
+    List.findOne({ _id: id }, (err, found) => {
         res.json(found);
     })
 })
 
 dbRouter.get('/listsbyuser/:username', (req, res) => {
     const username = req.params.username;
-    List.find({owner: username}, (err, found) => {
+    List.find({ owner: username }, (err, found) => {
         res.json(found);
     })
 })
 
 dbRouter.post('/list', (req, res) => {
-    const { listOwner, listName, listFrom, listTo, listContent } = req.body.newList;
-    console.log(typeof listContent)
+    const { owner, name, from, to, content } = req.body.newList;
+
 
     // check if this user has a list by this name, else put list in db and add the list to the user's lists in the db
-    List.findOne({ owner: listOwner, name: listName }, (err, foundList) => {
+    List.findOne({ owner, name }, (err, foundList) => {
         if (err) { throw err }
         if (foundList) {
             console.log('found list ')
@@ -69,27 +69,25 @@ dbRouter.post('/list', (req, res) => {
         }
         if (!foundList) {
             const newList = new List({
-                owner: listOwner,
-                name: listName,
-                from: listFrom,
-                to: [listTo],
-                content: [listContent],
+                owner: owner,
+                name: name,
+                from: from,
+                to: to,
+                content: content
             });
             newList.save((err, savedList) => {
-                if (err) { throw err };
+                if (err) { console.log(err.errors[Object.keys(err.errors)[0]]['properties'].message) };
                 if (savedList) {
                     console.log('new list saved to db:', savedList);
-                    User.findOneAndUpdate({ username: listOwner }, { $push: { lists: savedList } }, { new: true }, (err, updatedUser) => {
+                    User.findOneAndUpdate({ username: owner }, { $push: { lists: savedList } }, { new: true }, (err, updatedUser) => {
                         console.log(`added list ${savedList.name} to user ${savedList.owner}`);
                         res.json(savedList)
                     }
                     )
                 }
-
             })
         }
     })
-
 })
 
 module.exports = { dbRouter }

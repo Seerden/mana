@@ -8,7 +8,6 @@ const ReviewTerm = memo(({ dispatch, term }) => {
     const [shownTerm, setShownTerm] = useState(null);
     const [justRendered, setJustRendered] = useState(false);
 
-
     const duration = 100
 
     useEffect(() => {

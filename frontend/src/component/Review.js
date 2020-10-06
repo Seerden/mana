@@ -3,12 +3,9 @@
 import React, { useEffect, useState, useReducer } from "react";
 import * as d3 from 'd3';
 import csv from './testcsv.csv'
-import axios from 'axios';
-
 import ReviewTerm from './ReviewTerm';
 
 const Review = (props) => {
-    const [lists, setLists] = useState(null);
     const [data, setData] = useState({
         length: 0,
         columns: null,
@@ -26,11 +23,6 @@ const Review = (props) => {
                 terms: [...data.terms, ...d]
             })
         })
-
-        axios.get('/db/listsbyuser/seerden').then(r => {
-            setLists(r.data);
-        })
-
     }, [])
 
     function currentTermReducer(currentTerm, action) {
@@ -56,9 +48,4 @@ const Review = (props) => {
     )
 }
 
-export default Review
-
-/*
-List review component.
-
-*/
+export default Review;

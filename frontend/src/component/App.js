@@ -7,7 +7,7 @@ import ListsByUser from './ListsByUser';
 import Header from './Header';
 import NewList from './NewList';
 import Review from './Review';
-import List from './List'
+import List from './List';
 
 const App = memo(() => {
     return (
@@ -17,11 +17,11 @@ const App = memo(() => {
 
                 <Switch>
                     <Route exact path='/' >Homepage (TODO: make component)</Route>
-                    <Route path="/u/:username/lists/" component={ListsByUser} />
-                    <Route path="/u/:username" component={User} />
-                    <Route path="/lists/new" component={NewList} />
-                    <Route path="/lists/:id" component={List} />
-                    <Route path="/r" component={Review} />
+                    <Route exact path="/u/:username/lists/" component={ListsByUser} />
+                    <Route exact path="/u/:username/lists/new/" component={NewList} />
+                    <Route exact path="/u/:username/" component={User} />
+                    <Route exact path="/lists/:id/" component={List} />
+                    <Route exact path="/r/" component={Review} />
                     <Route path='*'>404</Route>
                 </Switch>
             </div>
@@ -31,3 +31,7 @@ const App = memo(() => {
 })
 
 export default App;
+
+/* 
+@TODO: combine all /u/:username/* routes into one nested router structure
+*/
