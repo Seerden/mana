@@ -3,20 +3,21 @@
 import React, { useEffect, useState, useReducer } from "react";
 import * as d3 from 'd3';
 import csv from './testcsv.csv'
+import axios from 'axios';
 
 import ReviewTerm from './ReviewTerm';
 
 const Review = (props) => {
+    const [lists, setLists] = useState(null);
     const [data, setData] = useState({
         length: 0,
         columns: null,
         terms: []
     });
-    // const [currentTerm, setCurrentTerm] = useState(0);  // @TODO: turn this into reducer 'algo'
+    const [currentTerm, currentTermDispatch] = useReducer(currentTermReducer, 0)
 
     useEffect(() => {
-        // @TODO: replace this csv import with db call, change all occurrences of data.length and .terms in 
-        // Review and ReviewTerm components
+        // @TODO: replace this csv import with db call, change all occurrences of data.length and .terms in Review and ReviewTerm components
         d3.csv(csv).then(d => {
             setData({
                 ...data,
@@ -26,13 +27,12 @@ const Review = (props) => {
             })
         })
 
-        window.addEventListener('keyup', handleKeyup);
-        return () => window.removeEventListener('keyup', handleKeyup)
-        
+        axios.get('/db/listsbyuser/seerden').then(r => {
+            setLists(r.data);
+        })
+
     }, [])
 
-    // reducer
-    const [currentTerm, currentTermDispatch] = useReducer(currentTermReducer, 0)
     function currentTermReducer(currentTerm, action) {
         switch (action.type) {
             case 'increment':
@@ -49,23 +49,9 @@ const Review = (props) => {
         }
     }
 
-    function handleKeyup(e) {
-        e.preventDefault();
-        switch (e.code) {
-            case 'ArrowLeft':
-                currentTermDispatch({ type: 'decrement' });
-                break;
-            case 'ArrowRight':
-                currentTermDispatch({ type: 'increment' });
-                break;
-            default:
-                break;
-        }
-    }
-
     return (
         <div className="Review">
-            { data.length > 0 && <ReviewTerm term={data.terms[currentTerm]} />}
+            { data.length > 0 && <ReviewTerm dispatch={currentTermDispatch} term={data.terms[currentTerm]} />}
         </div>
     )
 }

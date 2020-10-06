@@ -4,6 +4,7 @@
 }
 
 .ReviewTerm {
+    box-sizing: border-box;
     padding: 3em;
     max-width: 800px;
     margin: 0 auto;
@@ -43,15 +44,29 @@
     animation-fill-mode: forwards;
 }
 
+.render {
+    animation: calc(var(--duration)) linear render;
+    animation-fill-mode: forwards;
+}
+
+@keyframes render {
+    0% {
+        transform: scaleX(0);
+        color: transparent;
+    }
+    100% {
+        transform: scaleX(1);
+        color: inherit;
+    }
+}
+
 @keyframes show {
     0% {
         opacity: 0;
-        visibility: hidden;
         transform: scaleY(-1);
     }
     100% {
         opacity: 1;
-        visibility: visible;    
         transform: scaleY(1);
     }
 }
@@ -59,12 +74,10 @@
 @keyframes hide {
     0% {
         opacity: 1;
-        visibility: visible;
         transform: scaleY(1);
     }
     100% {
         opacity: 0;
-        visibility: hidden;
         transform: scaleY(-1);
     }
 }

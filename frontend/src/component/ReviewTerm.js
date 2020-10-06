@@ -3,10 +3,12 @@
 import React, { useEffect, useState, memo } from "react";
 import './css/ReviewTerm.css'
 
-const ReviewTerm = memo(({ term }) => {
+const ReviewTerm = memo(({ dispatch, term }) => {
     const [isFront, setIsFront] = useState(true);
-    // const term = { front: 'test front', back: 'test back' }
-    const [shownTerm, setShownTerm] = useState(null)
+    const [shownTerm, setShownTerm] = useState(null);
+    const [justRendered, setJustRendered] = useState(false);
+
+
     const duration = 100
 
     useEffect(() => {
@@ -14,19 +16,38 @@ const ReviewTerm = memo(({ term }) => {
     }, [term])
 
     useEffect(() => {
-        setTimeout(() => {setShownTerm(isFront ? term.EN : term.JA)}, duration)
+        setTimeout(() => { setShownTerm(isFront ? term.EN : term.JA) }, duration)
     }, [isFront])
 
     const windowKeyup = (e) => {
-        if (['ArrowUp', 'ArrowDown'].includes(e.code)) {
-            // console.log(e.code)
-            setIsFront(!isFront)
+        switch (e.code) {
+            case 'ArrowUp':
+            case 'ArrowDown':
+                setIsFront(!isFront);
+                break;
+            case 'ArrowLeft':
+                setJustRendered(true);
+                setTimeout(() => {setJustRendered(false)}, 250)
+                
+                dispatch({ type: 'decrement' });
+                break;
+            case 'ArrowRight':
+                setJustRendered(true);
+                setTimeout(() => {setJustRendered(false)}, 250)
+                
+                dispatch({ type: 'increment' });
+                break;
+            default:
+                break;
         }
     }
 
     useEffect(() => {
         window.addEventListener('keyup', windowKeyup)
-        return () => {window.removeEventListener('keyup', windowKeyup)}
+        return () => { 
+            setTimeout(() => { setJustRendered(false) }, duration);
+            window.removeEventListener('keyup', windowKeyup) 
+        }
 
     }, [isFront])
 
@@ -36,10 +57,10 @@ const ReviewTerm = memo(({ term }) => {
     }
 
     return (
-        <div className="ReviewTerm">
+        <div className="ReviewTerm render">
             {/* details implemented, but display something like this: */}
             {/* doesn't work at all like desired functionality, very wip */}
-            <div className="card-wrapper">
+            <div className={`card-wrapper ${justRendered ? 'render' : ''}`}>
                 <div onClick={handleCardClick} className={`card-front ${isFront ? 'show' : 'hide'}`}>{isFront ? shownTerm : ''}</div>
                 <div onClick={handleCardClick} className={`card-back ${isFront ? 'hide' : 'show'}`}>{isFront ? '' : shownTerm}</div>
                 <div className="card-progress"></div>
@@ -52,4 +73,9 @@ const ReviewTerm = memo(({ term }) => {
 export default ReviewTerm
 
 /*
-TODO: fix artifacting on animation */
+DONE: fix artifacting on animation
+TODO: figure out if passing currentTerm as prop makes card rerender properly instead of passing new term through useEffect
+
+TODO: implement timeLastFlipped and allow/disallow flip based on that
+
+*/

@@ -41,8 +41,19 @@ dbRouter.post('/u/', (req, res) => {
     })
 })
 
-dbRouter.get('/list', (req, res) => {
+dbRouter.get('/listbyid/:id', (req, res) => {
+    const id = req.params.id;
 
+    List.findOne({_id: id}, (err, found) => {
+        res.json(found);
+    })
+})
+
+dbRouter.get('/listsbyuser/:username', (req, res) => {
+    const username = req.params.username;
+    List.find({owner: username}, (err, found) => {
+        res.json(found);
+    })
 })
 
 dbRouter.post('/list', (req, res) => {
