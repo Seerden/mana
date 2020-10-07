@@ -10,6 +10,42 @@ const dbRouter = express.Router();
 dbRouter.use(bodyParser.urlencoded({ extended: true }));
 dbRouter.use(bodyParser.json());
 
+const fs = require('fs');
+const path = require('path');
+
+dbRouter.get('/list/devpopulate', (req, res) => {
+    const base = path.join(__dirname, '../dev/wrts');
+    const filenames = fs.readdirSync(base)
+    const jsonFiles = filenames.filter(f => f.includes('json'))
+
+    res.send(`${filenames.length}`)
+    // res.send(`${jsonFiles.length}`)
+
+    const populate = async () => {
+        for (let file of jsonFiles) {
+            let data = fs.readFileSync((path.join(base, file)), 'UTF-8');
+            const list = JSON.parse(data);
+            const newList = new List(list)
+            newList.save((err, saved) => {
+                if (!err) {
+                    User.findOneAndUpdate({ username: list.owner }, { $push: { lists: newList } }, (err, updated) => {
+                        if (!err) {
+                            console.log('updated:', updated)
+                        }
+                    })
+                }
+            })
+        }
+    }
+
+    populate().then(() => {
+        console.log('populated');
+        res.send('populated')
+    })
+
+})
+
+
 dbRouter.get('/u/:username', (req, res) => {
     let populate = req.query.populate
     let username = req.params.username;

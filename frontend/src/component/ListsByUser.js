@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import './css/Lists.css'
 
 const ListsByUser = ({history, location, match}) => {
     const username = match.params.username;
@@ -14,14 +15,19 @@ const ListsByUser = ({history, location, match}) => {
 
     return (
         <div className="ListsByUser">
-            <h2>
+            <h1>
                 Lists by u/{username}
-            </h2>
+            </h1>
 
+            { !lists && 
+                <div>Loading lists...</div>
+            }
             { lists && 
                 lists.map(l => {
                     return (
-                        <Link to={`/lists/${l._id}`}>{l.name}</Link>
+                        <div className="Link-div">
+                            <Link className="Lists-link" to={`/list/${l._id}`}>{l.name}</Link>
+                        </div>
                     )
                 })
             }
@@ -30,3 +36,5 @@ const ListsByUser = ({history, location, match}) => {
 }
 
 export default ListsByUser;
+
+// @ TODO | memoize lists so I don't have to call DB every single time

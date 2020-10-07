@@ -14,7 +14,7 @@ const listSchema = new mongoose.Schema({
     from: { type: String, required: true },  // original language
     to: [{type: String, required: true}],  // other languages (not just a string since want to be able to do multiple translations/definitions at a time)
     content: [
-        [{type: termSchema, required: true}]
+        {type: termSchema, required: true}
     ]   
 }, { collation: {locale: 'en', strength: 2}}) 
 

@@ -3,5 +3,6 @@
 
 # backend
 /backend/node_modules
+/backend/dev
 
 *.env

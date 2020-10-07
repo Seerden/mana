@@ -30,3 +30,25 @@ GET {{base}}/test/list?owner=seerden&listName=testlist
 
 ###
 GET {{base}}/test/list/drop
+###
+GET {{base}}/test/user/drop
+###
+GET {{base}}/test/user/
+###
+GET {{base}}/db/list/devpopulate 
+###
+POST {{base}}/db/list HTTP/1.1
+Content-Type: application/json
+
+{
+    "newList": {
+        "owner": "seerden",
+        "name": "test",
+        "from": "ja",
+        "to": ["en"],
+        "content": [
+            {"from": 1, "to": 2},
+            {"from": 3, "to": 4}
+        ]
+    }
+}
