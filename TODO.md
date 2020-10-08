@@ -12,7 +12,7 @@ todo | | figure out list session structure
 TODO | Oct 6 2:16| suspend list loading (bonus points: come up with a nice loading animation)
 TODO | | custom list ids
 TODO | | refine db list GET routes and frontend routes
-TODO | | figure out useHistory and history.push() 
+WIP | | figure out useHistory and history.push() 
 
 - Get rudimentary review page done
 - Refine list page

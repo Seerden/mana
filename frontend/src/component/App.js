@@ -10,16 +10,16 @@ import NewList from './NewList';
 import Review from './Review';
 import List from './List';
 
+import Test from './Test';
+
 import LoginProvider from '../context/LoginContext';
 
 const App = memo(() => {
     return (
         <>
-            <Router>
-                <LoginProvider>
+            <LoginProvider>
+                <Router>
                     <Header />
-                </LoginProvider>
-
                     <div className="App">
                         <Switch>
                             <Route exact path='/' >Homepage (TODO: make component)</Route>
@@ -27,12 +27,14 @@ const App = memo(() => {
                             <Route exact path="/u/:username/lists/new/" component={NewList} />
                             <Route exact path="/u/:username/" component={User} />
                             <Route exact path="/list/:id/" component={List} />
-                            <Route exact path="/list/:id/review" component={Review} />                            
+                            <Route exact path="/list/:id/review" component={Review} />
                             <Route exact path="/r/" component={Review} />
+                            <Route exact path='/test' component={Test} />
                             <Route path='*'>404</Route>
                         </Switch>
                     </div>
-            </Router>
+                </Router>
+            </LoginProvider>
 
         </>
     )

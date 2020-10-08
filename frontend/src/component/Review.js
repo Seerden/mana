@@ -1,8 +1,6 @@
 /* eslint react-hooks/exhaustive-deps: 0 */
 
 import React, { memo, useEffect, useState, useReducer } from "react";
-import * as d3 from 'd3';
-// import csv from './testcsv.csv'
 import ReviewTerm from './ReviewTerm';
 
 const Review = memo(({ location }) => {

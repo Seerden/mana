@@ -1,10 +1,15 @@
-import React from "react";
-import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
+import React, { useState } from "react";
 
-const Test = ( props ) => {
+import { useLogState } from '../hooks/state';
+
+const Test = (props) => {
+    const [testState, setTestState] = useState(() => 0)
+    
+    useLogState('testState', testState, setTestState);
+
     return (
         <div className="Test">
-
+            <input type="button" value="Increment" onClick={() => setTestState(testState+1)}/>
         </div>
     )
 }

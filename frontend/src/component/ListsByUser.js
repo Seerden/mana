@@ -30,9 +30,9 @@ const ListsByUser = memo(({ history, location, match }) => {
                 <div>Loading lists...</div>
             }
             { lists &&
-                lists.map(l => {
+                lists.map((l,idx) => {
                     return (
-                        <div className="Link-div">
+                        <div key={`link-list-${idx}`} className="Link-div">
                             <div className="Link-div__link">
                                 <Link className="Lists-link" to={`/list/${l._id}`}>{l.name}</Link>
                             </div>

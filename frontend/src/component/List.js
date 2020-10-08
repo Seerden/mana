@@ -9,13 +9,10 @@ const List = memo(({ match, history, location }) => {
 
     useEffect(() => {
         axios.get(`/db/listbyid/${match.params.id}`).then(r => setList(r.data));
-        console.log(match)
-    }, [])
+    }, [match])
 
     useEffect(() => {
         if (list) {
-            console.log(Object.keys(list))
-
             setTerms(list.content.map((i, idx) => {
                 return (
                     <div key={`list-term-${idx}`} className="List__term">
