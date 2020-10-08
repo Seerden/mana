@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { memo, useState, useEffect } from "react";
 import axios from 'axios';
-import './css/List.css'
+import { Link } from 'react-router-dom';
+import './css/List.css';
 
-const List = ({ match, history, location }) => {
+const List = memo(({ match, history, location }) => {
     const [list, setList] = useState(null);
     const [terms, setTerms] = useState(null);
 
     useEffect(() => {
-        axios.get(`/db/listbyid/${match.params.id}`).then(r => setList(r.data))
+        axios.get(`/db/listbyid/${match.params.id}`).then(r => setList(r.data));
+        console.log(match)
     }, [])
 
     useEffect(() => {
@@ -33,12 +35,16 @@ const List = ({ match, history, location }) => {
             { list &&
                 <>
                     <h1 className="List__name">{list.name}</h1>
+                    <Link to={{
+                        pathname: `${match.params.id}/review`,
+                        state: {list: {...list}}
+                    }}>Review!</Link>
                     {terms}
                 </>
 
             }
         </div>
     )
-}
+})
 
 export default List

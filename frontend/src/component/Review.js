@@ -1,11 +1,13 @@
 /* eslint react-hooks/exhaustive-deps: 0 */
 
-import React, { useEffect, useState, useReducer } from "react";
+import React, { memo, useEffect, useState, useReducer } from "react";
 import * as d3 from 'd3';
-import csv from './testcsv.csv'
+// import csv from './testcsv.csv'
 import ReviewTerm from './ReviewTerm';
 
-const Review = (props) => {
+const Review = memo(({ location }) => {
+    const list = location ? location.state.list : null;  // this is passed on by the <Link> in List.js @TODO: add robustness to this
+
     const [data, setData] = useState({
         length: 0,
         columns: null,
@@ -14,15 +16,13 @@ const Review = (props) => {
     const [currentTerm, currentTermDispatch] = useReducer(currentTermReducer, 0)
 
     useEffect(() => {
-        // @TODO: replace this csv import with db call, change all occurrences of data.length and .terms in Review and ReviewTerm components
-        d3.csv(csv).then(d => {
+        if(list) {
+            console.log(list);
             setData({
-                ...data,
-                length: d.length,
-                columns: d.columns,
-                terms: [...data.terms, ...d]
+                length: list.content.length, 
+                terms: list.content,
             })
-        })
+        }
     }, [])
 
     function currentTermReducer(currentTerm, action) {
@@ -43,9 +43,11 @@ const Review = (props) => {
 
     return (
         <div className="Review">
-            { data.length > 0 && <ReviewTerm dispatch={currentTermDispatch} term={data.terms[currentTerm]} />}
+            { data.length > 0 && 
+                <ReviewTerm dispatch={currentTermDispatch} term={data.terms[currentTerm]} />
+            }
         </div>
     )
-}
+})
 
 export default Review;

@@ -5,6 +5,7 @@
     padding: 1rem;
     background-color: #111;
     /* margin-bottom: 1em; */
+    z-index: 1000;
 }
 
 .NavLink {
@@ -14,3 +15,4 @@
 .NavLink:visited {
     color: deepskyblue;
 }
+

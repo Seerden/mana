@@ -1,26 +1,37 @@
+.List {
+    min-width: 800px;
+}
+
 .List__name {
     max-width: 750px;
     border-bottom: 2px solid deepskyblue;
 }
 
 .List__term {
+    font-size: 0.9em;
     display: grid;
     grid-template-columns: 2rem minmax(50%, min-content) 1fr ;
     /* white-space: nowrap; */
     overflow: hidden;
     word-break: break-all;
     width: 70%;
-    /* max-width: 750px; */
-}
-
-.List__term {
+    max-width: 750px;
     margin-top: 1em;
     box-shadow: 0 0 0.7em #000;
     border-top: 2px solid var(--background-secondary);
     border-right: 2px solid var(--background-secondary);
     border-bottom: 2px solid var(--background-secondary);
     border-left: 2px solid deepskyblue;
-    border-radius: 0 0 0 15px;
+    border-radius: 0 10px 0 10px;
+
+    transition: border-radius 200ms ease 100ms, transform 100ms ease-in;
+
+
+}
+
+.List__term:hover {
+    border-radius: 0; 
+    transform: translate(1em,0);
 }
 
 .List__term-from, .List__term-to, .List__term-index {

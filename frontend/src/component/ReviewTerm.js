@@ -11,11 +11,11 @@ const ReviewTerm = memo(({ dispatch, term }) => {
     const duration = 100
 
     useEffect(() => {
-        setShownTerm(isFront ? term.EN : term.JA)
+        setShownTerm(isFront ? term.from : term.to)
     }, [term])
 
     useEffect(() => {
-        setTimeout(() => { setShownTerm(isFront ? term.EN : term.JA) }, duration)
+        setTimeout(() => { setShownTerm(isFront ? term.from : term.to) }, duration)
     }, [isFront])
 
     const windowKeyup = (e) => {
