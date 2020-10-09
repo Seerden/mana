@@ -16,7 +16,7 @@
     word-break: break-all;
     width: 70%;
     max-width: 750px;
-    margin-top: 1em;
+    margin-bottom: 1em;
     box-shadow: 0 0 0.7em #000;
     border-top: 2px solid var(--background-secondary);
     border-right: 2px solid var(--background-secondary);

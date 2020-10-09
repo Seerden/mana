@@ -20,5 +20,9 @@ WIP | | figure out useHistory and history.push()
   - style lists
   - figure out stat priority (what _must_ be displayed on overview page?)
 
+
+| status | date | todo |
+:-- | :-- | :--
+TODO | Oct 9 | Completely refactor review card component
 # NOTE
 db schemas have collation with 'en' locale. if this causes issues, check if there's a way to specify multiple collation locales
