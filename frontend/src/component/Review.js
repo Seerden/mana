@@ -6,80 +6,76 @@ import './css/Review.css'
 import { getListFromDB } from '../helpers/db.api';
 import { useRouteProps } from '../hooks/routerHooks';
 import { useLogState } from '../hooks/state';
-import { buildTermList } from '../helpers/review/review.helpers';
+import { buildTermList } from '../helpers/review.helpers';
+
+function termReducer(terms, action) {
+    switch (action.type) {
+        case 'init':
+            return action.payload
+        case 'pass': // remove term from deck
+            return terms.slice(1,);
+        case 'fail':
+            // take term, shuffle it back into the deck (at random? can't be asked again right away, or maybe that's fine)
+            /*  @dev: want to insert in the 'current cycle' of the review session i.e. if not all terms have been passed at least once, I don't want to place the term among the second 'cycle'. requires tracking how many terms have been passed
+                @current: just put the item at a random index */
+            let newTerms = [...terms]
+            let currentTerm = newTerms.shift();
+            let newIndex = Math.floor((terms.length + 1) * Math.random());
+            newTerms.splice(newIndex, 0, currentTerm);
+            return newTerms
+    }
+}
 
 const Review = memo((props) => {
-    // function currentTermReducer(currentTerm, action) {
-    //     switch (action.type) {
-    //         case 'increment':
-    //             return currentTerm + 1
-    //         case 'decrement':
-    //             if (currentTerm !== 0) {
-    //                 return currentTerm - 1
-    //             }
-    //             else {
-    //                 return currentTerm
-    //             }
-    //         default:
-    //             return currentTerm;
-    //     }
-    // }
-
     const { match } = useRouteProps();
     const [list, setList] = useState(null);
-    const [termsToReview, setTermsToReview] = useState(null);
-    const [cur, setCur] = useState(0);
+    const [futureTerms, reduceFutureTerms] = useReducer(termReducer, []);
     const n = 2; // number of times each term should be reviewed. @TODO expand on this functionality
-    useLogState('list', list)
-
     useEffect(() => {
-        getListFromDB({ id: match.params.id }).then(res => {
-            // the three lines below just serve to filter the terms' _id properties
-            // should definitely be a single destructing expression to do this, but I'm not sure
-            let {owner, name, from, to, content} = res.data;
-            content = content.map(i => ({from: i.from, to: i.to}))
-            let _list = {owner, name, from, to, content}
-            setList(_list)
+        getListFromDB({ _id: match.params.id }).then(res => {
+            /* the three lines below just serve to filter the terms' _id properties
+            should definitely be a single destructing expression to do this, but I'm not sure */
+            let { owner, name, from, to, content } = res.data;
+            content = content.map(i => ({ from: i.from, to: i.to }));
+            let _list = { owner, name, from, to, content };
+            setList(_list);
         })
     }, [])
 
     useEffect(() => {
-        /* 
-            modify this to only setTerms when there's not a currently ongoing session in localStorage
-            if there is a local storage, prompt user to continue or start anew    
-        */
-        list && setTermsToReview((buildTermList(list.content, n)));
+        if (list) {
+            let toReview = (buildTermList(list.content, n))
+            reduceFutureTerms({ type: 'init', payload: toReview })
+        }
     }, [list])
+
     return (
-        <>
-        { list && 
-            <div className="List">
-                <h1>
-                    Reviewing <span className="Review-name">{list.name}</span> by <span className="Review-owner">{list.owner}</span>
-                </h1>
-            </div>
-        }
+        <div className="Review">
+            { list &&
+                <div className="Review-head">
+                    Reviewing
+                        <span className="Review-name">{list.name}</span>
+                    by
+                        <span className="Review-owner">{list.owner}</span>
+                </div>
+            }
 
-        { termsToReview && 
-            <div className="Review-current">
-                {termsToReview[cur].to} | {termsToReview[cur].from}
-            </div>
-        }
+            { futureTerms.length > 0 &&
+                <>
+                    <div className="Review-current">
+                        {futureTerms[0].to} | {futureTerms[0].from}
 
-        { !list && 
-            <div className="Loading">
-                Loading list...
-            </div>        
-        }
-        </>
+                    </div>
+                    <div className="Review-buttons">
+                        <input onClick={() => reduceFutureTerms({ type: 'fail' })} className="Review-button fail" type="button" value="Fail" />
+                        <input onClick={() => reduceFutureTerms({ type: 'pass' })} className="Review-button pass" type="button" value="Pass" />
+                    </div>
+                </>
+            }
+
+            { !list && <div className="Loading">Loading list...</div>}
+        </div>
     )
 })
 
 export default Review;
-
-/*
-// grab list from db
-1. build array of review terms (every term occurs n times, n could be specified eventually)
-2. make buttons to pass/fail and corresponding handlers
-
-*/

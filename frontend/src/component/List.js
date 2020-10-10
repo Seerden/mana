@@ -2,14 +2,16 @@ import React, { memo, useState, useEffect } from "react";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './css/List.css';
+import { useRouteProps } from '../hooks/routerHooks';
 
-const List = memo(({ match, history, location }) => {
+const List = memo((props) => {
     const [list, setList] = useState(null);
     const [terms, setTerms] = useState(null);
+    const { match } = useRouteProps();
 
     useEffect(() => {
         axios.get(`/db/listbyid/${match.params.id}`).then(r => setList(r.data));
-    }, [match])
+    }, [])
 
     useEffect(() => {
         if (list) {

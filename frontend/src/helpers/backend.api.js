@@ -6,7 +6,7 @@ import axios from 'axios';
     pings backend /db/u/:username, which returns a User instance in json format
     might be better to just separate this into getUser and getPopulatedUser like I originally implemented
  */
-export const getUserFromDb = async (username, args) => {
+export const getUserFromDB = async (username, args) => {
     if (args.populate) {
         const { populate } = args
         // populate needs to be a single space-separated string, e.g. 'following followed'

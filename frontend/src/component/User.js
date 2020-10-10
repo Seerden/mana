@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { getUserFromDb } from '../helpers/backend.api';
+import { getUserFromDB } from '../helpers/backend.api';
 
 const User = ({history, location, match}) => {
     const username = match.params.username;
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        getUserFromDb(username, { populate: 'lists'}).then(res => {
+        getUserFromDB(username, { populate: 'lists'}).then(res => {
             setUser(res)
             console.log(res.lists)
         })

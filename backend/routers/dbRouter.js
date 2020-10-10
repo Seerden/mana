@@ -1,15 +1,11 @@
-// import db connection and models
 const { dbConn } = require('../db/db.js');
 const User = dbConn.model('User');
 const List = dbConn.model('List');
-
 const express = require('express');
 const bodyParser = require('body-parser');
-
 const dbRouter = express.Router();
-dbRouter.use(bodyParser.urlencoded({ extended: true }));
-dbRouter.use(bodyParser.json());
-
+    dbRouter.use(bodyParser.urlencoded({ extended: true }));
+    dbRouter.use(bodyParser.json());
 const fs = require('fs');
 const path = require('path');
 
@@ -19,7 +15,6 @@ dbRouter.get('/list/devpopulate', (req, res) => {
     const jsonFiles = filenames.filter(f => f.includes('json'))
 
     res.send(`${filenames.length}`)
-    // res.send(`${jsonFiles.length}`)
 
     const populate = async () => {
         for (let file of jsonFiles) {
@@ -42,9 +37,7 @@ dbRouter.get('/list/devpopulate', (req, res) => {
         console.log('populated');
         res.send('populated')
     })
-
 })
-
 
 dbRouter.get('/u/:username', (req, res) => {
     let populate = req.query.populate
@@ -92,9 +85,13 @@ dbRouter.get('/listsbyuser/:username', (req, res) => {
     })
 })
 
+
+dbRouter.get('/list', (req, res) => {
+    const query = req.query;
+    List.findOne({...query}, (err, found) => {res.json(found)})
+})
 dbRouter.post('/list', (req, res) => {
     const { owner, name, from, to, content } = req.body.newList;
-
 
     // check if this user has a list by this name, else put list in db and add the list to the user's lists in the db
     List.findOne({ owner, name }, (err, foundList) => {

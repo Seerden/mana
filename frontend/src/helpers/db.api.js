@@ -7,6 +7,6 @@ export const getListFromDB = (query) => {
      */
 
     axios.create().interceptors.request.use(req => console.log('axios request:', req))
-    return axios.get('/db/list/', {query})
+    return axios.get('/db/list/', {params: query})
 
 }
