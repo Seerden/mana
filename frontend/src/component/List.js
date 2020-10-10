@@ -34,10 +34,7 @@ const List = memo(({ match, history, location }) => {
                     <h1 className="List__name">{list.name} ({list.from} to {list.to})</h1>
                     <Link
                         className="Link-button"
-                        to={{
-                            pathname: `${match.params.id}/review`,
-                            state: {list: {...list}}
-                        }}
+                        to={{pathname: `${match.params.id}/review`}}
                     >Review!</Link>
                     {terms}
                 </>

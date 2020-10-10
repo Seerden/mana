@@ -11,6 +11,6 @@ export const useLogState = (name, state, setState) => {
      */
 
     useEffect(() => {
-        console.log(`${name} changed:`, state);
-    }, [state, setState ? setState : null])
+        state && console.log(`${name} changed:`, state);
+    }, [name, state, setState])
 }
