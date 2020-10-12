@@ -16,7 +16,7 @@ function termReducer(terms, action) {
             return terms.slice(1,);
         case 'fail':
             // take term, shuffle it back into the deck (at random? can't be asked again right away, or maybe that's fine)
-            /*  @dev: want to insert in the 'current cycle' of the review session i.e. if not all terms have been passed at least once, I don't want to place the term among the second 'cycle'. requires tracking how many terms have been passed
+            /*  @future: want to insert in the 'current cycle' of the review session i.e. if not all terms have been passed at least once, I don't want to place the term among the second 'cycle'. requires tracking how many terms have been passed
                 @current: just put the item at a random index */
             let newTerms = [...terms]
             let currentTerm = newTerms.shift();
@@ -31,6 +31,10 @@ const Review = memo((props) => {
     const [list, setList] = useState(null);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, []);
     const n = 2; // number of times each term should be reviewed. @TODO expand on this functionality
+
+    const [progress, setProgress] = useState(0);
+    useLogState('progress', progress)
+
     useEffect(() => {
         getListFromDB({ _id: match.params.id }).then(res => {
             /* the three lines below just serve to filter the terms' _id properties
@@ -49,6 +53,17 @@ const Review = memo((props) => {
         }
     }, [list])
 
+    useEffect(() => {
+        if (list && futureTerms) { 
+            // 100
+            // 10
+            // 10/100
+            let sessionLength = list.content.length * 2;
+            let termsCompleted = sessionLength-futureTerms.length;
+            setProgress(Math.floor(100*termsCompleted/sessionLength));
+        }
+    }, [futureTerms])
+
     return (
         <div className="Review">
             { list &&
@@ -64,11 +79,15 @@ const Review = memo((props) => {
                 <>
                     <div className="Review-current">
                         {futureTerms[0].to} | {futureTerms[0].from}
-
                     </div>
+
                     <div className="Review-buttons">
                         <input onClick={() => reduceFutureTerms({ type: 'fail' })} className="Review-button fail" type="button" value="Fail" />
                         <input onClick={() => reduceFutureTerms({ type: 'pass' })} className="Review-button pass" type="button" value="Pass" />
+                    </div>
+
+                    <div className="Review-progress__wrapper">
+                        <div id="Review-progress__bar" style={{width: `${progress}%`}}></div>
                     </div>
                 </>
             }
