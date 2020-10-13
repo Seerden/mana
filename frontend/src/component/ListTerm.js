@@ -1,18 +1,25 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 
 const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [confirmingDelete, setConfirmingDelete ] = useState(false);
-    const [isHovering, setHovering] = useState(false)
+    const [isHovering, setIsHovering] = useState(false)
 
     const termStyles = {
         gridTemplateColumns: `2rem repeat(2, minmax(40%, min-content)) auto`,
-        // gridTemplateRows: `3fr ${confirmDelete ? '' : ''}`
     }
     const termDeleteStyles = {
         backgroundColor: confirmingDelete ? '' : null,
         border: confirmingDelete ? '2px solid orangered' : null
     }
+
+    useEffect(() => {
+        return () => {
+            setIsEditing(false);
+            setConfirmingDelete(false);
+            setIsHovering(false)
+        }
+    }, [])
 
     const handleConfirmClick = (e, action) => {
         e.preventDefault();
@@ -20,15 +27,13 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
         if (action.type === 'delete') {
             handleTermDelete(idx);
         }
-
-
     }
 
     return (
         <li 
-            onMouseEnter={() => setHovering(true)}
-            onMouseLeave={() => setHovering(false)}
-            className="List__term" style={ {...termStyles, ...termDeleteStyles} }>
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+          className="List__term" style={ {...termStyles, ...termDeleteStyles} }>
             <div className="List__term-index">{idx+1}</div>
             <div className="List__term-from">{term.from}</div>
             <div className="List__term-to">{term.to}</div>
@@ -42,17 +47,16 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
                         onClick={e => handleConfirmClick(e, 'keep')}
                         className="remove-confirm-button remove-keep" type="button" value="keep"/>
                 </span>
-
             }
-            {!isEditing && isHovering && !confirmingDelete &&
+
+            { !isEditing && isHovering && !confirmingDelete &&
                 <input 
                     onClick={() => setConfirmingDelete(true)}
                     className="List__term-remove" 
                     type="button" 
-                    value="x" />
+                    value="x" 
+                />
             }
-
-            
         </li>
     )
 })

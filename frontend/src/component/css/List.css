@@ -27,12 +27,16 @@ ul {
     border-left: 2px solid deepskyblue;
     border-radius: 0 10px 0 10px;
 
-    transition: border-radius 200ms ease 100ms, transform 100ms ease-in, border-color 120ms ease;
+    transition: border-radius 200ms ease 100ms, transform 100ms ease, border-color 120ms ease;
 }
 
 .List__term:hover {
     border-radius: 0; 
     transform: translate(1em,0);
+}
+
+.List__term-edit img {
+    background-color: white;
 }
 
 .List__term-from, .List__term-to, .List__term-index {
