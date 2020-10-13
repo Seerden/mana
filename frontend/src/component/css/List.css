@@ -7,16 +7,20 @@
     border-bottom: 2px solid deepskyblue;
 }
 
+ul {
+    margin: 0;
+    padding: 0;
+}
+
 .List__term {
     font-size: 0.9em;
     display: grid;
+    line-height: 1rem;
     grid-template-columns: 2rem minmax(50%, min-content) 1fr ;
-    /* white-space: nowrap; */
     overflow: hidden;
-    word-break: break-all;
     width: 70%;
     max-width: 750px;
-    margin-bottom: 1em;
+    margin-bottom: 0.6em;
     box-shadow: 0 0 0.7em #000;
     border-top: 2px solid var(--background-secondary);
     border-right: 2px solid var(--background-secondary);
@@ -25,8 +29,6 @@
     border-radius: 0 10px 0 10px;
 
     transition: border-radius 200ms ease 100ms, transform 100ms ease-in;
-
-
 }
 
 .List__term:hover {

@@ -28,3 +28,8 @@ db schemas have collation with 'en' locale. if this causes issues, check if ther
 - frontend: whenever a term is passed/failed, append pass/fail to term's history.
     every term has a history property, like {date: sessionStart, content: ['pass', 'pass', 'fail']}
     @todo: define sessions more rigorously. continuing previous sessions, ending sessions, etc.
+
+# 2020-10-13, 03:23
+List:
+    make a ListTerm component, and change terms to li elements
+

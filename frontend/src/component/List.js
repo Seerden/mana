@@ -1,8 +1,9 @@
 import React, { memo, useState, useEffect } from "react";
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './css/List.css';
 import { useRouteProps } from '../hooks/routerHooks';
+import { getListFromDB } from '../helpers/db.api';
+import ListTerm from './ListTerm'
 
 const List = memo((props) => {
     const [list, setList] = useState(null);
@@ -10,22 +11,11 @@ const List = memo((props) => {
     const { match } = useRouteProps();
 
     useEffect(() => {
-        axios.get(`/db/listbyid/${match.params.id}`).then(r => setList(r.data));
+        getListFromDB({  _id: match.params.id }).then(res => {
+            setList(res);
+            setTerms(res.content.map((term, idx) => <ListTerm key={`list-term-${idx}`} idx={idx+1} term={term} />))
+        })
     }, [])
-
-    useEffect(() => {
-        if (list) {
-            setTerms(list.content.map((i, idx) => {
-                return (
-                    <div key={`list-term-${idx}`} className="List__term">
-                        <div className="List__term-index">{idx}</div>
-                        <div className="List__term-from">{i.from}</div>
-                        <div className="List__term-to">{i.to}</div>
-                    </div>
-                )
-            }))
-        }
-    }, [list])
 
     return (
         <div className="List">
@@ -38,7 +28,10 @@ const List = memo((props) => {
                         className="Link-button"
                         to={{pathname: `${match.params.id}/review`}}
                     >Review!</Link>
-                    {terms}
+
+                    <ul>
+                        {terms}
+                    </ul>
                 </>
 
             }

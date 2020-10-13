@@ -2,13 +2,15 @@ import React, { memo, useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './css/Lists.css'
+import { useRouteProps } from '../hooks/routerHooks';
 
-const ListsByUser = memo(({ history, location, match }) => {
+const ListsByUser = memo((props) => {
+    const { match, location, history } = useRouteProps();
     const username = match.params.username;
     const [lists, setLists] = useState(null);
 
     useEffect(() => {
-        axios.get('/db/listsbyuser/seerden').then(r => {
+        axios.get(`/db/listsbyuser/${username}`).then(r => {
             setLists(r.data);
         })
     }, [])

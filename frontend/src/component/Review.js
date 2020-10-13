@@ -9,11 +9,11 @@ import './css/Review.css'
 
 const Review = memo((props) => {
     const n = 2; // number of times each term should be reviewed. @todo expand on this functionality
-    const [sessionStart, setSessionStart] = useState(() => Date.now())
     const { match } = useRouteProps();
+    const [sessionStart, setSessionStart] = useState(() => Date.now())
     const [list, setList] = useState(null);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, []);
-    const [progress, setProgress] = useState(0);  // percentage of terms completed in the session
+    const [progress, setProgress] = useState(0);  // percentage of terms marked 'pass' in the session
 
     function termReducer(terms, action) {
         /* handle what happens to current term after pass/fail is chosen */
@@ -58,7 +58,7 @@ const Review = memo((props) => {
         getListFromDB({ _id: match.params.id }).then(res => {
             /* the three lines below just serve to filter the terms' _id properties
             could possibly be a single destructing expression, but it works fine as is */
-            let { owner, name, from, to, content } = res.data;
+            let { owner, name, from, to, content } = res;
             content = content.map(i => ({ from: i.from, to: i.to }));
             let _list = { owner, name, from, to, content };
             setList(_list);
@@ -77,9 +77,7 @@ const Review = memo((props) => {
     }, [futureTerms])
 
     function handleClick(e, passfail) {
-        /* update the history of the current term, and handle the fate of the current term */
         e.preventDefault();
-        let t = e.target.value.toLowerCase();  // @todo: take 'pass' or 'fail' as an argument instead
         updateSessionHistory(futureTerms[0], passfail)
         reduceFutureTerms({type: passfail})
     }
