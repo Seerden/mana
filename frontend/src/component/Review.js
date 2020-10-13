@@ -1,36 +1,36 @@
 /* eslint react-hooks/exhaustive-deps: 0 */
 
 import React, { memo, useEffect, useState, useReducer } from "react";
-import './css/Review.css'
-import { getListFromDB } from '../helpers/db.api';
 import { useRouteProps } from '../hooks/routerHooks';
 import { useLogState } from '../hooks/state';
+import { getListFromDB } from '../helpers/db.api';
 import { buildTermList } from '../helpers/review.helpers';
+import './css/Review.css'
 
 const Review = memo((props) => {
-    const sessionStart = Date.now()
+    const n = 2; // number of times each term should be reviewed. @todo expand on this functionality
+    const [sessionStart, setSessionStart] = useState(() => Date.now())
     const { match } = useRouteProps();
     const [list, setList] = useState(null);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, []);
-    const n = 2; // number of times each term should be reviewed. @TODO expand on this functionality
     const [progress, setProgress] = useState(0);  // percentage of terms completed in the session
 
-    useLogState('list', list, setList)
-
     function termReducer(terms, action) {
+        /* handle what happens to current term after pass/fail is chosen */
         switch (action.type) {
             case 'init':
                 return action.payload
-            case 'pass': // remove term from deck
-                // update terms
+            case 'pass': 
+                // remove term from deck
                 return terms.slice(1,);
             case 'fail':
-                // take term, shuffle it back into the deck (at random? can't be asked again right away, or maybe that's fine)
-                /*  @future: want to insert in the 'current cycle' of the review session i.e. if not all terms have been passed at least once, I don't want to place the term among the second 'cycle'. requires tracking how many terms have been passed
-                    @current: just put the item at a random index */
+                /*  @todo:    insert term somewhere in 'current cycle' of review session 
+                                i.e. if not all terms have been passed at least once, I don't want to place the term among the second 'cycle'
+                    @current:   re-insert the term at a random index */
+                let newIndex = Math.floor((terms.length + 1) * Math.random());
+
                 let newTerms = [...terms]
                 let currentTerm = newTerms.shift();
-                let newIndex = Math.floor((terms.length + 1) * Math.random());
                 newTerms.splice(newIndex, 0, currentTerm);
                 return newTerms
         }
@@ -57,7 +57,7 @@ const Review = memo((props) => {
     useEffect(() => {
         getListFromDB({ _id: match.params.id }).then(res => {
             /* the three lines below just serve to filter the terms' _id properties
-            could possibly be a single destructing expression, but it works like this */
+            could possibly be a single destructing expression, but it works fine as is */
             let { owner, name, from, to, content } = res.data;
             content = content.map(i => ({ from: i.from, to: i.to }));
             let _list = { owner, name, from, to, content };
@@ -76,11 +76,12 @@ const Review = memo((props) => {
         }
     }, [futureTerms])
 
-    function handleClick(e) {
+    function handleClick(e, passfail) {
+        /* update the history of the current term, and handle the fate of the current term */
         e.preventDefault();
-        let t = e.target.value.toLowerCase();
-        updateSessionHistory(futureTerms[0], t)
-        reduceFutureTerms({type: t})
+        let t = e.target.value.toLowerCase();  // @todo: take 'pass' or 'fail' as an argument instead
+        updateSessionHistory(futureTerms[0], passfail)
+        reduceFutureTerms({type: passfail})
     }
 
     return (
@@ -101,8 +102,8 @@ const Review = memo((props) => {
                     </div>
 
                     <div className="Review-buttons">
-                        <input onClick={(e) => handleClick(e)} className="Review-button fail" type="button" value="Fail" />
-                        <input onClick={(e) => handleClick(e)} className="Review-button pass" type="button" value="Pass" />
+                        <input onClick={(e) => handleClick(e, 'fail')} className="Review-button fail" type="button" value="Fail" />
+                        <input onClick={(e) => handleClick(e, 'pass')} className="Review-button pass" type="button" value="Pass" />
                     </div>
 
                     <div className="Review-progress__wrapper">

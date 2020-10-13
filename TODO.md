@@ -13,6 +13,7 @@ TODO | Oct 6 2:16| suspend list loading (bonus points: come up with a nice loadi
 TODO | | custom list ids
 TODO | | refine db list GET routes and frontend routes
 WIP | | figure out useHistory and history.push() 
+WIP | Oct 9 | Completely refactor review card component
 
 - Get rudimentary review page done
 - Refine list page
@@ -20,9 +21,10 @@ WIP | | figure out useHistory and history.push()
   - style lists
   - figure out stat priority (what _must_ be displayed on overview page?)
 
-
-| status | date | todo |
-:-- | :-- | :--
-TODO | Oct 9 | Completely refactor review card component
 # NOTE
 db schemas have collation with 'en' locale. if this causes issues, check if there's a way to specify multiple collation locales
+
+## Review history
+- frontend: whenever a term is passed/failed, append pass/fail to term's history.
+    every term has a history property, like {date: sessionStart, content: ['pass', 'pass', 'fail']}
+    @todo: define sessions more rigorously. continuing previous sessions, ending sessions, etc.

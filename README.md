@@ -5,9 +5,9 @@ Spaced-repetition based (language) learning application.
 Project built for personal use, but also as portfolio project.
 
 ## Stack
-Frontend: React
-Backend: Node, Express
-Storage/Database: MongoDB (Mongoose)
+- Frontend: React
+- Backend: Node, Express
+- Storage/Database: MongoDB (Mongoose)
 
 ### Tech
 - JWT for frontend authentication, combined with Passport on the backend to protect API/DB calls.

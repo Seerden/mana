@@ -76,18 +76,22 @@
 
 }
 
-.fail {
+.fail, .pass {
+    background-color: var(--background-secondary);
+}
+
+.fail:hover {
     background-color: orangered;
 }
 
-.pass {
+.pass:hover {
     background-color: seagreen;
 }
 
 .Review-progress__wrapper {
     width: 100vw;
     position: absolute;
-    top: 3.3rem;
+    top: 3rem;
     left: 0;
     height: 4px;
     background-color: #555;
@@ -95,7 +99,6 @@
 
 #Review-progress__bar {
     background-color: deepskyblue;   
-    height: inherit; 
-    
+    height: inherit;     
     transition: width 300ms linear;
 }
