@@ -4,7 +4,6 @@ import './css/List.css';
 import { useRouteProps } from '../hooks/routerHooks';
 import { getListFromDB } from '../helpers/db.api';
 import ListTerm from './ListTerm'
-import { v4 as uuidv4 } from 'uuid';
 
 const List = memo((props) => {
     const [list, setList] = useState(null);

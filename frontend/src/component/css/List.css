@@ -13,11 +13,11 @@ ul {
 }
 
 .List__term {
-    font-size: 0.9em;
+    font-size: 1rem;
     display: grid;
     line-height: 1rem;
     overflow: hidden;
-    width: 70%;
+    width: 80%;
     max-width: 750px;
     margin-bottom: 0.6em;
     box-shadow: 0 0 0.7em #000;
@@ -66,6 +66,24 @@ ul {
     transition: background-color 100ms ease
 }
 
+.List__term input[type=text] {
+    display: flex;
+    line-height: inherit;
+    height: 100%;
+    color: deepskyblue;
+    border-radius: 3px;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    margin: 0;
+    margin-right: 0.2em;
+    font-size: inherit;
+    font-family: inherit;
+    width: 100%;
+    text-indent: 0;
+    background-color: inherit;
+}
+
 .List__term-remove:hover {
     background-color: orangered;
     color: azure;
@@ -90,7 +108,8 @@ ul {
 }
 
 .remove-keep, .remove-remove {
-    background-color: #111;
+    background-color: #555;
+    margin: 0 0.5em;
     transition: all 150ms ease
 }
 

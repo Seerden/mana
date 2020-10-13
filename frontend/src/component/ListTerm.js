@@ -1,7 +1,11 @@
 import React, { memo, useState, useEffect } from "react";
+import { useLogState } from '../hooks/state';
 
 const ListTerm = memo(({ handleTermDelete, term, idx }) => {
+    const [_term, setTerm] = useState(() => ({from: term.from, to: term.to}))
     const [isEditing, setIsEditing] = useState(false);
+    const [isEditingFrom, setIsEditingFrom] = useState(false);
+    const [isEditingTo, setIsEditingTo] = useState(false);
     const [confirmingDelete, setConfirmingDelete ] = useState(false);
     const [isHovering, setIsHovering] = useState(false)
 
@@ -29,14 +33,40 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
         }
     }
 
+    const handleTermEdit = (e, field) => {
+        setTerm({..._term, [field]: e.target.value})        
+    }
+
     return (
         <li 
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
           className="List__term" style={ {...termStyles, ...termDeleteStyles} }>
             <div className="List__term-index">{idx+1}</div>
-            <div className="List__term-from">{term.from}</div>
-            <div className="List__term-to">{term.to}</div>
+            { !isEditingFrom &&
+               <div 
+                 onClick={() => setIsEditingFrom(true)}
+                 className="List__term-from">{_term.from}</div>
+            }
+            { isEditingFrom &&
+                
+                <div className="List__term-input-wrapper">
+                    <input
+                      autoFocus
+                      autoCorrect="false"
+                      className="List__term-input"
+                      onChange={(e) => handleTermEdit(e, 'from')}
+                      onBlur={() => {
+                        setIsEditingFrom(false)
+                        setIsEditing(false)
+                      }}
+                    type="text" name="" id="" defaultValue={_term.from}/>
+                </div>
+            }
+            
+            { !isEditingTo &&
+                <div className="List__term-to">{_term.to}</div>
+            }
             
             { !isEditing && confirmingDelete &&
                 <span className="List__term-remove-confirm">
@@ -62,3 +92,10 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
 })
 
 export default ListTerm
+
+/* 
+@todo:  add edit functionality to 'to' field,
+        after writing a TermEdit component that has both the input field and the editing state
+
+        put a wrapper around the term/edit to assure dimensions match
+*/
