@@ -115,4 +115,16 @@ dbRouter.post('/list', (req, res) => {
     })
 })
 
+dbRouter.post('/list/update', async (req, res) => {
+    const { query, body } = req.body.data;
+    console.log(body);
+    List.findOneAndUpdate(query, {$set: {content: body.content, sessions: body.sessions}}, {new: true}, (err, updated) => {
+        if (err) res.status(500).send('Error updating list in database')
+        else if (!err) {
+            console.log('updated list', updated);
+            res.status(200).send(updated)
+        }
+    })
+})
+
 module.exports = { dbRouter }

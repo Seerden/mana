@@ -70,7 +70,8 @@ ul {
     display: flex;
     line-height: inherit;
     height: 100%;
-    color: deepskyblue;
+    color: black;
+    background-color: azure;
     border-radius: 3px;
     border: 0;
     outline: 0;
@@ -79,9 +80,8 @@ ul {
     margin-right: 0.2em;
     font-size: inherit;
     font-family: inherit;
-    width: 100%;
-    text-indent: 0;
-    background-color: inherit;
+    /* width: 100%; */
+    text-indent: 1em;
 }
 
 .List__term-remove:hover {

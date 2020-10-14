@@ -3,15 +3,18 @@
 import React, { memo, useEffect, useState, useReducer } from "react";
 import { useRouteProps } from '../hooks/routerHooks';
 import { useLogState } from '../hooks/state';
-import { getListFromDB } from '../helpers/db.api';
+import { getListFromDB, updateList } from '../helpers/db.api';
 import { buildTermList } from '../helpers/review.helpers';
 import './css/Review.css'
 
 const Review = memo((props) => {
     const n = 2; // number of times each term should be reviewed. @todo expand on this functionality
     const { match } = useRouteProps();
-    const [sessionStart, setSessionStart] = useState(() => Date.now())
+    const [sessionStart, setSessionStart] = useState(() => new Date())
+    const [sessionEnd, setSessionEnd] = useState(false);
     const [list, setList] = useState(null);
+    const [passCount, setPassCount] = useState(0);
+
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, []);
     const [progress, setProgress] = useState(0);  // percentage of terms marked 'pass' in the session
 
@@ -21,6 +24,7 @@ const Review = memo((props) => {
             case 'init':
                 return action.payload
             case 'pass': 
+                setPassCount(count => count + 1)
                 // remove term from deck
                 return terms.slice(1,);
             case 'fail':
@@ -39,7 +43,7 @@ const Review = memo((props) => {
     function updateSessionHistory(term, passfail){
         const content = list.content;
         let idx = content.findIndex(i => i.to === term.to && i.from === term.from)
-        if (!content[idx].history) {
+        if (!content[idx].history || content[idx].history.length == 0 ) {
             content[idx].history = [{date: Date.now(), content: []}]
         }
         if (content[idx].history.length > 0) {
@@ -51,21 +55,22 @@ const Review = memo((props) => {
                 content[idx].history[histLen-1].content.push(passfail)
             }
         }
-        setList({...list, content: [...content]})
+        let newList = {...list, content: [...content]};
+        setList(newList);
+        return newList
     }    
 
     useEffect(() => {
         getListFromDB({ _id: match.params.id }).then(res => {
             /* the three lines below just serve to filter the terms' _id properties
             could possibly be a single destructing expression, but it works fine as is */
-            let { owner, name, from, to, content } = res;
-            content = content.map(i => ({ from: i.from, to: i.to }));
-            let _list = { owner, name, from, to, content };
+            let _list = res;
             setList(_list);
 
             let toReview = (buildTermList(_list.content, n))
             reduceFutureTerms({ type: 'init', payload: toReview })
         })
+
     }, [])
 
     useEffect(() => {
@@ -78,8 +83,29 @@ const Review = memo((props) => {
 
     function handleClick(e, passfail) {
         e.preventDefault();
-        updateSessionHistory(futureTerms[0], passfail)
+        let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
         reduceFutureTerms({type: passfail})
+
+        if (passCount == n*list.content.length-1) {
+            /*  handle session completion:
+                - push list with updated term histories and updated session history to db
+                - show post-session stats
+                    - include redirect button (back to lists or list/:id)
+             */
+            let end = new Date()
+            setSessionEnd(end)
+            console.log('Session completed...');
+
+            updatedList.sessions.push({start: sessionStart, end: end, numTerms: n*updatedList.content.length})
+            updateList({_id: match.params.id, owner: list.owner}, updatedList)  
+            /**  although updateSessionHistory is called here, which updates 'list' (which is a piece of state), this 'list' in updateList still gets the new state value.. 
+            *    I thought, since these occur in the same render cycle, that 'list' here would only have access to the list state from before updateSessionHistory() was called
+            *    @todo investigate
+            */
+                .then(res => console.log(res))
+                .catch(err => console.log(err))
+
+        }
     }
 
     return (
@@ -93,7 +119,7 @@ const Review = memo((props) => {
                 </div>
             }
 
-            { futureTerms.length > 0 &&
+            { !sessionEnd && futureTerms.length > 0 &&
                 <>
                     <div className="Review-current">
                         {futureTerms[0].to} | {futureTerms[0].from}
@@ -110,6 +136,14 @@ const Review = memo((props) => {
                 </>
             }
 
+            { sessionEnd && 
+                <div className="Review-end">
+                    Session completed.
+                    <div>Started on {sessionStart.toISOString()}</div>
+                    <div className="">Completed on {sessionEnd.toISOString()}</div>
+                </div>
+            }
+
             { !list && <div className="Loading">Loading list...</div>}
         </div>
     )
@@ -120,4 +154,7 @@ export default Review;
 /*
 @todo?  set progress bar color based in session cycle. go to 100% n time with various colors, instead of slowly progress a single bar
         makes it feel like progress is faster
+
+@todo   add sessions property to List itself, include sessionStart and sessionEnd on session start, end
 */
+

@@ -5,6 +5,7 @@ import './css/App.css';
 
 import User from './User';
 import ListsByUser from './ListsByUser';
+import Sets from './Sets';
 import Header from './Header';
 import NewList from './NewList';
 import Review from './Review';
@@ -23,6 +24,7 @@ const App = memo(() => {
                     <div className="App">
                         <Switch>
                             <Route exact path='/' >Homepage (TODO: make component)</Route>
+                            <Route exact path="/u/:username/sets/" component={Sets} />
                             <Route exact path="/u/:username/lists/" component={ListsByUser} />
                             <Route exact path="/u/:username/lists/new/" component={NewList} />
                             <Route exact path="/u/:username/" component={User} />
