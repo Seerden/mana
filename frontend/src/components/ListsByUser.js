@@ -5,8 +5,8 @@ import './css/Lists.css'
 import { useRouteProps } from '../hooks/routerHooks';
 
 const ListsByUser = memo((props) => {
-    const { match, location, history } = useRouteProps();
-    const username = match.params.username;
+    const { params, location, navigate } = useRouteProps();
+    const username = params.username;
     const [lists, setLists] = useState(null);
 
     useEffect(() => {
@@ -18,7 +18,7 @@ const ListsByUser = memo((props) => {
     const handleClick = (e) => {
         e.preventDefault();
         // console.log(location);
-        history.push(`${location.pathname}/new`)
+        navigate(`${location.pathname}/new`)
     }
 
     return (

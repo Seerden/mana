@@ -6,6 +6,13 @@ const { dbRouter } = require('./routers/dbRouter');
 const { testRouter } = require('./routers/testRouter');
 const app = express();
 
+const log = (req, res, next) => {
+    console.log(req.originalUrl);
+    next()
+}
+
+app.use(log)
+
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
 

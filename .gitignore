@@ -6,3 +6,6 @@
 /backend/dev
 
 *.env
+node_modules
+MAP.md
+TODO.md

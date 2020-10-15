@@ -9,7 +9,7 @@ import './css/Review.css'
 
 const Review = memo((props) => {
     const n = 2; // number of times each term should be reviewed. @todo expand on this functionality
-    const { match } = useRouteProps();
+    const { params } = useRouteProps();
     const [sessionStart, setSessionStart] = useState(() => new Date())
     const [sessionEnd, setSessionEnd] = useState(false);
     const [list, setList] = useState(null);
@@ -61,7 +61,7 @@ const Review = memo((props) => {
     }    
 
     useEffect(() => {
-        getListFromDB({ _id: match.params.id }).then(res => {
+        getListFromDB({ _id: params.id }).then(res => {
             /* the three lines below just serve to filter the terms' _id properties
             could possibly be a single destructing expression, but it works fine as is */
             let _list = res;
@@ -97,10 +97,10 @@ const Review = memo((props) => {
             console.log('Session completed...');
 
             updatedList.sessions.push({start: sessionStart, end: end, numTerms: n*updatedList.content.length})
-            updateList({_id: match.params.id, owner: list.owner}, updatedList)  
+            updateList({_id: params.id, owner: list.owner}, updatedList)  
             /**  although updateSessionHistory is called here, which updates 'list' (which is a piece of state), this 'list' in updateList still gets the new state value.. 
             *    I thought, since these occur in the same render cycle, that 'list' here would only have access to the list state from before updateSessionHistory() was called
-            *    @todo investigate
+            *    @todo investigate. meanwhile, use updatedList since that's certain to be the correct value
             */
                 .then(res => console.log(res))
                 .catch(err => console.log(err))

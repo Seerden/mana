@@ -1,0 +1,23 @@
+{
+  "name": "mana",
+  "version": "1.0.0",
+  "description": "Spaced-repetition based (language) learning application.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-dev": "concurrently \"npm:start-front --prefix ./frontend\" \"npm:start-back --prefix ./backend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seerden/mana.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seerden/mana/issues"
+  },
+  "homepage": "https://github.com/seerden/mana#readme",
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
+}

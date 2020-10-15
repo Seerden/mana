@@ -45,6 +45,7 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
             <div className="List__term-index">{idx+1}</div>
             { !isEditingFrom &&
                <div 
+                 title="Click to edit"
                  onClick={() => setIsEditingFrom(true)}
                  className="List__term-from">{_term.from}</div>
             }
@@ -71,9 +72,11 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
             { !isEditing && confirmingDelete &&
                 <span className="List__term-remove-confirm">
                     <input 
+                        title="Permanently delete term"
                         onClick={(e) => handleConfirmClick(e, {type: 'delete'})}
                         className="remove-confirm-button remove-remove" type="button" value="delete"/>
                     <input 
+                        title="Keep term"
                         onClick={e => handleConfirmClick(e, 'keep')}
                         className="remove-confirm-button remove-keep" type="button" value="keep"/>
                 </span>

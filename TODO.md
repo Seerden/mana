@@ -33,3 +33,11 @@ db schemas have collation with 'en' locale. if this causes issues, check if ther
 List:
     make a ListTerm component, and change terms to li elements
 
+
+# 2020-10-15 03:15
+list:
+    .session: add boolean __finished__ property: on list page load, check for unfinished sessions and prompt continue/discard
+        either disable 'review' button while prompt unhandled, or alert 'unfinished sessions will be discarded'
+        - on continue: check unfinished session start date, then build a review session using session progress
+        - on discard: go through each term, remove .history entry for this date
+
