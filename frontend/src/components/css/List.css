@@ -35,10 +35,6 @@ ul {
     transform: translate(1em,0);
 }
 
-.List__term-edit img {
-    background-color: white;
-}
-
 .List__term-from, .List__term-to, .List__term-index {
     display: flex;
     padding-top: 0.5em;
@@ -66,12 +62,12 @@ ul {
     transition: background-color 100ms ease
 }
 
-.List__term input[type=text] {
+.List__term-input-wrapper input[type=text] {
     display: flex;
     line-height: inherit;
     height: 100%;
     color: black;
-    background-color: azure;
+    background-color: #fff  !important;  /* shouldn't need important here. look at html structure */
     border-radius: 3px;
     border: 0;
     outline: 0;

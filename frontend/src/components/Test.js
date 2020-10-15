@@ -27,39 +27,24 @@
 
 /*  */
 
-import React, { useEffect } from "react";
-import { Routes, Route } from 'react-router-dom';
-import { useRouteProps } from '../hooks/routerHooks';
+import React from "react";
+import Editable from '../wrappers/Editable';
 
 const Test = (props) => {
-    let { params } = useRouteProps();
-
-    useEffect(() => {
-        console.log(params);
-    }, [])
 
     return (
-        <div className="Test">
-            Test.js
-            <Routes>
-                <Route path="/id/:name">
-                    <SubTest />
-                </Route>
-            </Routes>
-        </div>
-    )
-}
-
-const SubTest = () => {
-    const { params, location } = useRouteProps();
-    useEffect(() => {
-        console.log(params);
-    }, [])
-
-    return (
-        <div className="">
-            SubTest.js
-        </div>
+        <Editable
+            initialState={
+                <div>
+                    <div onClick={() => console.log('clicked')} className="class-initial">Initial</div>
+                </div>
+            }
+            editState={
+                <div>
+                    <input autoFocus type="text" />
+                </div>
+            }
+        />
     )
 }
 

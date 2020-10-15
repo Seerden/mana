@@ -3,7 +3,7 @@ import { getUserFromDB } from '../helpers/backend.api';
 import { useRouteProps } from '../hooks/routerHooks';
 
 const User = (props) => {
-    const { params, match, location, history } = useRouteProps();
+    const { params } = useRouteProps();
     const username = params.username;
     const [user, setUser] = useState(null);
 

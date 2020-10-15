@@ -37,13 +37,15 @@ const Review = memo((props) => {
                 let currentTerm = newTerms.shift();
                 newTerms.splice(newIndex, 0, currentTerm);
                 return newTerms
+            default:
+                return terms
         }
     }
 
     function updateSessionHistory(term, passfail){
         const content = list.content;
         let idx = content.findIndex(i => i.to === term.to && i.from === term.from)
-        if (!content[idx].history || content[idx].history.length == 0 ) {
+        if (!content[idx].history || content[idx].history.length === 0 ) {
             content[idx].history = [{date: Date.now(), content: []}]
         }
         if (content[idx].history.length > 0) {
@@ -86,7 +88,7 @@ const Review = memo((props) => {
         let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
         reduceFutureTerms({type: passfail})
 
-        if (passCount == n*list.content.length-1) {
+        if (passCount === n*list.content.length-1) {
             /*  handle session completion:
                 - push list with updated term histories and updated session history to db
                 - show post-session stats

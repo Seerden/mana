@@ -23,6 +23,7 @@ const App = memo(() => {
                     <Header />
                     <div className="App">
                         <Routes>
+                            {/* home route */}
                             <Route path="/" element={<div>Home</div>} />
 
                             {/* test routes */}
@@ -46,6 +47,7 @@ const App = memo(() => {
                                 </Route>
                             </Route>
 
+                            {/* catchall 404 route */}
                             <Route path="*" element={<div>404</div>} />
                         </Routes>
                     </div>
