@@ -1,13 +1,18 @@
-import React, { memo, useState, useEffect } from "react";
-import { useLogState } from '../hooks/state';
+import React, { memo, useContext, useState, useEffect } from "react";
 import Editable from '../wrappers/Editable';
 import ListTermInput from './ListTermInput';
+import { ListContext } from '../context/ListContext';
 
+/**
+ * ListTerm component
+ * @param {object}  props: handleTermDelete (passed down function), term (list.content entry), idx (Number)
+ */
 const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     const [_term, setTerm] = useState(() => ({ from: term.from, to: term.to }))
     const [isEditing, setIsEditing] = useState(false);
     const [confirmingDelete, setConfirmingDelete] = useState(false);
     const [isHovering, setIsHovering] = useState(false)
+    const { listContextValue, setListContextValue } = useContext(ListContext);
 
     const termStyles = {
         gridTemplateColumns: `2rem repeat(2, minmax(40%, min-content)) auto`,
@@ -25,6 +30,13 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
         }
     }, [])
 
+    /**
+     * Remove term from the list.
+     * Triggered on deletion confirmation.
+     * 
+     * @todo        remove term from database entirely from this hook? or is there another 'send changes to database' layer on the /list/:id page?
+     * @param {object} action    currently only expects {type: 'delete'}
+     */
     const handleConfirmClick = (e, action) => {
         e.preventDefault();
         setConfirmingDelete(false);
@@ -33,6 +45,10 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
         }
     }
 
+    /**
+    * @param   {string}    field   'from'/'to', related to term.to and term.from properties (term is passed from props)
+    * @todo update actual list itself, also update listContextValue, and then push new list state to db
+    */
     const handleTermEdit = (e, field) => {
         if (e.target.value && _term[field] !== e.target.value) {
             setTerm({ ..._term, [field]: e.target.value })
@@ -43,20 +59,20 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
         <li
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
-            className="List__term" 
+            className="List__term"
             style={{ ...termStyles, ...termDeleteStyles }}
         >
             <div className="List__term-index">{idx + 1}</div>
 
             <Editable
-                initialState = { <div title="Click to edit" className="List__term-from">{_term.from}</div> }
-                editState = { <ListTermInput _term={_term} handleTermEdit={handleTermEdit} side="from" /> }
+                initialState={<div title="Click to edit" className="List__term-from">{_term.from}</div>}
+                editState={<ListTermInput _term={_term} handleTermEdit={handleTermEdit} side="from" />}
             />
 
-            <Editable 
-                initialState = { <div title="Click to edit" className="List__term-to">{_term.to}</div> }
-                editState = { <ListTermInput _term={_term} handleTermEdit={handleTermEdit} side="to"/> }
-            
+            <Editable
+                initialState={<div title="Click to edit" className="List__term-to">{_term.to}</div>}
+                editState={<ListTermInput _term={_term} handleTermEdit={handleTermEdit} side="to" />}
+
             />
 
             { !isEditing && confirmingDelete &&

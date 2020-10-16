@@ -72,7 +72,7 @@ dbRouter.post('/u/', (req, res) => {
 
 dbRouter.get('/listsbyuser/:username', (req, res) => {
     const username = req.params.username;
-    List.find({ owner: username }, '_id name', (err, found) => {
+    List.find({ owner: username }, '-content', (err, found) => {
         res.json(found);
     })
 })

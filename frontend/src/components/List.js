@@ -1,18 +1,18 @@
-import React, { memo, useCallback, useMemo, useState, useEffect } from "react";
+import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import './css/List.css';
 import { useRouteProps } from '../hooks/routerHooks';
-import { getListFromDB } from '../helpers/db.api';
+import { getListFromDB, updateList } from '../helpers/db.api';
 import ListTerm from './ListTerm'
+import { ListContext } from '../context/ListContext';
 
 const List = memo((props) => {
-    const [error, setError] = useState(null);
     const [list, setList] = useState(null);
     const [terms, setTerms] = useState(null);
     const { params, location } = useRouteProps();
+    const { listContextValue, setListContextValue } = useContext(ListContext);
 
     function updateTerms() {
-        try {
             setTerms(list.content.map((term, idx) => {
                 let termProps = {
                     handleTermDelete,
@@ -25,20 +25,17 @@ const List = memo((props) => {
                     <ListTerm {...termProps} />
                 )
             }))
-        }
-        catch {
-            setError('content-less list returned from db')
-        }
     }
 
     useEffect(() => {
         getListFromDB({ _id: params.id }).then(res => {
             setList(res);
+            setListContextValue(res)
         })
     }, [])
 
     useEffect(() => {
-        if (list) {
+        if (list && list.content && list.content.length > 0) {
             updateTerms();  
             /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list
                 this means I can't call updateTerms(res) inside the useEffect hook above (where I do getListFromDb.then(res => setList(res))) */

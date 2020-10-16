@@ -14,6 +14,7 @@ import NewList from '../components/NewList';
 import Test from './Test';
 
 import LoginProvider from '../context/LoginContext';
+import { ListProvider } from '../context/ListContext';
 
 const App = memo(() => {
     return (
@@ -40,12 +41,14 @@ const App = memo(() => {
                             </Route>
 
                             {/* list routes @todo: nest inside user routes */}
-                            <Route path="/list">
-                                <Route path="/:id*">
-                                    <Route path="/review" element={<Review />} />
-                                    <Route path="/" element={<List />} />
+                            <ListProvider>
+                                <Route path="/list">
+                                    <Route path="/:id*">
+                                        <Route path="/review" element={<Review />} />
+                                        <Route path="/" element={<List />} />
+                                    </Route>
                                 </Route>
-                            </Route>
+                            </ListProvider>
 
                             {/* catchall 404 route */}
                             <Route path="*" element={<div>404</div>} />

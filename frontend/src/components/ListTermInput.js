@@ -1,10 +1,6 @@
-/**
-     * @param   {string}   props.side    'from'/'to'
-     */
-    
-import React from "react";
+import React, { memo } from "react";
 
-const ListTermInput = ({ _term, handleTermEdit, side }) => {
+const ListTermInput = memo(({ _term, handleTermEdit, side }) => {
     
     return (
         <input
@@ -15,6 +11,6 @@ const ListTermInput = ({ _term, handleTermEdit, side }) => {
             type="text" name="" id="" defaultValue={_term[side]} 
         />
     )
-}
+})
 
 export default ListTermInput

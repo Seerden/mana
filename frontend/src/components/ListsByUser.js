@@ -10,6 +10,9 @@ const ListsByUser = memo((props) => {
     const [lists, setLists] = useState(null);
 
     useEffect(() => {
+        /**
+         * @todo convert this axios.get to a function
+         */
         axios.get(`/db/listsbyuser/${username}`).then(r => {
             setLists(r.data);
         })
@@ -17,7 +20,6 @@ const ListsByUser = memo((props) => {
 
     const handleClick = (e) => {
         e.preventDefault();
-        // console.log(location);
         navigate(`${location.pathname}/new`)
     }
 
@@ -32,12 +34,14 @@ const ListsByUser = memo((props) => {
                 <div>Loading lists...</div>
             }
             { lists &&
-                lists.map((l,idx) => {
+                
+                lists.map((l, idx) => {
                     return (
                         <div key={`link-list-${idx}`} className="Link-div">
                             <div className="Link-div__link">
                                 <Link className="Lists-link" to={`/list/${l._id}`}>{l.name}</Link>
                             </div>
+                            <div className="Lists__list-languages">{l.from} | {l.to}</div>
                         </div>
                     )
                 })

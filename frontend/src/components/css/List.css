@@ -15,7 +15,6 @@ ul {
 .List__term {
     font-size: 1rem;
     display: grid;
-    line-height: 1rem;
     overflow: hidden;
     width: 80%;
     max-width: 750px;
@@ -26,8 +25,13 @@ ul {
     border-bottom: 2px solid var(--background-secondary);
     border-left: 2px solid deepskyblue;
     border-radius: 0 10px 0 10px;
-
     transition: border-radius 200ms ease 100ms, transform 100ms ease, border-color 120ms ease;
+    padding: 0.5em 0;
+}
+
+.List__term div {
+    display: flex;
+    align-items: center;
 }
 
 .List__term:hover {
@@ -37,9 +41,18 @@ ul {
 
 .List__term-from, .List__term-to, .List__term-index {
     display: flex;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+    align-items: center !important;
+    /* padding: 0.5em 0; */
+}
+
+.List__term-index {
+    justify-content: center;
     align-items: center;
+    height: 100%;
+    margin: 0;
+    font-size: 0.7em;
+    color: #666;
+    user-select: none;
 }
 
 .List__term-to {
@@ -62,16 +75,14 @@ ul {
     transition: background-color 100ms ease
 }
 
-.List__term-input-wrapper input[type=text] {
-    display: flex;
-    line-height: inherit;
-    height: 100%;
+div > input[type=text].List__term-input {
+    display: inline-block;
     color: black;
-    background-color: #fff  !important;  /* shouldn't need important here. look at html structure */
+    background-color: azure;
     border-radius: 3px;
-    border: 0;
-    outline: 0;
-    padding: 0;
+    /* padding: 0.5em 0; */
+    /* border: 0; */
+    /* outline: 0; */
     margin: 0;
     margin-right: 0.2em;
     font-size: inherit;
@@ -123,15 +134,3 @@ ul {
     background-color: #2d2d2d
 }
 
-.List__term-index {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* background-color: deepskyblue; */
-    height: 100%;
-    margin: 0;
-    font-size: 0.7em;
-    color: #aaa;
-    /* border-left: 2px solid deepskyblue; */
-    user-select: none;
-}
