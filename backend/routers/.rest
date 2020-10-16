@@ -52,3 +52,5 @@ Content-Type: application/json
         ]
     }
 }
+###
+GET {{base}}/db/list?owner=seerden

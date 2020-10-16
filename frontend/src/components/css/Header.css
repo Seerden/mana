@@ -6,6 +6,8 @@
     background-color: #111;
     /* margin-bottom: 1em; */
     z-index: 1000;
+    height: 3rem;
+    width: 100%;
 }
 
 .NavLink {

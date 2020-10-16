@@ -1,0 +1,104 @@
+:root {
+    --review-width: 400px;
+}
+
+.Review {
+    width: 80%;
+    /* margin: 0 auto; */
+}
+
+.Review-head {
+    font-weight: 600;
+}
+
+.Review-owner, .Review-name {
+    color: deepskyblue;
+    margin: 0 0.3em;
+}
+
+.Review-current {
+    display: flex;
+    background-color: azure;
+    color: darkslategrey;
+    min-width: var(--review-width);
+    width: 80%;
+    max-width: 700px;
+    padding: 3em;
+    height: 140px;
+    box-shadow: 0 0 0.5em black;
+    justify-content: center;
+    align-items: center;
+    margin: 1em 0;
+    border-radius: 10px;
+    perspective: 700px;
+    transition: all 350ms;
+    font-weight: 200;
+}
+
+/* @todo rotation needs to be on a shadow element, because I don't want text content to be rotated (text becomes blurry, haven't found a fix) */
+/* note also that quickly hovering and unhovering causes the whole perspective to bug out */
+.Review-current:hover { 
+    transform: perspective(900px) rotateX(-90deg) translateZ(0);
+    transform-style: preserve-3d;
+    transform-origin: 50% 48%; 
+
+}
+
+.Review-buttons {
+    min-width: var(--review-width);
+    width: 80%;
+    max-width: 700px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.Review-button {
+    outline: none;
+    margin: none;
+    border: none;
+    color: azure;
+    box-shadow: 0 0 0.5em black;
+    margin: 0 1em;
+    width: 120px;
+    height: 30px;
+    /* font-weight: 600; */
+    font-family: 'Roboto';
+
+    transition: all 80ms ease-in
+}
+
+.Review-button:hover {
+    padding: 0;   /* padding is non-zero by default which causes 'shifting' effect of text */
+    transform: translateY(-1px) scale(1.03);
+    transform-style: preserve-3d;
+    transform: center;
+    box-shadow: 0 5px 1em -6px #333;
+
+}
+
+.fail, .pass {
+    background-color: var(--background-secondary);
+}
+
+.fail:hover {
+    background-color: orangered;
+}
+
+.pass:hover {
+    background-color: seagreen;
+}
+
+.Review-progress__wrapper {
+    width: 100vw;
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    height: 4px;
+    background-color: #555;
+}
+
+#Review-progress__bar {
+    background-color: deepskyblue;   
+    height: inherit;     
+    transition: width 300ms linear;
+}

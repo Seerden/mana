@@ -2,21 +2,25 @@ import React, { memo, useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './css/Lists.css'
+import { useRouteProps } from '../hooks/routerHooks';
 
-const ListsByUser = memo(({ history, location, match }) => {
-    const username = match.params.username;
+const ListsByUser = memo((props) => {
+    const { params, location, navigate } = useRouteProps();
+    const username = params.username;
     const [lists, setLists] = useState(null);
 
     useEffect(() => {
-        axios.get('/db/listsbyuser/seerden').then(r => {
+        /**
+         * @todo convert this axios.get to a function
+         */
+        axios.get(`/db/listsbyuser/${username}`).then(r => {
             setLists(r.data);
         })
     }, [])
 
     const handleClick = (e) => {
         e.preventDefault();
-        // console.log(location);
-        history.push(`${location.pathname}/new`)
+        navigate(`${location.pathname}/new`)
     }
 
     return (
@@ -30,12 +34,14 @@ const ListsByUser = memo(({ history, location, match }) => {
                 <div>Loading lists...</div>
             }
             { lists &&
-                lists.map((l,idx) => {
+                
+                lists.map((l, idx) => {
                     return (
                         <div key={`link-list-${idx}`} className="Link-div">
                             <div className="Link-div__link">
                                 <Link className="Lists-link" to={`/list/${l._id}`}>{l.name}</Link>
                             </div>
+                            <div className="Lists__list-languages">{l.from} | {l.to}</div>
                         </div>
                     )
                 })

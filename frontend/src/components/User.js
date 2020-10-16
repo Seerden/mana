@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { getUserFromDb } from '../helpers/backend.api';
+import { getUserFromDB } from '../helpers/backend.api';
+import { useRouteProps } from '../hooks/routerHooks';
 
-const User = ({history, location, match}) => {
-    const username = match.params.username;
+const User = (props) => {
+    const { params } = useRouteProps();
+    const username = params.username;
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        getUserFromDb(username, { populate: 'lists'}).then(res => {
+        getUserFromDB(username, { populate: 'lists'}).then(res => {
             setUser(res)
-            console.log(res.lists)
+            console.log(res);
+            // console.log(res.lists)
         })
 
     }, [username])

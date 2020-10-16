@@ -1,0 +1,133 @@
+.List {
+    min-width: 800px;
+}
+
+.List__name {
+    max-width: 750px;
+    border-bottom: 2px solid deepskyblue;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.List__term {
+    font-size: 1rem;
+    display: grid;
+    overflow: hidden;
+    word-break: break-all;
+    width: 80%;
+    max-width: 750px;
+    margin-bottom: 0.6em;
+    box-shadow: 0 0 0.7em #000;
+    border-top: 2px solid var(--background-secondary);
+    border-right: 2px solid var(--background-secondary);
+    border-bottom: 2px solid var(--background-secondary);
+    border-left: 2px solid deepskyblue;
+    border-radius: 0 10px 0 10px;
+    transition: border-radius 200ms ease 100ms, transform 100ms ease, border-color 120ms ease;
+    padding: 0.5em 0;
+}
+
+.List__term div {
+    display: flex;
+    align-items: center;
+}
+
+.List__term:hover {
+    border-radius: 0; 
+    transform: translate(1em,0);
+}
+
+.List__term-from, .List__term-to, .List__term-index {
+    display: flex;
+    align-items: center !important;
+    padding: 0 0;
+}
+
+.List__term-index {
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 0;
+    font-size: 0.7em;
+    color: #666;
+    user-select: none;
+}
+
+.List__term-to {
+    padding-right: 0.5em;
+}
+
+.List__term-remove {
+    display: flex;
+    background-color: var(--background-secondary);
+    color: #777;
+    box-shadow: 0 0 3px black;
+    border-radius: 3px;
+    border: none;
+    outline: 0;
+    justify-content: center;
+    place-self: center;
+    width: 2.5rem;
+    transition: background-color 100ms ease
+}
+
+div > input[type=text].List__term-input {
+    /* display: inline-block; */
+    color: black;
+    background-color: azure;
+    border-radius: 3px;
+    border: 0;
+    margin: 0;
+    margin-right: 0.2em;
+    font-size: inherit;
+    font-family: inherit;
+    text-indent: 0.5em;
+    height: 1.3rem;
+}
+
+.List__term-remove:hover {
+    background-color: orangered;
+    color: azure;
+}
+
+.List__term-remove-confirm {
+    display: flex;
+    place-self: center;
+    border-radius: 3px;
+}
+
+.remove-confirm-button {
+    color: azure;
+    font-size: 0.7rem;
+    outline: none;
+    border: none;
+    padding: 0.5em;
+    border-radius: 1px;
+    /* margin: 0.5em; */
+    width: 40px;
+    font-weight: 400;
+}
+
+.remove-keep, .remove-remove {
+    background-color: #555;
+    margin: 0 0.5em;
+    transition: all 150ms ease
+}
+
+.remove-keep:hover {
+    background-color: seagreen;
+}
+
+.remove-remove:hover {
+    background-color: orangered;
+}
+
+
+
+.List__term:nth-child(even) {
+    background-color: #2d2d2d
+}
+

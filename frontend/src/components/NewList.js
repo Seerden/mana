@@ -1,11 +1,13 @@
 import React, { useState, useEffect, memo } from 'react';
+import { useRouteProps } from '../hooks/routerHooks';
 import axios from 'axios';
 
 import './css/NewList.css';
 import NewListTerm from './NewListTerm';
 import LanguageInput from './LanguageInput';
 
-const NewList = memo(({ history, match, location }) => {
+const NewList = memo((props) => {
+    const { params } = useRouteProps();
     const [numTerms, setNumTerms] = useState(10)  // @TODO: allow user to set default number of terms when making new list
     const termEls = [];
     const [formOutput, setFormOutput] = useState(() => (
@@ -51,7 +53,7 @@ const NewList = memo(({ history, match, location }) => {
         // listOwner, listName, listFrom, listTo, listContent
         axios.post('/db/list', {
             newList: {
-                owner: match.params.username, // @TODO: replace
+                owner: params.username, // @TODO: replace
                 name: formOutput.listName,
                 from: formOutput.languages.from,
                 to: formOutput.languages.to,  // @TODO: make array input, also needs handleBlur() to be modified
