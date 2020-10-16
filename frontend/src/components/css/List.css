@@ -26,11 +26,6 @@ ul {
 
 }
 
-.List__content--sessions {
-    /* border: 2px solid red; */
-    /* padding: 1em; */
-}
-
 .Terms__header {
     display: grid;
     width: 80%;
