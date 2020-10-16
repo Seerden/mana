@@ -1,1 +1,0 @@
-Roadmap for Mana project.
