@@ -46,6 +46,9 @@ const List = memo((props) => {
         const updatedList = {...list}
         updatedList.content.splice(idx, 1);
         setList(updatedList);
+        setListContextValue(updatedList)
+        updateList({_id: updatedList._id, owner: updatedList.owner}, updatedList)
+            .then(r => console.log('removed item from list in db'))
     }
 
     return (

@@ -18,16 +18,18 @@ const Editable = memo(({ initialState, editState }) => {
     }
 
     const handleBlur = () => {
+        // @todo copy any existing onClick and append the new onClick functionality to it, so that I don't need to wrap the returned JSX in another div
+        // might be very difficult, since might be nested deeply. might be a lost cause
         setEditing(false);
     }
 
     return (
         <>
             { !editing &&
-                // React.cloneElement(initialState, {onClick: () => handleClick()})
-                <div onClick={handleClick}>
-                    {initialState}
-                </div>
+                React.cloneElement(initialState, {onClick: () => handleClick()})
+                // <div onClick={handleClick}>
+                //     {initialState}
+                // </div>
 
             }
             { editing &&

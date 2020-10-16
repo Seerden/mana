@@ -10,6 +10,9 @@ import './css/Review.css'
 const Review = memo((props) => {
     const n = 2; // number of times each term should be reviewed. @todo expand on this functionality
     const { params } = useRouteProps();
+    /**
+     * @todo refactor sessionStart, sessionEnd into single session state
+     */
     const [sessionStart, setSessionStart] = useState(() => new Date())
     const [sessionEnd, setSessionEnd] = useState(false);
     const [list, setList] = useState(null);

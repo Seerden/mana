@@ -2,6 +2,7 @@ import React, { memo, useContext, useState, useEffect } from "react";
 import Editable from '../wrappers/Editable';
 import ListTermInput from './ListTermInput';
 import { ListContext } from '../context/ListContext';
+import { updateList} from '../helpers/db.api';
 
 /**
  * ListTerm component
@@ -51,7 +52,14 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     */
     const handleTermEdit = (e, field) => {
         if (e.target.value && _term[field] !== e.target.value) {
-            setTerm({ ..._term, [field]: e.target.value })
+            let newTerm = { ..._term, [field]: e.target.value }
+            setTerm(newTerm)
+            let newListContent = [...listContextValue.content];
+            newListContent[idx] = {...newTerm};
+            let newList = {...listContextValue, content: [...newListContent]}
+            // setListContextValue(newList);
+            updateList({_id: listContextValue._id, owner: listContextValue.owner}, newList)
+                .then(r => console.log('List updated in database', r))
         }
     }
 

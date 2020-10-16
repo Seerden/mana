@@ -1,10 +1,7 @@
-// import mongoose
 const mongoose = require('mongoose');
-// import schemas 
+  mongoose.set('useFindAndModify', false);
 const { userSchema } = require('./schemas/userSchema');
 const { listSchema } = require('./schemas/listSchema');
-
-mongoose.set('useFindAndModify', false);
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@mana-cluster0.8vpgs.gcp.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 const dbConn = mongoose.createConnection(uri, {useNewUrlParser: true, useUnifiedTopology: true});

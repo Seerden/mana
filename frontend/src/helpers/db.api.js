@@ -8,6 +8,7 @@ export const getListFromDB = async (query) => {
      * @param   query   object with keys { _id, owner, name, from, to, content }, matching the properties of the list schema in the database
      */
 
+    axios.create({timeout: 2000}).interceptors.request.use(req => console.log('axios request:', req))
     return axios.get('/db/list/', {params: query})
         .then(r => r.data)
         .catch(e => {throw new Error('Could not get list from database:'); })
@@ -26,7 +27,8 @@ export const getListFromDB = async (query) => {
      *                      - implement this field udpating in the database     *      
      */
 export const updateList = async (query, body) => {
-   return axios.post('/db/list/update', { 
+    axios.create({timeout: 2000}).interceptors.request.use(req => console.log('axios request:', req))
+    return axios.post('/db/list/update', { 
         data: {
             query,
             body

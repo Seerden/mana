@@ -1,20 +1,16 @@
 require('dotenv').config();
 
 const express = require('express');
-const bodyParser = require('body-parser');
 const { dbRouter } = require('./routers/dbRouter');
 const { testRouter } = require('./routers/testRouter');
 const app = express();
 
 const log = (req, res, next) => {
-    console.log(req.originalUrl);
+    console.log(`${new Date()} - ${req.originalUrl}`);
     next()
 }
 
 app.use(log)
-
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/db', dbRouter)
 app.use('/test', testRouter)
