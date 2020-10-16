@@ -1,6 +1,4 @@
 import React, { useState,useEffect, createContext } from "react";
-import { useLogState } from '../hooks/state';
-import { updateList } from '../helpers/db.api';
 
 export const ListContext = createContext(null);
 

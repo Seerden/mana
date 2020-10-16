@@ -8,26 +8,28 @@ const LanguageInput = memo(({ formOutput, setFormOutput }) => {
         e.preventDefault();
         const t = e.currentTarget;
 
-        if ( t.value ) {
-            if ( t.value && formOutput.languages[t.name] !== t.value ) {
-                setFormOutput({...formOutput, languages: {...formOutput.languages, [t.name]: t.value}})
+        if (t.value) {
+            if (t.value && formOutput.languages[t.name] !== t.value) {
+                setFormOutput({ ...formOutput, languages: { ...formOutput.languages, [t.name]: t.value } })
             }
         }
     }
 
     return (
-        <div className="LanguageInput">
-           
-            <div className="Language__From-wrapper">
-                <label htmlFor="from">From:</label>
-                <input onBlur={handleBlur} type="text" name="from" />
-            </div>
-            <div className="Language__To-wrapper">
-                <label htmlFor="to">To:</label>
-                <input onBlur={handleBlur} type="text" name="to" />
+        <div className="LanguageInput__wrapper">
+            <div className="LanguageInput__header">Languages</div>
+            <div className="LanguageInput">
+                <div className="LanguageInput__side">
+                    <label htmlFor="from">Main</label>
+                    <input onBlur={handleBlur} type="text" name="from" />
+                </div>
+                <div className="LanguageInput__side">
+                    <label htmlFor="to">Secondary</label>
+                    <input onBlur={handleBlur} type="text" name="to" />
+                </div>
             </div>
 
-            
+
         </div>
     )
 })

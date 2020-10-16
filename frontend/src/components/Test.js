@@ -1,50 +1,32 @@
-// import React, { useState } from "react";
-
-// const Test = (props) => {
-//     const [file, setFile] = useState(null);
-//     const handleFileWrite = async () => {
-//         const [fileToHandle] = await window.showOpenFilePicker();
-//         const f = await fileToHandle.getFile();
-//         setFile(await f.text())
-
-
-//     }
-
-//     return (
-//         <div className="Test">
-//             <input onClick={handleFileWrite}type="button" value="Open file"/>
-
-
-//         { file && 
-//             <div>{JSON.stringify(file)}</div>
-//         }
-//         </div>
-//     )
-// }
-
-// export default Test
-
-
-/*  */
 
 import React from "react";
-import Editable from '../wrappers/Editable';
 
+/**
+ * NewList test component
+ * @param {*} props 
+ */
 const Test = (props) => {
+    let numTerms = 10;  // @todo: set global defaults like this in database or backend somewhere
 
     return (
-        <Editable
-            initialState={
-                <div>
-                    <div onClick={() => console.log('clicked')} className="class-initial">Initial</div>
-                </div>
-            }
-            editState={
-                <div>
-                    <input autoFocus type="text" />
-                </div>
-            }
-        />
+        <div className="Test">hi</div>
+        // <div className="NewList__wrapper">
+        //     <h1 className="NewList__header">Create a new list</h1>
+
+        //     <form className="NewList__form">
+        //         <div className="NewList__form--languages">
+        //             <div className="NewList__form--languages--side">
+        //                 <label htmlFor="language-from">Original language:</label>
+        //                 <input type="text" name="language-from" />
+        //             </div>
+        //             <div className="NewList__form--languages--side">
+        //                 <label htmlFor="language-to">Translated language:</label>
+        //                 <input type="text" name="language-to" />
+        //             </div>
+        //         </div>
+        //         <NewTerm/>
+        //     </form>
+        // </div>
     )
 }
 

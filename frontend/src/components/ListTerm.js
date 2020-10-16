@@ -16,7 +16,9 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     const { listContextValue, setListContextValue } = useContext(ListContext);
 
     const termStyles = {
-        gridTemplateColumns: `2rem repeat(2, minmax(40%, min-content)) auto`,
+        gridTemplateColumns: !confirmingDelete 
+            ? `2rem repeat(2, minmax(40%, min-content)) auto`
+            : `2rem minmax(40%, min-content) repeat(2, auto)`,
     }
     const termDeleteStyles = {
         backgroundColor: confirmingDelete ? '' : null,
@@ -57,7 +59,7 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
             let newListContent = [...listContextValue.content];
             newListContent[idx] = {...newTerm};
             let newList = {...listContextValue, content: [...newListContent]}
-            // setListContextValue(newList);
+            setListContextValue(newList);
             updateList({_id: listContextValue._id, owner: listContextValue.owner}, newList)
                 .then(r => console.log('List updated in database', r))
         }

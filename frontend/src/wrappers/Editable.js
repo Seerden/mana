@@ -26,7 +26,7 @@ const Editable = memo(({ initialState, editState }) => {
     return (
         <>
             { !editing &&
-                React.cloneElement(initialState, {onClick: () => handleClick()})
+                React.cloneElement(initialState, { onClick: () => handleClick() })
                 // <div onClick={handleClick}>
                 //     {initialState}
                 // </div>
