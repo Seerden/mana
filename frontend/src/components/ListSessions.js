@@ -17,7 +17,7 @@ const ListSessions = ({ sessions }) => {
                             <span>End</span>
                             <span># Terms</span>
                         </div>
-                        {sessions && sessions.reverse().map(s => <Session session={s} />)}
+                        {sessions && sessions.reverse().map(s => <Session key={`session-${s.start}`} session={s} />)}
                     </div>
                 </>
             }

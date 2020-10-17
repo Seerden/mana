@@ -3,52 +3,89 @@
 }
 
 .Review {
+    min-width: var(--review-width);
     width: 80%;
-    /* margin: 0 auto; */
+    padding: 1em;
+    margin: 0 auto;
+    box-shadow: 0 0 1em black;
+    border-radius: 5px;
+    border: 2px solid #333;
 }
 
-.Review-head {
+.Review__title {
     font-weight: 600;
+    font-size: 1.6rem;
+    padding-bottom: 0.2em;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #333;
 }
 
-.Review-owner, .Review-name {
+.Review__post {
+    border-left: 2px solid greenyellow;
+    padding-left: 1em;
+}
+
+.Review__title--owner, .Review__title--name {
     color: deepskyblue;
     margin: 0 0.3em;
 }
 
-.Review-current {
+.Review__current, .Review__buttons {
     display: flex;
-    background-color: azure;
-    color: darkslategrey;
+    max-width: 600px;
+    width: 90%;
+    margin: 1em auto;
+}
+
+.Review__current {
+    /* color: darkslategrey; */
     min-width: var(--review-width);
-    width: 80%;
-    max-width: 700px;
     padding: 3em;
     height: 140px;
-    box-shadow: 0 0 0.5em black;
+    box-shadow: 0 0 1em black;
     justify-content: center;
     align-items: center;
-    margin: 1em 0;
-    border-radius: 10px;
+    border-radius: 5px;
     perspective: 700px;
-    transition: all 350ms;
     font-weight: 200;
+}
+
+.ReviewCard {
+    min-width: var(--review-width);
+    height: 100%;
+    background: linear-gradient(to bottom, #eee, #aaa);
+    color: darkslategrey;
+    line-height: 1rem;
+    display: flex;
+    place-self: center;
+    /* align-items: center; */
 }
 
 /* @todo rotation needs to be on a shadow element, because I don't want text content to be rotated (text becomes blurry, haven't found a fix) */
 /* note also that quickly hovering and unhovering causes the whole perspective to bug out */
-.Review-current:hover { 
-    transform: perspective(900px) rotateX(-90deg) translateZ(0);
+.flip { 
+    transform: perspective(500px);
     transform-style: preserve-3d;
-    transform-origin: 50% 48%; 
+    transform-origin: 50% 50%; 
+
+    animation: 250ms linear flip;
+    animation-fill-mode: forwards;
 
 }
 
-.Review-buttons {
+@keyframes flip {
+    0% {
+    }
+    50% {
+        transform: rotateX(90deg)
+    }
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
+.Review__buttons {
     min-width: var(--review-width);
-    width: 80%;
-    max-width: 700px;
-    display: flex;
     justify-content: space-around;
 }
 
@@ -80,11 +117,11 @@
     background-color: var(--background-secondary);
 }
 
-.fail:hover {
+.fail:hover, .fail:focus {
     background-color: orangered;
 }
 
-.pass:hover {
+.pass:hover, .pass:focus {
     background-color: seagreen;
 }
 

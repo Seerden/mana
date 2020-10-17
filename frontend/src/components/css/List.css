@@ -1,5 +1,6 @@
 .List {
-    min-width: 800px;
+    /* max-width: 1200px; */
+    margin: 0 auto;
 }
 
 .List__name {
@@ -17,7 +18,7 @@ ul {
     display: grid;
     width: 80%;
     margin: 0 auto;
-    grid-template-columns: 3fr 2fr;
+    grid-template-columns: 5fr 2fr;
 }
 
 .List__content--header {
@@ -51,7 +52,7 @@ ul {
     font-size: 1rem;
     display: grid;
     overflow: hidden;
-    word-break: break-all;
+    line-break: strict;
     width: 80%;
     max-width: 750px;
     margin-bottom: 0.6em;
@@ -105,8 +106,10 @@ ul {
     outline: 0;
     justify-content: center;
     place-self: center;
-    width: 2.5rem;
     max-height: 2.5rem;
+    width: 100%;
+    max-width: 2.5rem;
+    /* margin-right: 1rem; */
     height: 100%;
     transition: background-color 100ms ease
 }

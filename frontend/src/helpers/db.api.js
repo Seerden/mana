@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-axios.create({timeout: 2000}).interceptors.request.use(req => console.log('axios request:', req))
+// axios.interceptors.request.use(req => {
+//     console.log('axios request:', req)
+//     return req
+// })
 
 export const getListFromDB = async (query) => {
     /**
@@ -8,10 +11,9 @@ export const getListFromDB = async (query) => {
      * @param   query   object with keys { _id, owner, name, from, to, content }, matching the properties of the list schema in the database
      */
 
-    axios.create({timeout: 2000}).interceptors.request.use(req => console.log('axios request:', req))
-    return axios.get('/db/list/', {params: query})
+    return axios.get('/db/list/', { params: query })
         .then(r => r.data)
-        .catch(e => {throw new Error('Could not get list from database:'); })
+        .catch(e => console.log(e))
 }
 
 /**
@@ -27,8 +29,7 @@ export const getListFromDB = async (query) => {
      *                      - implement this field udpating in the database     *      
      */
 export const updateList = async (query, body) => {
-    axios.create({timeout: 2000}).interceptors.request.use(req => console.log('axios request:', req))
-    return axios.post('/db/list/update', { 
+    return axios.post('/db/list/update', {
         data: {
             query,
             body
@@ -37,6 +38,6 @@ export const updateList = async (query, body) => {
         .then(res => res.data)
         .catch(e => {
             console.log(e.response)
-            throw new Error (e)
+            throw new Error(e)
         })
 }

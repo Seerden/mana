@@ -62,7 +62,7 @@ const List = memo((props) => {
                         <h1 className="List__name">{list.name} ({list.from} to {list.to})</h1>
                         <Link className="Link-button" to={`${location.pathname}/review`}>Review!</Link>
                         <div className="List__content">
-                            
+
                             <div className="List__content--terms">
                                 <div className="List__content--header">
                                     Terms
@@ -74,12 +74,16 @@ const List = memo((props) => {
                                 </div>
                                 <ul>
                                     {terms}
-                                </ul>    
+                                </ul>
                             </div>
                             <div className="List__content--sessions">
-                                <ListSessions sessions={(listContextValue && listContextValue.sessions) ? listContextValue.sessions : null}/>
+                                { listContextValue && listContextValue.sessions && listContextValue.sessions.length > 0 
+                                    ?
+                                     <ListSessions sessions={(listContextValue && listContextValue.sessions) ? listContextValue.sessions : null}/>
+                                    : <div>No sessions recorded for this list</div>
+                                }
                             </div>
-                            
+
                         </div>
 
                     </>

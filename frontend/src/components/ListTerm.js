@@ -17,7 +17,7 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
 
     const termStyles = {
         gridTemplateColumns: !confirmingDelete 
-            ? `2rem repeat(2, minmax(40%, min-content)) auto`
+            ? `2rem repeat(2, minmax(40%, min-content)) 2rem`
             : `2rem minmax(40%, min-content) repeat(2, auto)`,
     }
     const termDeleteStyles = {
@@ -66,6 +66,7 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     }
 
     return (
+        <>
         <li
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
@@ -107,6 +108,7 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
                 />
             }
         </li>
+        </>
     )
 })
 

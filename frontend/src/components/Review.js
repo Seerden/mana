@@ -1,15 +1,18 @@
 /* eslint react-hooks/exhaustive-deps: 0 */
 
-import React, { memo, useEffect, useState, useReducer } from "react";
+import React, { memo, useEffect, useState, useRef, useReducer } from "react";
+import { Link } from 'react-router-dom';
 import { useRouteProps } from '../hooks/routerHooks';
 import { useLogState } from '../hooks/state';
 import { getListFromDB, updateList } from '../helpers/db.api';
 import { buildTermList } from '../helpers/review.helpers';
-import './css/Review.css'
+import ReviewCard from './ReviewCard';
+import './css/Review.css';
+import dayjs from 'dayjs';
 
 const Review = memo((props) => {
     const n = 2; // number of times each term should be reviewed. @todo expand on this functionality
-    const { params } = useRouteProps();
+    const { params, location } = useRouteProps();
     /**
      * @todo refactor sessionStart, sessionEnd into single session state
      */
@@ -17,17 +20,21 @@ const Review = memo((props) => {
     const [sessionEnd, setSessionEnd] = useState(false);
     const [list, setList] = useState(null);
     const [passCount, setPassCount] = useState(0);
-
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, []);
     const [progress, setProgress] = useState(0);  // percentage of terms marked 'pass' in the session
+
+    const failRef = useRef(null);
+    const passRef = useRef(null);
+
+    useLogState('params', params)
 
     function termReducer(terms, action) {
         /* handle what happens to current term after pass/fail is chosen */
         switch (action.type) {
             case 'init':
                 return action.payload
-            case 'pass': 
-                setPassCount(count => count + 1)
+            case 'pass':
+                // setPassCount(passCount+1)
                 // remove term from deck
                 return terms.slice(1,);
             case 'fail':
@@ -36,7 +43,7 @@ const Review = memo((props) => {
                     @current:   re-insert the term at a random index */
                 let newIndex = Math.floor((terms.length + 1) * Math.random());
 
-                let newTerms = [...terms]
+                let newTerms = [...terms];
                 let currentTerm = newTerms.shift();
                 newTerms.splice(newIndex, 0, currentTerm);
                 return newTerms
@@ -45,25 +52,28 @@ const Review = memo((props) => {
         }
     }
 
-    function updateSessionHistory(term, passfail){
+    function updateSessionHistory(term, passfail) {
         const content = list.content;
         let idx = content.findIndex(i => i.to === term.to && i.from === term.from)
-        if (!content[idx].history || content[idx].history.length === 0 ) {
-            content[idx].history = [{date: Date.now(), content: []}]
+        if (!content[idx].history || content[idx].history.length === 0) {
+            content[idx].history = [{ date: Date.now(), content: [] }]
         }
         if (content[idx].history.length > 0) {
             let histLen = (content[idx].history).length
-            let lastHist = content[idx].history[histLen-1];
-            if (lastHist.date < sessionStart) {
-                content[idx].history.push({date: sessionStart, content: [passfail]})
+            let lastHist = content[idx].history[histLen - 1];
+            
+            console.log(dayjs(lastHist.date) - dayjs(sessionStart));
+
+            if (dayjs(lastHist.date) < dayjs(sessionStart)) {
+                content[idx].history.push({ date: sessionStart, content: [passfail] })
             } else {
-                content[idx].history[histLen-1].content.push(passfail)
+                content[idx].history[histLen - 1].content.push(passfail)
             }
         }
-        let newList = {...list, content: [...content]};
+        let newList = { ...list, content: [...content] };
         setList(newList);
         return newList
-    }    
+    }
 
     useEffect(() => {
         getListFromDB({ _id: params.id }).then(res => {
@@ -79,6 +89,37 @@ const Review = memo((props) => {
     }, [])
 
     useEffect(() => {
+        window.addEventListener('keydown', handleKeydown)
+        return () => window.removeEventListener('keydown', handleKeydown)
+    }, [futureTerms])
+
+    const handleKeydown = e => {
+        // e.preventDefault();
+        let ref;
+        switch (e.code) {
+            case 'ArrowLeft':
+                ref = failRef;
+                break;
+            case 'ArrowRight':
+                ref = passRef
+                break;
+            default:
+                return
+        }
+
+        if (ref.current) {
+            ref.current.focus()
+            ref.current.click();
+            setTimeout(() => {
+                if (ref.current) {
+                    ref.current.blur()
+                }
+            }, 100)
+        }
+
+    }
+
+    useEffect(() => {
         if (list && futureTerms) {
             let sessionLength = list.content.length * n;
             let termsCompleted = sessionLength - futureTerms.length;
@@ -89,24 +130,20 @@ const Review = memo((props) => {
     function handleClick(e, passfail) {
         e.preventDefault();
         let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
-        reduceFutureTerms({type: passfail})
+        reduceFutureTerms({ type: passfail })
 
-        if (passCount === n*list.content.length-1) {
-            /*  handle session completion:
-                - push list with updated term histories and updated session history to db
-                - show post-session stats
-                    - include redirect button (back to lists or list/:id)
-             */
+        if (passfail === 'pass') {setPassCount(passCount+1)}
+        if (passCount === (n * list.content.length - 1) && passfail == 'pass') {
             let end = new Date()
             setSessionEnd(end)
             console.log('Session completed...');
 
-            updatedList.sessions.push({start: sessionStart, end: end, numTerms: n*updatedList.content.length})
-            updateList({_id: params.id, owner: list.owner}, updatedList)  
-            /**  although updateSessionHistory is called here, which updates 'list' (which is a piece of state), this 'list' in updateList still gets the new state value.. 
-            *    I thought, since these occur in the same render cycle, that 'list' here would only have access to the list state from before updateSessionHistory() was called
-            *    @todo investigate. meanwhile, use updatedList since that's certain to be the correct value
-            */
+            updatedList.sessions.push({ start: sessionStart, end: end, numTerms: n * updatedList.content.length })
+            updateList({ _id: params.id, owner: list.owner }, updatedList)
+                /**  although updateSessionHistory is called here, which updates 'list' (which is a piece of state), this 'list' in updateList still gets the new state value.. 
+                *    I thought, since these occur in the same render cycle, that 'list' here would only have access to the list state from before updateSessionHistory() was called
+                *    @todo investigate. meanwhile, use updatedList since that's certain to be the correct value
+                */
                 .then(res => console.log(res))
                 .catch(err => console.log(err))
 
@@ -116,23 +153,22 @@ const Review = memo((props) => {
     return (
         <div className="Review">
             { list &&
-                <div className="Review-head">
+                <div className="Review__title">
                     Reviewing
-                        <span className="Review-name">{list.name}</span>
+                    <span className="Review__title--name">{list.name}</span>
                     by
-                        <span className="Review-owner">{list.owner}</span>
+                    <span className="Review__title--owner">{list.owner}</span>
                 </div>
             }
 
             { !sessionEnd && futureTerms.length > 0 &&
                 <>
-                    <div className="Review-current">
-                        {futureTerms[0].to} | {futureTerms[0].from}
-                    </div>
+                    <ReviewCard term={futureTerms[0]} />
+                    {/* {futureTerms[0].to} | {futureTerms[0].from} */}
 
-                    <div className="Review-buttons">
-                        <input onClick={(e) => handleClick(e, 'fail')} className="Review-button fail" type="button" value="Fail" />
-                        <input onClick={(e) => handleClick(e, 'pass')} className="Review-button pass" type="button" value="Pass" />
+                    <div className="Review__buttons">
+                        <input ref={failRef} onClick={(e) => handleClick(e, 'fail')} className="Review-button fail" type="button" value="Fail" />
+                        <input ref={passRef} onClick={(e) => handleClick(e, 'pass')} className="Review-button pass" type="button" value="Pass" />
                     </div>
 
                     <div className="Review-progress__wrapper">
@@ -141,11 +177,16 @@ const Review = memo((props) => {
                 </>
             }
 
-            { sessionEnd && 
-                <div className="Review-end">
-                    Session completed.
+            { sessionEnd &&
+                <div className="Review__post">
+                    <h2>
+                        Session completed.
+                    </h2>
                     <div>Started on {sessionStart.toISOString()}</div>
-                    <div className="">Completed on {sessionEnd.toISOString()}</div>
+                    <div>Completed on {sessionEnd.toISOString()}</div>
+                    {/* number of terms reviewed */}
+                    {/* redirect link */}
+                    <Link className="Link-button" to={`/list/${params.id}`}>Back to list</Link>
                 </div>
             }
 
