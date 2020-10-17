@@ -1,10 +1,53 @@
+.ListsByUser {
+    --filter-height: 1.6rem;
+
+    width: 80%;
+    max-width: var(--width-container);
+    margin: 0 auto;
+}
+
+.Lists__list--languages {
+    display: flex;
+    justify-content: flex-end;
+}
+.Lists__list--languages span {
+    display: inline-flex;
+    width: 100px;
+    justify-content: flex-end;
+}
+
+.Lists__filter {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    line-height: var(--filter-height);
+    width: 100%;
+    
+}
+#Lists__filter--filter {
+    border-bottom: 2px solid deepskyblue;
+    width: 250px;
+    height: 2rem;
+    border-radius: 2px;
+    background-color: #282828;
+    display: flex;
+    justify-self: flex-end;
+    
+}
+
+#Lists__filter--value {
+    display: block;
+    overflow: hidden;
+    font-size: var(--filter-height);
+    padding: 0.2em 0;
+}
+
 .Link-div {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
 
     margin: 0.5em;
     border: 2px solid #111;
-    padding: 0.8em;
+    padding: 0.8em 2rem;
     border-radius: 3px;
     box-shadow: 0 0 0.7em 0 black;
     border: 2px solid var(--background-secondary)
@@ -14,6 +57,8 @@
     background-color: #282828;
 
 }
+
+
 
 .Lists-link {
     position: relative;

@@ -21,15 +21,19 @@
     border: 1px solid #444;
     background-color: #333;
     border-radius: 1px;
+    width: 80%;
+    max-width: 800px;
 }
 
 
 /*  */
 
 .NewList {
-    border: 2px solid deepskyblue;
-    padding: 1em;
+    border: 1px solid deepskyblue;
+    margin: 2rem;
+    padding: 2em;
     background-color: #1d1d1d;
+    box-shadow: 0 0 1em black;
 }
 
 /* .NewList__Terms {

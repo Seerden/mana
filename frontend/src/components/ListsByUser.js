@@ -3,11 +3,14 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './css/Lists.css'
 import { useRouteProps } from '../hooks/routerHooks';
+import { useLogState } from '../hooks/state';
 
 const ListsByUser = memo((props) => {
     const { params, location, navigate } = useRouteProps();
     const username = params.username;
     const [lists, setLists] = useState(null);
+    const [filter, setFilter] = useState('');
+    const [elements, setElements] = useState(null);
 
     useEffect(() => {
         /**
@@ -17,10 +20,33 @@ const ListsByUser = memo((props) => {
             setLists(r.data);
         })
     }, [])
+    useEffect(() => {
+        if (lists) {
+            setElements(makeListsEl(lists, filter))
+        }
+    }, [lists])
 
-    const handleClick = (e) => {
-        e.preventDefault();
-        navigate(`${location.pathname}/new`)
+    const makeListsEl = (lists, filter) => {
+        return lists
+            .map((l, idx) => {
+                let condition = (filter && filter.length > 0 && (l.name).toLowerCase().includes(filter.toLowerCase()))
+                if (condition || filter.length === 0 || filter === '') {
+                    return (
+                        <div key={`link-list-${idx}`} className="Link-div">
+                            <div className="Link-div__link">
+                                <Link className="Lists-link" to={`/list/${l._id}`}>{l.name}</Link>
+                            </div>
+                            <div className="Lists__list--languages"><span>{l.from}</span><span>{l.to}</span></div>
+                        </div>
+                    )
+                }
+            })
+            .filter(el => el !== undefined)
+    }
+    const handleFilterChange = (e) => {
+        let val = e.currentTarget.value
+        setFilter(val)
+        setElements(makeListsEl(lists, val))
     }
 
     return (
@@ -28,23 +54,34 @@ const ListsByUser = memo((props) => {
             <h1 className="PageHead">
                 Lists by u/{username}
             </h1>
-            <input type="button" value="New List" onClick={handleClick}/>
+            <Link className="Link-button" to={`${location.pathname}/new`}>New</Link>
 
             { !lists &&
                 <div>Loading lists...</div>
             }
+
             { lists &&
-                
-                lists.map((l, idx) => {
-                    return (
-                        <div key={`link-list-${idx}`} className="Link-div">
-                            <div className="Link-div__link">
-                                <Link className="Lists-link" to={`/list/${l._id}`}>{l.name}</Link>
-                            </div>
-                            <div className="Lists__list-languages">{l.from} | {l.to}</div>
-                        </div>
-                    )
-                })
+                <div className="Lists__filter">
+
+                    <span id="Lists__filter--value">
+                        {filter ? `Filtering by '${filter}'` : `Showing all lists`}
+                    </span>
+                    <input
+                        onChange={handleFilterChange}
+                        placeholder="filter lists by name"
+                        id="Lists__filter--filter"
+                        type="text"
+                        name="filter"
+                        value={filter}
+                    />
+
+                </div>
+            }
+
+            { lists &&
+                <div className="Lists__wrapper">
+                    {elements}
+                </div>
             }
         </div>
     )
@@ -53,5 +90,3 @@ const ListsByUser = memo((props) => {
 export default ListsByUser;
 
 // @ TODO | memoize lists so I don't have to call DB every single time
-
-// @ TODO: scrolling through this page: links go over header. fix header position/z-index

@@ -118,3 +118,5 @@ export default ListTerm
 
         put a wrapper around the term/edit to assure dimensions match
 */
+
+/* @todo fix widescreen grid (too much empty space between terms and sessions) */

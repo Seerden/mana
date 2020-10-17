@@ -3,6 +3,7 @@
     --text-dark: #222;
     --background-secondary: #333;
     --indent: 0.5em;
+    --width-container: 800px;
 }
 
 html {
@@ -39,6 +40,8 @@ h1 {
     border-radius: 5px;
     color: black;
     text-decoration: none;
+    outline:none;
+    border: none;
 }
 
 .Link-button:hover {
