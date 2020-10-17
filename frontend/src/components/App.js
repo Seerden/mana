@@ -4,12 +4,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './css/App.css';
 
 import Header from './Header';
-import Review from './Review';
+import Review from './review/Review';
 import List from './List';
-import User from '../components/User';
-import Sets from '../components/Sets';
-import ListsByUser from '../components/ListsByUser';
-import NewList from '../components/NewList';
+import User from './User';
+import Sets from './Sets';
+import ListsByUser from './ListsByUser';
+import NewList from './NewList';
 
 import Test from './Test';
 

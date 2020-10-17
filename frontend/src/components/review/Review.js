@@ -1,26 +1,22 @@
-/* eslint react-hooks/exhaustive-deps: 0 */
-
 import React, { memo, useEffect, useState, useRef, useReducer } from "react";
 import { Link } from 'react-router-dom';
-import { useRouteProps } from '../hooks/routerHooks';
-import { useLogState } from '../hooks/state';
-import { getListFromDB, updateList } from '../helpers/db.api';
-import { buildTermList } from '../helpers/review.helpers';
+import { useRouteProps } from '../../hooks/routerHooks';
+import { useLogState } from '../../hooks/state';
+import { getListFromDB, updateList } from '../../helpers/db.api';
+import { buildTermList } from '../../helpers/review.helpers';
 import ReviewCard from './ReviewCard';
 import './css/Review.css';
 import dayjs from 'dayjs';
 
 const Review = memo((props) => {
     const n = 2; // number of times each term should be reviewed. @todo expand on this functionality
-    const { params, location } = useRouteProps();
-    /**
-     * @todo refactor sessionStart, sessionEnd into single session state
-     */
+    const { params } = useRouteProps();
     const [sessionStart, setSessionStart] = useState(() => new Date())
     const [sessionEnd, setSessionEnd] = useState(false);
     const [list, setList] = useState(null);
     const [passCount, setPassCount] = useState(0);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, []);
+    const [currentCard, setCurrentCard] = useState(null);
     const [progress, setProgress] = useState(0);  // percentage of terms marked 'pass' in the session
 
     const failRef = useRef(null);
@@ -59,10 +55,8 @@ const Review = memo((props) => {
             content[idx].history = [{ date: Date.now(), content: [] }]
         }
         if (content[idx].history.length > 0) {
-            let histLen = (content[idx].history).length
+            let histLen = content[idx].history.length
             let lastHist = content[idx].history[histLen - 1];
-            
-            console.log(dayjs(lastHist.date) - dayjs(sessionStart));
 
             if (dayjs(lastHist.date) < dayjs(sessionStart)) {
                 content[idx].history.push({ date: sessionStart, content: [passfail] })
@@ -75,26 +69,29 @@ const Review = memo((props) => {
         return newList
     }
 
-    useEffect(() => {
+    useEffect(() => { // get list from database and initialize futureTerms
         getListFromDB({ _id: params.id }).then(res => {
-            /* the three lines below just serve to filter the terms' _id properties
-            could possibly be a single destructing expression, but it works fine as is */
-            let _list = res;
-            setList(_list);
-
-            let toReview = (buildTermList(_list.content, n))
+            setList(res);
+            let toReview = (buildTermList(res.content, n))
             reduceFutureTerms({ type: 'init', payload: toReview })
         })
 
     }, [])
 
-    useEffect(() => {
+    useEffect(() => {  // add keydown listener, create <ReviewCard />
+        if (futureTerms.length > 0) {
+            setCurrentCard(<ReviewCard term={futureTerms[0]} />)
+        }
+
         window.addEventListener('keydown', handleKeydown)
         return () => window.removeEventListener('keydown', handleKeydown)
     }, [futureTerms])
 
+    /**
+     * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
+     * @param {*} e event object
+     */
     const handleKeydown = e => {
-        // e.preventDefault();
         let ref;
         switch (e.code) {
             case 'ArrowLeft':
@@ -110,7 +107,7 @@ const Review = memo((props) => {
         if (ref.current) {
             ref.current.focus()
             ref.current.click();
-            setTimeout(() => {
+            setTimeout(() => {  // highlight button for UX
                 if (ref.current) {
                     ref.current.blur()
                 }
@@ -132,7 +129,7 @@ const Review = memo((props) => {
         let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
         reduceFutureTerms({ type: passfail })
 
-        if (passfail === 'pass') {setPassCount(passCount+1)}
+        if (passfail === 'pass') { setPassCount(passCount + 1) }
         if (passCount === (n * list.content.length - 1) && passfail == 'pass') {
             let end = new Date()
             setSessionEnd(end)
@@ -140,13 +137,12 @@ const Review = memo((props) => {
 
             updatedList.sessions.push({ start: sessionStart, end: end, numTerms: n * updatedList.content.length })
             updateList({ _id: params.id, owner: list.owner }, updatedList)
-                /**  although updateSessionHistory is called here, which updates 'list' (which is a piece of state), this 'list' in updateList still gets the new state value.. 
-                *    I thought, since these occur in the same render cycle, that 'list' here would only have access to the list state from before updateSessionHistory() was called
-                *    @todo investigate. meanwhile, use updatedList since that's certain to be the correct value
-                */
-                .then(res => console.log(res))
-                .catch(err => console.log(err))
-
+            /**  although updateSessionHistory is called here, which updates 'list' (which is a piece of state), this 'list' in updateList still gets the new state value.. 
+            *    I thought, since these occur in the same render cycle, that 'list' here would only have access to the list state from before updateSessionHistory() was called
+            *    @todo investigate. meanwhile, use updatedList since that's certain to be the correct value
+            */
+            // .then(res => console.log(res))
+            // .catch(err => console.log(err))
         }
     }
 
@@ -161,10 +157,9 @@ const Review = memo((props) => {
                 </div>
             }
 
-            { !sessionEnd && futureTerms.length > 0 &&
+            { !sessionEnd && currentCard &&
                 <>
-                    <ReviewCard term={futureTerms[0]} />
-                    {/* {futureTerms[0].to} | {futureTerms[0].from} */}
+                    {currentCard}
 
                     <div className="Review__buttons">
                         <input ref={failRef} onClick={(e) => handleClick(e, 'fail')} className="Review-button fail" type="button" value="Fail" />
@@ -179,13 +174,9 @@ const Review = memo((props) => {
 
             { sessionEnd &&
                 <div className="Review__post">
-                    <h2>
-                        Session completed.
-                    </h2>
+                    <h2>Session completed.</h2>
                     <div>Started on {sessionStart.toISOString()}</div>
                     <div>Completed on {sessionEnd.toISOString()}</div>
-                    {/* number of terms reviewed */}
-                    {/* redirect link */}
                     <Link className="Link-button" to={`/list/${params.id}`}>Back to list</Link>
                 </div>
             }
