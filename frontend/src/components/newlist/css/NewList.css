@@ -1,19 +1,50 @@
-.NewList {
-    border: 2px solid deepskyblue;
+.NewList__name {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
     padding: 1em;
-    background-color: #1d1d1d;
+    border-left: 2px solid deepskyblue;
+    border-radius: 2px;
+    margin-top: 1em;
+    max-width: 800px;
 }
 
-.NewList__Terms {
+.NewList__name label {
+    display: flex;
+    align-items: center;
+    color: deepskyblue;
+    font-weight: 600;
+}
+
+.NewList__name input[type=text] {
+    
+    margin-left: 1rem;
+    border: 1px solid #444;
+    background-color: #333;
+    border-radius: 1px;
+    width: 80%;
+    max-width: 800px;
+}
+
+
+/*  */
+
+.NewList {
+    border: 1px solid deepskyblue;
+    margin: 2rem;
+    padding: 2em;
+    background-color: #1d1d1d;
+    box-shadow: 0 0 1em black;
+}
+
+/* .NewList__Terms {
     max-height: 50vh;
     overflow-y: scroll;
-}
+} */
 
 .NewList__Header {
     grid-template-columns: 1fr 1fr;
     display: grid;
     width: 70%;
-    padding: 0;
     min-width: 200px;
 }
 
@@ -36,17 +67,29 @@
 
 .NewList__Terms-index {
     display: inline-flex;
-    align-self: center;
-    justify-self: flex-end;
+    place-self: center;
+    width: 1rem;
     /* padding-right: 0.2em; */
-    margin-right: 0.5em;
-    color: var(--text-light)
+    color: #888;
+    font-size: 0.8rem;
 
 }
 
+.NewList__Terms {
+    margin-top: 1em;
+    border-left: 2px solid deepskyblue;
+    max-width: 800px;
+}
+
+.NewList__Terms::before {
+    content: "Terms";
+    padding: 1em;
+    color: deepskyblue;
+    font-weight: 600;
+}
 
 .NewList__Terms-term {
-    width: 70%;
+    width: 80%;
     display: grid;
     grid-template-columns: 2em 1fr;
     margin-bottom: 5px;
@@ -58,26 +101,22 @@
 }
 
 .Term-fromto input[type=text] {
-    display: inline-flex;
-    align-items: center;
+    border: 1px solid #444;
+    border-left: 2px solid #444;
+    
     width: 95%;
-    border: none;
-    /* border-bottom: 1px solid var(--background-secondary); */
-    height: 2.5rem;
+    height: 1.5rem;
+    background-color: #333;
     line-height: 1.5em;
     transition: transform 200ms ease;
 }
 
 .Term-fromto input[type=text]:focus{
-    box-shadow: 0 0 1em 0 black;
-    background-color: #282828;
     border-left: 2px solid deepskyblue;
-    /* transform: scale(1.05);
-    transition: transform 100ms cubic-bezier(0.075, 0.82, 0.165, 1); */
 }
 
 /* webkit scrollbar: doesn't work on firefox! */
-.NewList__Terms::-webkit-scrollbar {
+/* .NewList__Terms::-webkit-scrollbar {
     width: 10px;
 }
 
@@ -86,4 +125,4 @@
 }
 .NewList__Terms::-webkit-scrollbar-thumb {
     background-color: deepskyblue;
-}
+} */

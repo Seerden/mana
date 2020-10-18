@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { useRouteProps } from '../hooks/routerHooks';
+import { useRouteProps } from '../../hooks/routerHooks';
 import axios from 'axios';
 
 import './css/NewList.css';
@@ -10,6 +10,15 @@ const NewList = memo((props) => {
     const { params } = useRouteProps();
     const [numTerms, setNumTerms] = useState(10)  // @TODO: allow user to set default number of terms when making new list
     const termEls = [];
+
+    // const [newList, setNewList] = useState({
+    //     owner: params.username,  // set to username from context or from pathname
+    //     name: null,
+    //     to: [],
+    //     from: null,
+    //     content: [],
+    // });
+
     const [formOutput, setFormOutput] = useState(() => (
         {
             listName: "",
@@ -38,9 +47,11 @@ const NewList = memo((props) => {
         setNumTerms(numTerms + 10);
     }
 
+
     const handleBlur = e => {
         e.preventDefault();
         const t = e.currentTarget;
+        console.log(t);
         if (t.value && t.value !== formOutput.listName) {
             console.log(t.value)
             setFormOutput({ ...formOutput, listName: t.value })
@@ -50,7 +61,6 @@ const NewList = memo((props) => {
     const handleSubmit = e => {
         e.preventDefault();
 
-        // listOwner, listName, listFrom, listTo, listContent
         axios.post('/db/list', {
             newList: {
                 owner: params.username, // @TODO: replace
@@ -71,15 +81,15 @@ const NewList = memo((props) => {
             </header>
 
             <form className="Form">
+                {/* Language input */}
                 <LanguageInput formOutput={formOutput} setFormOutput={setFormOutput} />
+
+                {/* List name input */}
                 <div className="NewList__name">
-                    <label htmlFor="name">List name:</label>
+                    <label htmlFor="name">List name</label>
                     <input onBlur={handleBlur} type="text" name="name" id="" />
                 </div>
-                <div className="NewList__Header">
-                    <span>Definition</span>
-                    <span>Meaning</span>
-                </div>
+                
                 <div className="NewList__Terms">
                     {termEls.length > 0 && termEls}
                 </div>

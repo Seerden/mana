@@ -1,8 +1,8 @@
 import React, { memo, useContext, useState, useEffect } from "react";
-import Editable from '../wrappers/Editable';
+import Editable from '../../wrappers/Editable';
 import ListTermInput from './ListTermInput';
-import { ListContext } from '../context/ListContext';
-import { updateList} from '../helpers/db.api';
+import { ListContext } from '../../context/ListContext';
+import { updateList} from '../../helpers/db.api';
 
 /**
  * ListTerm component
@@ -16,7 +16,9 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     const { listContextValue, setListContextValue } = useContext(ListContext);
 
     const termStyles = {
-        gridTemplateColumns: `2rem repeat(2, minmax(40%, min-content)) auto`,
+        gridTemplateColumns: !confirmingDelete 
+            ? `2rem repeat(2, minmax(40%, min-content)) 2rem`
+            : `2rem minmax(40%, min-content) repeat(2, auto)`,
     }
     const termDeleteStyles = {
         backgroundColor: confirmingDelete ? '' : null,
@@ -57,13 +59,14 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
             let newListContent = [...listContextValue.content];
             newListContent[idx] = {...newTerm};
             let newList = {...listContextValue, content: [...newListContent]}
-            // setListContextValue(newList);
+            setListContextValue(newList);
             updateList({_id: listContextValue._id, owner: listContextValue.owner}, newList)
                 .then(r => console.log('List updated in database', r))
         }
     }
 
     return (
+        <>
         <li
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
@@ -105,6 +108,7 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
                 />
             }
         </li>
+        </>
     )
 })
 
@@ -116,3 +120,5 @@ export default ListTerm
 
         put a wrapper around the term/edit to assure dimensions match
 */
+
+/* @todo fix widescreen grid (too much empty space between terms and sessions) */
