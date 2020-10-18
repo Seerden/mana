@@ -11,8 +11,6 @@ import Sets from './sets/Sets';
 import Lists from './lists/Lists';
 import NewList from './newlist/NewList';
 
-import Test from './Test';
-
 import LoginProvider from '../context/LoginContext';
 import { ListProvider } from '../context/ListContext';
 
@@ -27,9 +25,6 @@ const App = memo(() => {
                             <Routes>
                                 {/* home route */}
                                 <Route path="/" element={<div>Home</div>} />
-
-                                {/* test routes */}
-                                <Route path="/test/*" element={<Test />} />
 
                                 {/* user routes */}
                                 <Route path="/u/:username">
