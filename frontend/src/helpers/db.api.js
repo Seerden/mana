@@ -41,6 +41,10 @@ export const updateList = async (query, body) => {
         })
 }
 
+/**
+ * Get all lists by the specific user from the database. Returns all list properties, except the content itself.
+ * @param {string} username 
+ */
 export const getListsByUser = async (username) => {
     return axios.get(`/db/listsbyuser/${username}`)
         .then(r => r.data)
