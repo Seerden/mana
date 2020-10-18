@@ -24,6 +24,62 @@ const Review = memo((props) => {
 
     useLogState('params', params)
 
+    useEffect(() => { // get list from database and initialize futureTerms
+        getListFromDB({ _id: params.id }).then(res => {
+            setList(res);
+            let toReview = (buildTermList(res.content, n))
+            reduceFutureTerms({ type: 'init', payload: toReview })
+        })
+
+    // eslint-disable-next-line
+    }, [])
+
+    useEffect(() => {  // add keydown listener, create <ReviewCard />
+        if (futureTerms.length > 0) {
+            setCurrentCard(<ReviewCard key={`card-${futureTerms[0].from}`} term={futureTerms[0]} />)
+        }
+
+        window.addEventListener('keydown', handleKeydown)
+        return () => window.removeEventListener('keydown', handleKeydown)
+    }, [futureTerms])
+
+    useEffect(() => {
+        if (list && futureTerms) {
+            let sessionLength = list.content.length * n;
+            let termsCompleted = sessionLength - futureTerms.length;
+            setProgress(Math.floor(100 * termsCompleted / sessionLength));
+        }
+    }, [futureTerms])
+
+    /**
+     * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
+     * @param {*} e event object
+     */
+    const handleKeydown = e => {
+        let ref;
+        switch (e.code) {
+            case 'ArrowLeft':
+                ref = failRef;
+                break;
+            case 'ArrowRight':
+                ref = passRef
+                break;
+            default:
+                return
+        }
+
+        if (ref.current) {
+            ref.current.focus()
+            ref.current.click();
+            setTimeout(() => {  // highlight button for UX
+                if (ref.current) {
+                    ref.current.blur()
+                }
+            }, 100)
+        }
+
+    }
+
     function termReducer(terms, action) {
         /* handle what happens to current term after pass/fail is chosen */
         switch (action.type) {
@@ -69,69 +125,13 @@ const Review = memo((props) => {
         return newList
     }
 
-    useEffect(() => { // get list from database and initialize futureTerms
-        getListFromDB({ _id: params.id }).then(res => {
-            setList(res);
-            let toReview = (buildTermList(res.content, n))
-            reduceFutureTerms({ type: 'init', payload: toReview })
-        })
-
-    // eslint-disable-next-line
-    }, [])
-
-    useEffect(() => {  // add keydown listener, create <ReviewCard />
-        if (futureTerms.length > 0) {
-            setCurrentCard(<ReviewCard key={`card-${futureTerms[0].from}`} term={futureTerms[0]} />)
-        }
-
-        window.addEventListener('keydown', handleKeydown)
-        return () => window.removeEventListener('keydown', handleKeydown)
-    }, [futureTerms])
-
-    /**
-     * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
-     * @param {*} e event object
-     */
-    const handleKeydown = e => {
-        let ref;
-        switch (e.code) {
-            case 'ArrowLeft':
-                ref = failRef;
-                break;
-            case 'ArrowRight':
-                ref = passRef
-                break;
-            default:
-                return
-        }
-
-        if (ref.current) {
-            ref.current.focus()
-            ref.current.click();
-            setTimeout(() => {  // highlight button for UX
-                if (ref.current) {
-                    ref.current.blur()
-                }
-            }, 100)
-        }
-
-    }
-
-    useEffect(() => {
-        if (list && futureTerms) {
-            let sessionLength = list.content.length * n;
-            let termsCompleted = sessionLength - futureTerms.length;
-            setProgress(Math.floor(100 * termsCompleted / sessionLength));
-        }
-    }, [futureTerms])
-
     function handleClick(e, passfail) {
         e.preventDefault();
         let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
         reduceFutureTerms({ type: passfail })
 
         if (passfail === 'pass') { setPassCount(passCount + 1) }
-        if (passCount === (n * list.content.length - 1) && passfail === 'pass') {
+        if (passCount === (n * list.content.length - 1) && passfail === 'pass') {  // end session
             let end = new Date()
             setSessionEnd(end)
             console.log('Session completed...');

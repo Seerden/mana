@@ -11,22 +11,20 @@ import React, { memo, useState } from "react";
 * 
 */
 const Editable = memo(({ initialState, editState }) => {
-    const [editing, setEditing] = useState(false);
+    const [editing, setIsEditing] = useState(false);
 
     const handleClick = () => {
-        setEditing(true);
+        setIsEditing(true);
     }
 
     const handleBlur = () => {
-        // @todo copy any existing onClick and append the new onClick functionality to it, so that I don't need to wrap the returned JSX in another div
-        // might be very difficult, since might be nested deeply. might be a lost cause
-        setEditing(false);
+        setIsEditing(false);
     }
 
     return (
         <>
             { !editing &&
-                React.cloneElement(initialState, { onClick: () => handleClick() })
+                React.cloneElement(initialState, { onClick: () => setIsEditing(true) })
                 // <div onClick={handleClick}>
                 //     {initialState}
                 // </div>
@@ -34,7 +32,7 @@ const Editable = memo(({ initialState, editState }) => {
             }
             { editing &&
                 // React.cloneElement(editState, {onBlur: () => handleBlur()})
-                <div onBlur={handleBlur}>
+                <div onBlur={() => setIsEditing(false)}>
                     {editState}
                 </div>
             }
