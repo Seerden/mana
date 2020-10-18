@@ -25,7 +25,13 @@ h1 {
     margin: 0;
 }
 
+.PageComponent {
+    width: 80%;
+    min-width: 700px;
+    margin: 0 auto;
+}
 .PageHeader {
+    font-size: 1.6rem;
     border-bottom: 2px solid deepskyblue;
     margin-bottom: 0.5rem;
 }

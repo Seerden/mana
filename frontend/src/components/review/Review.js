@@ -76,11 +76,12 @@ const Review = memo((props) => {
             reduceFutureTerms({ type: 'init', payload: toReview })
         })
 
+    // eslint-disable-next-line
     }, [])
 
     useEffect(() => {  // add keydown listener, create <ReviewCard />
         if (futureTerms.length > 0) {
-            setCurrentCard(<ReviewCard term={futureTerms[0]} />)
+            setCurrentCard(<ReviewCard key={`card-${futureTerms[0].from}`} term={futureTerms[0]} />)
         }
 
         window.addEventListener('keydown', handleKeydown)
@@ -130,7 +131,7 @@ const Review = memo((props) => {
         reduceFutureTerms({ type: passfail })
 
         if (passfail === 'pass') { setPassCount(passCount + 1) }
-        if (passCount === (n * list.content.length - 1) && passfail == 'pass') {
+        if (passCount === (n * list.content.length - 1) && passfail === 'pass') {
             let end = new Date()
             setSessionEnd(end)
             console.log('Session completed...');
@@ -178,6 +179,7 @@ const Review = memo((props) => {
                     <div>Started on {sessionStart.toISOString()}</div>
                     <div>Completed on {sessionEnd.toISOString()}</div>
                     <Link className="Link-button" to={`/list/${params.id}`}>Back to list</Link>
+                    <Link className="Link-button"to={`/u/${list.owner}/lists`}>My lists</Link>
                 </div>
             }
 

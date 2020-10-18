@@ -5,11 +5,11 @@ import './css/App.css';
 
 import Header from './Header';
 import Review from './review/Review';
-import List from './List';
+import List from './list/List';
 import User from './User';
-import Sets from './Sets';
-import ListsByUser from './ListsByUser';
-import NewList from './NewList';
+import Sets from './sets/Sets';
+import Lists from './lists/Lists';
+import NewList from './newlist/NewList';
 
 import Test from './Test';
 
@@ -36,7 +36,7 @@ const App = memo(() => {
                                     <Route path="/" element={<User />} />
                                     <Route path="/sets" element={<Sets />} />
                                     <Route path="/lists">
-                                        <Route path="/" element={<ListsByUser />} />
+                                        <Route path="/" element={<Lists />} />
                                         <Route path="/new" element={<NewList />} />
                                     </Route>
                                 </Route>

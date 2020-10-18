@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { useRouteProps } from '../hooks/routerHooks';
+import { useRouteProps } from '../../hooks/routerHooks';
 import axios from 'axios';
 
 import './css/NewList.css';
@@ -11,13 +11,13 @@ const NewList = memo((props) => {
     const [numTerms, setNumTerms] = useState(10)  // @TODO: allow user to set default number of terms when making new list
     const termEls = [];
 
-    const [newList, setNewList] = useState({
-        owner: params.username,  // set to username from context or from pathname
-        name: null,
-        to: [],
-        from: null,
-        content: [],
-    });
+    // const [newList, setNewList] = useState({
+    //     owner: params.username,  // set to username from context or from pathname
+    //     name: null,
+    //     to: [],
+    //     from: null,
+    //     content: [],
+    // });
 
     const [formOutput, setFormOutput] = useState(() => (
         {

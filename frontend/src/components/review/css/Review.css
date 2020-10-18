@@ -1,5 +1,6 @@
 :root {
     --review-width: 400px;
+    --duration: 250ms;
 }
 
 .Review {
@@ -40,8 +41,7 @@
 .Review__current {
     /* color: darkslategrey; */
     min-width: var(--review-width);
-    padding: 3em;
-    height: 140px;
+    padding: 3rem;
     box-shadow: 0 0 1em black;
     justify-content: center;
     align-items: center;
@@ -53,12 +53,18 @@
 .ReviewCard {
     min-width: var(--review-width);
     height: 100%;
-    background: linear-gradient(to bottom, #eee, #aaa);
+    background: linear-gradient(-30deg, #eee, #ddd);
     color: darkslategrey;
-    line-height: 1rem;
+    font-size: 1.6rem;    
+    line-height: 1.8rem;
     display: flex;
     place-self: center;
-    /* align-items: center; */
+    
+}
+
+.fadein {
+    animation: var(--duration) ease 1 fadein;
+    animation-fill-mode: forwards;
 }
 
 /* @todo rotation needs to be on a shadow element, because I don't want text content to be rotated (text becomes blurry, haven't found a fix) */
@@ -73,8 +79,19 @@
 
 }
 
+@keyframes fadein {
+    0% {
+        opacity: 0;
+        
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 @keyframes flip {
     0% {
+        opacity: 1
     }
     50% {
         transform: rotateX(90deg)

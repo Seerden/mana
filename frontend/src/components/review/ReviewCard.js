@@ -1,9 +1,9 @@
-import React, { memo, useState, useEffect } from "react";
-import { useLogState } from '../../hooks/state';
+import React, { useState, useEffect } from "react";
 
-const ReviewCard = memo(({ term }) => {
+const ReviewCard = ({ term }) => {
     const [side, setSide] = useState('from');
     const [flipping, setFlipping] = useState(false);
+    const [fade, setFade] = useState(false);
     const toggleSide = () => setSide(side === 'from' ? 'to' : 'from')
 
     useEffect(() => {
@@ -15,6 +15,8 @@ const ReviewCard = memo(({ term }) => {
 
     useEffect(() => { // when new term is shown, reset card state
         setSide('from')
+        setFade(true)
+        setTimeout(() => setFade(false), 150)
     }, [term])
 
     const handleKeyup = (e) => {
@@ -26,15 +28,14 @@ const ReviewCard = memo(({ term }) => {
         setFlipping(true);
         setTimeout(() => setFlipping(false), duration)
         setTimeout(() => toggleSide(), duration / 2);
-
     }
 
     return (
-        <div className={`Review__current ReviewCard ${flipping ? 'flip' : ''}`}>
+        <div className={`Review__current ReviewCard ${fade ? 'fadein' : ''} ${flipping ? 'flip' : ''}`}>
             {term[side]}
         </div>
     )
-})
+}
 
 export default ReviewCard
 

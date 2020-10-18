@@ -1,8 +1,8 @@
 import React, { memo, useContext, useState, useEffect } from "react";
-import Editable from '../wrappers/Editable';
+import Editable from '../../wrappers/Editable';
 import ListTermInput from './ListTermInput';
-import { ListContext } from '../context/ListContext';
-import { updateList} from '../helpers/db.api';
+import { ListContext } from '../../context/ListContext';
+import { updateList} from '../../helpers/db.api';
 
 /**
  * ListTerm component

@@ -1,30 +1,23 @@
 import React, { memo, useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './css/Lists.css'
-import { useRouteProps } from '../hooks/routerHooks';
-import { useLogState } from '../hooks/state';
+import { useRouteProps } from '../../hooks/routerHooks';
+import { getListsByUser } from '../../helpers/db.api';
 
-const ListsByUser = memo((props) => {
-    const { params, location, navigate } = useRouteProps();
-    const username = params.username;
+const Lists = memo((props) => {
+    const { params, location } = useRouteProps();
     const [lists, setLists] = useState(null);
     const [filter, setFilter] = useState('');
     const [elements, setElements] = useState(null);
 
-    useEffect(() => {
-        /**
-         * @todo convert this axios.get to a function
-         */
-        axios.get(`/db/listsbyuser/${username}`).then(r => {
-            setLists(r.data);
-        })
+    useEffect(() => {  // get lists from db on component mount, build JSX
+        getListsByUser(params.username)
+            .then(r => {
+                setLists(r);
+                setElements(makeListsEl(r, filter))
+            })
+            .catch(e => e)
     }, [])
-    useEffect(() => {
-        if (lists) {
-            setElements(makeListsEl(lists, filter))
-        }
-    }, [lists])
 
     const makeListsEl = (lists, filter) => {
         return lists
@@ -46,13 +39,16 @@ const ListsByUser = memo((props) => {
     const handleFilterChange = (e) => {
         let val = e.currentTarget.value
         setFilter(val)
-        setElements(makeListsEl(lists, val))
+        setElements(makeListsEl(lists, val))  
+            /*  @todo:  currently this is rebuilding the whole lists element
+                        instead, have the initial setElements call (on mount) return an object with a filterable property, 
+                        to prevent rebuilding list every time */
     }
 
     return (
         <div className="ListsByUser">
             <h1 className="PageHead">
-                Lists by u/{username}
+                Lists by u/{params.username}
             </h1>
             <Link className="Link-button" to={`${location.pathname}/new`}>New</Link>
 
@@ -67,6 +63,7 @@ const ListsByUser = memo((props) => {
                         {filter ? `Filtering by '${filter}'` : `Showing all lists`}
                     </span>
                     <input
+                        autoFocus
                         onChange={handleFilterChange}
                         placeholder="filter lists by name"
                         id="Lists__filter--filter"
@@ -87,6 +84,6 @@ const ListsByUser = memo((props) => {
     )
 })
 
-export default ListsByUser;
+export default Lists;
 
 // @ TODO | memoize lists so I don't have to call DB every single time

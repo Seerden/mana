@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-import './css/form.css';
+import '../css/form.css';
 
 import './css/NewList.css'
 

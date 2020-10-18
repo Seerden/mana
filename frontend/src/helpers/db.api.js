@@ -5,12 +5,11 @@ import axios from 'axios';
 //     return req
 // })
 
-export const getListFromDB = async (query) => {
-    /**
+/**
      * Gets a list instance from the database
      * @param   query   object with keys { _id, owner, name, from, to, content }, matching the properties of the list schema in the database
      */
-
+export const getListFromDB = async (query) => {
     return axios.get('/db/list/', { params: query })
         .then(r => r.data)
         .catch(e => console.log(e))
@@ -40,4 +39,10 @@ export const updateList = async (query, body) => {
             console.log(e.response)
             throw new Error(e)
         })
+}
+
+export const getListsByUser = async (username) => {
+    return axios.get(`/db/listsbyuser/${username}`)
+        .then(r => r.data)
+        .catch(e => console.log('Error fetching from database:', e))
 }

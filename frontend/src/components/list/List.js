@@ -1,11 +1,11 @@
 import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import './css/List.css';
-import { useRouteProps } from '../hooks/routerHooks';
-import { getListFromDB, updateList } from '../helpers/db.api';
+import { useRouteProps } from '../../hooks/routerHooks';
+import { getListFromDB, updateList } from '../../helpers/db.api';
 import ListTerm from './ListTerm'
 import ListSessions from './ListSessions';
-import { ListContext } from '../context/ListContext';
+import { ListContext } from '../../context/ListContext';
 
 const List = memo((props) => {
     const [list, setList] = useState(null);
@@ -13,7 +13,7 @@ const List = memo((props) => {
     const { params, location } = useRouteProps();
     const { listContextValue, setListContextValue } = useContext(ListContext);
 
-    function updateTerms() {
+    const updateTerms = () => {
         setTerms(list.content.map((term, idx) => {
             let termProps = {
                 handleTermDelete,
