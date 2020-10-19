@@ -169,7 +169,7 @@ const Review = memo((props) => {
                     <h2>Session completed.</h2>
                     <div>Started on {sessionStart.toISOString()}</div>
                     <div>Completed on {sessionEnd.toISOString()}</div>
-                    <Link className="Link-button" to={`/list/${params.id}`}>Back to list</Link>
+                    <Link className="Link-button" to={`/u/${list.owner}/list/${params.id}`}>Back to list</Link>
                     <Link className="Link-button"to={`/u/${list.owner}/lists`}>My lists</Link>
                 </div>
             }
