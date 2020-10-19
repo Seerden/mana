@@ -5,7 +5,6 @@ const { dbRouter } = require('./routers/dbRouter');
 const { testRouter } = require('./routers/testRouter');
 const app = express();
 
-console.log('ENV:', process.env.DB_USER);
 
 /**
  * Express middleware to log every route that is hit
