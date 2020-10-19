@@ -22,33 +22,27 @@ const Review = memo((props) => {
     const failRef = useRef(null);
     const passRef = useRef(null);
 
-    useLogState('params', params)
-
-    useEffect(() => { // get list from database and initialize futureTerms
+    useEffect(() => {  // get list from database and initialize futureTerms
         getListFromDB({ _id: params.id }).then(res => {
             setList(res);
             let toReview = (buildTermList(res.content, n))
             reduceFutureTerms({ type: 'init', payload: toReview })
         })
-
-    // eslint-disable-next-line
     }, [])
 
-    useEffect(() => {  // add keydown listener, create <ReviewCard />
+    useEffect(() => {  // remove, recreate keydown listener, create <ReviewCard />
         if (futureTerms.length > 0) {
             setCurrentCard(<ReviewCard key={`card-${futureTerms[0].from}`} term={futureTerms[0]} />)
         }
 
-        window.addEventListener('keydown', handleKeydown)
-        return () => window.removeEventListener('keydown', handleKeydown)
-    }, [futureTerms])
-
-    useEffect(() => {
         if (list && futureTerms) {
             let sessionLength = list.content.length * n;
             let termsCompleted = sessionLength - futureTerms.length;
             setProgress(Math.floor(100 * termsCompleted / sessionLength));
         }
+        
+        window.addEventListener('keydown', handleKeydown)
+        return () => window.removeEventListener('keydown', handleKeydown)
     }, [futureTerms])
 
     /**
@@ -80,8 +74,14 @@ const Review = memo((props) => {
 
     }
 
+    /**
+     * case init: initialize futureTerms using list.content from database
+     * case pass/fail: Handle what happens to current term after pass/fail is chosen.
+     * @param {Array} terms     array of terms
+     * @param {Object} action   properties: type (init, pass, fail). if type 'init', send terms as action.payload
+     */
     function termReducer(terms, action) {
-        /* handle what happens to current term after pass/fail is chosen */
+        
         switch (action.type) {
             case 'init':
                 return action.payload
@@ -126,7 +126,6 @@ const Review = memo((props) => {
     }
 
     function handleClick(e, passfail) {
-        e.preventDefault();
         let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
         reduceFutureTerms({ type: passfail })
 
@@ -134,16 +133,8 @@ const Review = memo((props) => {
         if (passCount === (n * list.content.length - 1) && passfail === 'pass') {  // end session
             let end = new Date()
             setSessionEnd(end)
-            console.log('Session completed...');
-
             updatedList.sessions.push({ start: sessionStart, end: end, numTerms: n * updatedList.content.length })
             updateList({ _id: params.id, owner: list.owner }, updatedList)
-            /**  although updateSessionHistory is called here, which updates 'list' (which is a piece of state), this 'list' in updateList still gets the new state value.. 
-            *    I thought, since these occur in the same render cycle, that 'list' here would only have access to the list state from before updateSessionHistory() was called
-            *    @todo investigate. meanwhile, use updatedList since that's certain to be the correct value
-            */
-            // .then(res => console.log(res))
-            // .catch(err => console.log(err))
         }
     }
 

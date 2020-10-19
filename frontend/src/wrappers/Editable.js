@@ -13,14 +13,6 @@ import React, { memo, useState } from "react";
 const Editable = memo(({ initialState, editState }) => {
     const [editing, setIsEditing] = useState(false);
 
-    const handleClick = () => {
-        setIsEditing(true);
-    }
-
-    const handleBlur = () => {
-        setIsEditing(false);
-    }
-
     return (
         <>
             { !editing &&

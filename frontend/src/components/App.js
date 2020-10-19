@@ -22,33 +22,36 @@ const App = memo(() => {
                     <Header />
                     <div className="App__wrapper">
                         <div className="App">
-                            <Routes>
-                                {/* home route */}
-                                <Route path="/" element={<div>Home</div>} />
+                            <ListProvider>
+                                <Routes>
+                                    {/* home route */}
+                                    <Route path="/" element={<div>Home</div>} />
 
-                                {/* user routes */}
-                                <Route path="/u/:username">
-                                    <Route path="/" element={<User />} />
-                                    <Route path="/sets" element={<Sets />} />
-                                    <Route path="/lists">
-                                        <Route path="/" element={<Lists />} />
-                                        <Route path="/new" element={<NewList />} />
-                                    </Route>
-                                </Route>
-
-                                {/* list routes @todo: nest inside user routes */}
-                                <ListProvider>
-                                    <Route path="/list">
-                                        <Route path="/:id*">
-                                            <Route path="/review" element={<Review />} />
-                                            <Route path="/" element={<List />} />
+                                    {/* user routes */}
+                                    <Route path="/u/:username">
+                                        <Route path="/" element={<User />} />
+                                        <Route path="/sets" element={<Sets />} />
+                                        <Route path="/lists">
+                                            <Route path="/" element={<Lists />} />
+                                            <Route path="/new" element={<NewList />} />
                                         </Route>
-                                    </Route>
-                                </ListProvider>
 
-                                {/* catchall 404 route */}
-                                <Route path="*" element={<div>404</div>} />
-                            </Routes>
+                                        <Route path="/list">
+
+                                            <Route path="/:id">
+
+                                                <Route path="/review" element={<Review />} />
+                                                <Route path="/" element={<List />} />
+
+                                            </Route>
+                                        </Route>
+
+
+                                    </Route>
+                                    {/* catchall 404 route */}
+                                    <Route path="*" element={<div>404</div>} />
+                                </Routes>
+                            </ListProvider>
                         </div>
                     </div>
 

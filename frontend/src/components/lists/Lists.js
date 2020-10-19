@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import './css/Lists.css'
 import { useRouteProps } from '../../hooks/routerHooks';
 import { getListsByUser } from '../../helpers/db.api';
+import { useLogState } from '../../hooks/state';
 
 const Lists = memo((props) => {
     const { params, location } = useRouteProps();
     const [lists, setLists] = useState(null);
     const [filter, setFilter] = useState('');
     const [elements, setElements] = useState(null);
+
+    useLogState('location', location)
 
     useEffect(() => {  // get lists from db on component mount, build JSX
         getListsByUser(params.username)
@@ -27,7 +30,7 @@ const Lists = memo((props) => {
                     return (
                         <div key={`link-list-${idx}`} className="Link-div">
                             <div className="Link-div__link">
-                                <Link className="Lists-link" to={`/list/${l._id}`}>{l.name}</Link>
+                                <Link className="Lists-link" to={`/u/${params.username}/list/${l._id}`}>{l.name}</Link>
                             </div>
                             <div className="Lists__list--languages"><span>{l.from}</span><span>{l.to}</span></div>
                         </div>
