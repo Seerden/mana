@@ -104,8 +104,14 @@ const Review = memo((props) => {
         }
     }
 
+    /**
+     * Find current term in list.content, update its history, and setList with updated list.content
+     * @param {object} term     should always be futureTerms[0]
+     * @param {string} passfail 'pass'/'fail'
+     * @return {object}         copy of newly set list state
+     */
     function updateSessionHistory(term, passfail) {
-        const content = list.content;
+        const content = [...list.content];
         let idx = content.findIndex(i => i.to === term.to && i.from === term.from)
         if (!content[idx].history || content[idx].history.length === 0) {
             content[idx].history = [{ date: Date.now(), content: [] }]
@@ -125,6 +131,11 @@ const Review = memo((props) => {
         return newList
     }
 
+    /**
+     * Handle clicking 'pass'/'fail': updateSessionHistory(), then reduceFutureTerms()
+     * @param {*} e javascript event
+     * @param {string} passfail 'pass'/'fail'
+     */
     function handleClick(e, passfail) {
         let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
         reduceFutureTerms({ type: passfail })
@@ -183,8 +194,8 @@ export default Review;
 
 /*
 @todo?  set progress bar color based in session cycle. go to 100% n time with various colors, instead of slowly progress a single bar
-        makes it feel like progress is faster
+        makes it feel like progress is faster */
 
-@todo   add sessions property to List itself, include sessionStart and sessionEnd on session start, end
-*/
-
+/* 
+@todo: if the same card is shown twice in a row (can happen randomly), currentCard isn't rerendered (or something to the same effect)
+        this isn't a problem, really, but the fadein effect isn't shown. find a way to fix this, e.g. by changing currentCard's key */

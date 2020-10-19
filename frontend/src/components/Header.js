@@ -10,8 +10,9 @@ const Header = memo(() => {
             <nav>
                 <span id="Logo">Mana</span>
                 <NavLink className="NavLink" to="/">Home</NavLink>
-                <NavLink className="NavLink" to={`/u/${user}/lists`}>Lists</NavLink>
-                <NavLink className="NavLink" to={`/u/${user}/sets`}>Sets</NavLink>
+                <NavLink className="NavLink" to={`/u/${user}`}>My Profile</NavLink>
+                <NavLink className="NavLink" to={`/u/${user}/lists`}>My Lists</NavLink>
+                <NavLink className="NavLink" to={`/u/${user}/sets`}>My Sets</NavLink>
 
             </nav>
         </div>

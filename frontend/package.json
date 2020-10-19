@@ -9,6 +9,7 @@
     "axios": "^0.20.0",
     "d3": "^6.2.0",
     "dayjs": "^1.9.3",
+    "express": "^4.17.1",
     "history": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -17,6 +18,7 @@
     "react-scripts": "3.4.3",
     "recoil": "0.0.13"
   },
+  "homepage": "/",
   "scripts": {
     "start-front": "react-scripts start",
     "build": "react-scripts build",
@@ -24,7 +26,6 @@
     "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:5000",
-  "homepage": "./",
   "eslintConfig": {
     "extends": "react-app"
   },

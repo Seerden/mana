@@ -6,8 +6,8 @@ import axios from 'axios';
 // })
 
 /**
-     * Gets a list instance from the database
-     * @param   query   object with keys { _id, owner, name, from, to, content }, matching the properties of the list schema in the database
+     * Get a list instance from the database
+     * @param {object} query object with keys { _id, owner, name, from, to, content }, matching the properties of the list schema in the database
      */
 export const getListFromDB = async (query) => {
     return axios.get('/db/list/', { params: query })
@@ -49,4 +49,16 @@ export const getListsByUser = async (username) => {
     return axios.get(`/db/listsbyuser/${username}`)
         .then(r => r.data)
         .catch(e => console.log('Error fetching from database:', e))
+}
+
+/**
+ * Get a user instance from the database
+ * @param {string} username 
+ * @param {object} args args.populate needs to be a single space-separated string, e.g. 'following followed'
+ *                      nested population wouldn't work this way
+ */
+export const getUserFromDB = async (username, args) => {
+    return await axios.get(`/db/u/${username}${ args && args.populate ? `?populate=${ args && args.populate}` : ''}`)
+        .then(res => res.data)
+        .catch(err => { throw new Error('Error getting user from database') })
 }
