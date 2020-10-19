@@ -9,10 +9,13 @@
     z-index: 1000;
     height: 3rem;
     width: 100%;
+    font-size: 1.3rem;
+    line-height: 1.3rem;
 }
 
 .NavLink {
-    margin-left: 1em;
+    margin-left: 1rem;
+    font-size: 1.1rem;
 }
 
 .NavLink:visited {

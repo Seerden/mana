@@ -1,5 +1,9 @@
 import React, { memo } from "react";
 
+/**
+ * List term input element
+ * @return {jsx} input:text element to edit and update a list term
+ */
 const ListTermInput = memo(({ _term, handleTermEdit, side }) => {
     
     return (

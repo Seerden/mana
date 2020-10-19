@@ -1,10 +1,14 @@
+:root {
+    --max-term-width: 750px;
+}
+
 .List {
-    /* max-width: 1200px; */
+    width: 80%;
     margin: 0 auto;
 }
 
 .List__name {
-    max-width: 750px;
+    max-width: var(--max-term-width);
     border-bottom: 2px solid deepskyblue;
 }
 
@@ -15,10 +19,9 @@ ul {
 }
 
 .List__content {
-    display: grid;
-    width: 80%;
-    margin: 0 auto;
-    grid-template-columns: 5fr 2fr;
+    /* set grid if including sessions component */
+    /* display: grid; */
+    /* grid-template-columns: 5fr 2fr; */
 }
 
 .List__content--header {
@@ -31,12 +34,10 @@ ul {
 
 .Terms__header {
     display: grid;
-    width: 80%;
-    max-width: 750px;
+    max-width: var(--max-term-width);
     font-size: 0.8rem;
     padding: 0.3rem;
     grid-template-columns: 2rem repeat(2, 40%);
-    /* padding: 0 1em; */
     background-color: #111;
     border-radius: 10px 10px 0 5px;
     box-shadow: 3px 3px 0.5em black;
@@ -51,10 +52,9 @@ ul {
 .List__term {
     font-size: 1rem;
     display: grid;
-    overflow: hidden;
+    /* overflow: hidden; */
     line-break: strict;
-    width: 80%;
-    max-width: 750px;
+    max-width: var(--max-term-width);
     margin-bottom: 0.6em;
     box-shadow: 0 0 0.7em #000;
     border-top: 2px solid var(--background-secondary);
@@ -62,7 +62,7 @@ ul {
     border-bottom: 2px solid var(--background-secondary);
     border-left: 2px solid deepskyblue;
     border-radius: 0 10px 0 10px;
-    transition: border-radius 200ms ease 100ms, transform 100ms ease, border-color 120ms ease;
+    transition: border-radius 200ms ease 100ms, transform 100ms ease-out, border-color 120ms ease;
     padding: 0.5em 0;
 }
 
@@ -73,12 +73,14 @@ ul {
 
 .List__term:hover {
     border-radius: 0; 
-    transform: translate(1em,0);
+    transform: translateX(1rem) translateZ(1px);
+    transform-origin: 0% 50%;
+    transform-style: preserve-3d;
 }
 
-.List__term-from, .List__term-to, .List__term-index {
+.List__term--from, .List__term--to, .List__term-index {
     display: flex;
-    align-items: center !important;
+    align-items: center;
     padding: 0 0;
 }
 
@@ -92,26 +94,8 @@ ul {
     user-select: none;
 }
 
-.List__term-to {
+.List__term--to {
     padding-right: 0.5em;
-}
-
-.List__term-remove {
-    display: flex;
-    background-color: var(--background-secondary);
-    color: #777;
-    box-shadow: 0 0 3px black;
-    border-radius: 3px;
-    border: none;
-    outline: 0;
-    justify-content: center;
-    place-self: center;
-    max-height: 2.5rem;
-    width: 100%;
-    max-width: 2.5rem;
-    /* margin-right: 1rem; */
-    height: 100%;
-    transition: background-color 100ms ease
 }
 
 div > input[type=text].List__term-input {
@@ -125,48 +109,8 @@ div > input[type=text].List__term-input {
     font-size: inherit;
     font-family: inherit;
     text-indent: 0.5em;
-    /* height: 1.3rem; */
     width: 100%;
 }
-
-.List__term-remove:hover {
-    background-color: orangered;
-    color: azure;
-}
-
-.List__term-remove-confirm {
-    display: flex;
-    place-self: center;
-    border-radius: 3px;
-}
-
-.remove-confirm-button {
-    color: azure;
-    font-size: 0.7rem;
-    outline: none;
-    border: none;
-    padding: 0.5em;
-    border-radius: 1px;
-    /* margin: 0.5em; */
-    width: 40px;
-    font-weight: 400;
-}
-
-.remove-keep, .remove-remove {
-    background-color: #555;
-    margin: 0 0.5em;
-    transition: all 150ms ease
-}
-
-.remove-keep:hover {
-    background-color: seagreen;
-}
-
-.remove-remove:hover {
-    background-color: orangered;
-}
-
-
 
 .List__term:nth-child(even) {
     background-color: #2d2d2d

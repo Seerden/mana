@@ -25,6 +25,7 @@ const App = memo(() => {
                         <div className="App">
                             <ListProvider>
                                 <Routes>
+                                    <Route path="/test" element={<Test />} />
                                     {/* home route */}
                                     <Route path="/" element={<div>Home</div>} />
                                     <Route path="/test/:id" element={<Test />} />

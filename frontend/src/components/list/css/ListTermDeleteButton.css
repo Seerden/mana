@@ -1,0 +1,56 @@
+.Term__remove {
+    display: flex;
+    place-self: center;
+}
+
+.remove--initial, .remove--confirm {
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    /* max-height: 90%; */
+}
+
+.remove--delete, .remove--keep {
+    display: flex;
+    place-self: center;
+    background-color: #444;
+    color: azure;
+    outline: none;
+    border: none;
+    padding: 0.3rem;
+    transition: all 100ms ease;
+    max-height: 2.5rem;
+}
+
+.remove--delete:hover, .remove--keep:hover {
+    color: azure;
+}
+
+.remove--confirm {
+    grid-column: 4;
+    padding: 0.2em;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(auto, 4rem)) !important;
+    gap: 0.2rem;
+}
+
+.remove--keep:hover {
+    background-color: seagreen;
+}
+.remove--delete:hover {
+    background-color: orangered;
+}
+.remove--initial {
+    background-color: #444;
+    padding: 0.1rem 0.5rem;
+    border: 2px solid #222;
+    max-width: 2rem;
+    color: azure;
+    transition: all 150ms ease;
+    height: 90%;
+    max-height: 2.5rem;
+}
+
+.remove--initial:hover {
+    background-color: orangered;
+}

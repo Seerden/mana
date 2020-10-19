@@ -76,16 +76,15 @@ const List = memo((props) => {
                                     {terms}
                                 </ul>
                             </div>
-                            <div className="List__content--sessions">
+                            {/* <div className="List__content--sessions">
                                 { listContextValue && listContextValue.sessions && listContextValue.sessions.length > 0 
                                     ?
                                      <ListSessions sessions={(listContextValue && listContextValue.sessions) ? listContextValue.sessions : null}/>
                                     : <div>No sessions recorded for this list</div>
                                 }
-                            </div>
+                            </div> */}
 
                         </div>
-
                     </>
                 }
             </div>

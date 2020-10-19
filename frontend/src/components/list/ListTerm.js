@@ -2,7 +2,8 @@ import React, { memo, useContext, useState, useEffect } from "react";
 import Editable from '../../wrappers/Editable';
 import ListTermInput from './ListTermInput';
 import { ListContext } from '../../context/ListContext';
-import { updateList} from '../../helpers/db.api';
+import { updateList } from '../../helpers/db.api';
+import ListTermDeleteButton from "./ListTermDeleteButton";
 
 /**
  * ListTerm component
@@ -16,11 +17,9 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     const { listContextValue, setListContextValue } = useContext(ListContext);
 
     const termStyles = {
-        gridTemplateColumns: !confirmingDelete 
-            ? `2rem repeat(2, minmax(40%, min-content)) 2rem`
-            : `2rem minmax(40%, min-content) repeat(2, auto)`,
-    }
-    const termDeleteStyles = {
+        gridTemplateColumns: confirmingDelete
+            ? `2rem repeat(2, minmax(40%, min-content)) auto`
+            : `2rem repeat(2, minmax(40%, min-content)) auto`,
         backgroundColor: confirmingDelete ? '' : null,
         border: confirmingDelete ? '2px solid orangered' : null
     }
@@ -57,57 +56,45 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
             let newTerm = { ..._term, [field]: e.target.value }
             setTerm(newTerm)
             let newListContent = [...listContextValue.content];
-            newListContent[idx] = {...newTerm};
-            let newList = {...listContextValue, content: [...newListContent]}
+            newListContent[idx] = { ...newTerm };
+            let newList = { ...listContextValue, content: [...newListContent] }
             setListContextValue(newList);
-            updateList({_id: listContextValue._id, owner: listContextValue.owner}, newList)
+            updateList({ _id: listContextValue._id, owner: listContextValue.owner }, newList)
                 .then(r => console.log('List updated in database', r))
         }
     }
 
     return (
         <>
-        <li
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            className="List__term"
-            style={{ ...termStyles, ...termDeleteStyles }}
-        >
-            <div className="List__term-index">{idx + 1}</div>
+            <li
+                className="List__term"
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
+                style={{ ...termStyles }}
+            >
+                <div className="List__term-index">{idx + 1}</div>
 
-            <Editable
-                initialState={<div title="Click to edit" className="List__term-from">{_term.from}</div>}
-                editState={<ListTermInput _term={_term} handleTermEdit={handleTermEdit} side="from" />}
-            />
-
-            <Editable
-                initialState={<div title="Click to edit" className="List__term-to">{_term.to}</div>}
-                editState={<ListTermInput _term={_term} handleTermEdit={handleTermEdit} side="to" />}
-
-            />
-
-            { !isEditing && confirmingDelete &&
-                <span className="List__term-remove-confirm">
-                    <input
-                        title="Permanently delete term"
-                        onClick={(e) => handleConfirmClick(e, { type: 'delete' })}
-                        className="remove-confirm-button remove-remove" type="button" value="delete" />
-                    <input
-                        title="Keep term"
-                        onClick={e => handleConfirmClick(e, 'keep')}
-                        className="remove-confirm-button remove-keep" type="button" value="keep" />
-                </span>
-            }
-
-            { !isEditing && isHovering && !confirmingDelete &&
-                <input
-                    onClick={() => setConfirmingDelete(true)}
-                    className="List__term-remove"
-                    type="button"
-                    value="x"
+                <Editable
+                    initialState={<div title="Click to edit" className="List__term--from">{_term.from}</div>}
+                    editState={<ListTermInput _term={_term} handleTermEdit={handleTermEdit} side="from" />}
                 />
-            }
-        </li>
+
+                <Editable
+                    initialState={<div title="Click to edit" className="List__term--to">{_term.to}</div>}
+                    editState={<ListTermInput _term={_term} handleTermEdit={handleTermEdit} side="to" />}
+
+                />
+
+                {!isEditing &&
+                    <ListTermDeleteButton
+                        confirmingDelete={confirmingDelete}
+                        isHovering={isHovering}
+                        setConfirmingDelete={setConfirmingDelete}
+                        handleConfirmClick={handleConfirmClick}
+                    />
+                }
+
+            </li>
         </>
     )
 })

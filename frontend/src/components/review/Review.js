@@ -137,6 +137,7 @@ const Review = memo((props) => {
      * @param {string} passfail 'pass'/'fail'
      */
     function handleClick(e, passfail) {
+        e.preventDefault();
         let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
         reduceFutureTerms({ type: passfail })
 
