@@ -9,7 +9,8 @@
     grid-template-areas: 
         'name'
         'from'
-        'to';
+        'to'
+        'since';
 }
 
 .ListsItem__name {
@@ -37,7 +38,7 @@
     }
 }
 
-.ListsItem__from, .ListsItem__to {
+.ListsItem__from, .ListsItem__to, .ListsItem__since {
     font-size: 0.8rem;
 }
 
@@ -47,4 +48,12 @@
 
 .ListsItem__to {
     grid-area: to;
+}
+
+.ListsItem__since {
+    display: flex;
+    grid-area: since;
+    color: #777;
+    justify-content: flex-end;
+
 }

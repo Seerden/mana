@@ -2,10 +2,11 @@ import React, { memo, useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { useRouteProps } from "../../hooks/routerHooks";
 import './css/ListsItem.scss'
+import { timeSince } from '../../helpers/time';
 
 const ListsItem = memo(({ list }) => {
     const { params } = useRouteProps();
-    const [expanded, setExpanded] = useState(false);
+
     return (
         <div className="ListsItem">
             <div className="ListsItem__name">
@@ -15,6 +16,11 @@ const ListsItem = memo(({ list }) => {
             </div>
             <div className="ListsItem__from">{list.from}</div>
             <div className="ListsItem__to">{list.to}</div>
+        { list.sessions.length > 0 && 
+            <div className="ListsItem__since">
+                <em>Reviewed {timeSince(list.sessions[list.sessions.length-1].end)}</em>
+            </div> 
+        }
         </div>
     )
 })
