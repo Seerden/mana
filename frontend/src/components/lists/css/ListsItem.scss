@@ -29,13 +29,16 @@
 
     &:hover {
         transform: translateY(-2px);
-        color: #ddd;
+        color: slateblue;
     }
 
     &:active {
-        color: slateblue;
         border-bottom: 1px solid slateblue;
     }
+}
+
+.ListsItem__from, .ListsItem__to {
+    font-size: 0.8rem;
 }
 
 .ListsItem__from {

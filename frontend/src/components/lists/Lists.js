@@ -21,35 +21,44 @@ const Lists = memo((props) => {
     }
 
     const makeListsElement = (lists) => {
-        return lists.map(l => {
-            return (
-                {
-                    name: l.name,
-                    element: <ListsItem key={l._id} list={l} />
-                }
-            )
-        })
+        return lists.map(l => ({ name: l.name, element: <ListsItem key={l._id} list={l} /> }))
     }
 
     return (
-        <div className="Lists__wrapper">
-            <input
-                autoFocus
-                onChange={handleFilterChange}
-                placeholder="filter lists by name"
-                id="Lists__filter--filter"
-                type="text"
-                name="filter"
-                value={filter}
-            />
-            <div className="Lists">
+        <>
+            { !lists &&
+                <div className="Lists__wrapper">
+                    Loading lists from database...
+                </div>
+            }
 
-                {listsElement &&
-                    listsElement.filter(l => l.name.toLowerCase().includes(filter.toLowerCase())).map(l => l.element)
-                }
+            { lists &&
+                <div className="Lists__wrapper">
+                    <div className="Lists__header">Lists by /u/{params.username}</div>
 
-            </div>
-        </div>
+                    <label htmlFor="filter" id="Lists__filter--label">Filter by name:</label>
+                    <input
+                        autoFocus
+                        onChange={handleFilterChange}
+                        placeholder="e.g. 'chapter 2'"
+                        id="Lists__filter"
+                        type="text"
+                        name="filter"
+                        value={filter}
+                    />
+
+                    <div className="Lists">
+
+                        {listsElement &&
+                            listsElement
+                                .filter(l => l.name.toLowerCase().includes(filter.toLowerCase()))
+                                .map(l => l.element)
+                        }
+
+                    </div>
+                </div>
+            }
+        </>
     )
 })
 
