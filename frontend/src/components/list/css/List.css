@@ -55,7 +55,7 @@ ul {
     /* overflow: hidden; */
     line-break: strict;
     max-width: var(--max-term-width);
-    margin-bottom: 0.6em;
+    margin-top: 0.6em;
     box-shadow: 0 0 0.7em #000;
     border-top: 2px solid var(--background-secondary);
     border-right: 2px solid var(--background-secondary);
@@ -64,6 +64,10 @@ ul {
     border-radius: 0 10px 0 10px;
     transition: border-radius 200ms ease 100ms, transform 100ms ease-out, border-color 120ms ease;
     padding: 0.5em 0;
+}
+
+.List__term--historybutton {
+    width: 50px;
 }
 
 .List__term div {

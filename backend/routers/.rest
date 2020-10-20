@@ -53,4 +53,7 @@ Content-Type: application/json
     }
 }
 ###
-GET {{base}}/db/list?owner=seerden
+GET {{base}}/db/list?owner=seerden&name=Test
+
+###
+GET {{base}}/db/listlength?user=seerden

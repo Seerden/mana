@@ -1,0 +1,54 @@
+$maxwidth: 800px;  // dev
+
+.TermHistory {
+    transform: translateY(-10px);
+    background-color: #232323;
+    border: 2px solid #444;
+    padding: 0.3rem 1rem;
+    margin-left: 2rem;
+
+    max-width: $maxwidth;  // dev
+}
+
+.TermHistory__session {
+
+}
+
+.TermHistory__date {
+    font-size: 1.3rem;
+}
+
+.TermHistory__history {
+    padding-left: 1rem;
+
+}
+
+.TermHistory__passfail {
+    width: 4rem;
+    height: 1.5rem;
+    margin: 0.2rem;
+    border-radius: 2px;
+    
+}
+
+.pass, .fail {
+    display: inline-flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
+.pass {
+    background-color: seagreen;
+    
+}
+
+.fail {
+    background-color: orangered;
+}
+
+.TermHistory__header {
+    * {
+        display: inline-block;
+        margin-right: 0.2rem;
+    }
+}

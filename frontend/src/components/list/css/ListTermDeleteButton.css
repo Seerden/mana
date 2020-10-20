@@ -30,7 +30,7 @@
     grid-column: 4;
     padding: 0.2em;
     display: grid !important;
-    grid-template-columns: repeat(2, minmax(auto, 4rem)) !important;
+    grid-template-columns: repeat(2, minmax(min-content, 1fr)) !important;
     gap: 0.2rem;
 }
 

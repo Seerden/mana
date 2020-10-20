@@ -26,4 +26,5 @@ const listSchema = new mongoose.Schema({
     sessions: [{type: sessionSchema}]
 }, { collation: {locale: 'en', strength: 2}}) 
 
+
 module.exports = { listSchema };

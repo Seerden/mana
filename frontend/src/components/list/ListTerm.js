@@ -4,6 +4,7 @@ import ListTermInput from './ListTermInput';
 import { ListContext } from '../../context/ListContext';
 import { updateList } from '../../helpers/db.api';
 import ListTermDeleteButton from "./ListTermDeleteButton";
+import TermHistory from './TermHistory';
 
 /**
  * ListTerm component
@@ -15,11 +16,12 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     const [confirmingDelete, setConfirmingDelete] = useState(false);
     const [isHovering, setIsHovering] = useState(false)
     const { listContextValue, setListContextValue } = useContext(ListContext);
+    const [showHistory, setShowHistory] = useState(false);
 
     const termStyles = {
         gridTemplateColumns: confirmingDelete
-            ? `2rem repeat(2, minmax(40%, min-content)) auto`
-            : `2rem repeat(2, minmax(40%, min-content)) auto`,
+            ? `2rem repeat(2, minmax(40%, min-content)) repeat(3, auto)`
+            : `2rem repeat(2, minmax(40%, min-content)) repeat(3, auto)`,
         backgroundColor: confirmingDelete ? '' : null,
         border: confirmingDelete ? '2px solid orangered' : null
     }
@@ -86,15 +88,20 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
                 />
 
                 {!isEditing &&
-                    <ListTermDeleteButton
-                        confirmingDelete={confirmingDelete}
-                        isHovering={isHovering}
-                        setConfirmingDelete={setConfirmingDelete}
-                        handleConfirmClick={handleConfirmClick}
-                    />
+                    <>
+                        <button className="List__term--historybutton" onClick={() => setShowHistory(!showHistory)}>hist</button>
+                        <ListTermDeleteButton
+                            confirmingDelete={confirmingDelete}
+                            isHovering={isHovering}
+                            setConfirmingDelete={setConfirmingDelete}
+                            handleConfirmClick={handleConfirmClick}
+                        />
+
+                    </>
                 }
 
             </li>
+            <TermHistory visible={showHistory} history={term.history} />
         </>
     )
 })
