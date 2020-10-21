@@ -1,6 +1,7 @@
 .ListsItem {
+    background: linear-gradient(to bottom, #252525, #222);
     border-radius: 2px;
-    border: 1px solid #313131;
+    border: 2px solid #444;
     box-shadow: 0em 0.3em 1em black;
 
     padding: 1rem;
@@ -11,6 +12,14 @@
         'from'
         'to'
         'since';
+
+    transition: background 200ms linear, box-shadow 100ms ease-in;
+
+    &:hover {
+        background: linear-gradient(to bottom right, #272727, #222);
+        border-color: #484848;
+        box-shadow: 0 0.3em 1.5em black;
+    }
 }
 
 .ListsItem__name {

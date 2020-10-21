@@ -8,10 +8,14 @@ $maxwidth: 800px;  // dev
     margin-left: 2rem;
 
     max-width: $maxwidth;  // dev
+    width: minmax(min-content, max-content);
 }
 
 .TermHistory__session {
-
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    box-shadow: 4px 4px 1em black;
+    border: 1px solid #333;
 }
 
 .TermHistory__date {
@@ -20,7 +24,6 @@ $maxwidth: 800px;  // dev
 
 .TermHistory__history {
     padding-left: 1rem;
-
 }
 
 .TermHistory__passfail {
@@ -28,7 +31,6 @@ $maxwidth: 800px;  // dev
     height: 1.5rem;
     margin: 0.2rem;
     border-radius: 2px;
-    
 }
 
 .pass, .fail {

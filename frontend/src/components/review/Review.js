@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
 import { useLogState } from '../../hooks/state';
 import { getListFromDB, updateList } from '../../helpers/db.api';
-import { buildTermList } from '../../helpers/review.helpers';
+import { buildTermList } from '../../helpers/review.api';
 import ReviewCard from './ReviewCard';
 import './css/Review.css';
 import dayjs from 'dayjs';

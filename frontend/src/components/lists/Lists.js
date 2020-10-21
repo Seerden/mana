@@ -1,10 +1,10 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './css/Lists.scss'
 import { useRouteProps } from '../../hooks/routerHooks';
 import { getListsByUser } from '../../helpers/db.api';
 import { useLogState } from '../../hooks/state';
 import ListsItem from './ListsItem';
+import './Lists.scss'
 
 const Lists = memo((props) => {
     const [filter, setFilter] = useState('');
@@ -26,15 +26,10 @@ const Lists = memo((props) => {
 
     return (
         <>
-            { !lists &&
-                <div className="Lists__wrapper">
-                    Loading lists from database...
-                </div>
-            }
 
             { lists &&
                 <div className="Lists__wrapper">
-                    <div className="Lists__header">Lists by /u/{params.username}</div>
+                    <div className="Lists__header">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
 
                     <label htmlFor="filter" id="Lists__filter--label">Filter by name:</label>
                     <input

@@ -115,6 +115,16 @@ dbRouter.post('/list', (req, res) => {
     })
 })
 
+dbRouter.delete('/list', (req, res) => {
+    List.findOneAndDelete({...req.query}, (err, deletedList) => {
+        if (!err) {
+            res.status(200).json(deletedList)
+        } else if (err) {
+            res.status(404).send('Could not delete requested list.')
+        }
+    })
+})
+
 dbRouter.post('/list/update', async (req, res) => {
     const { query, body } = req.body.data;
     List.findOneAndUpdate(query, {$set: {content: body.content, sessions: body.sessions}}, {new: true}, (err, updated) => {

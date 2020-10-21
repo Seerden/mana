@@ -7,7 +7,7 @@ import axios from 'axios';
 
 /**
      * Get a list instance from the database
-     * @param {object} query object with keys { _id, owner, name, from, to, content }, matching the properties of the list schema in the database
+     * @param {object} query object with keys matching database listSchema
      */
 export const getListFromDB = async (query) => {
     return axios.get('/db/list/', { params: query })
@@ -61,4 +61,13 @@ export const getUserFromDB = async (username, args) => {
     return await axios.get(`/db/u/${username}${ args && args.populate ? `?populate=${ args && args.populate}` : ''}`)
         .then(res => res.data)
         .catch(err => { throw new Error('Error getting user from database') })
+}
+
+/**
+ * Delete list from database
+ */
+export const deleteListFromDB = async (query) => {
+    axios.delete('/db/list', { params: query })
+        .then(r => r.data)
+        .catch(e => e)
 }

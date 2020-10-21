@@ -2,9 +2,8 @@ import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import './css/List.css';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { getListFromDB, updateList } from '../../helpers/db.api';
+import { deleteListFromDB, getListFromDB, updateList } from '../../helpers/db.api';
 import ListTerm from './ListTerm'
-import ListSessions from './ListSessions';
 import { ListContext } from '../../context/ListContext';
 
 const List = memo((props) => {
@@ -52,6 +51,12 @@ const List = memo((props) => {
             .then(r => console.log('removed item from list in db'))
     }
 
+    function handleDelete(){
+        deleteListFromDB({_id: params.id})
+            .then(res => console.log(res))
+            .catch(e => console.log(e))
+    }
+
     return (
         <>
             <div className="List">
@@ -60,7 +65,8 @@ const List = memo((props) => {
                 {list &&
                     <>
                         <h1 className="List__name">{list.name} ({list.from} to {list.to})</h1>
-                        <Link className="Link-button" to={`${location.pathname}/review`}>Review!</Link>
+                        <button className="Button"><Link to={`${location.pathname}/review`}>Review</Link></button>
+                        <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
                         <div className="List__content">
 
                             <div className="List__content--terms">
