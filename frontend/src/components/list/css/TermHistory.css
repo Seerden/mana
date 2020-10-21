@@ -1,4 +1,6 @@
-$maxwidth: 800px;  // dev
+:root {
+    --maxwidth: 800px
+}
 
 .TermHistory {
     transform: translateY(-10px);
@@ -7,7 +9,7 @@ $maxwidth: 800px;  // dev
     padding: 0.3rem 1rem;
     margin-left: 2rem;
 
-    max-width: $maxwidth;  // dev
+    max-width: var(--maxwidth);
     width: minmax(min-content, max-content);
 }
 

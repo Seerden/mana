@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from "react";
-import './css/TermHistory.scss'
+import './css/TermHistory.css'
 import dayjs from 'dayjs';
 import { timeSince } from '../../helpers/time';
 
@@ -31,7 +31,7 @@ const TermHistory = memo(({ visible, history }) => {
                 <div className="TermHistory">
                     <div className="TermHistory__header">
                         <div
-                            className="TermHistry__header--desc">
+                            className="TermHistory__header--desc">
                             You've reviewed this term {histEl.length} time{histEl.length === 1 ? '' : 's'}
                         </div>
                         {histEl.length > 1 &&

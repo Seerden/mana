@@ -40,11 +40,10 @@ body {
     outline:none;
     border: none;
 }
-
 .Button:hover {
-    transform: translateY(-1px) scale(1.02);
-    box-shadow: 0 0 1em black;
-}
+        transform: translateY(-1px) scale(1.02);
+        box-shadow: 0 0 1em black;
+    }
 
 .danger {
     background-color: orangered;
@@ -57,13 +56,12 @@ body {
     border-bottom: 1px solid transparent;
 
     transition: all ease 100ms;
-
-    &:hover {
+}
+.Link:hover {
         transform: translateY(-2px);
         color: slateblue;
     }
 
-    &:active {
+.Link:active {
         border-bottom: 1px solid slateblue;
     }
-}

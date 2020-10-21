@@ -22,16 +22,15 @@
     outline: 1px solid #444;
     box-shadow: 5px 5px 0.5em -2px black;
     transition: all 100ms linear;
-
-    &::placeholder {
+}
+#Lists__filter::placeholder {
         color: #aaa;
     }
 
-    &:focus {
+#lists__filter:focus {
         outline: 1px solid deepskyblue;
         box-shadow: 5px 5px 1.5em -2px black;
     }
-}
 
 #Lists__filter--label {
     display: block;
