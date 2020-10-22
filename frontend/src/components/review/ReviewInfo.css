@@ -1,0 +1,62 @@
+details {
+    display: block;
+    width: max-content;
+    margin-top: 2rem;
+    box-shadow: 0 0 0.5em black;
+    border-radius: 3px 0 0 0;
+
+}
+
+summary {
+    opacity: 1;
+    outline: none;
+    list-style: none;
+    outline: 2px solid #111;
+    width: 100%;
+    padding: 1rem;
+    background-color: #222;
+    background-attachment: fixed;
+    user-select: none;
+    color: deepskyblue;
+    font-weight: 600;
+
+    transition: all 100ms ease;
+    border-bottom: 2px solid transparent;
+}
+
+summary span {
+    padding-left: 0.5rem;
+}
+
+summary:hover {
+    border-bottom: 2px solid deepskyblue;
+}
+
+details[open] {
+    width: minmax(max-content, 100%);
+}
+
+summary::-webkit-details-marker {
+    display: none;
+    color: deepskyblue;
+}
+
+summary::before {
+    display: inline-block;
+    content: "+";
+    width: 5px;
+}
+
+details[open] summary::before {
+    display: inline-block;
+    content: "-";
+    width: 5px;
+}
+
+details[open] summary {
+    border-bottom: 2px solid deepskyblue;
+}
+
+details > div, details > span {
+    padding: 1rem;
+}

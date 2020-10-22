@@ -1,30 +1,38 @@
-import React from "react";
+import React, { useState, memo } from "react";
+import Timer from './Timer';
+import './ReviewInfo.css';
 
-const ReviewInfo = ({ numTerms, n, progress }) => {
+const ReviewInfo = memo(({ start, numTerms, n, progress }) => {
+    const [expanded, setExpanded] = useState(false);
 
     return (
-        <div className="Review__info">
-            <h2 className="Review__info--header">
-                Session information
-            </h2>
+        <details className="Review__info">
+            <summary>
+                <span className="Review__info--header">
+                    <span>Session information</span>
+                </span>
+            </summary>
 
             <div className="Review__info--dynamic">
                 <div className="Review__info--completion">
                     Session completion: {progress}%.
+                    <div>
+                        You started this session <Timer start={start} />.
+                    </div>
                 </div>
             </div>
 
             <div className="Review__info--hideable">
                 <div>
-                    Number of terms in this list: {numTerms}.
+                    Number of terms in this list: <storng>{numTerms}</storng>.
                 </div>
                 <div>
-                    Pass each term {n} time{n !== 1 ? 's' : ''} to complete the session.
+                    Pass each term <strong>{n} time{n !== 1 ? 's' : ''}</strong> to complete the session.
                 </div>
             </div>
 
-        </div>
+        </details>
     )
-}
+})
 
 export default ReviewInfo

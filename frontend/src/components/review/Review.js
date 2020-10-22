@@ -160,7 +160,7 @@ const Review = memo((props) => {
             { list &&
                 <div className="PageHeader Review__title">
                     <div>
-                        Reviewing<span className="Review__title--name">{list.name}</span>
+                        Reviewing<span className="Review__title--name"><em>{list.name}</em></span>
                     </div>
                     <div className="">
                         <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to {list.name}</Link>
@@ -181,7 +181,7 @@ const Review = memo((props) => {
                         <div id="Review-progress__bar" style={{ width: `${progress}%` }}></div>
                     </div>
 
-                    <ReviewInfo numTerms={list.content.length} n={n} progress={progress}/>
+                { sessionStart && <ReviewInfo start={sessionStart}numTerms={list.content.length} n={n} progress={progress}/> }
                     
                 </>
             }
