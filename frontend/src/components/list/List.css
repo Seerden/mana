@@ -67,7 +67,23 @@ ul {
 }
 
 .List__term--historybutton {
+    color: whitesmoke;
+    background-color: #111;
+    outline: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    place-self: center;
     width: 50px;
+    padding: 0.2rem;
+
+    transition: all 100ms linear;
+}
+
+.List__term--historybutton:hover {
+    background-color:whitesmoke;
+    color: #222;
 }
 
 .List__term div {

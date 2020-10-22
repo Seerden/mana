@@ -6,6 +6,7 @@
 # backend
 /backend/node_modules
 /backend/dev
+/backend/routers.rest
 
 *.env
 node_modules

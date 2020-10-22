@@ -15,11 +15,6 @@
 
     transition: background 200ms linear, box-shadow 100ms ease-in;
 }
-.ListsItem:hover {
-        background: linear-gradient(to bottom right, #272727, #222);
-        border-color: #484848;
-        box-shadow: 0 0.3em 1.5em black;
-    }
 
 .ListsItem__name {
     grid-area: name;
@@ -36,14 +31,14 @@
 
     transition: all ease 100ms;
 }
-    .ListsItem__name--link:hover {
-        transform: translateY(-2px);
-        color: slateblue;
-    }
+.ListsItem__name--link:hover {
+    transform: translateY(-2px);
+    color: slateblue;
+}
 
-    .ListsItem__name--link:active {
-        border-bottom: 1px solid slateblue;
-    }
+.ListsItem__name--link:active {
+    border-bottom: 1px solid slateblue;
+}
 
 .ListsItem__from, .ListsItem__to, .ListsItem__since {
     font-size: 0.8rem;

@@ -3,18 +3,20 @@ const User = dbConn.model('User');
 const List = dbConn.model('List');
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
+
+/**
+ * Express router for /db routes, used as API endpoints for frontend interaction with the database.
+ */
 const dbRouter = express.Router();
     dbRouter.use(bodyParser.urlencoded({ extended: true }));
     dbRouter.use(bodyParser.json());
-const fs = require('fs');
-const path = require('path');
 
 dbRouter.get('/list/devpopulate', (req, res) => {
     const base = path.join(__dirname, '../dev/wrts');
     const filenames = fs.readdirSync(base)
     const jsonFiles = filenames.filter(f => f.includes('json'))
-
-    res.send(`${filenames.length}`)
 
     const populate = async () => {
         for (let file of jsonFiles) {
@@ -78,8 +80,8 @@ dbRouter.get('/listsbyuser/:username', (req, res) => {
 })
 
 dbRouter.get('/list', (req, res) => {
-    const query = req.query;
-    List.findOne({...query}, (err, found) => {res.json(found)})
+    const { filter, ...query } = req.query;  // expect query like '?filter=-content&username=foo'
+    List.findOne({...query}, filter, (err, found) => {res.json(found)})
 })
 
 dbRouter.post('/list', (req, res) => {

@@ -1,12 +1,12 @@
 import React, { memo, useEffect, useState, useRef, useReducer } from "react";
-import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { useLogState } from '../../hooks/state';
 import { getListFromDB, updateList } from '../../helpers/db.api';
 import { buildTermList } from '../../helpers/review.api';
 import ReviewCard from './ReviewCard';
-import './css/Review.css';
 import dayjs from 'dayjs';
+import PostReview from "./PostReview";
+import ReviewInfo from "./ReviewInfo";
+import './Review.css';
 
 const Review = memo((props) => {
     const n = 2; // number of times each term should be reviewed. @todo expand on this functionality
@@ -19,18 +19,17 @@ const Review = memo((props) => {
     const [currentCard, setCurrentCard] = useState(null);
     const [progress, setProgress] = useState(0);  // percentage of terms marked 'pass' in the session
 
-    const failRef = useRef(null);
+    const failRef = useRef(null);  // refs for handleLeftRightArrowKeydown to target
     const passRef = useRef(null);
 
     useEffect(() => {  // get list from database and initialize futureTerms
         getListFromDB({ _id: params.id }).then(res => {
             setList(res);
-            let toReview = (buildTermList(res.content, n))
-            reduceFutureTerms({ type: 'init', payload: toReview })
+            reduceFutureTerms({ type: 'init', payload: buildTermList(res.content, n)})
         })
     }, [])
 
-    useEffect(() => {  // remove, recreate keydown listener, create <ReviewCard />
+    useEffect(() => {  // remove, recreate keydown listener, create <ReviewCard /> and setCurrentCard
         if (futureTerms.length > 0) {
             setCurrentCard(<ReviewCard key={`card-${futureTerms[0].from}`} term={futureTerms[0]} />)
         }
@@ -40,16 +39,19 @@ const Review = memo((props) => {
             let termsCompleted = sessionLength - futureTerms.length;
             setProgress(Math.floor(100 * termsCompleted / sessionLength));
         }
-        
-        window.addEventListener('keydown', handleKeydown)
-        return () => window.removeEventListener('keydown', handleKeydown)
+
+        window.addEventListener('keydown', handleLeftRightArrowKeyDown)
+        return () => { 
+            window.removeEventListener('keydown', handleLeftRightArrowKeyDown) 
+            setCurrentCard(null)
+        }
     }, [futureTerms])
 
     /**
      * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
      * @param {*} e event object
      */
-    const handleKeydown = e => {
+    const handleLeftRightArrowKeyDown = e => {
         let ref;
         switch (e.code) {
             case 'ArrowLeft':
@@ -81,7 +83,7 @@ const Review = memo((props) => {
      * @param {Object} action   properties: type (init, pass, fail). if type 'init', send terms as action.payload
      */
     function termReducer(terms, action) {
-        
+
         switch (action.type) {
             case 'init':
                 return action.payload
@@ -113,8 +115,9 @@ const Review = memo((props) => {
     function updateSessionHistory(term, passfail) {
         const content = [...list.content];
         let idx = content.findIndex(i => i.to === term.to && i.from === term.from)
+
         if (!content[idx].history || content[idx].history.length === 0) {
-            content[idx].history = [{ date: Date.now(), content: [] }]
+            content[idx].history = [{ date: sessionStart, content: [] }]
         }
         if (content[idx].history.length > 0) {
             let histLen = content[idx].history.length
@@ -153,11 +156,8 @@ const Review = memo((props) => {
     return (
         <div className="Review">
             { list &&
-                <div className="Review__title">
-                    Reviewing
-                    <span className="Review__title--name">{list.name}</span>
-                    by
-                    <span className="Review__title--owner">{list.owner}</span>
+                <div className="PageHeader">
+                    Reviewing<span className="Review__title--name">{list.name}</span>
                 </div>
             }
 
@@ -173,17 +173,18 @@ const Review = memo((props) => {
                     <div className="Review-progress__wrapper">
                         <div id="Review-progress__bar" style={{ width: `${progress}%` }}></div>
                     </div>
+
+                    <ReviewInfo list={list} n={n} progress={progress}/>
+                    
                 </>
             }
 
             { sessionEnd &&
-                <div className="Review__post">
-                    <h2>Session completed.</h2>
-                    <div>Started on {sessionStart.toISOString()}</div>
-                    <div>Completed on {sessionEnd.toISOString()}</div>
-                    <Link className="Link-button" to={`/u/${list.owner}/list/${params.id}`}>Back to list</Link>
-                    <Link className="Link-button"to={`/u/${list.owner}/lists`}>My lists</Link>
-                </div>
+                <PostReview 
+                    sessionStart={sessionStart}
+                    sessionEnd={sessionEnd}
+                    list={list}
+                />
             }
 
             { !list && <div className="Loading">Loading list...</div>}
@@ -197,6 +198,6 @@ export default Review;
 @todo?  set progress bar color based in session cycle. go to 100% n time with various colors, instead of slowly progress a single bar
         makes it feel like progress is faster */
 
-/* 
+/*
 @todo: if the same card is shown twice in a row (can happen randomly), currentCard isn't rerendered (or something to the same effect)
         this isn't a problem, really, but the fadein effect isn't shown. find a way to fix this, e.g. by changing currentCard's key */

@@ -26,21 +26,23 @@ const Lists = memo((props) => {
 
     return (
         <>
-
             { lists &&
-                <div className="Lists__wrapper">
+                <div className="PageWrapper Lists__wrapper">
                     <div className="Lists__header">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
+                    <button className="Button"><Link to={`/u/${params.username}/lists/new`}>Make a new list</Link></button>
 
-                    <label htmlFor="filter" id="Lists__filter--label">Filter by name:</label>
-                    <input
-                        autoFocus
-                        onChange={handleFilterChange}
-                        placeholder="e.g. 'chapter 2'"
-                        id="Lists__filter"
-                        type="text"
-                        name="filter"
-                        value={filter}
-                    />
+                    <div className="Lists__filter">
+                        <label htmlFor="filter" id="Lists__filter--label">Filter lists by name:</label>
+                        <input
+                            autoFocus
+                            onChange={handleFilterChange}
+                            placeholder="e.g. 'chapter 2'"
+                            id="Lists__filter"
+                            type="text"
+                            name="filter"
+                            value={filter}
+                        />
+                    </div>
 
                     <div className="Lists">
 

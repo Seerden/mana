@@ -43,7 +43,7 @@ const ListsItem = memo(({ list }) => {
             <div className="ListsItem__to">{list.to}</div>
         { list.sessions.length > 0 && 
             <div className="ListsItem__since">
-                <em>Reviewed {timeSince(list.sessions[list.sessions.length-1].end)}</em>
+                <em>last reviewed {timeSince(list.sessions[list.sessions.length-1].end)}</em>
             </div> 
         }
         </div>

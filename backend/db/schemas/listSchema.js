@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const termSchema = new mongoose.Schema({
     to: String,
     from: String,
-    history: Array
+    history: {type: Array, default: []}
 })
 
 const sessionSchema = new mongoose.Schema({
@@ -23,7 +23,8 @@ const listSchema = new mongoose.Schema({
     content: [
         {type: termSchema, required: true}
     ],
-    sessions: [{type: sessionSchema}]
+    sessions: [{type: sessionSchema}],
+    numTerms: {type: Number, default: function(){return this.content.length}}
 }, { collation: {locale: 'en', strength: 2}}) 
 
 

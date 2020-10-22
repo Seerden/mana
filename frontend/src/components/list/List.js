@@ -1,16 +1,26 @@
 import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import './css/List.css';
+import './List.css';
 import { useRouteProps } from '../../hooks/routerHooks';
 import { deleteListFromDB, getListFromDB, updateList } from '../../helpers/db.api';
 import ListTerm from './ListTerm'
 import { ListContext } from '../../context/ListContext';
+import { extractSession } from '../../helpers/list.api';
 
 const List = memo((props) => {
     const [list, setList] = useState(null);
     const [terms, setTerms] = useState(null);
     const { params, location } = useRouteProps();
     const { listContextValue, setListContextValue } = useContext(ListContext);
+
+    useEffect(() => {
+        if (list) {
+            if (list.sessions.length > 0 ) {
+                console.log(extractSession(list, 0));
+            }
+        }
+
+    }, [list])
 
     const updateTerms = () => {
         setTerms(list.content.map((term, idx) => {

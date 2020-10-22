@@ -1,16 +1,9 @@
 :root {
-    --review-width: 400px;
     --duration: 250ms;
 }
 
 .Review {
-    min-width: var(--review-width);
-    width: 80%;
     padding: 1em;
-    margin: 0 auto;
-    box-shadow: 0 0 1em black;
-    border-radius: 5px;
-    border: 2px solid #333;
 }
 
 .Review__title {
@@ -33,32 +26,25 @@
 
 .Review__current, .Review__buttons {
     display: flex;
-    max-width: 600px;
-    width: 90%;
-    margin: 1em auto;
+    width: 50%;
 }
 
 .Review__current {
     /* color: darkslategrey; */
-    min-width: var(--review-width);
+    line-height: 1.5rem;
     padding: 3rem;
     box-shadow: 0 0 1em black;
     justify-content: center;
-    align-items: center;
     border-radius: 5px;
     perspective: 700px;
     font-weight: 200;
 }
 
 .ReviewCard {
-    min-width: var(--review-width);
-    height: 100%;
     background: linear-gradient(-30deg, #eee, #ddd);
     color: darkslategrey;
     font-size: 1.6rem;    
-    line-height: 1.8rem;
     display: flex;
-    place-self: center;
     
 }
 
@@ -73,36 +59,22 @@
     transform: perspective(500px);
     transform-style: preserve-3d;
     transform-origin: 50% 50%; 
-
     animation: 250ms linear flip;
     animation-fill-mode: forwards;
-
 }
 
 @keyframes fadein {
-    0% {
-        opacity: 0;
-        
-    }
-    100% {
-        opacity: 1;
-    }
+    0% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 @keyframes flip {
-    0% {
-        opacity: 1
-    }
-    50% {
-        transform: rotateX(90deg)
-    }
-    100% {
-        transform: rotateX(0deg);
-    }
+    0% { opacity: 1 }
+    50% { transform: rotateX(90deg) }
+    100% { transform: rotateX(0deg); }
 }
 
 .Review__buttons {
-    min-width: var(--review-width);
     justify-content: space-around;
 }
 
@@ -112,10 +84,9 @@
     border: none;
     color: azure;
     box-shadow: 0 0 0.5em black;
-    margin: 0 1em;
+    margin-top: 1rem;
     width: 120px;
     height: 30px;
-    /* font-weight: 600; */
     font-family: 'Roboto';
 
     transition: all 80ms ease-in
@@ -130,8 +101,8 @@
 
 }
 
-.fail, .pass {
-    background-color: var(--background-secondary);
+.Review-button.fail, .Review-button.pass {
+    background-color: #333;
 }
 
 .fail:hover, .fail:focus {

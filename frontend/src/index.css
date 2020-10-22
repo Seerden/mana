@@ -22,9 +22,11 @@ body {
 }
 
 .PageHeader {
+    font-weight: 600;
     font-size: 1.6rem;
-    border-bottom: 2px solid deepskyblue;
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.2em;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #333;
 }
 
 .Button {
@@ -60,8 +62,12 @@ body {
 .Link:hover {
         transform: translateY(-2px);
         color: slateblue;
-    }
+}
 
 .Link:active {
         border-bottom: 1px solid slateblue;
-    }
+}
+
+.PageWrapper {
+    margin: 2rem;
+}

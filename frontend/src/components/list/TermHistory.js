@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from "react";
-import './css/TermHistory.css'
+import './TermHistory.css'
 import dayjs from 'dayjs';
 import { timeSince } from '../../helpers/time';
 
