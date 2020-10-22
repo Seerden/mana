@@ -1,8 +1,8 @@
 .ListsItem {
-    background: linear-gradient(to bottom, #252525, #222);
+    background: linear-gradient(to bottom right, #292929, #222);
     border-radius: 2px;
     border: 2px solid #444;
-    box-shadow: 0em 0.3em 1em black;
+    box-shadow: 0em 0.3rem 1rem black;
 
     padding: 1rem;
 

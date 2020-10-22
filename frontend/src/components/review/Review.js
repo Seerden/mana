@@ -1,4 +1,6 @@
 import React, { memo, useEffect, useState, useRef, useReducer } from "react";
+import { Link } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import { useRouteProps } from '../../hooks/routerHooks';
 import { getListFromDB, updateList } from '../../helpers/db.api';
 import { buildTermList } from '../../helpers/review.api';
@@ -31,7 +33,7 @@ const Review = memo((props) => {
 
     useEffect(() => {  // remove, recreate keydown listener, create <ReviewCard /> and setCurrentCard
         if (futureTerms.length > 0) {
-            setCurrentCard(<ReviewCard key={`card-${futureTerms[0].from}`} term={futureTerms[0]} />)
+            setCurrentCard(<ReviewCard key={uuidv4()} term={futureTerms[0]} />)
         }
 
         if (list && futureTerms) {
@@ -51,7 +53,7 @@ const Review = memo((props) => {
      * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
      * @param {*} e event object
      */
-    const handleLeftRightArrowKeyDown = e => {
+    function handleLeftRightArrowKeyDown(e) {
         let ref;
         switch (e.code) {
             case 'ArrowLeft':
@@ -88,13 +90,8 @@ const Review = memo((props) => {
             case 'init':
                 return action.payload
             case 'pass':
-                // setPassCount(passCount+1)
-                // remove term from deck
-                return terms.slice(1,);
+                return terms.slice(1,);  // remove the term
             case 'fail':
-                /*  @todo:    insert term somewhere in 'current cycle' of review session 
-                                i.e. if not all terms have been passed at least once, I don't want to place the term among the second 'cycle'
-                    @current:   re-insert the term at a random index */
                 let newIndex = Math.floor((terms.length + 1) * Math.random());
 
                 let newTerms = [...terms];
@@ -135,7 +132,7 @@ const Review = memo((props) => {
     }
 
     /**
-     * Handle clicking 'pass'/'fail': updateSessionHistory(), then reduceFutureTerms()
+     * Handle clicking the pass or fail button
      * @param {*} e javascript event
      * @param {string} passfail 'pass'/'fail'
      */
@@ -147,17 +144,27 @@ const Review = memo((props) => {
         if (passfail === 'pass') { setPassCount(passCount + 1) }
         if (passCount === (n * list.content.length - 1) && passfail === 'pass') {  // end session
             let end = new Date()
-            setSessionEnd(end)
-            updatedList.sessions.push({ start: sessionStart, end: end, numTerms: n * updatedList.content.length })
-            updateList({ _id: params.id, owner: list.owner }, updatedList)
+            endSession(updatedList)
         }
+    }
+
+    function endSession(list){
+        let end = new Date();
+        setSessionEnd(end);
+        list.sessions.push({ start: sessionStart, end: end, numTerms: n * list.content.length })
+        updateList({ _id: params.id, owner: list.owner }, list)
     }
 
     return (
         <div className="Review">
             { list &&
-                <div className="PageHeader">
-                    Reviewing<span className="Review__title--name">{list.name}</span>
+                <div className="PageHeader Review__title">
+                    <div>
+                        Reviewing<span className="Review__title--name">{list.name}</span>
+                    </div>
+                    <div className="">
+                        <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to {list.name}</Link>
+                    </div>
                 </div>
             }
 
@@ -174,7 +181,7 @@ const Review = memo((props) => {
                         <div id="Review-progress__bar" style={{ width: `${progress}%` }}></div>
                     </div>
 
-                    <ReviewInfo list={list} n={n} progress={progress}/>
+                    <ReviewInfo numTerms={list.content.length} n={n} progress={progress}/>
                     
                 </>
             }
@@ -197,7 +204,3 @@ export default Review;
 /*
 @todo?  set progress bar color based in session cycle. go to 100% n time with various colors, instead of slowly progress a single bar
         makes it feel like progress is faster */
-
-/*
-@todo: if the same card is shown twice in a row (can happen randomly), currentCard isn't rerendered (or something to the same effect)
-        this isn't a problem, really, but the fadein effect isn't shown. find a way to fix this, e.g. by changing currentCard's key */

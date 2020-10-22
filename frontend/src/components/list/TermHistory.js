@@ -9,8 +9,8 @@ const TermHistory = memo(({ visible, history }) => {
     const histEl = makeHistoryElement(history);
 
     function makeHistoryElement(history) {
-        return history.map(el => {
-            return (
+        return history.map(el => 
+             (
                 <>
                     <div className="TermHistory__session">
                         <div title={dayjs(el.date).format('MMMM DD, YYYY (HH:mm)')} className="TermHistory__date">
@@ -22,7 +22,7 @@ const TermHistory = memo(({ visible, history }) => {
                     </div>
                 </>
             )
-        })
+        )
     }
 
     return (
@@ -34,7 +34,7 @@ const TermHistory = memo(({ visible, history }) => {
                             className="TermHistory__header--desc">
                             You've reviewed this term {histEl.length} time{histEl.length === 1 ? '' : 's'}
                         </div>
-                        {histEl.length > 1 &&
+                        { histEl.length > 1 &&
                             <button
                                 className="TermHistory__header--button"
                                 onClick={() => setExpand(!expand)}

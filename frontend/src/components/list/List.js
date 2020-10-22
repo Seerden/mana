@@ -74,7 +74,7 @@ const List = memo((props) => {
 
                 {list &&
                     <>
-                        <h1 className="List__name">{list.name} ({list.from} to {list.to})</h1>
+                        <div className="PageHeader">{list.name} ({list.from} to {list.to})</div>
                         <button className="Button"><Link to={`${location.pathname}/review`}>Review</Link></button>
                         <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
                         <div className="List__content">

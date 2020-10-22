@@ -1,6 +1,6 @@
 import React from "react";
 
-const ReviewInfo = ({ list, n, progress }) => {
+const ReviewInfo = ({ numTerms, n, progress }) => {
 
     return (
         <div className="Review__info">
@@ -15,7 +15,12 @@ const ReviewInfo = ({ list, n, progress }) => {
             </div>
 
             <div className="Review__info--hideable">
-                {list.content.length} terms in this session, to be reviewed {n} times each.
+                <div>
+                    Number of terms in this list: {numTerms}.
+                </div>
+                <div>
+                    Pass each term {n} time{n !== 1 ? 's' : ''} to complete the session.
+                </div>
             </div>
 
         </div>
