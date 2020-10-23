@@ -24,7 +24,7 @@ const ReviewInfo = memo(({ start, numTerms, n, progress }) => {
 
             <div className="Review__info--hideable">
                 <div>
-                    Number of terms in this list: <storng>{numTerms}</storng>.
+                    Number of terms in this list: <strong>{numTerms}</strong>.
                 </div>
                 <div>
                     Pass each term <strong>{n} time{n !== 1 ? 's' : ''}</strong> to complete the session.

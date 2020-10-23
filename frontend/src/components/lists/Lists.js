@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { getListsByUser } from '../../helpers/db.api';
+import { getLists } from '../../helpers/db.api';
 import { useLogState } from '../../hooks/state';
 import ListsItem from './ListsItem';
 import './Lists.css'
@@ -12,7 +12,7 @@ const Lists = memo((props) => {
     const [listsElement, setListsElement] = useState(null);
     const { params } = useRouteProps();
 
-    useEffect(() => { getListsByUser(params.username).then(res => setLists(res)) }, [])
+    useEffect(() => { getLists(params.username).then(res => setLists(res)) }, [])
     useEffect(() => { if (lists) { setListsElement(makeListsElement(lists)) } }, [lists])
 
     const handleFilterChange = e => {

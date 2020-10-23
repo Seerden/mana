@@ -9,7 +9,7 @@ import axios from 'axios';
      * Get a list instance from the database
      * @param {object} query object with keys matching database listSchema
      */
-export const getListFromDB = async (query) => {
+export const getList = async (query) => {
     return axios.get('/db/list/', { params: query })
         .then(r => r.data)
         .catch(e => console.log(e))
@@ -45,7 +45,7 @@ export const updateList = async (query, body) => {
  * Get all lists by the specific user from the database. Returns all list properties, except the content itself.
  * @param {string} username 
  */
-export const getListsByUser = async (username) => {
+export const getLists = async (username) => {
     return axios.get(`/db/listsbyuser/${username}`)
         .then(r => r.data)
         .catch(e => console.log('Error fetching from database:', e))
@@ -57,7 +57,7 @@ export const getListsByUser = async (username) => {
  * @param {object} args args.populate needs to be a single space-separated string, e.g. 'following followed'
  *                      nested population wouldn't work this way
  */
-export const getUserFromDB = async (username, args) => {
+export const getUser = async (username, args) => {
     return await axios.get(`/db/u/${username}${ args && args.populate ? `?populate=${ args && args.populate}` : ''}`)
         .then(res => res.data)
         .catch(err => { throw new Error('Error getting user from database') })
@@ -66,7 +66,7 @@ export const getUserFromDB = async (username, args) => {
 /**
  * Delete list from database
  */
-export const deleteListFromDB = async (query) => {
+export const deleteList = async (query) => {
     axios.delete('/db/list', { params: query })
         .then(r => r.data)
         .catch(e => e)

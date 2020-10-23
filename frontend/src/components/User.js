@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getUserFromDB } from '../helpers/db.api';
+import { getUser } from '../helpers/db.api';
 import { useRouteProps,  } from '../hooks/routerHooks';
 
 const User = () => {
@@ -7,7 +7,7 @@ const User = () => {
     const username = params.username;
     const [user, setUser] = useState(null);
 
-    useEffect(() => { getUserFromDB(username).then(res => setUser(res)) }, [])
+    useEffect(() => { getUser(username).then(res => setUser(res)) }, [])
 
     return (
         <div className="User">

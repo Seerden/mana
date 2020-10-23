@@ -27,13 +27,9 @@
     margin: 0 0.3em;
 }
 
-.Review__current, .Review__buttons {
+.ReviewCard {
     display: flex;
-    width: 50%;
-}
-
-.Review__current {
-    /* color: darkslategrey; */
+    border: 2px solid transparent;
     line-height: 1.5rem;
     padding: 3rem;
     box-shadow: 0 0 1em black;
@@ -41,9 +37,6 @@
     border-radius: 5px;
     perspective: 700px;
     font-weight: 200;
-}
-
-.ReviewCard {
     background: linear-gradient(-30deg, #eee, #ddd);
     color: darkslategrey;
     font-size: 1.6rem;    
@@ -55,8 +48,6 @@
     animation-fill-mode: forwards;
 }
 
-/* @todo rotation needs to be on a shadow element, because I don't want text content to be rotated (text becomes blurry, haven't found a fix) */
-/* note also that quickly hovering and unhovering causes the whole perspective to bug out */
 .flip { 
     transform: perspective(500px);
     transform-style: preserve-3d;
@@ -77,16 +68,19 @@
 }
 
 .Review__buttons {
+    display: flex;
     justify-content: space-around;
 }
 
-.Review-button {
+.Review__button {
     outline: none;
     margin: none;
     border: none;
     color: azure;
     box-shadow: 0 0 0.5em black;
     margin-top: 1rem;
+    background-color: #333;
+
     width: 120px;
     height: 30px;
     font-family: 'Roboto';
@@ -94,7 +88,7 @@
     transition: all 80ms ease-in
 }
 
-.Review-button:hover {
+.Review__button:hover {
     padding: 0;   /* padding is non-zero by default which causes 'shifting' effect of text */
     transform: translateY(-1px) scale(1.03);
     transform-style: preserve-3d;
@@ -103,28 +97,24 @@
 
 }
 
-.Review-button.fail, .Review-button.pass {
-    background-color: #333;
-}
-
-.fail:hover, .fail:focus {
+#Review__button--fail:hover, #Review__button--fail:focus {
     background-color: orangered;
 }
 
-.pass:hover, .pass:focus {
+#Review__button--pass:hover, #Review__button--pass:focus {
     background-color: seagreen;
 }
 
-.Review-progress__wrapper {
+.Review__progress--wrapper {
     width: 100vw;
     position: absolute;
-    top: 3rem;
+    top: 3rem;  /* should match Header component's height */
     left: 0;
     height: 4px;
     background-color: #555;
 }
 
-#Review-progress__bar {
+#Review-progress--bar {
     background-color: deepskyblue;   
     height: inherit;     
     transition: width 300ms linear;

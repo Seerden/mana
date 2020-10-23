@@ -7,12 +7,11 @@ const ReviewCard = memo(({ term }) => {
     const toggleSide = () => setSide(side === 'from' ? 'to' : 'from')
 
     useEffect(() => {
-        window.addEventListener('keyup', handleKeyup)
-
+        window.addEventListener('keyup', handleArrowUpDownKeyup)
         return () => {
-            window.removeEventListener('keyup', handleKeyup)
+            window.removeEventListener('keyup', handleArrowUpDownKeyup)
         }
-    }, [side])  // only flips correctly once if side not specified as dependency
+    }, [side])  // only flips correctly once per render if side not specified as dependency
 
     useEffect(() => { // when new term is shown, reset card state
         setSide('from')
@@ -20,7 +19,7 @@ const ReviewCard = memo(({ term }) => {
         setTimeout(() => setFade(false), 150)
     }, [term])
 
-    const handleKeyup = (e) => {
+    const handleArrowUpDownKeyup = (e) => {
         if (['ArrowUp', 'ArrowDown'].includes(e.code)) {
             flip();
         }

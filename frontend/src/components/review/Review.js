@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState, useRef, useReducer } from "react";
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { getListFromDB, updateList } from '../../helpers/db.api';
+import { getList, updateList } from '../../helpers/db.api';
 import { buildTermList } from '../../helpers/review.api';
 import ReviewCard from './ReviewCard';
 import dayjs from 'dayjs';
@@ -13,11 +13,10 @@ import './Review.css';
 const Review = memo((props) => {
     const n = 2; // number of times each term should be reviewed. @todo expand on this functionality
     const { params } = useRouteProps();
-    const [sessionStart, setSessionStart] = useState(() => new Date())
-    const [sessionEnd, setSessionEnd] = useState(false);
+    const [session, setSession] = useState(() => ({ start: new Date(), end: false }));
     const [list, setList] = useState(null);
     const [passCount, setPassCount] = useState(0);
-    const [futureTerms, reduceFutureTerms] = useReducer(termReducer, []);
+    const [futureTerms, reduceFutureTerms] = useReducer(termReducer, null);
     const [currentCard, setCurrentCard] = useState(null);
     const [progress, setProgress] = useState(0);  // percentage of terms marked 'pass' in the session
 
@@ -25,14 +24,14 @@ const Review = memo((props) => {
     const passRef = useRef(null);
 
     useEffect(() => {  // get list from database and initialize futureTerms
-        getListFromDB({ _id: params.id }).then(res => {
+        getList({ _id: params.id }).then(res => {
             setList(res);
-            reduceFutureTerms({ type: 'init', payload: buildTermList(res.content, n)})
+            reduceFutureTerms({ type: 'init', payload: buildTermList(res.content, n) })
         })
     }, [])
 
-    useEffect(() => {  // remove, recreate keydown listener, create <ReviewCard /> and setCurrentCard
-        if (futureTerms.length > 0) {
+    useEffect(() => {
+        if (futureTerms && futureTerms.length > 0) {
             setCurrentCard(<ReviewCard key={uuidv4()} term={futureTerms[0]} />)
         }
 
@@ -42,9 +41,13 @@ const Review = memo((props) => {
             setProgress(Math.floor(100 * termsCompleted / sessionLength));
         }
 
+        if (futureTerms && futureTerms.length === 0) {
+            endSession(list);
+        }
+
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
-        return () => { 
-            window.removeEventListener('keydown', handleLeftRightArrowKeyDown) 
+        return () => {
+            window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
             setCurrentCard(null)
         }
     }, [futureTerms])
@@ -114,14 +117,14 @@ const Review = memo((props) => {
         let idx = content.findIndex(i => i.to === term.to && i.from === term.from)
 
         if (!content[idx].history || content[idx].history.length === 0) {
-            content[idx].history = [{ date: sessionStart, content: [] }]
+            content[idx].history = [{ date: session.start, content: [] }]
         }
         if (content[idx].history.length > 0) {
             let histLen = content[idx].history.length
             let lastHist = content[idx].history[histLen - 1];
 
-            if (dayjs(lastHist.date) < dayjs(sessionStart)) {
-                content[idx].history.push({ date: sessionStart, content: [passfail] })
+            if (dayjs(lastHist.date) < dayjs(session.start)) {
+                content[idx].history.push({ date: session.start, content: [passfail] })
             } else {
                 content[idx].history[histLen - 1].content.push(passfail)
             }
@@ -136,22 +139,22 @@ const Review = memo((props) => {
      * @param {*} e javascript event
      * @param {string} passfail 'pass'/'fail'
      */
-    function handleClick(e, passfail) {
+    function handlePassFailClick(e, passfail) {
         e.preventDefault();
         let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
         reduceFutureTerms({ type: passfail })
 
         if (passfail === 'pass') { setPassCount(passCount + 1) }
-        if (passCount === (n * list.content.length - 1) && passfail === 'pass') {  // end session
-            let end = new Date()
-            endSession(updatedList)
-        }
     }
 
-    function endSession(list){
+    /**
+     * Set session.end, push the session to the list, update the list in the database.
+     * @param {Array} list list state
+     */
+    function endSession(list) {
         let end = new Date();
-        setSessionEnd(end);
-        list.sessions.push({ start: sessionStart, end: end, numTerms: n * list.content.length })
+        setSession({ ...session, end });
+        list.sessions.push({ start: session.start, end: end, numTerms: n * list.content.length })
         updateList({ _id: params.id, owner: list.owner }, list)
     }
 
@@ -162,34 +165,34 @@ const Review = memo((props) => {
                     <div>
                         Reviewing<span className="Review__title--name"><em>{list.name}</em></span>
                     </div>
-                    <div className="">
-                        <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to {list.name}</Link>
+                    <div>
+                        <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to list</Link>
                     </div>
                 </div>
             }
 
-            { !sessionEnd && currentCard &&
+            { !session.end && currentCard &&
                 <>
                     {currentCard}
 
                     <div className="Review__buttons">
-                        <input ref={failRef} onClick={(e) => handleClick(e, 'fail')} className="Review-button fail" type="button" value="Fail" />
-                        <input ref={passRef} onClick={(e) => handleClick(e, 'pass')} className="Review-button pass" type="button" value="Pass" />
+                        <input ref={failRef} onClick={(e) => handlePassFailClick(e, 'fail')} className="Review__button" id="Review__button--fail"type="button" value="Fail" />
+                        <input ref={passRef} onClick={(e) => handlePassFailClick(e, 'pass')} className="Review__button" id="Review__button--pass" type="button" value="Pass" />
                     </div>
 
-                    <div className="Review-progress__wrapper">
-                        <div id="Review-progress__bar" style={{ width: `${progress}%` }}></div>
+                    <div className="Review__progress--wrapper">
+                        <div id="Review__progress--bar" style={{ width: `${progress}%` }}></div>
                     </div>
 
-                { sessionStart && <ReviewInfo start={sessionStart}numTerms={list.content.length} n={n} progress={progress}/> }
-                    
+                    { session.start && <ReviewInfo start={session.start} numTerms={list.content.length} n={n} progress={progress} />}
+
                 </>
             }
 
-            { sessionEnd &&
-                <PostReview 
-                    sessionStart={sessionStart}
-                    sessionEnd={sessionEnd}
+            { session.end &&
+                <PostReview
+                    sessionStart={session.start}
+                    sessionEnd={session.end}
                     list={list}
                 />
             }

@@ -2,7 +2,7 @@ import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import './List.css';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { deleteListFromDB, getListFromDB, updateList } from '../../helpers/db.api';
+import { deleteList, getList, updateList } from '../../helpers/db.api';
 import ListTerm from './ListTerm'
 import { ListContext } from '../../context/ListContext';
 import { extractSession } from '../../helpers/list.api';
@@ -38,7 +38,7 @@ const List = memo((props) => {
     }
 
     useEffect(() => {
-        getListFromDB({ _id: params.id }).then(res => {
+        getList({ _id: params.id }).then(res => {
             setList(res);
             setListContextValue(res)
         })
@@ -62,7 +62,7 @@ const List = memo((props) => {
     }
 
     function handleDelete(){
-        deleteListFromDB({_id: params.id})
+        deleteList({_id: params.id})
             .then(res => console.log(res))
             .catch(e => console.log(e))
     }
