@@ -1,16 +1,9 @@
 import React, { memo } from 'react';
-
-import '../css/form.css';
-
 import './css/NewList.css'
 
 const NewListTerm = memo(({ index, formOutput, setFormOutput }) => {
     const handleTermBlur = (e, idx) => {
-        e.preventDefault();
-        idx -= 1
-
         let copy = { ...formOutput }
-        // check if term exists
         if (!copy.content[idx] && e.target.value) {
             copy.content[idx] = { to: "", from: "" };
         }
@@ -21,9 +14,10 @@ const NewListTerm = memo(({ index, formOutput, setFormOutput }) => {
     }
 
     return (
-        <div className="Term-fromto">
-            <input onBlur={(e) => handleTermBlur(e, index)} type="text" name="from" />
-            <input onBlur={(e) => handleTermBlur(e, index)} type="text" name="to" />
+        <div className="NewList__term">
+            <div className="NewList__term--index">{index+1}</div>
+            <input className="NewList__term--input" onBlur={(e) => handleTermBlur(e, index)} type="text" name="from" />
+            <input className="NewList__term--input" onBlur={(e) => handleTermBlur(e, index)} type="text" name="to" />
         </div>
     )
 })

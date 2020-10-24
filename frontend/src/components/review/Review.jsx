@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouteProps } from '../../hooks/routerHooks';
 import { getList, updateList } from '../../helpers/db.api';
-import { buildTermList } from '../../helpers/review.api';
+import { makeReviewList } from '../../helpers/review.api';
 import ReviewCard from './ReviewCard';
 import dayjs from 'dayjs';
 import PostReview from "./PostReview";
@@ -15,7 +15,7 @@ const Review = memo((props) => {
     const { params } = useRouteProps();
     const [session, setSession] = useState(() => ({ start: new Date(), end: false }));
     const [list, setList] = useState(null);
-    const [passCount, setPassCount] = useState(0);
+    const [error, setError ] = useState(false);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, null);
     const [currentCard, setCurrentCard] = useState(null);
     const [progress, setProgress] = useState(0);  // percentage of terms marked 'pass' in the session
@@ -25,25 +25,26 @@ const Review = memo((props) => {
 
     useEffect(() => {  // get list from database and initialize futureTerms
         getList({ _id: params.id }).then(res => {
-            setList(res);
-            reduceFutureTerms({ type: 'init', payload: buildTermList(res.content, n) })
+            if (res.content && res.content.length > 0) {
+                setList(res);
+                reduceFutureTerms({ 
+                    type: 'init', 
+                    payload: makeReviewList(res.content, n) })
+            } else {
+                setError(true)
+            }
         })
     }, [])
 
     useEffect(() => {
-        if (futureTerms && futureTerms.length > 0) {
-            setCurrentCard(<ReviewCard key={uuidv4()} term={futureTerms[0]} />)
-        }
-
         if (list && futureTerms) {
             let sessionLength = list.content.length * n;
             let termsCompleted = sessionLength - futureTerms.length;
             setProgress(Math.floor(100 * termsCompleted / sessionLength));
         }
 
-        if (futureTerms && futureTerms.length === 0) {
-            endSession(list);
-        }
+        futureTerms && futureTerms.length > 0 && setCurrentCard(<ReviewCard key={uuidv4()} term={futureTerms[0]} />)
+        futureTerms && futureTerms.length === 0 && endSession(list);
 
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
         return () => {
@@ -143,8 +144,6 @@ const Review = memo((props) => {
         e.preventDefault();
         let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
         reduceFutureTerms({ type: passfail })
-
-        if (passfail === 'pass') { setPassCount(passCount + 1) }
     }
 
     /**
@@ -154,7 +153,12 @@ const Review = memo((props) => {
     function endSession(list) {
         let end = new Date();
         setSession({ ...session, end });
-        list.sessions.push({ start: session.start, end: end, numTerms: n * list.content.length })
+        list.sessions.push({ 
+            start: session.start, 
+            end: end, 
+            numTerms: n * list.content.length 
+        });
+        list.lastReviewed = end;
         updateList({ _id: params.id, owner: list.owner }, list)
     }
 
@@ -197,7 +201,8 @@ const Review = memo((props) => {
                 />
             }
 
-            { !list && <div className="Loading">Loading list...</div>}
+            { !list && !error && <div className="Loading">Loading list...</div>}
+            { error && <div className="Error">List doesn't exist, or it exists but doesn't contain any terms to review.</div>}
         </div>
     )
 })
@@ -206,4 +211,7 @@ export default Review;
 
 /*
 @todo?  set progress bar color based in session cycle. go to 100% n time with various colors, instead of slowly progress a single bar
-        makes it feel like progress is faster */
+        makes it feel like progress is faster 
+        
+@todo postsession: let user know session has been stored in db
+*/

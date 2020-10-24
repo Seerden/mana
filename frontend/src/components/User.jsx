@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getUser } from '../helpers/db.api';
-import { useRouteProps,  } from '../hooks/routerHooks';
+import { useRouteProps } from '../hooks/routerHooks';
 
 const User = () => {
     const { params } = useRouteProps();
@@ -10,8 +10,10 @@ const User = () => {
     useEffect(() => { getUser(username).then(res => setUser(res)) }, [])
 
     return (
-        <div className="User">
-            <h1>User page for /u/<strong>{username}</strong></h1>
+        <div className="PageWrapper">
+            <div className="User">
+                <div className="PageHeader">User page for /u/<strong>{username}</strong></div>
+            </div>
         </div>
     )
 }

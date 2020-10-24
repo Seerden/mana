@@ -2,15 +2,12 @@ require('dotenv').config();
 
 const express = require('express');
 const { dbRouter } = require('./routers/dbRouter');
-const { testRouter } = require('./routers/testRouter');
+const { devRouter } = require('./routers/devRouter');
 const app = express();
 
 
 /**
  * Express middleware to log every route that is hit
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
  */
 const log = (req, res, next) => {
     console.log(`${new Date()} - ${req.originalUrl}`);
@@ -20,7 +17,7 @@ const log = (req, res, next) => {
 app.use(log)
 
 app.use('/db', dbRouter)
-app.use('/test', testRouter)
+app.use('/dev', devRouter)
 
 
 app.get('/', (req, res) => {

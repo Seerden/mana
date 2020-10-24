@@ -9,11 +9,9 @@ const ListsItem = memo(({ list }) => {
     const { params } = useRouteProps();
 
     const timeSinceLastReview = (list) => {
-        if (!list.sessions || list.sessions.length === 0) {
-            return false
-        } else {
-            return dayjs(new Date()) - dayjs(list.sessions[list.sessions.length-1].end)
-        }
+        if (!list.lastReviewed) { return null }
+
+        return dayjs(new Date()) - dayjs(list.lastReviewed)
     }
 
     const colorByLastReviewDate = () => {

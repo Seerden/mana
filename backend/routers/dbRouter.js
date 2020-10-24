@@ -10,8 +10,8 @@ const path = require('path');
  * Express router for /db routes, used as API endpoints for frontend interaction with the database.
  */
 const dbRouter = express.Router();
-    dbRouter.use(bodyParser.urlencoded({ extended: true }));
-    dbRouter.use(bodyParser.json());
+dbRouter.use(bodyParser.urlencoded({ extended: true }));
+dbRouter.use(bodyParser.json());
 
 dbRouter.get('/list/devpopulate', (req, res) => {
     const base = path.join(__dirname, '../dev/wrts');
@@ -81,7 +81,7 @@ dbRouter.get('/listsbyuser/:username', (req, res) => {
 
 dbRouter.get('/list', (req, res) => {
     const { filter, ...query } = req.query;  // expect query like '?filter=-content&username=foo'
-    List.findOne({...query}, filter, (err, found) => {res.json(found)})
+    List.findOne({ ...query }, filter, (err, found) => { res.json(found) })
 })
 
 dbRouter.post('/list', (req, res) => {
@@ -118,7 +118,7 @@ dbRouter.post('/list', (req, res) => {
 })
 
 dbRouter.delete('/list', (req, res) => {
-    List.findOneAndDelete({...req.query}, (err, deletedList) => {
+    List.findOneAndDelete({ ...req.query }, (err, deletedList) => {
         if (!err) {
             res.status(200).json(deletedList)
         } else if (err) {
@@ -129,12 +129,18 @@ dbRouter.delete('/list', (req, res) => {
 
 dbRouter.post('/list/update', async (req, res) => {
     const { query, body } = req.body.data;
-    List.findOneAndUpdate(query, {$set: {content: body.content, sessions: body.sessions}}, {new: true}, (err, updated) => {
-        if (err) res.status(500).send('Error updating list in database')
-        else if (!err) {
-            res.status(200).send(updated)
+
+    List.findOneAndUpdate(query, {
+        $set: {
+            content: body.content,
+            sessions: body.sessions,
+            lastReviewed: body.lastReviewed
         }
-    })
+    },
+        { new: true }, (err, updated) => {
+            if (err) { res.status(500).send('Error updating list in database') }
+            else { res.status(200).send(updated) }
+        })
 })
 
 module.exports = { dbRouter }

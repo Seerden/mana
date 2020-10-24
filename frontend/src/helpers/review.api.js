@@ -4,7 +4,7 @@
  * @param {Number} n integer number of shuffled copies of the list to concatenate
  * @return {Array}
  */
-export const buildTermList = (terms, n) => {
+export const makeReviewList = (terms, n) => {
     let shuffled = []
 
     const makeList = () => {

@@ -1,11 +1,3 @@
-.App__wrapper {
-    padding-left: calc(100vw - 100%);
-}
-
 .App {
     padding: 2em;
-}
-
-.PageHead {
-    border-bottom: 2px solid deepskyblue;
 }

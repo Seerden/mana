@@ -6,6 +6,7 @@ import { deleteList, getList, updateList } from '../../helpers/db.api';
 import ListTerm from './ListTerm'
 import { ListContext } from '../../context/ListContext';
 import { extractSession } from '../../helpers/list.api';
+import { formatDate } from '../../helpers/time';
 
 const List = memo((props) => {
     const [list, setList] = useState(null);
@@ -15,7 +16,7 @@ const List = memo((props) => {
 
     useEffect(() => {
         if (list) {
-            if (list.sessions.length > 0 ) {
+            if (list.sessions.length > 0) {
                 console.log(extractSession(list, 0));
             }
         }
@@ -61,38 +62,42 @@ const List = memo((props) => {
             .then(r => console.log('removed item from list in db'))
     }
 
-    function handleDelete(){
-        deleteList({_id: params.id})
+    function handleDelete() {
+        deleteList({ _id: params.id })
             .then(res => console.log(res))
             .catch(e => console.log(e))
     }
 
     return (
         <>
-            <div className="List">
-                {!list && 'Loading list...'}
+            <div className="PageWrapper">
+                <div className="List">
+                    {!list && 'Loading list...'}
 
-                {list &&
-                    <>
-                        <div className="PageHeader">{list.name} ({list.from} to {list.to})</div>
-                        <button className="Button"><Link to={`${location.pathname}/review`}>Review</Link></button>
-                        <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
-                        <div className="List__content">
+                    {list &&
+                        <>
+                            <div className="PageHeader">{list.name} ({list.from} to {list.to})</div>
+                            <button className="Button"><Link to={`${location.pathname}/review`}>Review</Link></button>
+                            <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
+                            <div className="List__content">
+                                <div className="List__info">
+                                    {formatDate(list.lastReviewed, 'MMMM DD, HH:mm')}
+                                </div>
 
-                            <div className="List__content--terms">
-                                <div className="List__content--header">
-                                    Terms
+                                <div className="List__content--terms">
+                                    <div className="List__content--header">
+                                        Terms
                                 </div>
-                                <div className="Terms__header">
-                                    <div className="Terms__header--index">#</div>
-                                    <div className="Terms__header--from">From</div>
-                                    <div className="Terms__header--to">To</div>
+                                    <div className="Terms__header">
+                                        <div className="Terms__header--index">#</div>
+                                        <div className="Terms__header--from">From</div>
+                                        <div className="Terms__header--to">To</div>
+                                    </div>
+                                    <ul>
+                                        {terms}
+                                    </ul>
                                 </div>
-                                <ul>
-                                    {terms}
-                                </ul>
-                            </div>
-                            {/* <div className="List__content--sessions">
+                                {/* <div className="List__content--sessions">
                                 { listContextValue && listContextValue.sessions && listContextValue.sessions.length > 0 
                                     ?
                                      <ListSessions sessions={(listContextValue && listContextValue.sessions) ? listContextValue.sessions : null}/>
@@ -100,9 +105,10 @@ const List = memo((props) => {
                                 }
                             </div> */}
 
-                        </div>
-                    </>
-                }
+                            </div>
+                        </>
+                    }
+                </div>
             </div>
         </>
     )

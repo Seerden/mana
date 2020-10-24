@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './css/App.css';
 
 import Header from './Header';
+import Footer from './Footer';
 import Review from './review/Review';
 import List from './list/List';
 import User from './User';
@@ -18,16 +19,16 @@ import { ListProvider } from '../context/ListContext';
 const App = memo(() => {
     return (
         <>
-            <LoginProvider>
-                <Router>
-                    <Header />
-                    <div className="App__wrapper">
+            <div className="App__wrapper">
+                <LoginProvider>
+                    <Router>
+                        <Header />
                         <div className="App">
                             <ListProvider>
                                 <Routes>
                                     <Route path="/test" element={<Test />} />
                                     {/* home route */}
-                                    <Route path="/" element={<Home/>} />
+                                    <Route path="/" element={<Home />} />
                                     <Route path="/test/:id" element={<Test />} />
 
                                     {/* user routes */}
@@ -55,10 +56,10 @@ const App = memo(() => {
                                 </Routes>
                             </ListProvider>
                         </div>
-                    </div>
-
-                </Router>
-            </LoginProvider>
+                        <Footer />
+                    </Router>
+                </LoginProvider>
+            </div>
 
         </>
     )

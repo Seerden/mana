@@ -71,3 +71,7 @@ export const deleteList = async (query) => {
         .then(r => r.data)
         .catch(e => e)
 }
+
+export const postList = async body => {
+    axios.post('/db/list')
+}

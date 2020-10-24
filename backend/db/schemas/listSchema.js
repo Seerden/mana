@@ -24,7 +24,9 @@ const listSchema = new mongoose.Schema({
         {type: termSchema, required: true}
     ],
     sessions: [{type: sessionSchema}],
-    numTerms: {type: Number, default: function(){return this.content.length}}
+    numTerms: {type: Number, default: function(){return this.content.length}},
+    created: Date,
+    lastReviewed: Date,
 }, { collation: {locale: 'en', strength: 2}}) 
 
 

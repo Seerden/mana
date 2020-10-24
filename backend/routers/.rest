@@ -53,10 +53,4 @@ Content-Type: application/json
     }
 }
 ###
-GET {{base}}/db/list?owner=seerden&name=Test
-
-###
-GET {{base}}/db/list?owner=seerden
-
-###
-GET {{base}}/db/dev/test
+DELETE {{base}}/dev/lists

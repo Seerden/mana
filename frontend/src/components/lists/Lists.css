@@ -5,23 +5,18 @@
     margin-top: 1rem;
 }
 
-.Lists__header {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
 #Lists__filter {
     display: inline-block;
-    margin: 0.3rem 0 0 0;
     width: 20rem;
-    padding: 1rem 0.5rem;
+    padding: 0.5rem 1rem;
     background-color: rgb(36, 36, 36);
     color: white;
     border-radius: 3px;
     outline: 1px solid #444;
-    box-shadow: 5px 5px 0.5em -2px black;
+    box-shadow: 0 0 0.5rem black;
     transition: all 100ms linear;
+    outline: none;
+    border: 2px solid #333;
 }
 #Lists__filter::placeholder {
         color: #aaa;
@@ -32,6 +27,57 @@
         box-shadow: 5px 5px 1.5em -2px black;
     }
 
-#Lists__filter--label {
-    display: block;
+#Lists__filter--label, #Lists__sort--label {
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: flex;
+    margin-bottom: 0.2rem;
+}
+
+.Lists__header {
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    /* align-items: center; */
+    padding: 1rem 2.5rem;
+    outline: 1px solid #363636;
+    box-shadow:  0 0 1rem 0.1rem black;
+
+}
+
+.Lists__filter {
+    /* grid-area: filter; */
+    width: 20rem;
+    white-space: nowrap;
+}
+
+
+.Lists__sort {
+    /* grid-area: sort; */
+    /* width: max-content; */
+    width: max-content;
+}
+
+#Lists__sort--label {
+    justify-content: flex-end;
+    /* width: max-content; */
+}
+
+.Lists__sort select {
+    direction: rtl;
+    display: flex;
+    outline: none;
+    padding: 0.5rem;
+    border: 1px solid transparent;
+    background-color: rgb(36,36,36);
+    box-shadow: 5px 5px 0.5em -2px black;
+
+    outline: 1px solid #444;
+    color: azure;
+    transition: all 50ms linear;
+}
+
+.Lists__sort select:hover, .Lists__sort select:focus {
+    border-color: deepskyblue;
 }

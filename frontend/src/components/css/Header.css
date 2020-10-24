@@ -8,6 +8,7 @@
     /* margin-bottom: 1em; */
     z-index: 1000;
     height: 3rem;
+    max-height: max-content;
     width: 100%;
     font-size: 1.3rem;
     line-height: 1.3rem;
