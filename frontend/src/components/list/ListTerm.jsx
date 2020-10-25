@@ -1,6 +1,4 @@
 import React, { memo, useContext, useState, useEffect } from "react";
-import Editable from '../../wrappers/Editable';
-import ListTermInput from './ListTermInput';
 import { ListContext } from '../../context/ListContext';
 import { updateList } from '../../helpers/db.api';
 import ListTermDeleteButton from "./ListTermDeleteButton";
@@ -19,11 +17,7 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     const [showHistory, setShowHistory] = useState(false);
 
     const termStyles = {
-        gridTemplateColumns: confirmingDelete
-            ? `2rem repeat(2, minmax(40%, min-content)) repeat(3, auto)`
-            : `2rem repeat(2, minmax(40%, min-content)) repeat(3, auto)`,
-        backgroundColor: confirmingDelete ? '' : null,
-        border: confirmingDelete ? '2px solid orangered' : null
+        border: confirmingDelete ? '2px solid orangered' : "2px solid transparent",
     }
 
     useEffect(() => {
@@ -53,9 +47,10 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     * @param   {string}    field   'from'/'to', related to term.to and term.from properties (term is passed from props)
     * @todo update actual list itself, also update listContextValue, and then push new list state to db
     */
-    const handleTermEdit = (e, field) => {
-        if (e.target.value && _term[field] !== e.target.value) {
-            let newTerm = { ..._term, [field]: e.target.value }
+    const handleTermEdit = (e) => {
+        let side = e.currentTarget.getAttribute('side');
+        if (e.target.value && _term[side] !== e.target.value) {
+            let newTerm = { ..._term, [side]: e.target.value }
             setTerm(newTerm)
             let newListContent = [...listContextValue.content];
             newListContent[idx] = { ...newTerm };
@@ -72,35 +67,39 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
                 className="List__term"
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
-                style={{ ...termStyles }}
             >
-                <div className="List__term-index">{idx + 1}</div>
+                <div className="term">
 
-                <Editable
-                    initialState={<div title="Click to edit" className="List__term--from">{_term.from}</div>}
-                    editState={<ListTermInput _term={_term} handleTermEdit={handleTermEdit} side="from" />}
-                />
+                    <div style={{ color: confirmingDelete ? 'orangered' : '' }} className="term--index">{idx + 1}</div>
+                    <input 
+                        disabled={confirmingDelete}
+                        style={{
+                            backgroundColor: confirmingDelete ? 'orangered' : '',
+                        }}
+                        onBlur={handleTermEdit} className="term--side term--from" side="from" type="text" defaultValue={_term.from} />
+                    <input 
+                        disabled={confirmingDelete}
+                        style={{
+                            backgroundColor: confirmingDelete ? 'orangered' : '',
+                        }}
+                        onBlur={handleTermEdit} className="term--side term--to" side="to" type="text" defaultValue={_term.to} />
+                    {!isEditing &&
+                        <>
+                            {/* <button className="List__term--historybutton" onClick={() => setShowHistory(!showHistory)}>hist</button> */}
+                            <ListTermDeleteButton
+                                confirmingDelete={confirmingDelete}
+                                isHovering={isHovering}
+                                setConfirmingDelete={setConfirmingDelete}
+                                handleConfirmClick={handleConfirmClick}
+                            />
+                        </>
+                    }
+                </div>
 
-                <Editable
-                    initialState={<div title="Click to edit" className="List__term--to">{_term.to}</div>}
-                    editState={<ListTermInput _term={_term} handleTermEdit={handleTermEdit} side="to" />}
 
-                />
-
-                {!isEditing &&
-                    <>
-                        <button className="List__term--historybutton" onClick={() => setShowHistory(!showHistory)}>hist</button>
-                        <ListTermDeleteButton
-                            confirmingDelete={confirmingDelete}
-                            isHovering={isHovering}
-                            setConfirmingDelete={setConfirmingDelete}
-                            handleConfirmClick={handleConfirmClick}
-                        />
-
-                    </>
-                }
 
             </li>
+
             <TermHistory visible={showHistory} history={term.history} />
         </>
     )
@@ -108,11 +107,4 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
 
 export default ListTerm
 
-/*
-@todo:  add edit functionality to 'to' field,
-        after writing a TermEdit component that has both the input field and the editing state
-
-        put a wrapper around the term/edit to assure dimensions match
-*/
-
-/* @todo fix widescreen grid (too much empty space between terms and sessions) */
+/* FIXME: deleting only term in a list doesn't update visible terms (but does update the database entry, so problem lies in a key or a render based on .length > 0) */

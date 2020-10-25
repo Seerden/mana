@@ -54,3 +54,6 @@ Content-Type: application/json
 }
 ###
 DELETE {{base}}/dev/lists
+
+###
+GET {{base}}/db/list/devpopulate

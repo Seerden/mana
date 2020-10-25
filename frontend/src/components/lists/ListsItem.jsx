@@ -14,8 +14,7 @@ const ListsItem = memo(({ list }) => {
         return dayjs(new Date()) - dayjs(list.lastReviewed)
     }
 
-    const colorByLastReviewDate = () => {
-        let timeSince = timeSinceLastReview(list)
+    const colorByLastReviewDate = (timeSince) => {
         let day = 3600*24*1000
         if (!timeSince) {
             return '#333'
@@ -33,12 +32,13 @@ const ListsItem = memo(({ list }) => {
 
 
     return (
-        <div style={{borderColor: colorByLastReviewDate()}}className="ListsItem">
+        <div style={{borderColor: colorByLastReviewDate(timeSinceLastReview(list))}}className="ListsItem">
             <div className="ListsItem__name">
                 <Link className="Link" to={`/u/${params.username}/list/${list._id}`}>{list.name}</Link>
             </div>
             <div className="ListsItem__from">{list.from}</div>
             <div className="ListsItem__to">{list.to}</div>
+            <div className="ListsItem__numTerms">{list.numTerms} terms in this list</div>
         { list.sessions.length > 0 && 
             <div className="ListsItem__since">
                 <em>last reviewed {timeSince(list.sessions[list.sessions.length-1].end)}</em>

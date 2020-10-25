@@ -79,37 +79,15 @@ const List = memo((props) => {
                             <div className="PageHeader">{list.name} ({list.from} to {list.to})</div>
                             <button className="Button"><Link to={`${location.pathname}/review`}>Review</Link></button>
                             <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
-                            <div className="List__content">
-                                <div className="List__info">
-                                    {formatDate(list.lastReviewed, 'MMMM DD, HH:mm')}
-                                </div>
 
-                                <div className="List__content--terms">
-                                    <div className="List__content--header">
-                                        Terms
-                                </div>
-                                    <div className="Terms__header">
-                                        <div className="Terms__header--index">#</div>
-                                        <div className="Terms__header--from">From</div>
-                                        <div className="Terms__header--to">To</div>
-                                    </div>
-                                    <ul>
-                                        {terms}
-                                    </ul>
-                                </div>
-                                {/* <div className="List__content--sessions">
-                                { listContextValue && listContextValue.sessions && listContextValue.sessions.length > 0 
-                                    ?
-                                     <ListSessions sessions={(listContextValue && listContextValue.sessions) ? listContextValue.sessions : null}/>
-                                    : <div>No sessions recorded for this list</div>
-                                }
-                            </div> */}
+                                <ul className="terms">
+                                    {terms}
+                                </ul>
 
-                            </div>
                         </>
                     }
                 </div>
-            </div>
+        </div>
         </>
     )
 })

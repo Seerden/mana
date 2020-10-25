@@ -40,8 +40,9 @@ const NewList = memo((props) => {
 
 
     const handleBlur = e => {;
-        const t = e.target;
-        setFormOutput({ ...formOutput, [t.name]: t.value })
+        if (e.currentTarget.value !== formOutput[e.currentTarget.name]) {
+            setFormOutput({ ...formOutput, [e.currentTarget.name]: e.currentTarget.value })
+        }
     }
 
     const handleSubmit = e => {

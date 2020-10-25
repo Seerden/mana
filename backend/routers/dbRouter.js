@@ -14,18 +14,29 @@ dbRouter.use(bodyParser.urlencoded({ extended: true }));
 dbRouter.use(bodyParser.json());
 
 dbRouter.get('/list/devpopulate', (req, res) => {
-    const base = path.join(__dirname, '../dev/wrts');
+    const base = path.join(__dirname, '../dev/kklc');
     const filenames = fs.readdirSync(base)
     const jsonFiles = filenames.filter(f => f.includes('json'))
 
     const populate = async () => {
         for (let file of jsonFiles) {
             let data = fs.readFileSync((path.join(base, file)), 'UTF-8');
-            const list = JSON.parse(data);
-            const newList = new List(list)
+            let { name, content } = JSON.parse(data);
+            content = content.filter(i => (i.from !== null && i.to !== null))
+            // console.log(content);
+            const newList = new List({
+                owner: 'seerden',
+                name,
+                from: 'Japanese',
+                to: "English",
+                created: new Date(),
+                numTerms: content.length,
+                content
+            })
+            
             newList.save((err, saved) => {
                 if (!err) {
-                    User.findOneAndUpdate({ username: list.owner }, { $push: { lists: newList } }, (err, updated) => {
+                    User.findOneAndUpdate({ username: 'seerden' }, { $push: { lists: newList } }, (err, updated) => {
                         if (!err) {
                             console.log('updated:', updated)
                         }

@@ -18,11 +18,11 @@ const PostReview = ({ sessionStart, sessionEnd, list }) => {
             </button>
 
             <button className="Button">
-                <Link to={`/u/${list.owner}/lists`}>My lists</Link>
+                <Link to={`/u/${list.owner}/lists`}>Back to lists overview</Link>
             </button>
 
             <button onClick={() => navigate(0)}className="Button">
-                <Link to={`/u/${list.owner}/list/${params.id}/review`}>Review again</Link>
+                <Link to={`/u/${list.owner}/list/${params.id}/review`}>Review this list again</Link>
             </button>
         </div>
     )

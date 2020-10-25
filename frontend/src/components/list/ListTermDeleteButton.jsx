@@ -15,13 +15,13 @@ const ListTermDeleteButton = memo(({ confirmingDelete, setConfirmingDelete, hand
             { confirmingDelete &&
                 <div className="Term__remove remove--confirm">
                     <input
-                        title="Permanently delete term"
-                        onClick={(e) => handleConfirmClick(e, { type: 'delete' })}
-                        className="remove--delete" type="button" value="delete" />
-                    <input
                         title="Keep term"
                         onClick={e => handleConfirmClick(e, 'keep')}
                         className="remove--keep" type="button" value="keep" />
+                    <input
+                        title="Permanently delete term"
+                        onClick={(e) => handleConfirmClick(e, { type: 'delete' })}
+                        className="remove--delete" type="button" value="delete" />
                 </div>
             }
 

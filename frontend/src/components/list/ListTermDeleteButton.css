@@ -1,6 +1,7 @@
 .Term__remove {
     display: flex;
     place-self: center;
+    user-select: none;
 }
 
 .remove--initial, .remove--confirm {

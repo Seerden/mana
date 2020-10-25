@@ -36,7 +36,13 @@ const Lists = memo((props) => {
 
     return (
         <>
-            { lists && lists.length > 0 ?
+            { !lists && 
+                <div className="PageWrapper">
+                    Loading lists..
+                </div>
+            }
+
+            { lists && lists.length > 0 &&
                 <div className="PageWrapper">
                     <div className="PageHeader">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
                     <button className="Button"><Link to={`/u/${params.username}/lists/new`}>Make a new list</Link></button>
@@ -76,7 +82,9 @@ const Lists = memo((props) => {
                     </div>
                 </div>
 
-                :
+            }
+
+            { lists && lists.length === 0 &&
                 <div className="PageWrapper">
                     <div className="PageHeader">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
                     <div className="Lists__new">
@@ -85,8 +93,8 @@ const Lists = memo((props) => {
                     <button className="Button"><Link to={`/u/${params.username}/lists/new`}>Make a new list</Link></button>
 
                 </div>
-
             }
+
         </>
     )
 })
