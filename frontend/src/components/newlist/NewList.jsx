@@ -77,8 +77,8 @@ const NewList = memo((props) => {
                                 <span></span>
                                 {formOutput &&
                                     <>
-                                        <span className="Terms__header--from">{formOutput.from}</span>
-                                        <span className="Terms__header--to">{formOutput.to}</span>
+                                        <span className="Terms__header--side">{formOutput.from}</span>
+                                        <span className="Terms__header--side">{formOutput.to}</span>
                                     </>
                                 }
                             </div>

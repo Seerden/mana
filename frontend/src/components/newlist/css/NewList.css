@@ -10,14 +10,10 @@
     margin-bottom: 1rem;
 }
 
-.NewList__form--name {
-    border: 2px solid blue;
-}
-
 .NewList__form--language {
     display: block;
     /* margin: 0.5rem; */
-    font-size: 1.3rem;
+    font-size: 1.2rem;
 }
 
 .NewList__form--name, .NewList__form--language {
@@ -25,18 +21,33 @@
     color: azure;
     border: none;
     outline: none;
-    padding: 0.4rem;
-    
-    transition: all 100ms linear;
+    padding: 0.2rem 0.5rem;
+    margin-left: 1rem;
+    transition: all 50ms linear;
     border-bottom: 2px solid transparent;
 }
 
+:not(:focus)::placeholder {
+    color: #666;
+    border-bottom: 2px solid #444;
+    width: 20rem;
+    background-color: #181818;
+    transition: 100ms all linear;
+}
+
 .NewList__form--name:focus, .NewList__form--language:focus {
-    border-bottom-color: deepskyblue;
+    border-bottom-color: blueviolet;
+    background-color: #ccc;
+    color: #111;
+    border-radius: 3px;
+}
+
+.NewList__form--name:focus::placeholder, .NewList__form--language:focus::placeholder {
+    border-color: transparent;
 }
 
 .NewList__terms {
-    /* margin: 0.5rem 0 1rem 0; */
+    margin: 0.5rem 0 1rem 0;
     border: 2px solid #333;
     border-width: 2px 0;
     border-radius: 5px;
@@ -51,27 +62,28 @@
 
 }
 
-.NewList__term input[type=text] {
+.NewList__term input {
     font-size: 1.1rem;
     border-radius: 3px;
-    /* background-color: #292929; */
+    background-color: #222;
     background: linear-gradient(to bottom, #202020, #222);
     background-attachment: fixed;
     outline: none;
     border: 2px solid #333;
     color: azure;
-    padding: 0.3rem;
+    padding: 0.4rem;
     width: 20rem;
     margin-bottom: 0.4rem;
-
-    transition: 100ms all linear;
+    text-indent: 0.5em;
+    transition: 100ms all ease-in;
 }
 
 .NewList__term input:focus {
-    /* background-color: #333; */
-    border-color: deepskyblue;
-    box-shadow: 0 0 0.5rem black;
-
+    background: linear-gradient(-40deg, #202020, #292929);
+    background-attachment: fixed;
+    box-shadow: 0 0 0.8rem black;
+    animation: 3000ms ease infinite colorcycle;
+    animation-fill-mode: forwards;
 }
 
 .NewList__term--input:nth-of-type(1) {
@@ -79,11 +91,14 @@
 }
 
 .NewList__term--index {
-    display: inline-flex;
+    display: flex;
     width: 2rem;
+    height: 1.5rem;
     padding: 0 1rem;
-    color: #777;
+    color: #444;
     justify-content: flex-end;
+    align-items: baseline;
+    user-select: none;
 }
 
 .NewList label {
@@ -116,7 +131,7 @@
     outline: none;
     color: azure;
     border: 2px solid #333;
-    background-color: #222;
+    background-color: blueviolet;
     width: 10rem;
     border-radius: 1px;
 
@@ -124,5 +139,18 @@
 }
 
 .Form__button:hover {
-    border: 2px solid deepskyblue;
+    border: 2px solid white;
+}
+
+@keyframes colorcycle {
+    0% {border-color: blueviolet;}
+    25% {border-color: blueviolet;}
+    70% {border-color: slateblue;}
+    /* 75% {border-color: deepskyblue;} */
+    100% {border-color: blueviolet;}
+}
+
+.Terms__header--side {
+    font-size: 1.3rem;
+    padding: 0.4rem 0.2rem;
 }
