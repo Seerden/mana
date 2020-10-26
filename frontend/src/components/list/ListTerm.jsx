@@ -3,6 +3,7 @@ import { ListContext } from '../../context/ListContext';
 import { updateList } from '../../helpers/db.api';
 import ListTermDeleteButton from "./ListTermDeleteButton";
 import TermHistory from './TermHistory';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * ListTerm component

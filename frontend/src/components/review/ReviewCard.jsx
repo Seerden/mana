@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from "react";
 
-const ReviewCard = memo(({ term }) => {
-    const [side, setSide] = useState('from');
+const ReviewCard = memo(({ direction, term }) => {
+    const [side, setSide] = useState(direction === 'forwards' ? 'from' : 'to');
     const [flipping, setFlipping] = useState(false);
     const [fade, setFade] = useState(false);
     const toggleSide = () => setSide(side === 'from' ? 'to' : 'from')
@@ -14,7 +14,7 @@ const ReviewCard = memo(({ term }) => {
     }, [side])  // only flips correctly once per render if side not specified as dependency
 
     useEffect(() => { // when new term is shown, reset card state
-        setSide('from')
+        setSide(direction === 'forwards' ? 'from' : 'to')
         setFade(true)
         setTimeout(() => setFade(false), 150)
     }, [term])

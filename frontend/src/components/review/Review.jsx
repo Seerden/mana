@@ -14,22 +14,17 @@ import ReviewInfo from "./ReviewInfo";
 import './Review.css';
 
 const Review = memo((props) => {
-    const { params } = useRouteProps();
-    const [session, setSession] = useState(() => ({ start: new Date(), end: false }));
-    const [list, setList] = useState(null);
-    const [error, setError] = useState(false);
-    const [futureTerms, reduceFutureTerms] = useReducer(termReducer, null);
-    const [currentCard, setCurrentCard] = useState(null);
-    const [progress, setProgress] = useState(0);  // percentage of terms marked 'pass' in the session
-    const { reviewContext } = useContext(ReviewContext);
-    const { n, direction, started } = reviewContext.settings;
-
-    useEffect(() => {
-        console.log('started changed:', started);
-    }, [started])
-
-    const failRef = useRef(null);  // refs for handleLeftRightArrowKeydown to target
-    const passRef = useRef(null);
+    const { params } = useRouteProps(),
+        [session, setSession] = useState(() => ({ start: new Date(), end: false })),
+        [list, setList] = useState(null),
+        [error, setError] = useState(false),
+        [futureTerms, reduceFutureTerms] = useReducer(termReducer, null),
+        [currentCard, setCurrentCard] = useState(null),
+        [progress, setProgress] = useState(0),  // percentage of terms marked 'pass' in the session
+        { reviewContext } = useContext(ReviewContext),
+        { n, direction, started } = reviewContext.settings,
+        failRef = useRef(null), // refs for handleLeftRightArrowKeydown to target
+        passRef = useRef(null);
 
     useEffect(() => {  // get list from database and initialize futureTerms
         getList({ _id: params.id }).then(res => {
@@ -46,13 +41,22 @@ const Review = memo((props) => {
     }, [])
 
     useEffect(() => {
+        if (list) {
+            reduceFutureTerms({
+                type: 'init',
+                payload: makeReviewList(list.content, Number(n))
+            })
+        }
+    }, [n])
+
+    useEffect(() => {
         if (list && futureTerms) {
             let sessionLength = list.content.length * n;
             let termsCompleted = sessionLength - futureTerms.length;
             setProgress(Math.floor(100 * termsCompleted / sessionLength));
         }
 
-        futureTerms && futureTerms.length > 0 && setCurrentCard(<ReviewCard key={uuidv4()} term={futureTerms[0]} />)
+        futureTerms && futureTerms.length > 0 && setCurrentCard(<ReviewCard key={uuidv4()} direction={direction} term={futureTerms[0]} />)
         futureTerms && futureTerms.length === 0 && endSession(list);
 
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
@@ -60,7 +64,7 @@ const Review = memo((props) => {
             window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
             setCurrentCard(null)
         }
-    }, [futureTerms])
+    }, [futureTerms, direction])
 
     /**
      * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
@@ -164,8 +168,9 @@ const Review = memo((props) => {
         setSession({ ...session, end });
         list.sessions.push({
             start: session.start,
-            end: end,
-            numTerms: n * list.content.length
+            end,
+            numTerms: n * list.content.length,
+            direction
         });
         list.lastReviewed = end;
         updateList({ _id: params.id, owner: list.owner }, list)
@@ -186,7 +191,7 @@ const Review = memo((props) => {
                 </>
             }
 
-            { !started 
+            { list && !started
                 ?
                     <>
                         <PreReview/>
@@ -244,7 +249,6 @@ const Review = memo((props) => {
                     </>
             }
 
-
             {/* { !list && !error && <div className="Loading">Loading list...</div>} */}
             { error && <div className="Error">List doesn't exist, or it exists but doesn't contain any terms to review.</div>}
         </div>
@@ -258,4 +262,7 @@ export default Review;
         makes it feel like progress is faster
 
 @todo postsession: let user know session has been stored in db
+
+@note: list loads with n = 2 terms by default, but is rebuilt when n changes. could be cleaned up into a single case, but I need time to work that out. functions for now.
+
 */
