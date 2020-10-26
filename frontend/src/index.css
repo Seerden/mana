@@ -72,3 +72,18 @@ body {
 .PageWrapper {
     margin: 2rem;
 }
+
+.Home__link {
+    display: inline-block;
+    padding: 0 0.4rem;
+    color: #cccccc;
+    width: max-content;
+    background-color: #333;
+    text-decoration: none;
+    transition: 100ms all linear;
+}
+
+.Home__link:hover {
+    color: white;
+    background-color: blueviolet;
+}

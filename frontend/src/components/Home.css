@@ -1,0 +1,25 @@
+.highlight {
+    color: deepskyblue;
+    font-weight: 600;
+}
+
+.Home__header {
+    font-weight: 600;
+    font-size: 1.5rem;
+    border-bottom: 2px solid blueviolet;
+    border-radius: 3px;
+    max-width: max-content;
+    margin-bottom: 0;
+    background-color: #222;
+    padding: 0 1rem;
+}
+
+.Home__paragraph {
+    margin: 0;
+    padding: 0.5rem 2rem;
+    max-width: 80%;
+}
+
+.Home__paragraph div {
+    margin-bottom: 0.4rem;
+}

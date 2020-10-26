@@ -27,14 +27,12 @@ const TermHistory = memo(({ visible, history }) => {
                                         height: "20px",
                                         display: "inline-block",
                                         margin: "0.2rem",
-                                        // padding: "15px",
                                         borderRadius: "50%",
                                         backgroundColor: i === 'pass' ? 'seagreen' : 'orangered'
                                     }}
                                 > </span>
                             )
                         }
-                        {/* {el.content.map((i, idx) => <span key={`${i}-${idx}`} className={`TermHistory__passfail ${i === 'pass' ? 'pass' : 'fail'}`}>{i}</span>)} */}
                     </div>
                 </div>
             </Fragment>
