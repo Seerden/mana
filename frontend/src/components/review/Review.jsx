@@ -1,24 +1,32 @@
-import React, { memo, useEffect, useState, useRef, useReducer } from "react";
+import React, { memo, useEffect, useState, useRef, useContext, useReducer } from "react";
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+
 import { useRouteProps } from '../../hooks/routerHooks';
 import { getList, updateList } from '../../helpers/db.api';
 import { makeReviewList } from '../../helpers/review.api';
+import { ReviewContext } from '../../context/ReviewContext';
 import ReviewCard from './ReviewCard';
 import dayjs from 'dayjs';
+import PreReview from './PreReview';
 import PostReview from "./PostReview";
 import ReviewInfo from "./ReviewInfo";
 import './Review.css';
 
 const Review = memo((props) => {
-    const n = 2; // number of times each term should be reviewed. @todo expand on this functionality
     const { params } = useRouteProps();
     const [session, setSession] = useState(() => ({ start: new Date(), end: false }));
     const [list, setList] = useState(null);
-    const [error, setError ] = useState(false);
+    const [error, setError] = useState(false);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, null);
     const [currentCard, setCurrentCard] = useState(null);
     const [progress, setProgress] = useState(0);  // percentage of terms marked 'pass' in the session
+    const { reviewContext } = useContext(ReviewContext);
+    const { n, direction, started } = reviewContext.settings;
+
+    useEffect(() => {
+        console.log('started changed:', started);
+    }, [started])
 
     const failRef = useRef(null);  // refs for handleLeftRightArrowKeydown to target
     const passRef = useRef(null);
@@ -27,9 +35,10 @@ const Review = memo((props) => {
         getList({ _id: params.id }).then(res => {
             if (res.content && res.content.length > 0) {
                 setList(res);
-                reduceFutureTerms({ 
-                    type: 'init', 
-                    payload: makeReviewList(res.content, n) })
+                reduceFutureTerms({
+                    type: 'init',
+                    payload: makeReviewList(res.content, n)
+                })
             } else {
                 setError(true)
             }
@@ -153,55 +162,90 @@ const Review = memo((props) => {
     function endSession(list) {
         let end = new Date();
         setSession({ ...session, end });
-        list.sessions.push({ 
-            start: session.start, 
-            end: end, 
-            numTerms: n * list.content.length 
+        list.sessions.push({
+            start: session.start,
+            end: end,
+            numTerms: n * list.content.length
         });
         list.lastReviewed = end;
         updateList({ _id: params.id, owner: list.owner }, list)
     }
 
     return (
-        <div className="Review">
+        <div className="PageWrapper Review">
             { list &&
-                <div className="PageHeader Review__title">
-                    <div>
-                        Reviewing<span className="Review__title--name"><em>{list.name}</em></span>
-                    </div>
-                    <div>
-                        <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to list</Link>
-                    </div>
-                </div>
-            }
-
-            { !session.end && currentCard &&
                 <>
-                    {currentCard}
-
-                    <div className="Review__buttons">
-                        <input ref={failRef} onClick={(e) => handlePassFailClick(e, 'fail')} className="Review__button" id="Review__button--fail"type="button" value="Fail" />
-                        <input ref={passRef} onClick={(e) => handlePassFailClick(e, 'pass')} className="Review__button" id="Review__button--pass" type="button" value="Pass" />
+                    <div className="PageHeader Review__title">
+                        <div>
+                            Reviewing<span className="Review__title--name"><em>{list.name}</em></span>
+                        </div>
+                        <div>
+                            <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to list</Link>
+                        </div>
                     </div>
-
-                    <div className="Review__progress--wrapper">
-                        <div id="Review__progress--bar" style={{ width: `${progress}%` }}></div>
-                    </div>
-
-                    { session.start && <ReviewInfo start={session.start} numTerms={list.content.length} n={n} progress={progress} />}
-
                 </>
             }
 
-            { session.end &&
-                <PostReview
-                    sessionStart={session.start}
-                    sessionEnd={session.end}
-                    list={list}
-                />
+            { !started 
+                ?
+                    <>
+                        <PreReview/>
+                    </>
+                :
+                    <>
+                        { !session.end && currentCard &&
+                            <>
+                                {currentCard}
+
+                                <div className="Review__buttons">
+                                    <input 
+                                        ref={failRef} 
+                                        onClick={(e) => handlePassFailClick(e, 'fail')} 
+                                        className="Review__button" 
+                                        id="Review__button--fail" 
+                                        type="button" 
+                                        value="Fail" 
+                                    />
+                                    <input 
+                                        ref={passRef} 
+                                        onClick={(e) => handlePassFailClick(e, 'pass')} 
+                                        className="Review__button" 
+                                        id="Review__button--pass" 
+                                        type="button" 
+                                        value="Pass" 
+                                    />
+                                </div>
+
+                                <div className="Review__progress--wrapper">
+                                    <div id="Review__progress--bar" style={{ width: `${progress}%` }}></div>
+                                </div>
+
+                                { session.start && 
+                                    <ReviewInfo 
+                                        start={session.start} 
+                                        numTerms={list.content.length} 
+                                        n={n} 
+                                        progress={progress} 
+                                    />
+                                }
+
+                            </>
+                        }
+
+                        { session.end &&
+                            <>
+                                <PostReview
+                                    sessionStart={session.start}
+                                    sessionEnd={session.end}
+                                    list={list}
+                                />
+                            </>
+                        }
+                    </>
             }
 
-            { !list && !error && <div className="Loading">Loading list...</div>}
+
+            {/* { !list && !error && <div className="Loading">Loading list...</div>} */}
             { error && <div className="Error">List doesn't exist, or it exists but doesn't contain any terms to review.</div>}
         </div>
     )
@@ -211,7 +255,7 @@ export default Review;
 
 /*
 @todo?  set progress bar color based in session cycle. go to 100% n time with various colors, instead of slowly progress a single bar
-        makes it feel like progress is faster 
-        
+        makes it feel like progress is faster
+
 @todo postsession: let user know session has been stored in db
 */

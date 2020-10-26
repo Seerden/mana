@@ -1,6 +1,10 @@
 .terms {
     list-style: none;
     padding: 2rem;
+ 
+    border: 2px solid #222;
+    border-radius: 4px;
+    box-shadow: 0 0 0.5rem #000;
 }
 
 .term {
@@ -8,6 +12,8 @@
     align-items: center;
     margin-bottom: 5px;
     padding: 0.2rem;
+    width: max-content;
+
     border: 2px solid transparent;
 }
 
@@ -38,16 +44,18 @@
 }
 
 .term--side:not(:focus) {
-    background-color: #222;
+    background-color: #262626;
     border-bottom-color: #333;
     color: #ccc;
 
 }
 .term--side:focus {
-    color: #aaa;
-    background-color: #262626;
+    color: black;
+    background-color: white;
+    /* background-color: #262626; */
     box-shadow: 0 0 1rem #111;
     text-indent: 0.5rem;
+    border-radius: 10px;
 
     
     animation: 2000ms ease-in-out infinite termcolorcycle;
@@ -63,4 +71,56 @@
     50% {border-color: #555;}
     100% {border-color: blueviolet;}
 
+}
+
+.List__term--historybutton {
+    color: #ccc;
+    background-color: blueviolet;
+    padding: 3px 1rem;
+    border: 2px solid transparent;
+    outline: none;
+
+    transition: all 100ms linear;
+}
+
+.List__term--historybutton:hover {
+    transform: translateY(-2px);
+    background-color: white;
+    box-shadow: 0 3px 0 -1px blueviolet, 0 0 0.5rem 0.2rem black;
+    color: black;
+
+}
+
+/* ----- LIST INFO ----- */
+.List__info {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 2px solid #222;
+    border-radius: 4px;
+    box-shadow: 0 0 0.5rem #000;
+
+    /* animation: 5000ms ease infinite colorcycle */
+}
+.List__info--header, .List__terms--header {
+    font-size: 1.7rem;
+    font-weight: 600;
+    width: max-content;
+    margin-bottom: 0.5rem;
+    background-color: #333;
+    padding: 0 0.5rem;
+}
+
+.List__info--item {
+    margin: 0;
+    max-width: 400px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.List__info--datum {
+    color: deepskyblue;
+    font-weight: 600;
+    margin: 0 5px;
+    background-color: #222;
+    padding: 0 2px;
 }

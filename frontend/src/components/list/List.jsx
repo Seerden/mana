@@ -80,14 +80,33 @@ const List = memo((props) => {
                             <button className="Button"><Link to={`${location.pathname}/review`}>Review</Link></button>
                             <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
 
+                            <section className="List__info">
+                                <header className="List__info--header">List info</header>
+                                <p className="List__info--item">There are <span className="List__info--datum">{list.numTerms}</span> terms in this list.</p>
+                                { list.lastReviewed 
+                                    ?
+                                        <p className="List__info--item">You last reviewed this list
+                                            <span className="List__info--datum">
+                                                {formatDate(list.lastReviewed, 'hh:mma, MMMM Do')}
+                                            </span>
+                                        </p>
+                                    :
+                                        <p className="List__info--item" style={{width: 'max-content', backgroundColor: 'blueviolet'}}>You haven't reviewed this list yet. Get on it!</p>
+                                }
+
+                            </section>
+
+                            <section className="List__content">
                                 <ul className="terms">
+                                    <header className="List__terms--header">Terms</header>
                                     {terms}
                                 </ul>
+                            </section>
 
                         </>
                     }
                 </div>
-        </div>
+            </div>
         </>
     )
 })

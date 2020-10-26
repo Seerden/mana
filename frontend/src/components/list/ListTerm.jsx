@@ -70,7 +70,19 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
             >
                 <div className="term">
 
-                    <div style={{ color: confirmingDelete ? 'orangered' : '' }} className="term--index">{idx + 1}</div>
+                    {/* <div style={{ color: confirmingDelete ? 'orangered' : '' }} className="term--index">{idx + 1}</div> */}
+                    {!isEditing && isHovering ?
+                        <>
+                            <ListTermDeleteButton
+                                confirmingDelete={confirmingDelete}
+                                isHovering={isHovering}
+                                setConfirmingDelete={setConfirmingDelete}
+                                handleConfirmClick={handleConfirmClick}
+                            />
+                        </> 
+                        : <div style={{ color: confirmingDelete ? 'orangered' : '' }} className="term--index">{idx + 1}</div>
+                    }
+
                     <input 
                         disabled={confirmingDelete}
                         style={{
@@ -83,18 +95,10 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
                             backgroundColor: confirmingDelete ? 'orangered' : '',
                         }}
                         onBlur={handleTermEdit} className="term--side term--to" side="to" type="text" defaultValue={_term.to} />
-                    {!isEditing &&
-                        <>
-                            {/* <button className="List__term--historybutton" onClick={() => setShowHistory(!showHistory)}>hist</button> */}
-                            <ListTermDeleteButton
-                                confirmingDelete={confirmingDelete}
-                                isHovering={isHovering}
-                                setConfirmingDelete={setConfirmingDelete}
-                                handleConfirmClick={handleConfirmClick}
-                            />
-                        </>
-                    }
+
+                    { (showHistory || (isHovering && !confirmingDelete)) && <button className="List__term--historybutton" onClick={() => setShowHistory(!showHistory)}>hist</button> }
                 </div>
+
 
 
 

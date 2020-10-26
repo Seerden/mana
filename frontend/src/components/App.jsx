@@ -15,6 +15,7 @@ import Home from './Home';
 
 import LoginProvider from '../context/LoginContext';
 import { ListProvider } from '../context/ListContext';
+import { ReviewProvider } from '../context/ReviewContext';
 
 const App = memo(() => {
     return (
@@ -43,7 +44,12 @@ const App = memo(() => {
 
                                             <Route path="/:id">
 
-                                                <Route path="/review" element={<Review />} />
+                                                <Route path="/review" element={
+                                                    <ReviewProvider>
+                                                        <Review />    
+                                                    </ReviewProvider>
+                                                }
+                                                 />
                                                 <Route path="/" element={<List />} />
 
                                             </Route>
