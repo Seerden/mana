@@ -1,17 +1,17 @@
 // import db connection and models
-const { dbConn } = require('../db/db.js');
+import { dbConn } from '../db/db.js';
+
 const User = dbConn.model('User');
 const List = dbConn.model('List');
+import express from 'express';
+import bodyParser from 'body-parser';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const devRouter = express.Router();
+export const devRouter = express.Router();
 devRouter.use(bodyParser.urlencoded({extended: true}));
 devRouter.use(bodyParser.json());
 
 // @dev: downloading a file on frontend that's stored on backend, see also frontend/component/Download
-const path = require('path');
+import path from 'path';
 devRouter.get('/download', (req, res) => {
     res.download(path.resolve(__dirname, '../dev/wrts/excel-list-kanji-1-30..json'));
 })
@@ -48,5 +48,3 @@ devRouter.get('/user', (req, res) => {
         }
     })
 })
-
-module.exports = { devRouter }

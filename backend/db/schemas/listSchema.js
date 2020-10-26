@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const termSchema = new mongoose.Schema({
     to: String,
@@ -15,7 +15,7 @@ const sessionSchema = new mongoose.Schema({
     direction: String,
 })
 
-const listSchema = new mongoose.Schema({
+export const listSchema = new mongoose.Schema({
     owner: {
         type: String,
         default: 'seerden'
@@ -31,6 +31,3 @@ const listSchema = new mongoose.Schema({
     created: Date,
     lastReviewed: Date,
 }, { collation: {locale: 'en', strength: 2}}) 
-
-
-module.exports = { listSchema };

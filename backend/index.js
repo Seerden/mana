@@ -1,11 +1,9 @@
-require('dotenv').config();
+import 'dotenv/config.js';
 
-const express = require('express');
-const { dbRouter } = require('./routers/dbRouter');
-const { devRouter } = require('./routers/devRouter');
-const { authRouter } = require('./routers/authRouter');
+import express from 'express';
+import { dbRouter } from './routers/dbRouter.js'
+import { devRouter } from './routers/devRouter.js'
 const app = express();
-
 
 /**
  * Express middleware to log every route that is hit
@@ -19,8 +17,6 @@ app.use(log)
 
 app.use('/db', dbRouter)
 app.use('/dev', devRouter)
-app.use('/api/auth', authRouter)
-
 
 app.get('/', (req, res) => {
     res.send('Index route')

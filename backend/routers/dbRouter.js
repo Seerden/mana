@@ -1,15 +1,19 @@
-const { dbConn } = require('../db/db.js');
+import { dbConn } from '../db/db.js'
+import express from 'express';
+import bodyParser from 'body-parser';
+import fs from 'fs';
+import path from 'path';
+import bcrypt from 'bcryptjs';
+const { hash, compare } = bcrypt;
+
+
 const User = dbConn.model('User');
 const List = dbConn.model('List');
-const express = require('express');
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
 
 /**
  * Express router for /db routes, used as API endpoints for frontend interaction with the database.
  */
-const dbRouter = express.Router();
+export const dbRouter = express.Router();
 dbRouter.use(bodyParser.urlencoded({ extended: true }));
 dbRouter.use(bodyParser.json());
 
@@ -152,5 +156,3 @@ dbRouter.post('/list/update', async (req, res) => {
             else { res.status(200).send(updated) }
         })
 })
-
-module.exports = { dbRouter }
