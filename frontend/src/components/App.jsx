@@ -12,6 +12,7 @@ import Lists from './lists/Lists';
 import NewList from './newlist/NewList';
 import Test from './Test';
 import Home from './Home';
+import Register from './register/Register'
 
 import LoginProvider from '../context/LoginContext';
 import { ListProvider } from '../context/ListContext';
@@ -27,10 +28,14 @@ const App = memo(() => {
                         <div className="App">
                             <ListProvider>
                                 <Routes>
+                                    {/* test route */}
                                     <Route path="/test" element={<Test />} />
+
                                     {/* home route */}
                                     <Route path="/" element={<Home />} />
-                                    <Route path="/test/:id" element={<Test />} />
+
+                                    <Route path="/register" element={<Register />} />
+
 
                                     {/* user routes */}
                                     <Route path="/u/:username">

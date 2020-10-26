@@ -57,3 +57,11 @@ DELETE {{base}}/dev/lists
 
 ###
 GET {{base}}/db/list/devpopulate
+###
+POST {{base}}/api/auth/user HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "newhere",
+    "email": "my@email.com"
+}

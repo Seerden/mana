@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const { dbRouter } = require('./routers/dbRouter');
 const { devRouter } = require('./routers/devRouter');
+const { authRouter } = require('./routers/authRouter');
 const app = express();
 
 
@@ -18,6 +19,7 @@ app.use(log)
 
 app.use('/db', dbRouter)
 app.use('/dev', devRouter)
+app.use('/api/auth', authRouter)
 
 
 app.get('/', (req, res) => {

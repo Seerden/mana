@@ -1,0 +1,12 @@
+@base = http://localhost:5000
+
+POST {{base}}/api/auth/user/verify HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "newhere",
+    "email": "my@email.com"
+}
+
+###
+GET {{base}}/api/auth/user/verify?username=newhere&email=my@email.com

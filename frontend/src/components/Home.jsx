@@ -8,7 +8,7 @@ const Home = (props) => {
         <div className="PageWrapper">
             <div className="Home">
                 <div className="PageHeader">
-                    Mana
+                    Home
                 </div>
 
                 <div className="Home__description">
@@ -16,7 +16,7 @@ const Home = (props) => {
                         <header className="Home__header">About</header>
                         <p className="Home__paragraph">
                             <div>
-                                Mana is a <a className="Home__link" href="https://en.wikipedia.org/wiki/Spaced_repetition">spaced-repetition</a> language learning application I built to streamline the language studying I do in my own free time, 
+                                Mana is a <a className="Home__link" href="https://en.wikipedia.org/wiki/Spaced_repetition">spaced-repetition</a> language learning application I built to streamline the language studying I do in my own free time,
                                 but of course anyone who shares my studying mindset and can benefit from this application is welcome to partake!</div>
                             <div>
                                 Spaced-repetition learning principles are quite straightforward: each (vocabulary) term is implemented as a virtual flash card. Learning intervals are chosen based on your preferences, and on how well you know each term.
@@ -53,7 +53,7 @@ const Home = (props) => {
                     <p className="Home__paragraph">
                         <div>
                             If you're ready to make an account, click <Link className="Home__link" to="/register">here</Link> to register. It's free, and no personal information will be requested or stored.
-                            </div>
+                        </div>
                     </p>
 
                 </div>

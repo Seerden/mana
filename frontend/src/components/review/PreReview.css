@@ -69,7 +69,7 @@
     background-color: blueviolet;
     border-radius: 3px;
     box-shadow: 0 0 0.3rem black;
-    transition: all 100ms linear;
+    transition: all 40ms ease;
 }
 
 .PreReview__settings--label {

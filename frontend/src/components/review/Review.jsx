@@ -47,7 +47,7 @@ const Review = memo((props) => {
                 payload: makeReviewList(list.content, Number(n))
             })
         }
-    }, [n])
+    }, [n]) // including list in deps causes session to be malformed somehow (progress doesn't change when moving to a new term)
 
     useEffect(() => {
         if (list && futureTerms) {
@@ -169,7 +169,9 @@ const Review = memo((props) => {
         list.sessions.push({
             start: session.start,
             end,
-            numTerms: n * list.content.length,
+            numTerms: list.content.length,
+            termsReviewed: Number(n) * list.content.length,
+            n: Number(n),
             direction
         });
         list.lastReviewed = end;

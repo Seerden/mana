@@ -36,11 +36,11 @@ const Lists = memo((props) => {
 
     return (
         <>
-            { !lists && 
+            {/* { !lists && 
                 <div className="PageWrapper">
                     Loading lists..
                 </div>
-            }
+            } */}
 
             { lists && lists.length > 0 &&
                 <div className="PageWrapper">

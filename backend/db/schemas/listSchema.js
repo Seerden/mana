@@ -9,7 +9,10 @@ const termSchema = new mongoose.Schema({
 const sessionSchema = new mongoose.Schema({
     start: String,
     end: String,
-    numTerms: Number
+    termsReviewed: Number,
+    numTerms: Number,
+    n: Number,
+    direction: String,
 })
 
 const listSchema = new mongoose.Schema({
