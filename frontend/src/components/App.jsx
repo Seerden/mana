@@ -1,7 +1,9 @@
 import React, { memo } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import './css/App.css';
+import './css/App.scss';
+
+import PrivateRoute from '../wrappers/PrivateRoute';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -12,7 +14,8 @@ import Lists from './lists/Lists';
 import NewList from './newlist/NewList';
 import Test from './Test';
 import Home from './Home';
-import Register from './register/Register'
+import Register from './register/Register';
+import Login from './login/Login';
 
 import LoginProvider from '../context/LoginContext';
 import { ListProvider } from '../context/ListContext';
@@ -35,14 +38,15 @@ const App = memo(() => {
                                     <Route path="/" element={<Home />} />
 
                                     <Route path="/register" element={<Register />} />
+                                    <Route path="/login" element={<Login />} />
 
 
                                     {/* user routes */}
                                     <Route path="/u/:username">
-                                        <Route path="/" element={<User />} />
+                                        <PrivateRoute path="/" component={User}/>
                                         <Route path="/lists">
-                                            <Route path="/" element={<Lists />} />
-                                            <Route path="/new" element={<NewList />} />
+                                            <PrivateRoute path="/" component={Lists} />
+                                            <PrivateRoute path="/new" component={NewList} />
                                         </Route>
 
                                         <Route path="/list">
@@ -51,10 +55,10 @@ const App = memo(() => {
 
                                                 <Route path="/review" element={
                                                     <ReviewProvider>
-                                                        <Review />    
+                                                        <Review />
                                                     </ReviewProvider>
                                                 }
-                                                 />
+                                                />
                                                 <Route path="/" element={<List />} />
 
                                             </Route>

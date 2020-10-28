@@ -2,7 +2,8 @@ import React, { useState, useEffect, memo } from 'react';
 import { useRouteProps } from '../../hooks/routerHooks';
 import axios from 'axios';
 import { useLogState } from '../../hooks/state'
-import './css/NewList.css';
+import { postList } from '../../helpers/db.api';
+import './css/NewList.scss';
 import NewListTerm from './NewListTerm';
 
 const NewList = memo((props) => {
@@ -48,13 +49,12 @@ const NewList = memo((props) => {
     const handleSubmit = e => {
         e.preventDefault();
 
-        axios.post('/db/list', {
-            newList: {
-                owner: params.username, // @TODO: replace
-                ...formOutput,
-                content: formOutput.content.filter(i => i !== null)
-            }
+        postList({
+            owner: params.username, // @TODO: replace
+            ...formOutput,
+            content: formOutput.content.filter(i => i !== null)
         })
+
     }
 
     return (

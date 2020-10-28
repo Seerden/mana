@@ -4,7 +4,7 @@ import { useRouteProps } from '../../hooks/routerHooks';
 import { getLists } from '../../helpers/db.api';
 import { useLogState } from '../../hooks/state';
 import ListsItem from './ListsItem';
-import './Lists.css'
+import './Lists.scss'
 
 const Lists = memo((props) => {
     const [filter, setFilter] = useState('');

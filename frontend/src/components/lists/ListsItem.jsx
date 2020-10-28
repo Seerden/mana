@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { useRouteProps } from "../../hooks/routerHooks";
-import './ListsItem.css'
+import './ListsItem.scss'
 import { timeSince } from '../../helpers/time';
 import dayjs from 'dayjs';
 

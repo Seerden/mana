@@ -13,3 +13,25 @@ export const useLogState = (name, state, setState) => {
         state && console.log(`${name} changed:`, state);
     }, [name, state, setState])
 }
+
+/**
+ * Simple form input blur handler. Only works on top-level keys, don't use for nested form state.
+ * @param {React.FocusEvent} e event object
+ * @param {*} state useState state
+ * @param {React.Dispatch<React.SetStateAction>} setState useState setter
+ */
+export const handleFormBlur = (e, state, setState) => {
+    let t = e.currentTarget;
+    
+    if ( !(!state[t.name] && !t.value) && (!state[t.name] || (state[t.name] && state[t.name] !== t.value))) {  // check if value exists and differs from current value
+        setState({...state, [t.name]: t.value})
+    }
+}
+
+/* to check whether key exists in state:
+        option 1: 
+            if (!Object.keys(state).includes(t.name))
+            works if state is null or undefined
+        option 2:
+            if (!state[t.name])
+            works only is state is already an object (so for this, need to initialize useState with empty object, and not null) */

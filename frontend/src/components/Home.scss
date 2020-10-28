@@ -10,7 +10,6 @@
     border-radius: 0 0 3px 0;
     max-width: max-content;
     margin-bottom: 0;
-    /* background-color: #222; */
     background-color: blueviolet;
     padding: 0 1rem;
 }
@@ -22,6 +21,7 @@
     border-left: 2px solid blueviolet;
 }
 
-.Home__paragraph div {
+.Home__paragraph span {
+    display: block;
     margin-bottom: 0.4rem;
 }

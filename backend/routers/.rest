@@ -65,3 +65,10 @@ Content-Type: application/json
     "username": "newhere",
     "email": "my@email.com"
 }
+
+###
+GET {{base}}/dev/users
+###
+GET {{base}}/dev/updatepass
+###
+GET {{base}}/dev/user/a

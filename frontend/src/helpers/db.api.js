@@ -1,4 +1,26 @@
 import axios from 'axios';
+import { storeUser } from '../hooks/auth';
+
+axios.defaults.withCredentials = true;
+
+// axios.interceptors.response.use(res => {
+//     return res
+// }, err => {
+//     storeUser(null, 'remove');
+//     console.log('error received:',err);
+//     Promise.reject(err)
+//     // console.log(err);
+//     // throw new axios.Cancel('cancelled request: not logged in')
+// })
+
+// axios.interceptors.request.use(config => {
+//     let user = storeUser(null, 'get');
+//     if (!user) { 
+//         console.log('no user, cancelling axios request');    
+//         return config
+//     }
+//     return config
+// }, err => Promise.reject(err))
 
 // axios.interceptors.request.use(req => {
 //     console.log('axios request:', req)
@@ -60,18 +82,38 @@ export const getLists = async (username) => {
 export const getUser = async (username, args) => {
     return await axios.get(`/db/u/${username}${ args && args.populate ? `?populate=${ args && args.populate}` : ''}`)
         .then(res => res.data)
-        .catch(err => { throw new Error('Error getting user from database') })
+        .catch(err => err)
 }
 
 /**
  * Delete list from database
  */
 export const deleteList = async (query) => {
-    axios.delete('/db/list', { params: query })
+    return await axios.delete('/db/list', { params: query })
         .then(r => r.data)
         .catch(e => e)
 }
 
-export const postList = async body => {
-    axios.post('/db/list')
+export const postList = async newList => {
+    console.log('posting lost');
+    return await axios.post('/db/list', {newList}, {withCredentials: true})
+        .then(r => r)
+        .catch(e => {
+            storeUser(null, 'remove')
+            console.log('error posting list');
+            console.log(e);
+        })
+}
+
+/**
+ * Authenticate and authorize the user against the Passport.js validation
+ * Single endpoint for both registration and login, as the backend route checks whether or not user exists, and creates one if not.
+ * @param {Object} user object with 'username' and 'password' keys
+ * @return {Object} returns status: 4xx if not validated, 2xx if validated)
+ */
+export const authenticateUser = async (user) => {
+    console.log('authenticating user')
+    return await axios.post('/db/user', user)
+        .then(r => r)
+        .catch(e => e)
 }

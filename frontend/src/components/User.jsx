@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getUser } from '../helpers/db.api';
 import { useRouteProps } from '../hooks/routerHooks';
-import './User.css';
+import './User.scss';
 
 const User = () => {
     const { params } = useRouteProps();

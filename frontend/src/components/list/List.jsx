@@ -1,6 +1,6 @@
 import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import './List.css';
+import './List.scss';
 import { useRouteProps } from '../../hooks/routerHooks';
 import { deleteList, getList, updateList } from '../../helpers/db.api';
 import ListTerm from './ListTerm'

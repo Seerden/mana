@@ -5,6 +5,8 @@ const User = dbConn.model('User');
 const List = dbConn.model('List');
 import express from 'express';
 import bodyParser from 'body-parser';
+import bcrypt from 'bcryptjs';
+import 'dotenv/config.js';
 
 export const devRouter = express.Router();
 devRouter.use(bodyParser.urlencoded({extended: true}));
@@ -39,12 +41,26 @@ devRouter.get('/user/drop', (req, res) => {
     })
 })
 
-devRouter.get('/user', (req, res) => {
-    let newUser = new User({username: 'seerden'})
-    newUser.save((err, saved) => {
+devRouter.get('/user/:username', (req, res) => {
+    const { username } = req.params;
+    User.find({username}, (err, found) => res.send(found))
+})
+
+devRouter.get('/users', (req, res) => {
+    User.find({}, 'username', (err, foundUsers) => {
+        res.json(foundUsers)
+    })
+})
+
+/**
+ * password on admin account wasn't set yet, used this to set it retroactively
+ */
+devRouter.get('/updatepass', async (req, res) => {
+    let hashedPassword = await bcrypt.hash(process.env.MANA_ADMIN_PASS, 10)
+    User.findOneAndUpdate({username: process.env.MANA_ADMIN_USER}, {$set: {password: hashedPassword}}, {new: true}, (err, updated) => {
         if(!err) {
-            console.log(saved);
-            res.send('saved new user')
+            console.log('update user', updated)
+            res.send('updated user')
         }
     })
 })

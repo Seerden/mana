@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import './css/NewList.css'
+import './css/NewList.scss'
 
 const NewListTerm = memo(({ index, formOutput, setFormOutput }) => {
     const handleTermBlur = (e, idx) => {

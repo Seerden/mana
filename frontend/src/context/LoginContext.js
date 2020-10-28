@@ -1,6 +1,6 @@
 import React, {memo, useState, useEffect, createContext } from 'react';
 import { useLogState } from '../hooks/state';
-
+import { storeUser } from '../hooks/auth';
 export const LoginContext = createContext(null);
 
 const LoginProvider = memo((props) => {
@@ -8,20 +8,22 @@ const LoginProvider = memo((props) => {
      * @todo    update this to do proper authentication, as it currently hard-codes 'seerden' as username
      */
     
-    const [currentUser, setCurrentUser] = useState(() => {'seerden'});
-    useEffect(() => {
-        setCurrentUser('seerden')
-    }, [])
+    const [currentUser, setCurrentUser] = useState(storeUser(null, 'get'));
 
-    useLogState('username', currentUser, setCurrentUser)
+    const setUser = user => {
+        setCurrentUser(user);
+        storeUser(user, 'set')
+    }
 
+    useLogState('currentUser', currentUser)
 
     return (
-        <LoginContext.Provider value={ {user: currentUser }}>
+        <LoginContext.Provider value={{...{currentUser, setUser} }}>
             {props.children}
         </LoginContext.Provider>
     )
 })
 
 export default LoginProvider;
-// @dev replace with proper auth
+
+/* handle user == null case for this and all dependent components */
