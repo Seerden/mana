@@ -11,7 +11,7 @@ const Lists = memo((props) => {
         [listsElement, setListsElement] = useState(null),
         [sortBy, setSortBy] = useState('created'),
         { params } = useRouteProps();
-    const { response: lists, makeRequest, loading } = useRequest({...handleGetLists(params.username)})
+    const { response: lists, makeRequest, loading, error } = useRequest({...handleGetLists(params.username)})
 
     useEffect(() => {makeRequest()}, [])
     useEffect(() => { if (lists) { setListsElement(makeListsElement(lists)) } }, [lists])
@@ -42,6 +42,8 @@ const Lists = memo((props) => {
                     Loading lists..
                 </div>
             }
+
+            { error && JSON.stringify(error)}
 
             { lists && lists.length > 0 &&
                 <div className="PageWrapper">

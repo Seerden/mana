@@ -8,7 +8,7 @@ const LoginProvider = memo((props) => {
      * @todo    update this to do proper authentication, as it currently hard-codes 'seerden' as username
      */
     
-    const [currentUser, setCurrentUser] = useState(storeUser(null, 'get'));
+    const [currentUser, setCurrentUser] = useState(null);
 
     const login = user => {
         setCurrentUser(user);
@@ -20,7 +20,11 @@ const LoginProvider = memo((props) => {
         storeUser(null, 'remove')
     }
 
-    useLogState('currentUser', currentUser)
+    useLogState('LoginContext: currentUser', currentUser)
+
+    useEffect(() => {
+        // verify localstorage user against db on LoginContext mount
+    }, [])
 
     return (
         <LoginContext.Provider value={{...{currentUser, login, logout} }}>

@@ -13,8 +13,7 @@ const Login = (props) => {
 
     useAuthenticateUser(auth, _user);
 
-    // useLogState('response', response)
-    useLogState('current user from login.jsx', currentUser)
+    useLogState('Login.jsx: currentUser', currentUser)
  
     return (
         <div className="Login">

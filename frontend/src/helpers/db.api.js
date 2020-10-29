@@ -32,7 +32,7 @@ axios.defaults.withCredentials = true;
 // })
 
 const checkResponseError = e => {
-    if(e.response.status === 401) {
+    if (e.response.status === 401) {
         // api says request wasn't authorized. handle
         console.log('unauthorized');
     }
@@ -45,9 +45,10 @@ const checkResponseError = e => {
  * @param {Function} handleError function to handle error, form similar to handleResponse
  * @returns {[response: *, error: Boolean, loading: Boolean, makeRequest: Function]} [response, error] are returned states set by the handleResponse/handleError functions. loading is the loading state (true while request is being made), and makeRequest can be called to trigger a request
  */
-export const useRequest = ({request, handleResponse, handleError}) => {
-    const 
+export const useRequest = ({ request, handleResponse, handleError }) => {
+    const
         { currentUser, login, logout } = useContext(LoginContext),
+        { username } = useRouteProps().params,
         [fireRequest, setFireRequest] = useState(false),
         makeRequest = () => setFireRequest(true),
         [response, setResponse] = useState(null),
@@ -55,40 +56,47 @@ export const useRequest = ({request, handleResponse, handleError}) => {
         [loading, setLoading] = useState(false),
         source = axios.CancelToken.source();
 
-    const logoutIfUnauthenticated = useCallback((err) => {
-        if (err.response.status === 401) {
-            // console.log("Unauthorized request");
-            logout()
+    const authorizeUser = (next, setError) => {
+        if (username && (currentUser === username)) {
+            next()
+        } else {
+            setLoading(false);
+            setError('Route not accessible by current user.');
         }
-    }, [])
+    }
 
-    useEffect(() => {
+    useEffect(() => {  // verify if user should have access to the page, execute request or set error based on result
         if (fireRequest) {
             setLoading(true);
 
-            // console.log(request);
+            function executeRequest() {
+                request()
+                    .then(res => {
+                        handleResponse(res, setResponse)
+                        setLoading(false);
+                        setFireRequest(false);
+                    })
+                    .catch(err => {
+                        setLoading(false);
 
-            request()
-                .then(res => { 
-                    // setTimeout(() => setLoading(false), 150);  // just to test. works fine, don't need it though, loading will be there if a request actually needs time to load
-                    setLoading(false);
-                    handleResponse(res, setResponse)
-                    setFireRequest(false);
-                })
-                .catch(err => {
-                    setLoading(false);
-                    logoutIfUnauthenticated(err);
-                    handleError(err, setError)
-                    setFireRequest(false);
-                })
+                        if (err.response.status === 401) {
+                            logout()
+                        }
+
+                        handleError(err, setError)
+                        setFireRequest(false);
+                    })
+            }
+
+            authorizeUser(executeRequest, setError)
         }
-    }, [fireRequest])
+    }, [currentUser, fireRequest])
 
     useEffect(() => {  // if current user changes (e.g. because user was logged out by making unauthorized request), component will unmount, so we need to cancel any active requests
         return () => source.cancel("Component was unmounted")
     }, [currentUser])
 
-    return {response, error, loading, makeRequest}
+    return { response, error, loading, makeRequest }
 }
 
 /**
@@ -182,8 +190,8 @@ export const useAuthenticateUser = (auth, user) => {
     const [err, setErr] = useState(false);
 
     useEffect(() => {
-        
-        (function(){
+
+        (function () {
             if (auth) {
                 axios.post('/db/user', user)
                     .then(r => {
@@ -199,6 +207,7 @@ export const useAuthenticateUser = (auth, user) => {
 /* ------- NEW */
 // @todo: rewrite all api calls to be handleResponse functions instead, to be used in conjunction with useRequest
 
+// handleError and handleResponse are generic handlers
 const handleError = (err, setError) => {  // called from within useRequest, from which we obtain err, setError
     setError(err.response);
 }
@@ -208,13 +217,13 @@ const handleResponse = (res, setResponse) => { // called from within useRequest,
 }
 
 export const handleGetList = (query) => {
-    const request = () => axios.get('/db/list', {params: query});
-    return {request, handleResponse, handleError}
+    const request = () => axios.get('/db/list', { params: query });
+    return { request, handleResponse, handleError }
 }
 
 export const handlePostList = (newList) => {
     const request = () => axios.post('/db/list', { newList })
-    return {request, handleResponse, handleError}
+    return { request, handleResponse, handleError }
 }
 
 export const handlePutList = (query, body) => {
@@ -226,17 +235,24 @@ export const handlePutList = (query, body) => {
             }
         })
     }
-    return {request, handleResponse, handleError}
+    return { request, handleResponse, handleError }
 }
 
 export const handleDeleteList = (query) => {
-    const request = () => {axios.delete('/db/list', { params: query })}
-    return {request, handleResponse, handleError}
+    const request = () => { axios.delete('/db/list', { params: query }) }
+    return { request, handleResponse, handleError }
 }
 
 export const handleGetLists = (username) => {
     const request = () => axios.get(`/db/listsbyuser/${username}`)
-    return ({request, handleResponse, handleError})
+    return ({ request, handleResponse, handleError })
 }
 
 /* @note: don't remove old functions until I've implemented useRequest in all components in the app */
+
+/* thoughts
+distinguish between unauthorized request and request made by an authenticated user for another user's information
+
+
+@todo: allow optional fireImmediately prop to be passed to useRequest to fire on component mount
+*/

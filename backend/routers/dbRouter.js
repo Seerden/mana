@@ -43,6 +43,14 @@ function isLoggedIn(req, res, next) {
     next()
 }
 
+function userOwnsRoute(req, res, next) {
+    if (req.params.username === req.user.username) {
+        next()
+    } else {
+        res.status(403).json('User does not own this route.')
+    }
+}
+
 dbRouter.get('/list/devpopulate', (req, res) => {
     const base = path.join(__dirname, '../dev/wrts');
     const filenames = fs.readdirSync(base)
@@ -81,69 +89,6 @@ dbRouter.get('/list/devpopulate', (req, res) => {
     })
 })
 
-dbRouter.get('/u/:username', (req, res) => {
-    let populate = req.query.populate
-    let username = req.params.username;
-
-    if (populate) {
-        User.findOne({ username: username }).populate(populate).exec((err, foundUser) => {
-            res.json(foundUser)
-        })
-    } else {
-        User.findOne({ username: username }, (err, foundUser) => {
-            res.json(foundUser);
-        })
-    }
-})
-
-dbRouter.get('/listsbyuser/:username', isLoggedIn, (req, res) => {
-    console.log('getting lists by user');
-    const username = req.params.username;
-    List.find({ owner: username }, '-content', (err, found) => {
-        res.json(found);
-    })
-})
-
-dbRouter.get('/list',isLoggedIn, (req, res) => {
-    const { filter, ...query } = req.query;  // expect query like '?filter=-content&username=foo'
-    List.findOne({ ...query }, filter, (err, found) => { res.json(found) })
-})
-
-dbRouter.post('/list', isLoggedIn, (req, res) => {
-    const { owner, name, from, to, content } = req.body.newList;
-
-    if(req.user.username === owner) {
-        List.findOne({ owner, name }, (err, foundList) => {
-            if (err) { throw err }
-            if (foundList) {
-                console.log('found list ')
-                res.json(foundList)
-            }
-            if (!foundList) {
-                const newList = new List({
-                    owner: owner,
-                    name: name,
-                    from: from,
-                    to: to,
-                    content: content
-                });
-                newList.save((err, savedList) => {
-                    if (err) { console.log(err.errors[Object.keys(err.errors)[0]]['properties'].message) };
-                    if (savedList) {
-                        console.log('new list saved to db:', savedList);
-                        User.findOneAndUpdate({ username: owner }, { $push: { lists: savedList } }, { new: true }, (err, updatedUser) => {
-                            console.log(`added list ${savedList.name} to user ${savedList.owner}`);
-                            res.json(savedList)
-                        }
-                        )
-                    }
-                })
-            }
-        })
-    }
-
-})
-
 dbRouter.delete('/list', (req, res) => {
     List.findOneAndDelete({ ...req.query }, (err, deletedList) => {
         if (!err) {
@@ -175,32 +120,80 @@ dbRouter.get('/testing', isLoggedIn, (req, res) => {
     res.send('hey bob')
 })
 
-// ---------- PASSPORT
-// routes set up with authentication in mind
-
 // currently, registration and login go through this same route (registration is done in the passport local strategy, see my passport.js file)
-
-// ---- OPTION 1
-    // dbRouter.post('/user/', (req, res, next) => passport.authenticate('local', (err, user, info) => {
-    //     if (err) {
-    //         // return res.status(400).json({errors: err})
-    //         return res.status(400).send('error authenticating user !!!')
-    //     }
-    //     if (!user) {
-    //         // return res.status(400).json({errors: 'user not found'})
-    //         return res.status(400).send('error authing')
-    //     }
-
-    //     req.login(user, err => {
-    //         // if (err) { return res.status(400).json({err})}
-    //         if (err) { return res.status(400).json({err})}
-    //         return res.status(200).json({username: user.username})
-    //     })
-    // })(req, res, next))
-
-// ---- OPTION 2 (much, much cleaner)
 /* note, however, that this just sends a 401 response without further customization if the authentication fails. using a callback (like option 1) gives us more options */
 dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
     console.log(`Authenticated user ${req.user.username}`);
     res.json({username: req.user.username})
 })
+
+/**
+ * Subrouter for owner-protected routes (e.g. /u/admin/lists) 
+ * @note Creation and authentication of users happens outside this subrouter.
+ */
+const userRouter = express.Router({mergeParams: true});
+  userRouter.use(isLoggedIn);
+  userRouter.use(userOwnsRoute);
+dbRouter.use('/u/:username', userRouter);
+
+userRouter.get('/user', (req, res) => {
+    let populate = req.query.populate
+    let username = req.params.username;
+
+    if (populate) {
+        User.findOne({ username: username }).populate(populate).exec((err, foundUser) => {
+            res.json(foundUser)
+        })
+    } else {
+        User.findOne({ username: username }, (err, foundUser) => {
+            res.json(foundUser);
+        })
+    }
+})
+
+userRouter.get('/list', (req, res) => {
+    const { filter, ...query } = req.query;  // expect query like '?filter=-content&username=foo'
+    List.findOne({ ...query }, filter, (err, found) => { res.json(found) })
+})
+userRouter.post('/list', (req, res) => {
+    const { owner, name, from, to, content } = req.body.newList;
+
+    if(req.user.username === owner) {
+        List.findOne({ owner, name }, (err, foundList) => {
+            if (err) { throw err }
+            if (foundList) {
+                console.log('found list ')
+                res.json(foundList)
+            }
+            if (!foundList) {
+                const newList = new List({
+                    owner: owner,
+                    name: name,
+                    from: from,
+                    to: to,
+                    content: content
+                });
+                newList.save((err, savedList) => {
+                    if (err) { console.log(err.errors[Object.keys(err.errors)[0]]['properties'].message) };
+                    if (savedList) {
+                        console.log('new list saved to db:', savedList);
+                        User.findOneAndUpdate({ username: owner }, { $push: { lists: savedList } }, { new: true }, (err, updatedUser) => {
+                            console.log(`added list ${savedList.name} to user ${savedList.owner}`);
+                            res.json(savedList)
+                        }
+                        )
+                    }
+                })
+            }
+        })
+    }
+})
+userRouter.put('/list')
+userRouter.delete('/list')
+
+userRouter.get('/lists', (req, res) => {
+    List.find({ owner: req.params.username }, '-content', (err, found) => {
+        res.json(found);
+    })
+})
+

@@ -6,9 +6,10 @@
 # backend
 /backend/node_modules
 /backend/dev
-/backend/routers.rest
+/backend/routers/.rest
 
 *.env
+*.rest
 node_modules
 
 MAP.md
