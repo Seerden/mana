@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
   mongoose.set('useFindAndModify', false);
+  mongoose.set('useCreateIndex', true)
 import { userSchema } from './schemas/userSchema.js';
 import { listSchema } from './schemas/listSchema.js';
 

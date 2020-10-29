@@ -89,37 +89,6 @@ dbRouter.get('/list/devpopulate', (req, res) => {
     })
 })
 
-dbRouter.delete('/list', (req, res) => {
-    List.findOneAndDelete({ ...req.query }, (err, deletedList) => {
-        if (!err) {
-            res.status(200).json(deletedList)
-        } else if (err) {
-            res.status(404).send('Could not delete requested list.')
-        }
-    })
-})
-
-dbRouter.post('/list/update', async (req, res) => {
-    const { query, body } = req.body.data;
-
-    List.findOneAndUpdate(query, {
-        $set: {
-            content: body.content,
-            sessions: body.sessions,
-            lastReviewed: body.lastReviewed
-        }
-    },
-        { new: true }, (err, updated) => {
-            if (err) { res.status(500).send('Error updating list in database') }
-            else { res.status(200).send(updated) }
-        })
-})
-
-
-dbRouter.get('/testing', isLoggedIn, (req, res) => {
-    res.send('hey bob')
-})
-
 // currently, registration and login go through this same route (registration is done in the passport local strategy, see my passport.js file)
 /* note, however, that this just sends a 401 response without further customization if the authentication fails. using a callback (like option 1) gives us more options */
 dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
@@ -188,8 +157,30 @@ userRouter.post('/list', (req, res) => {
         })
     }
 })
-userRouter.put('/list')
-userRouter.delete('/list')
+userRouter.put('/list', (req, res) => {
+    const { query, body } = req.body.data;
+
+    List.findOneAndUpdate(query, {
+        $set: {
+            content: body.content,
+            sessions: body.sessions,
+            lastReviewed: body.lastReviewed
+        }
+    },
+        { new: true }, (err, updated) => {
+            if (err) { res.status(500).send('Error updating list in database') }
+            else { res.status(200).send(updated) }
+        })
+})
+userRouter.delete('/list', (req, res) => {
+    List.findOneAndDelete({ ...req.query }, (err, deletedList) => {
+        if (!err) {
+            res.status(200).json(deletedList)
+        } else if (err) {
+            res.status(404).send('Could not delete requested list.')
+        }
+    })
+})
 
 userRouter.get('/lists', (req, res) => {
     List.find({ owner: req.params.username }, '-content', (err, found) => {
