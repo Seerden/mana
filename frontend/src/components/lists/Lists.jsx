@@ -4,7 +4,7 @@ import { useRouteProps } from '../../hooks/routerHooks';
 import { useRequest } from '../../helpers/db.api';
 import { handleGetLists } from '../../helpers/apiHandlers';
 import ListsItem from './ListsItem';
-import './Lists.scss'
+import './style/Lists.scss'
 
 const Lists = memo((props) => {
     const

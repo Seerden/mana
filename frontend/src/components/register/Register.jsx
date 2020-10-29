@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import './Register.scss';
+import './style/Register.scss';
 import { useLogState, handleFormBlur } from '../../hooks/state';
 import { useAuthenticateUser } from '../../helpers/db.api';
 

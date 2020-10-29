@@ -204,19 +204,13 @@ export const useAuthenticateUser = (auth, user) => {
     }, [auth])
 }
 
-// @todo: rewrite all api calls to be handleResponse functions instead, to be used in conjunction with useRequest
 
-/* @todo:
-    @note:  protected API endpoints are now /db/u/:username/...
-            means each protected route expects :username parameter
+/* 
 
-*/
-
-/* @todo:
+@todo:
     feature: distinguish between unauthorized request and request made by an authenticated user for another user's information
     solution: handle 401 and 403 requests separately
 
 @todo: allow optional fireImmediately prop to be passed to useRequest to fire on component mount
-a
 
 */

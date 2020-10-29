@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import PreReview from './PreReview';
 import PostReview from "./PostReview";
 import ReviewInfo from "./ReviewInfo";
-import './Review.scss';
+import './style/Review.scss';
 
 const Review = memo((props) => {
     const { params } = useRouteProps(),

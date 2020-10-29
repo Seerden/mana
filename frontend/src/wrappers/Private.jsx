@@ -6,8 +6,9 @@ import { LoginContext } from '../context/LoginContext';
 
  /**
   * Wrapper to hide components from unauthorized users.
-  * @note actual authorization is handled in LoginContext
-  * @usage used by PrivateRoute component
+  * @note   actual authorization is handled in LoginContext, useRequest, and on the backend
+  * @todo   currently only checks if there is _any_ user, but we also want to check if the logged in user is the _right_ user
+  * @usage  used by PrivateRoute component
   * @param {*} props: props.component is a React/JSX component
   * @return {React.NamedExoticComponent} React component that displays login form or desired component based on auth state
   */

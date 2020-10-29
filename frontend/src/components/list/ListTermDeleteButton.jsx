@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import './ListTermDeleteButton.scss';
+import './style/ListTermDeleteButton.scss';
 
 /**
  * JSX delete button element that turns into two buttons: 'delete' and 'keep'

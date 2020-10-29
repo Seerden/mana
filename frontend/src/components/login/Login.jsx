@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { LoginContext } from '../../context/LoginContext';
-import './Login.scss';
+import './style/Login.scss';
 import { useLogState, handleFormBlur } from '../../hooks/state';
 import { useAuthenticateUser } from '../../helpers/db.api';
 import { Link } from 'react-router-dom';

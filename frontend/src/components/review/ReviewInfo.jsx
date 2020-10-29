@@ -1,6 +1,6 @@
 import React, { useState, memo } from "react";
 import Timer from './Timer';
-import './ReviewInfo.scss';
+import './style/ReviewInfo.scss';
 
 const ReviewInfo = memo(({ start, numTerms, n, progress }) => {
     const [expanded, setExpanded] = useState(false);

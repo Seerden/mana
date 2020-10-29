@@ -3,7 +3,7 @@ import { useRouteProps } from '../../hooks/routerHooks';
 import axios from 'axios';
 import { useLogState } from '../../hooks/state'
 import { postList } from '../../helpers/db.api';
-import './css/NewList.scss';
+import './style/NewList.scss';
 import NewListTerm from './NewListTerm';
 
 const NewList = memo((props) => {

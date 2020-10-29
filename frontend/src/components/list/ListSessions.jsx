@@ -1,6 +1,6 @@
 import React from "react";
 import dayjs from 'dayjs';
-import './ListSession.scss'
+import './style/ListSession.scss'
 
 const ListSessions = ({ sessions }) => {
 
