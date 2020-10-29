@@ -1,9 +1,8 @@
-import React, { useState, memo } from "react";
+import React, { memo } from "react";
 import Timer from './Timer';
 import './style/ReviewInfo.scss';
 
 const ReviewInfo = memo(({ start, numTerms, n, progress }) => {
-    const [expanded, setExpanded] = useState(false);
 
     return (
         <details className="Review__info">

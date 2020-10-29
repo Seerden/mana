@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { storeUser } from '../hooks/auth';
 import { LoginContext } from '../context/LoginContext';
-import { useContext, useState, useEffect, useCallback } from 'react';
-import { useLogState } from '../hooks/state';
+import { useContext, useState, useEffect } from 'react';
 import { useRouteProps } from '../hooks/routerHooks';
+import { useLogState } from '../hooks/state';
 
 axios.defaults.withCredentials = true;
 
@@ -48,7 +48,7 @@ const checkResponseError = e => {
 export const useRequest = ({ request, handleResponse, handleError }) => {
     const
         { currentUser, login, logout } = useContext(LoginContext),
-        { username } = useRouteProps().params,
+        { params } = useRouteProps(),
         [fireRequest, setFireRequest] = useState(false),
         makeRequest = () => setFireRequest(true),
         [response, setResponse] = useState(null),
@@ -56,41 +56,50 @@ export const useRequest = ({ request, handleResponse, handleError }) => {
         [loading, setLoading] = useState(false),
         source = axios.CancelToken.source();
 
-    const authorizeUser = (next, setError) => {
+    useLogState(error)
+
+    const authorizeUser = function (username, setError, next) {
         if (username && (currentUser === username)) {
+            setError(null)  // this fixes error persisting on route change from unauthorized -> authorized
             next()
+            
         } else {
-            setLoading(false);
             setError('Route not accessible by current user.');
+            setLoading(false);
         }
     }
+
+    const executeRequest = function() {
+        request()
+            .then(res => {
+                handleResponse(res, setResponse)
+                setLoading(false);
+                setFireRequest(false);
+            })
+            .catch(err => {
+                setLoading(false);
+
+                if (err.response.status === 401) {
+                    logout()
+                }
+
+                handleError(err, setError)
+                setFireRequest(false);
+            })
+    }
+
+    useEffect(() => {return () => { // cleanup on unmount. @note: doesn't fix error persisting on change from unauthorized to authorized route (e.g. when mary navigates from /u/bob/lists -> u/mary/lists)
+        setError(null);
+        setResponse(null);
+        setLoading(false);
+    } }, [])
 
     useEffect(() => {  // verify if user should have access to the page, execute request or set error based on result
         if (fireRequest) {
             setLoading(true);
-
-            function executeRequest() {
-                request()
-                    .then(res => {
-                        handleResponse(res, setResponse)
-                        setLoading(false);
-                        setFireRequest(false);
-                    })
-                    .catch(err => {
-                        setLoading(false);
-
-                        if (err.response.status === 401) {
-                            logout()
-                        }
-
-                        handleError(err, setError)
-                        setFireRequest(false);
-                    })
-            }
-
-            authorizeUser(executeRequest, setError)
+            authorizeUser(params.username, setError, executeRequest)
         }
-    }, [currentUser, fireRequest])
+    }, [fireRequest, params.username])
 
     useEffect(() => {  // if current user changes (e.g. because user was logged out by making unauthorized request), component will unmount, so we need to cancel any active requests
         return () => source.cancel("Component was unmounted")

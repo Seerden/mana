@@ -1,5 +1,4 @@
-import React, { createContext, useState, memo, useEffect } from "react";
-import { useLogState } from "../hooks/state";
+import React, { createContext, useState, memo } from "react";
 
 export const ReviewContext = createContext(null);
 

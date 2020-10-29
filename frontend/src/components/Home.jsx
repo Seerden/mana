@@ -35,7 +35,7 @@ const Home = memo((props) => {
                         <header className="Home__header">Getting started</header>
                         <p className="Home__paragraph">
                             <span>
-                                If you're just taking a look at the application, please click <a className="Home__link" href="#">here</a> to be logged in as a temporary user.
+                                If you're just taking a look at the application, please click <a className="Home__link" href="/">here</a> to be logged in as a temporary user.
                                 You'll see a number of lists having been created already, including some review activity, so you can fully explore the functionality the application has to offer.
                                 Changes you make will persist to the database, but the temporary account and all its content will be removed after two hours.
 

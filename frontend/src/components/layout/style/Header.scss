@@ -1,0 +1,36 @@
+.Header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    
+    background-color: #111;
+    z-index: 1000;
+    height: 3rem;
+    max-height: max-content;
+    width: 100%;
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+
+    nav {
+        width: 100%;
+        max-width: 800px;
+        
+        button {
+            margin-left: 1rem;
+            background-color: #333;
+            border: none;
+            color: white;
+            padding: 0.3rem;
+        }
+    }
+}
+
+.NavLink {
+    margin-left: 1rem;
+    font-size: 1.1rem;
+}
+
+.NavLink:visited {
+    color: deepskyblue;
+}

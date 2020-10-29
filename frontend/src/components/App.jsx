@@ -9,7 +9,7 @@ import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Review from './review/Review';
 import List from './list/List';
-import User from './User';
+import User from './user/User';
 import Lists from './lists/Lists';
 import NewList from './newlist/NewList';
 import Test from './Test';

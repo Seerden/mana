@@ -8,7 +8,7 @@ const LoginProvider = memo((props) => {
      * @todo    update this to do proper authentication, as it currently hard-codes 'seerden' as username
      */
     
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(storeUser(null, 'get'));
 
     const login = user => {
         setCurrentUser(user);
