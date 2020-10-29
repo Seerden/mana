@@ -1,19 +1,19 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { getLists } from '../../helpers/db.api';
-import { useLogState } from '../../hooks/state';
+import { useRequest, handleGetLists } from '../../helpers/db.api';
 import ListsItem from './ListsItem';
 import './Lists.scss'
 
 const Lists = memo((props) => {
-    const [filter, setFilter] = useState('');
-    const [lists, setLists] = useState(null);
-    const [listsElement, setListsElement] = useState(null);
-    const [sortBy, setSortBy] = useState('created');
-    const { params } = useRouteProps();
+    const
+        [filter, setFilter] = useState(''),
+        [listsElement, setListsElement] = useState(null),
+        [sortBy, setSortBy] = useState('created'),
+        { params } = useRouteProps();
+    const { response: lists, makeRequest, loading } = useRequest({...handleGetLists(params.username)})
 
-    useEffect(() => { getLists(params.username).then(res => setLists(res)) }, [])
+    useEffect(() => {makeRequest()}, [])
     useEffect(() => { if (lists) { setListsElement(makeListsElement(lists)) } }, [lists])
 
     const handleFilterChange = e => {
@@ -36,11 +36,12 @@ const Lists = memo((props) => {
 
     return (
         <>
-            {/* { !lists && 
+
+            { loading && 
                 <div className="PageWrapper">
                     Loading lists..
                 </div>
-            } */}
+            }
 
             { lists && lists.length > 0 &&
                 <div className="PageWrapper">

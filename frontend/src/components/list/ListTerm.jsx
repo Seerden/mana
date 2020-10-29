@@ -3,7 +3,6 @@ import { ListContext } from '../../context/ListContext';
 import { updateList } from '../../helpers/db.api';
 import ListTermDeleteButton from "./ListTermDeleteButton";
 import TermHistory from './TermHistory';
-import { v4 as uuidv4 } from 'uuid';
 
 /**
  * ListTerm component
@@ -17,11 +16,7 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     const { listContextValue, setListContextValue } = useContext(ListContext);
     const [showHistory, setShowHistory] = useState(false);
 
-    const termStyles = {
-        border: confirmingDelete ? '2px solid orangered' : "2px solid transparent",
-    }
-
-    useEffect(() => {
+    useEffect(() => { // cleanup
         return () => {
             setIsEditing(false);
             setConfirmingDelete(false);
@@ -71,7 +66,6 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
             >
                 <div className="term">
 
-                    {/* <div style={{ color: confirmingDelete ? 'orangered' : '' }} className="term--index">{idx + 1}</div> */}
                     {!isEditing && isHovering ?
                         <>
                             <ListTermDeleteButton

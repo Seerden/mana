@@ -19,7 +19,7 @@ dbRouter.use(bodyParser.json());
 dbRouter.use(session({
     secret: process.env.SESSION_SECRET,
     cookie: {
-        maxAge: 120000,  // 2 minutes
+        maxAge: 1000*3600*24,  // TTL in milliseconds
         // secure: true // only set once I have https setup look at docs for handy if statement to set this only for production
     },
     // store: @todo add mongo connect
@@ -37,7 +37,7 @@ dbRouter.use(passport.session());
  */
 function isLoggedIn(req, res, next) {
     if (!req.isAuthenticated()) {
-        res.status(404).send('not logged in')
+        res.status(401).send('Request made by unauthorized user')
         return;
     }
     next()
@@ -96,14 +96,15 @@ dbRouter.get('/u/:username', (req, res) => {
     }
 })
 
-dbRouter.get('/listsbyuser/:username', (req, res) => {
+dbRouter.get('/listsbyuser/:username', isLoggedIn, (req, res) => {
+    console.log('getting lists by user');
     const username = req.params.username;
     List.find({ owner: username }, '-content', (err, found) => {
         res.json(found);
     })
 })
 
-dbRouter.get('/list', isLoggedIn, (req, res) => {
+dbRouter.get('/list',isLoggedIn, (req, res) => {
     const { filter, ...query } = req.query;  // expect query like '?filter=-content&username=foo'
     List.findOne({ ...query }, filter, (err, found) => { res.json(found) })
 })
@@ -170,6 +171,10 @@ dbRouter.post('/list/update', async (req, res) => {
 })
 
 
+dbRouter.get('/testing', isLoggedIn, (req, res) => {
+    res.send('hey bob')
+})
+
 // ---------- PASSPORT
 // routes set up with authentication in mind
 
@@ -196,5 +201,6 @@ dbRouter.post('/list/update', async (req, res) => {
 // ---- OPTION 2 (much, much cleaner)
 /* note, however, that this just sends a 401 response without further customization if the authentication fails. using a callback (like option 1) gives us more options */
 dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
+    console.log(`Authenticated user ${req.user.username}`);
     res.json({username: req.user.username})
 })

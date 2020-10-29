@@ -1,21 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './Register.scss';
 import { useLogState, handleFormBlur } from '../../hooks/state';
-import { authenticateUser } from '../../helpers/db.api';
+import { useAuthenticateUser } from '../../helpers/db.api';
 
 const Register = (props) => {
     const defaultUser = {username: null, password: null}
 
     const [newUser, setNewUser] = useState(defaultUser);
+    const [auth, setAuth] = useState(false); 
 
+    useAuthenticateUser(auth, newUser);
+    
     useLogState('new user', newUser)
     
-    const handlePost = (e, user) => {
-        e.preventDefault();
-        authenticateUser(user)
-            .then(res => console.log(res))
-            .catch(err => console.log(err))
-    }
+    // const handlePost = (e, user) => {
+    //     e.preventDefault();
+    //     useAuthenticateUser(user)
+    //         .then(res => console.log(res))
+    //         .catch(err => console.log(err))
+    // }
 
     return (
         <div className="PageWrapper">
@@ -29,7 +32,7 @@ const Register = (props) => {
                     <input onBlur={e => handleFormBlur(e, newUser, setNewUser)} type="password" name="password"/>
                     <input id="Register__button__show-password"type="button" value="show password"/>
 
-                    <input onClick={(e) => handlePost(e, newUser)} className="Register__button"type="button" value="Register"/>
+                    <input onClick={() => setAuth(true)} className="Register__button"type="button" value="Register"/>
                 </form>
             </div>
         </div>

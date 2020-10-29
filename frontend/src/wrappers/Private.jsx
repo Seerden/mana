@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Login from '../components/login/Login';
 import { LoginContext } from '../context/LoginContext';
-import { useRouteProps } from  '../hooks/routerHooks';
-import { useLogState } from "../hooks/state";
+// import { useRouteProps } from  '../hooks/routerHooks';
+// import { useLogState } from "../hooks/state";
 
  /**
   * Wrapper to hide components from unauthorized users.
@@ -13,13 +13,15 @@ import { useLogState } from "../hooks/state";
   */
 const Private = ({ component: Component, ...rest}) => {
     const { currentUser } = useContext(LoginContext);
-    console.log('current user from private.jsx', currentUser);
-    const { params } = useRouteProps();
-    useLogState('params', params);
-    
+    const [isLoggedIn, setIsLoggedIn] = useState(currentUser ? true : false)
+
+    useEffect(() => {
+        setIsLoggedIn(currentUser ? true : false)
+    }, [currentUser])
+
     return (
         <>
-            { currentUser
+            { isLoggedIn
                 ? 
                     <Component/>    
                 : 

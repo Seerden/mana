@@ -10,15 +10,20 @@ const LoginProvider = memo((props) => {
     
     const [currentUser, setCurrentUser] = useState(storeUser(null, 'get'));
 
-    const setUser = user => {
+    const login = user => {
         setCurrentUser(user);
         storeUser(user, 'set')
+    }
+
+    const logout = () => {
+        setCurrentUser(null);
+        storeUser(null, 'remove')
     }
 
     useLogState('currentUser', currentUser)
 
     return (
-        <LoginContext.Provider value={{...{currentUser, setUser} }}>
+        <LoginContext.Provider value={{...{currentUser, login, logout} }}>
             {props.children}
         </LoginContext.Provider>
     )

@@ -2,26 +2,20 @@ import React, { useState, useContext } from "react";
 import { LoginContext } from '../../context/LoginContext';
 import './Login.scss';
 import { useLogState, handleFormBlur } from '../../hooks/state';
-import { authenticateUser } from '../../helpers/db.api';
+import { useAuthenticateUser } from '../../helpers/db.api';
 import { Link } from 'react-router-dom';
 
 
 const Login = (props) => {
     const [_user, _setUser] = useState({});
     const { currentUser, setUser } = useContext(LoginContext);
+    const [auth, setAuth] = useState(false); 
 
-    const handlePost = (e, user) => {
-        authenticateUser(user)
-            .then(res => {
-                console.log(res);
-                if (res.status === 200) {
-                    console.log('set user')
-                    setUser(res.data.username);
-                }
-            })
-            .catch(err => console.log(err))
-    }
+    useAuthenticateUser(auth, _user);
 
+    // useLogState('response', response)
+    useLogState('current user from login.jsx', currentUser)
+ 
     return (
         <div className="Login">
             <div className="PageHeader">You're not currently logged in. Log in or register.</div>
@@ -36,7 +30,7 @@ const Login = (props) => {
                 <label htmlFor="password">Password</label>
                 <input onBlur={e => handleFormBlur(e, _user, _setUser)} type="password" name="password" />
 
-                <input onClick={(e) => handlePost(e, _user)} className="Login__button" type="button" value="Log in" />
+                <input onClick={() => setAuth(true)} className="Login__button" type="button" value="Log in" />
                 <Link to="/register">Register</Link>
             </form>
 
