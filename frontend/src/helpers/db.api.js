@@ -204,55 +204,19 @@ export const useAuthenticateUser = (auth, user) => {
     }, [auth])
 }
 
-/* ------- NEW */
 // @todo: rewrite all api calls to be handleResponse functions instead, to be used in conjunction with useRequest
 
-// handleError and handleResponse are generic handlers
-const handleError = (err, setError) => {  // called from within useRequest, from which we obtain err, setError
-    setError(err.response);
-}
+/* @todo:
+    @note:  protected API endpoints are now /db/u/:username/...
+            means each protected route expects :username parameter
 
-const handleResponse = (res, setResponse) => { // called from within useRequest, from which we obtain res, setResponse
-    setResponse(res.data);
-}
+*/
 
-export const handleGetList = (query) => {
-    const request = () => axios.get('/db/list', { params: query });
-    return { request, handleResponse, handleError }
-}
-
-export const handlePostList = (newList) => {
-    const request = () => axios.post('/db/list', { newList })
-    return { request, handleResponse, handleError }
-}
-
-export const handlePutList = (query, body) => {
-    const request = () => {
-        axios.post('/db/list/update', {
-            data: {
-                query,
-                body
-            }
-        })
-    }
-    return { request, handleResponse, handleError }
-}
-
-export const handleDeleteList = (query) => {
-    const request = () => { axios.delete('/db/list', { params: query }) }
-    return { request, handleResponse, handleError }
-}
-
-export const handleGetLists = (username) => {
-    const request = () => axios.get(`/db/listsbyuser/${username}`)
-    return ({ request, handleResponse, handleError })
-}
-
-/* @note: don't remove old functions until I've implemented useRequest in all components in the app */
-
-/* thoughts
-distinguish between unauthorized request and request made by an authenticated user for another user's information
-
+/* @todo:
+    feature: distinguish between unauthorized request and request made by an authenticated user for another user's information
+    solution: handle 401 and 403 requests separately
 
 @todo: allow optional fireImmediately prop to be passed to useRequest to fire on component mount
+a
+
 */

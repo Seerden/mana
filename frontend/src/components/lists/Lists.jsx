@@ -1,7 +1,8 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { useRequest, handleGetLists } from '../../helpers/db.api';
+import { useRequest } from '../../helpers/db.api';
+import { handleGetLists } from '../../helpers/apiHandlers';
 import ListsItem from './ListsItem';
 import './Lists.scss'
 

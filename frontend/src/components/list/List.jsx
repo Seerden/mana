@@ -8,7 +8,8 @@ import { ListContext } from '../../context/ListContext';
 import { extractSession } from '../../helpers/list.api';
 import { formatDate } from '../../helpers/time';
 
-import { useRequest, handleGetList } from '../../helpers/db.api';
+import { useRequest } from '../../helpers/db.api';
+import { handleGetList } from '../../helpers/apiHandlers';
 
 const List = memo((props) => {
     const [list, setList] = useState(null);
