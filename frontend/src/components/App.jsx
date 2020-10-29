@@ -5,8 +5,8 @@ import './style/App.scss';
 
 import PrivateRoute from '../wrappers/PrivateRoute';
 
-import Header from './Header';
-import Footer from './Footer';
+import Header from './layout/Header';
+import Footer from './layout/Footer';
 import Review from './review/Review';
 import List from './list/List';
 import User from './User';
