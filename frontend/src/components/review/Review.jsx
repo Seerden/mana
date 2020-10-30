@@ -1,9 +1,8 @@
 import React, { memo, useEffect, useState, useRef, useContext, useReducer } from "react";
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-
 import { useRouteProps } from '../../hooks/routerHooks';
-import { getList, updateList } from '../../helpers/db.api';
+// import { getList } from '../../helpers/db.api';
 import { makeReviewList } from '../../helpers/review.api';
 import { ReviewContext } from '../../context/ReviewContext';
 import ReviewCard from './ReviewCard';
@@ -12,6 +11,11 @@ import PreReview from './PreReview';
 import PostReview from "./PostReview";
 import ReviewInfo from "./ReviewInfo";
 import './style/Review.scss';
+
+import { useRequest } from '../../hooks/useRequest';
+import { handleGetList, getList, handlePutList, putList } from '../../helpers/apiHandlers';
+
+function updateList(){ return }
 
 const Review = memo((props) => {
     const { params } = useRouteProps(),
@@ -26,18 +30,25 @@ const Review = memo((props) => {
         failRef = useRef(null), // refs for handleLeftRightArrowKeydown to target
         passRef = useRef(null);
 
-    useEffect(() => {  // get list from database and initialize futureTerms
-        getList({ _id: params.id }).then(res => {
+    const { response: getResponse, setRequest: setGetRequest } = useRequest({
+        handleResponse: (res, setResponse) => {
+            res = res.data
+            
             if (res.content && res.content.length > 0) {
-                setList(res);
+                setResponse(res);
+                setList(res)
                 reduceFutureTerms({
                     type: 'init',
                     payload: makeReviewList(res.content, n)
                 })
-            } else {
-                setError(true)
             }
-        })
+        },
+        handleError: handleGetList().handleError    
+    })
+    const { response: putResponse, setRequest: setPutRequest } = useRequest({...handlePutList()})
+
+    useEffect(() => {  // get list from database and initialize futureTerms
+        setGetRequest(() => getList(params.username, {_id: params.id}))
     }, [])
 
     useEffect(() => {
@@ -175,7 +186,7 @@ const Review = memo((props) => {
             direction
         });
         list.lastReviewed = end;
-        updateList({ _id: params.id, owner: list.owner }, list)
+        setPutRequest(() => putList(params.username, { _id: params.id, owner: list.owner }, list))
     }
 
     return (

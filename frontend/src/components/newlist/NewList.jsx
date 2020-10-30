@@ -1,8 +1,8 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useRouteProps } from '../../hooks/routerHooks';
-import axios from 'axios';
 import { useLogState } from '../../hooks/state'
-import { postList } from '../../helpers/db.api';
+import { postList, handlePostList } from '../../helpers/apiHandlers';
+import { useRequest } from '../../hooks/useRequest';
 import './style/NewList.scss';
 import NewListTerm from './NewListTerm';
 
@@ -19,7 +19,9 @@ const NewList = memo((props) => {
     }))
     const [termInputs, setTermInputs] = useState([]);
 
-    useLogState('formOutput', formOutput)
+    const { response: postResponse, setRequest: setPostRequest } = useRequest({...handlePostList()});
+
+    useLogState('postresponse', postResponse)
 
     useEffect(() => {
         setTermInputs(makeTermInputElements(formOutput, numTerms))
@@ -49,11 +51,12 @@ const NewList = memo((props) => {
     const handleSubmit = e => {
         e.preventDefault();
 
-        postList({
+        console.log('user:', params.username);
+        setPostRequest(() => postList(params.username, {
             owner: params.username, // @TODO: replace
             ...formOutput,
             content: formOutput.content.filter(i => i !== null)
-        })
+        }))
 
     }
 

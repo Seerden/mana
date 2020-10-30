@@ -2,22 +2,39 @@ import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import './style/List.scss';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { deleteList, getList, updateList } from '../../helpers/db.api';
 import ListTerm from './ListTerm'
 import { ListContext } from '../../context/ListContext';
 import { extractSession } from '../../helpers/list.api';
 import { formatDate } from '../../helpers/time';
 
-import { useRequest } from '../../helpers/db.api';
-import { handleGetList } from '../../helpers/apiHandlers';
+import { useRequest } from '../../hooks/useRequest';
+import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList } from '../../helpers/apiHandlers';
+import { useLogState } from "../../hooks/state";
 
 const List = memo((props) => {
     const [list, setList] = useState(null);
     const [terms, setTerms] = useState(null);
     const { params, location } = useRouteProps();
-    const { listContextValue, setListContextValue } = useContext(ListContext);
+    const { setListContextValue } = useContext(ListContext);
 
-    const { response, makeRequest } = useRequest({...handleGetList});
+    const { response: getResponse, setRequest: setGetRequest } = useRequest({...handleGetList()});
+    const { response: putResponse, setRequest: setPutRequest } = useRequest({...handlePutList()});
+    const { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({
+        ...handleDeleteList()});
+
+    useLogState('deleteresponse', deleteResponse)
+
+    useEffect(() => {
+        console.log('hi');
+        setGetRequest(() => getList(params.username, {_id: params.id}))
+    }, [])
+
+    useEffect(() => {
+        if(getResponse) {
+            setList(getResponse);
+            setListContextValue(getResponse);
+        }
+    }, [getResponse])
 
     useEffect(() => {
         if (list) {
@@ -26,6 +43,11 @@ const List = memo((props) => {
             }
         }
 
+        if (list && list.content && list.content.length > 0) {
+            updateTerms();
+            /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list
+                this means I can't call updateTerms(res) inside the useEffect hook above (where I do getListFromDb.then(res => setList(res))) */
+        }
     }, [list])
 
     const updateTerms = () => {
@@ -43,34 +65,17 @@ const List = memo((props) => {
         }))
     }
 
-    useEffect(() => {
-        getList({ _id: params.id }).then(res => {
-            setList(res);
-            setListContextValue(res)
-        })
-    }, [])
-
-    useEffect(() => {
-        if (list && list.content && list.content.length > 0) {
-            updateTerms();
-            /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list
-                this means I can't call updateTerms(res) inside the useEffect hook above (where I do getListFromDb.then(res => setList(res))) */
-        }
-    }, [list])
-
     function handleTermDelete(idx) {
         const updatedList = { ...list }
         updatedList.content.splice(idx, 1);
         setList(updatedList);
         setListContextValue(updatedList)
-        updateList({ _id: updatedList._id, owner: updatedList.owner }, updatedList)
-            .then(r => console.log('removed item from list in db'))
+
+        setPutRequest(() => putList(params.username, { _id: updatedList._id, owner: updatedList.owner }, updatedList))
     }
 
     function handleDelete() {
-        deleteList({ _id: params.id })
-            .then(res => console.log(res))
-            .catch(e => console.log(e))
+        setDeleteRequest(() => deleteList(params.username, { _id: params.id }))
     }
 
     return (
@@ -78,6 +83,8 @@ const List = memo((props) => {
             <div className="PageWrapper">
                 <div className="List">
                     {!list && 'Loading list...'}
+
+                    { deleteResponse && JSON.stringify(deleteResponse)}
 
                     {list &&
                         <>

@@ -2,8 +2,6 @@ import axios from 'axios';
 import { storeUser } from '../hooks/auth';
 import { LoginContext } from '../context/LoginContext';
 import { useContext, useState, useEffect } from 'react';
-import { useRouteProps } from '../hooks/routerHooks';
-import { useLogState } from '../hooks/state';
 
 axios.defaults.withCredentials = true;
 
@@ -39,76 +37,6 @@ const checkResponseError = e => {
 }
 
 /**
- * Request hook that handles request and logs a user out if the API returns 401 Unauthorized.
- * @param {Function} request axios request initialized wrapper inside an anonymous function, e.g. () => axios.get('/home')
- * @param {Function} handleResponse function to handle successful response, will be called as request().then(r => handleResponse(r))
- * @param {Function} handleError function to handle error, form similar to handleResponse
- * @returns {[response: *, error: Boolean, loading: Boolean, makeRequest: Function]} [response, error] are returned states set by the handleResponse/handleError functions. loading is the loading state (true while request is being made), and makeRequest can be called to trigger a request
- */
-export const useRequest = ({ request, handleResponse, handleError }) => {
-    const
-        { currentUser, login, logout } = useContext(LoginContext),
-        { params } = useRouteProps(),
-        [fireRequest, setFireRequest] = useState(false),
-        makeRequest = () => setFireRequest(true),
-        [response, setResponse] = useState(null),
-        [error, setError] = useState(null),
-        [loading, setLoading] = useState(false),
-        source = axios.CancelToken.source();
-
-    useLogState(error)
-
-    const authorizeUser = function (username, setError, next) {
-        if (username && (currentUser === username)) {
-            setError(null)  // this fixes error persisting on route change from unauthorized -> authorized
-            next()
-            
-        } else {
-            setError('Route not accessible by current user.');
-            setLoading(false);
-        }
-    }
-
-    const executeRequest = function() {
-        request()
-            .then(res => {
-                handleResponse(res, setResponse)
-                setLoading(false);
-                setFireRequest(false);
-            })
-            .catch(err => {
-                setLoading(false);
-
-                if (err.response.status === 401) {
-                    logout()
-                }
-
-                handleError(err, setError)
-                setFireRequest(false);
-            })
-    }
-
-    useEffect(() => {return () => { // cleanup on unmount. @note: doesn't fix error persisting on change from unauthorized to authorized route (e.g. when mary navigates from /u/bob/lists -> u/mary/lists)
-        setError(null);
-        setResponse(null);
-        setLoading(false);
-    } }, [])
-
-    useEffect(() => {  // verify if user should have access to the page, execute request or set error based on result
-        if (fireRequest) {
-            setLoading(true);
-            authorizeUser(params.username, setError, executeRequest)
-        }
-    }, [fireRequest, params.username])
-
-    useEffect(() => {  // if current user changes (e.g. because user was logged out by making unauthorized request), component will unmount, so we need to cancel any active requests
-        return () => source.cancel("Component was unmounted")
-    }, [currentUser])
-
-    return { response, error, loading, makeRequest }
-}
-
-/**
      * Get a list instance from the database
      * @param {object} query object with keys matching database listSchema
      */
@@ -118,42 +46,6 @@ export const getList = async (query) => {
         .catch(e => {
             checkResponseError(e)
         })
-}
-
-/**
-     * Update local list changes (e.g. term deletions, edits, or updated session/term histories) to the database
-     * 
-     * @param   {object}    query   database query for relevant list instance (combination of _id and owner should suffice)
-     * @param   {object}    body    updated list content
-     * 
-     * @current         send entire list object to the backend as 'body',
-     *                      backend sets list.content to body.content
-     * @future          refine database call:
-     *                      - allow user to specify fields that need to be updated
-     *                      - implement this field udpating in the database     *      
-     */
-export const updateList = async (query, body) => {
-    return axios.post('/db/list/update', {
-        data: {
-            query,
-            body
-        }
-    })
-        .then(res => res.data)
-        .catch(e => {
-            console.log(e.response)
-            throw new Error(e)
-        })
-}
-
-/**
- * Get all lists by the specific user from the database. Returns all list properties, except the content itself.
- * @param {string} username 
- */
-export const getLists = async (username) => {
-    return axios.get(`/db/listsbyuser/${username}`)
-        .then(r => r.data)
-        .catch(e => console.log('Error fetching from database:', e))
 }
 
 /**

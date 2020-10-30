@@ -172,6 +172,7 @@ userRouter.put('/list', (req, res) => {
             else { res.status(200).send(updated) }
         })
 })
+
 userRouter.delete('/list', (req, res) => {
     List.findOneAndDelete({ ...req.query }, (err, deletedList) => {
         if (!err) {

@@ -1,10 +1,13 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { useRequest } from '../../helpers/db.api';
-import { handleGetLists } from '../../helpers/apiHandlers';
+import { useRequest } from '../../hooks/useRequest';
+import { handleError, handleResponse } from '../../helpers/apiHandlers';
 import ListsItem from './ListsItem';
 import './style/Lists.scss'
+
+import { getLists } from '../../helpers/apiHandlers'
+
 
 const Lists = memo((props) => {
     const
@@ -12,9 +15,15 @@ const Lists = memo((props) => {
         [listsElement, setListsElement] = useState(null),
         [sortBy, setSortBy] = useState('created'),
         { params } = useRouteProps();
-    const { response: lists, makeRequest, loading, error } = useRequest({...handleGetLists(params.username)})
 
-    useEffect(() => {makeRequest()}, [])
+
+    // useRequest logic ends up being condensed to these three lines:
+    const { response: lists, setRequest, loading, error } = useRequest({ handleError, handleResponse })
+    
+    useEffect(() => {
+        setRequest(() => getLists(params.username))
+    }, [])
+
     useEffect(() => { if (lists) { setListsElement(makeListsElement(lists)) } }, [lists])
 
     const handleFilterChange = e => {

@@ -1,8 +1,10 @@
 import React, { memo, useContext, useState, useEffect } from "react";
 import { ListContext } from '../../context/ListContext';
-import { updateList } from '../../helpers/db.api';
 import ListTermDeleteButton from "./ListTermDeleteButton";
 import TermHistory from './TermHistory';
+
+import { useRequest } from '../../hooks/useRequest';
+import { putList, handlePutList } from '../../helpers/apiHandlers'
 
 /**
  * ListTerm component
@@ -15,6 +17,8 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     const [isHovering, setIsHovering] = useState(false)
     const { listContextValue, setListContextValue } = useContext(ListContext);
     const [showHistory, setShowHistory] = useState(false);
+
+    const { response: putResponse, setRequest: setPutRequest } = useRequest({...handlePutList()});
 
     useEffect(() => { // cleanup
         return () => {
@@ -52,8 +56,7 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
             newListContent[idx] = { ...newTerm };
             let newList = { ...listContextValue, content: [...newListContent] }
             setListContextValue(newList);
-            updateList({ _id: listContextValue._id, owner: listContextValue.owner }, newList)
-                .then(r => console.log('List updated in database', r))
+            setPutRequest(() => putList(listContextValue.owner, { _id: listContextValue._id, owner: listContextValue.owner }, newList))
         }
     }
 
