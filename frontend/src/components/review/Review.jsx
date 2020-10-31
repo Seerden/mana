@@ -30,7 +30,7 @@ const Review = memo((props) => {
         failRef = useRef(null), // refs for handleLeftRightArrowKeydown to target
         passRef = useRef(null);
 
-    const { response: getResponse, setRequest: setGetRequest } = useRequest({
+    const { setRequest: setGetRequest } = useRequest({
         handleResponse: (res, setResponse) => {
             res = res.data
             
@@ -45,7 +45,7 @@ const Review = memo((props) => {
         },
         handleError: handleGetList().handleError    
     })
-    const { response: putResponse, setRequest: setPutRequest } = useRequest({...handlePutList()})
+    const { setRequest: setPutRequest } = useRequest({...handlePutList()})
 
     useEffect(() => {  // get list from database and initialize futureTerms
         setGetRequest(() => getList(params.username, {_id: params.id}))

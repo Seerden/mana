@@ -19,7 +19,7 @@ const Private = ({ component: Component, ...rest }) => {
 
     useEffect(() => {
         setComponent(<Component key={Date.now()} />)
-    }, [params, location])
+    }, [Component, params, location, currentUser])
 
     useEffect(() => {
             setIsLoggedIn(currentUser ? true : false)

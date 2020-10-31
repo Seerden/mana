@@ -25,7 +25,6 @@ const List = memo((props) => {
     useLogState('deleteresponse', deleteResponse)
 
     useEffect(() => {
-        console.log('hi');
         setGetRequest(() => getList(params.username, {_id: params.id}))
     }, [])
 
@@ -82,8 +81,6 @@ const List = memo((props) => {
         <>
             <div className="PageWrapper">
                 <div className="List">
-                    {!list && 'Loading list...'}
-
                     { deleteResponse && JSON.stringify(deleteResponse)}
 
                     {list &&

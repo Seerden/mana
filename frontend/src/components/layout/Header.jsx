@@ -1,6 +1,7 @@
 import React, { useContext, memo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LoginContext } from '../../context/LoginContext';
+import { useLogState } from '../../hooks/state';
 import './style/Header.scss';
 
 const Header = memo(() => {
@@ -16,7 +17,7 @@ const Header = memo(() => {
 export default Header;
 
 const HeaderLoggedIn = () => {
-    const { currentUser } = useContext(LoginContext);
+    const { currentUser, logout } = useContext(LoginContext);
 
     return (
         <nav>
@@ -25,7 +26,7 @@ const HeaderLoggedIn = () => {
             <NavLink className="NavLink" to={`/u/${currentUser}`}>My Profile</NavLink>
             <NavLink className="NavLink" to={`/u/${currentUser}/lists`}>My Lists</NavLink>
             
-            <button>Log Out</button>
+            <button onClick={() => logout()}>Log Out</button>
         </nav>
     )
 }

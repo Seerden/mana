@@ -5,30 +5,6 @@ import { useContext, useState, useEffect } from 'react';
 
 axios.defaults.withCredentials = true;
 
-// axios.interceptors.response.use(res => {
-//     return res
-// }, err => {
-//     console.log('Not authenticated. Removing user from local storage');
-//     storeUser(null, 'remove');
-//     console.log('error response:', err.response)
-//     Promise.reject(err.response.status)
-
-//     // Promise.reject(err)
-// })
-
-// axios.interceptors.request.use(config => {
-//     let user = storeUser(null, 'get');
-//     if (!user) { 
-//         throw new axios.Cancel('No user, canceling request.') 
-//         // return config
-//     }
-// }, err => Promise.reject(err))
-
-// axios.interceptors.request.use(req => {
-//     console.log('axios request:', req)
-//     return req
-// })
-
 const checkResponseError = e => {
     if (e.response.status === 401) {
         // api says request wasn't authorized. handle
@@ -96,13 +72,15 @@ export const useAuthenticateUser = (auth, user) => {
             if (auth) {
                 axios.post('/db/user', user)
                     .then(r => {
-                        setResponse(r.data)
+                        setResponse(r.data.username)
                         login(r.data.username)
                     })
                     .catch(e => setErr(e))
             }
         })()
     }, [auth])
+
+    return [response, err]
 }
 
 

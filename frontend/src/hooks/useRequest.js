@@ -35,8 +35,6 @@ export const useRequest = ({ handleResponse, handleError }) => {
     }
 
     const executeRequest = function () {
-        console.log(request)
-
         request()
             .then(res => {
                 handleResponse(res, setResponse)
@@ -53,7 +51,7 @@ export const useRequest = ({ handleResponse, handleError }) => {
         setRequest(null); //  unsure if necessary
     }
 
-    useEffect(() => {
+    useEffect(() => {  // cleanup function. might be obsolete. look into it
         mounted.current = true
 
         if (params.username && params.username === currentUser) {
@@ -66,10 +64,11 @@ export const useRequest = ({ handleResponse, handleError }) => {
             setResponse(null);
             setLoading(false);
             setRequest(null)
-            source.cancel("Component unmounted")
             mounted.current = false
         }
     }, [])
+
+    useEffect(() => {return () => source.cancel("Component unmounted")})  // cleanup axios requests on any unmount (note: need to not have deps array)
 
     useEffect(() => {  // verify if user should have access to the page, execute request or set error based on result
         if (mounted.current) {

@@ -4,10 +4,6 @@ import { storeUser } from '../hooks/auth';
 export const LoginContext = createContext(null);
 
 const LoginProvider = memo((props) => {
-    /**
-     * @todo    update this to do proper authentication, as it currently hard-codes 'seerden' as username
-     */
-    
     const [currentUser, setCurrentUser] = useState(storeUser(null, 'get'));
 
     const login = user => {

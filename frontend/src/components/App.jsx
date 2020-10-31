@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './style/App.scss';
 
 import PrivateRoute from '../wrappers/PrivateRoute';
+import Private from '../wrappers/Private';
 
 import Header from './layout/Header';
 import Footer from './layout/Footer';
@@ -55,11 +56,11 @@ const App = memo(() => {
 
                                                 <Route path="/review" element={
                                                     <ReviewProvider>
-                                                        <Review />
+                                                        <Private component={Review}/>
                                                     </ReviewProvider>
                                                 }
                                                 />
-                                                <Route path="/" element={<List />} />
+                                                <PrivateRoute path="/" component={List} />
 
                                             </Route>
                                         </Route>
