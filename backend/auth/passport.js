@@ -26,7 +26,7 @@ passport.use(new LocalStrategy({
                 return done(null, false, { message: err })
             } else {
                 if (!foundUser) {
-                    // make user
+                    return done(null, false, {message: 'No existing user with that username'})
                 } else {
                     compare(password, foundUser.password, (err, didMatch) => {
                         if (err) { throw err }
