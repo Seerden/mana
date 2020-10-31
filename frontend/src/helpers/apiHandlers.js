@@ -68,3 +68,10 @@ export const deleteList = (username, query) => {
 export const getLists = (username) => {
     return () => axios.get(`/db/u/${username}/lists`)
 }
+
+// New user registration: unprotected route, can't currently be called using useRequest
+export const postUser = newUser => {
+    return axios.post('/db/u/register', {newUser})
+        .then(r => r.data)
+        .catch(err => err)
+}

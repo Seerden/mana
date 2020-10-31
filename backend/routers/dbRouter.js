@@ -7,6 +7,9 @@ import 'dotenv/config.js';
 import session from 'express-session';
 import passport from '../auth/passport.js';
 
+import bcrypt from 'bcryptjs';
+const { hash } = bcrypt;
+
 const User = dbConn.model('User');
 const List = dbConn.model('List');
 
@@ -96,6 +99,32 @@ dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
     res.json({username: req.user.username})
 })
 
+dbRouter.post('/u/register', (req, res) => {
+    const { username, password } = req.body.newUser;
+
+    User.findOne({username}, async (err, foundUser) => {
+        console.log('inside user.findone');
+
+        if (!err) {
+            if (!foundUser) {
+                let hashedPassword = await hash(password, 10);
+                let newUser = new User({username, password: hashedPassword})
+                newUser.save((err, savedUser) => {
+                    if (!err) {
+                        console.log('saved new user');
+                        res.status(201).send('New user created')
+                    } else {
+                        res.status(400).send(err)
+                    }
+                })
+            } else {
+                res.status(409).send('user exists already')
+            }
+        } else {
+            res.status(400).send(err)
+        }
+    })
+})
 /**
  * Subrouter for owner-protected routes (e.g. /u/admin/lists) 
  * @note Creation and authentication of users happens outside this subrouter.

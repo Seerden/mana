@@ -70,6 +70,7 @@ export const useAuthenticateUser = (auth, user) => {
 
         (function () {
             if (auth) {
+                console.log('posting user to db')
                 axios.post('/db/user', user)
                     .then(r => {
                         setResponse(r.data.username)
