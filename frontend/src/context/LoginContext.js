@@ -3,7 +3,7 @@ import { useLogState } from '../hooks/state';
 import { storeUser } from '../hooks/auth';
 export const LoginContext = createContext(null);
 
-const LoginProvider = memo((props) => {
+export const LoginProvider = memo((props) => {
     const [currentUser, setCurrentUser] = useState(storeUser(null, 'get'));
 
     const login = user => {
@@ -28,7 +28,3 @@ const LoginProvider = memo((props) => {
         </LoginContext.Provider>
     )
 })
-
-export default LoginProvider;
-
-/* handle user == null case for this and all dependent components */

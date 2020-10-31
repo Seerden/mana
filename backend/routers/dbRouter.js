@@ -164,7 +164,8 @@ userRouter.put('/list', (req, res) => {
         $set: {
             content: body.content,
             sessions: body.sessions,
-            lastReviewed: body.lastReviewed
+            lastReviewed: body.lastReviewed,
+            numTerms: body.numTerms
         }
     },
         { new: true }, (err, updated) => {

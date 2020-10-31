@@ -5,7 +5,6 @@ import './style/App.scss';
 
 import PrivateRoute from '../wrappers/PrivateRoute';
 import Private from '../wrappers/Private';
-
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Review from './review/Review';
@@ -18,7 +17,7 @@ import Home from './Home';
 import Register from './register/Register';
 import Login from './login/Login';
 
-import LoginProvider from '../context/LoginContext';
+import { LoginProvider } from '../context/LoginContext';
 import { ListProvider } from '../context/ListContext';
 import { ReviewProvider } from '../context/ReviewContext';
 

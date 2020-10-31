@@ -31,10 +31,10 @@ const Login = (props) => {
                     </header>
 
                     <label htmlFor="username">Username</label>
-                    <input onBlur={e => handleFormBlur(e, _user, _setUser)} type="text" name="username" />
+                    <input autoComplete="username" onBlur={e => handleFormBlur(e, _user, _setUser)} type="text" name="username" />
 
                     <label htmlFor="password">Password</label>
-                    <input onBlur={e => handleFormBlur(e, _user, _setUser)} type="password" name="password" />
+                    <input autoComplete="password" onBlur={e => handleFormBlur(e, _user, _setUser)} type="password" name="password" />
 
                     <input onClick={() => setAuth(true)} className="Login__button" type="button" value="Log in" />
                     <Link to="/register">Register</Link>

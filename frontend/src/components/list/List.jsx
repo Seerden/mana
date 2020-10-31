@@ -67,6 +67,7 @@ const List = memo((props) => {
     function handleTermDelete(idx) {
         const updatedList = { ...list }
         updatedList.content.splice(idx, 1);
+        updatedList.numTerms = updatedList.content.length
         setList(updatedList);
         setListContextValue(updatedList)
 
