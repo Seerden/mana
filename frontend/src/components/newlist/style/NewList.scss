@@ -36,15 +36,18 @@
     transition: 100ms all linear;
 }
 
-.NewList__form--name:focus, .NewList__form--language:focus {
-    border-bottom-color: blueviolet;
-    background-color: #ccc;
-    color: #111;
-    border-radius: 3px;
-}
+.NewList__form--name, .NewList__form--language {
+    &:focus {
+        border-bottom-color: blueviolet;
+        background-color: #ccc;
+        color: #111;
+        border-radius: 3px;
 
-.NewList__form--name:focus::placeholder, .NewList__form--language:focus::placeholder {
-    border-color: transparent;
+        &::placeholder {
+            border-color: transparent;
+        }
+    }
+
 }
 
 .NewList__terms {
@@ -59,31 +62,29 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    /* justify-content: center; */
+    
+    input {
+        font-size: 1.1rem;
+        border-radius: 3px;
+        background-color: #181818;
+        background-attachment: fixed;
+        outline: none;
+        border: 2px solid #333;
+        color: azure;
+        padding: 0.4rem;
+        width: 20rem;
+        margin-bottom: 0.4rem;
+        text-indent: 0.5em;
+        transition: 100ms all ease-in;
 
-}
-
-.NewList__term input {
-    font-size: 1.1rem;
-    border-radius: 3px;
-    background-color: #181818;
-    background-attachment: fixed;
-    outline: none;
-    border: 2px solid #333;
-    color: azure;
-    padding: 0.4rem;
-    width: 20rem;
-    margin-bottom: 0.4rem;
-    text-indent: 0.5em;
-    transition: 100ms all ease-in;
-}
-
-.NewList__term input:focus {
-    background: linear-gradient(-40deg, #202020, #292929);
-    background-attachment: fixed;
-    box-shadow: 0 0 0.8rem black;
-    animation: 3000ms ease infinite colorcycle;
-    animation-fill-mode: forwards;
+        &:focus {
+            background: linear-gradient(-40deg, #202020, #292929);
+            background-attachment: fixed;
+            box-shadow: 0 0 0.8rem black;
+            animation: 3000ms ease infinite colorcycle;
+            animation-fill-mode: forwards;
+        }
+    }
 }
 
 .NewList__term--input:nth-of-type(1) {
@@ -137,17 +138,17 @@
     border-radius: 1px;
 
     transition: all 100ms linear;
-}
 
-.Form__button:hover {
-    border-bottom-color: black;
-    transform: translateY(-3px);
-    box-shadow: 0 0.3rem -0rem -0.1rem indigo, 0 0.3rem 1rem black;
-}
+    &:hover {
+        border-bottom-color: black;
+        transform: translateY(-3px);
+        box-shadow: 0 0.3rem -0rem -0.1rem indigo, 0 0.3rem 1rem black;    
+    }
 
-.Form__button:active {
-    background-color: slateblue;
-    color: smokewhite;
+    &:active {
+        background-color: slateblue;
+        color: smokewhite;
+    }
 }
 
 @keyframes colorcycle {

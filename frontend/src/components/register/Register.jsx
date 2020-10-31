@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import './style/Register.scss';
 import { useLogState, handleFormBlur } from '../../hooks/state';
-import { postUser} from '../../helpers/apiHandlers';
+import { postUser } from '../../helpers/apiHandlers';
 
 const Register = (props) => {
     const defaultUser = { username: null, password: null }
