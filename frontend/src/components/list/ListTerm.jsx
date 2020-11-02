@@ -65,10 +65,12 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     }
 
     return (
-        <div className="Term">
-            { !open && 
-                <div title="Click to expand" onClick={() => setOpen(true)}>{idx+1} {term.from} | {term.to}</div>
-            }
+        <div className="ListTerm">
+            <li className="Term" title="Click to expand" onClick={() => setOpen(true)}>
+                    <span className="Term__index">{idx}</span>
+                    <span className="Term__from">{term.from}</span>
+                    <span className="Term__to">{term.to}</span>
+                </li>
             { open && 
                 <TermModal setOpen={setOpen} term={term} handleTermEdit={handleTermEdit} confirmingDelete={confirmingDelete}/>
             }

@@ -6,13 +6,13 @@
     }
 
     &__expand {  // 'expand/collapse history' button
-        display: inline-block;
+        display: block;
         border: none;
         border-radius: 3px;
         outline: none;
         background-color: #ccc;
         padding: 0.5rem;
-        margin: 0 1rem;
+        margin: 0.5rem 0;
         width: 100px;
 
         transition: all 50ms ease;
@@ -32,6 +32,10 @@
     &__content {  // actual history entries
         max-height: 200px;
         overflow-y: scroll;
+
+        @media screen and (max-height: 700px) {
+            max-height: 100px;
+        }
 
         &::-webkit-scrollbar {
             background-color: #333;
