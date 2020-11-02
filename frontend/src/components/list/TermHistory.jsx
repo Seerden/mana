@@ -42,25 +42,27 @@ const TermHistory = memo(({ visible, history }) => {
 
     return (
         <>
-            { visible &&
+            
                 <div className="TermHistory">
                     <div className="TermHistory__header">
                         <div
-                            className="TermHistory__header--desc">
+                            className="TermHistory__desc">
                             You've reviewed this term {histEl.length} time{histEl.length === 1 ? '' : 's'}
                         </div>
                         {histEl.length > 1 &&
                             <button
-                                className="TermHistory__header--button"
+                                className="TermHistory__expand"
                                 onClick={() => setExpand(!expand)}
                             >
-                                {!expand ? 'Expand history' : 'Collapse history'}
+                                {!expand ? 'Expand' : 'Collapse'}
                             </button>
                         }
                     </div>
-                    {expand ? histEl.reverse() : histEl[histEl.length - 1]}
+                    <div className="TermHistory__content">
+                        {expand ? histEl.reverse() : histEl[histEl.length - 1]}
+                    </div>
                 </div>
-            }
+            
         </>
     )
 })

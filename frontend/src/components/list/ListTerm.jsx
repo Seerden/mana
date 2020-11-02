@@ -1,7 +1,9 @@
 import React, { memo, useContext, useState, useEffect } from "react";
 import { ListContext } from '../../context/ListContext';
+
 import ListTermDeleteButton from "./ListTermDeleteButton";
 import TermHistory from './TermHistory';
+import TermModal from './TermModal';
 
 import { useRequest } from '../../hooks/useRequest';
 import { putList, handlePutList } from '../../helpers/apiHandlers'
@@ -19,7 +21,8 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
         [isHovering, setIsHovering] = useState(false),
         { listContextValue, setListContextValue } = useContext(ListContext),
         [showHistory, setShowHistory] = useState(false),
-        { response: putResponse, setRequest: setPutRequest } = useRequest({...handlePutList()});
+        { response: putResponse, setRequest: setPutRequest } = useRequest({...handlePutList()}),
+        [open, setOpen] = useState(false);
 
     useEffect(() => { // cleanup
         return () => {
@@ -62,6 +65,17 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     }
 
     return (
+        <div className="Term">
+            { !open && 
+                <div title="Click to expand" onClick={() => setOpen(true)}>{idx+1} {term.from} | {term.to}</div>
+            }
+            { open && 
+                <TermModal setOpen={setOpen} term={term} handleTermEdit={handleTermEdit} confirmingDelete={confirmingDelete}/>
+            }
+        </div>
+    )
+
+    return (
         <>
             <li
                 className="List__term"
@@ -99,9 +113,6 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
                         <button className="List__term--historybutton" onClick={() => setShowHistory(!showHistory)}>hist</button> 
                     }
                 </div>
-
-
-
 
             </li>
 
