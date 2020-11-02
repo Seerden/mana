@@ -1,15 +1,12 @@
 import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import './style/List.scss';
-import { useRouteProps } from '../../hooks/routerHooks';
 import ListTerm from './ListTerm'
 import { ListContext } from '../../context/ListContext';
-import { extractSession } from '../../helpers/list.api';
 import { formatDate } from '../../helpers/time';
-
-import { useRequest } from '../../hooks/useRequest';
 import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList } from '../../helpers/apiHandlers';
-import { useLogState } from "../../hooks/state";
+import { useRouteProps } from '../../hooks/routerHooks';
+import { useRequest } from '../../hooks/useRequest';
+import './style/List.scss';
 
 const List = memo((props) => {
     const [list, setList] = useState(null);
@@ -17,30 +14,23 @@ const List = memo((props) => {
     const { params, location } = useRouteProps();
     const { setListContextValue } = useContext(ListContext);
 
-    const { response: getResponse, setRequest: setGetRequest } = useRequest({...handleGetList()});
-    const { response: putResponse, setRequest: setPutRequest } = useRequest({...handlePutList()});
-    const { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({
-        ...handleDeleteList()});
-
-    useLogState('deleteresponse', deleteResponse)
+    const { response: getResponse, setRequest: setGetRequest } = useRequest({ ...handleGetList() });
+    const { response: putResponse, setRequest: setPutRequest } = useRequest({ ...handlePutList() });
+    const { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() });
 
     useEffect(() => {
-        setGetRequest(() => getList(params.username, {_id: params.id}))
+        setGetRequest(() => getList(params.username, { _id: params.id }))
     }, [])
 
     useEffect(() => {
-        if(getResponse) {
+        if (getResponse) {
             setList(getResponse);
             setListContextValue(getResponse);
         }
     }, [getResponse])
 
     useEffect(() => {
-        if (list && list.content && list.content.length > 0) {
-            updateTerms();
-            /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list
-                this means I can't call updateTerms(res) inside the useEffect hook above (where I do getListFromDb.then(res => setList(res))) */
-        }
+        if (list && list.content && list.content.length > 0) { updateTerms() };      /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list */
     }, [list])
 
     const updateTerms = () => {
@@ -52,11 +42,9 @@ const List = memo((props) => {
                 term
             }
 
-            return (
-                <ListTerm {...termProps} />
-            )
+            return (<ListTerm {...termProps} />)
         }))
-    }
+    };
 
     function handleTermDelete(idx) {
         const updatedList = { ...list }
@@ -66,17 +54,17 @@ const List = memo((props) => {
         setListContextValue(updatedList)
 
         setPutRequest(() => putList(params.username, { _id: updatedList._id, owner: updatedList.owner }, updatedList))
-    }
+    };
 
     function handleDelete() {
         setDeleteRequest(() => deleteList(params.username, { _id: params.id }))
-    }
+    };
 
     return (
         <>
             <div className="PageWrapper">
                 <div className="List">
-                    { deleteResponse && JSON.stringify(deleteResponse)}
+                    {deleteResponse && JSON.stringify(deleteResponse)}
 
                     {list &&
                         <>
@@ -87,15 +75,15 @@ const List = memo((props) => {
                             <section className="List__info">
                                 <header className="List__info--header">List info</header>
                                 <p className="List__info--item">There are <span className="List__info--datum">{list.numTerms}</span> terms in this list.</p>
-                                { list.lastReviewed 
+                                {list.lastReviewed
                                     ?
-                                        <p className="List__info--item">You last reviewed this list
+                                    <p className="List__info--item">You last reviewed this list
                                             <span className="List__info--datum">
-                                                {formatDate(list.lastReviewed, 'hh:mma, MMMM Do')}
-                                            </span>
-                                        </p>
+                                            {formatDate(list.lastReviewed, 'hh:mma, MMMM Do')}
+                                        </span>
+                                    </p>
                                     :
-                                        <p className="List__info--item" style={{width: 'max-content', backgroundColor: 'blueviolet'}}>You haven't reviewed this list yet. Get on it!</p>
+                                    <p className="List__info--item" style={{ width: 'max-content', backgroundColor: 'blueviolet' }}>You haven't reviewed this list yet. Get on it!</p>
                                 }
 
                             </section>

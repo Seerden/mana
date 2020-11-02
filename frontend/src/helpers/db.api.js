@@ -1,28 +1,8 @@
 import axios from 'axios';
-import { storeUser } from '../hooks/auth';
 import { LoginContext } from '../context/LoginContext';
 import { useContext, useState, useEffect } from 'react';
 
 axios.defaults.withCredentials = true;
-
-const checkResponseError = e => {
-    if (e.response.status === 401) {
-        // api says request wasn't authorized. handle
-        console.log('unauthorized');
-    }
-}
-
-/**
-     * Get a list instance from the database
-     * @param {object} query object with keys matching database listSchema
-     */
-export const getList = async (query) => {
-    return axios.get('/db/list/', { params: query })
-        .then(r => r.data)
-        .catch(e => {
-            checkResponseError(e)
-        })
-}
 
 /**
  * Get a user instance from the database
@@ -34,25 +14,6 @@ export const getUser = async (username, args) => {
     return await axios.get(`/db/u/${username}${args && args.populate ? `?populate=${args && args.populate}` : ''}`)
         .then(res => res.data)
         .catch(err => err)
-}
-
-/**
- * Delete list from database
- */
-export const deleteList = async (query) => {
-    return await axios.delete('/db/list', { params: query })
-        .then(r => r.data)
-        .catch(e => e)
-}
-
-export const postList = async newList => {
-    return await axios.post('/db/list', { newList }, { withCredentials: true })
-        .then(r => r)
-        .catch(e => {
-            storeUser(null, 'remove')
-            console.log('error posting list');
-            console.log(e);
-        })
 }
 
 /**
@@ -85,12 +46,5 @@ export const useAuthenticateUser = (auth, user) => {
 }
 
 
-/* 
-
-@todo:
-    feature: distinguish between unauthorized request and request made by an authenticated user for another user's information
-    solution: handle 401 and 403 requests separately
-
-@todo: allow optional fireImmediately prop to be passed to useRequest to fire on component mount
-
-*/
+/*  @todo: handle 401 and 403 responses separately
+    @todo: allow optional fireImmediately prop to be passed to useRequest to fire on component mount  */
