@@ -9,7 +9,7 @@ const term = {
     ]
 }
 
-describe('saturateAfterSeeding', () => {
+describe('saturateUnseededTerm', () => {
     const cases = [
         [['pass', 'pass'], 2], 
         [['pass','fail','pass'], 1], 

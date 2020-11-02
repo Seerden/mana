@@ -188,13 +188,11 @@ userRouter.post('/list', (req, res) => {
 })
 userRouter.put('/list', (req, res) => {
     const { query, body } = req.body.data;
+    // console.log(body);
 
     List.findOneAndUpdate(query, {
         $set: {
-            content: body.content,
-            sessions: body.sessions,
-            lastReviewed: body.lastReviewed,
-            numTerms: body.numTerms
+            ...body            
         }
     },
         { new: true }, (err, updated) => {

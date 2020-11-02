@@ -36,12 +36,6 @@ const List = memo((props) => {
     }, [getResponse])
 
     useEffect(() => {
-        if (list) {
-            if (list.sessions.length > 0) {
-                console.log(extractSession(list, 0));
-            }
-        }
-
         if (list && list.content && list.content.length > 0) {
             updateTerms();
             /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list

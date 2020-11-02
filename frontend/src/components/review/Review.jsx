@@ -1,27 +1,27 @@
 import React, { memo, useEffect, useState, useRef, useContext, useReducer } from "react";
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
+
 import { useRouteProps } from '../../hooks/routerHooks';
-// import { getList } from '../../helpers/db.api';
 import { makeReviewList } from '../../helpers/review.api';
 import { ReviewContext } from '../../context/ReviewContext';
+import { useRequest } from '../../hooks/useRequest';
+import { handleGetList, getList, handlePutList, putList } from '../../helpers/apiHandlers';
+import { saturate } from '../../helpers/srs/saturation';
+
 import ReviewCard from './ReviewCard';
-import dayjs from 'dayjs';
 import PreReview from './PreReview';
 import PostReview from "./PostReview";
 import ReviewInfo from "./ReviewInfo";
+
 import './style/Review.scss';
 
-import { useRequest } from '../../hooks/useRequest';
-import { handleGetList, getList, handlePutList, putList } from '../../helpers/apiHandlers';
-
-function updateList(){ return }
 
 const Review = memo((props) => {
     const { params } = useRouteProps(),
         [session, setSession] = useState(() => ({ start: new Date(), end: false })),
         [list, setList] = useState(null),
-        [error, setError] = useState(false),
         [futureTerms, reduceFutureTerms] = useReducer(termReducer, null),
         [currentCard, setCurrentCard] = useState(null),
         [progress, setProgress] = useState(0),  // percentage of terms marked 'pass' in the session
@@ -166,17 +166,18 @@ const Review = memo((props) => {
      */
     function handlePassFailClick(e, passfail) {
         e.preventDefault();
-        let updatedList = updateSessionHistory(futureTerms[0], passfail);  // updateSessionHistory returns the newly updated state
+        updateSessionHistory(futureTerms[0], passfail);
         reduceFutureTerms({ type: passfail })
     }
 
     /**
-     * Set session.end, push the session to the list, update the list in the database.
+     * Append this session's information to the list, determine each term's saturation level, and update list in database.
      * @param {Array} list list state
      */
     function endSession(list) {
         let end = new Date();
         setSession({ ...session, end });
+
         list.sessions.push({
             start: session.start,
             end,
@@ -185,7 +186,15 @@ const Review = memo((props) => {
             n: Number(n),
             direction
         });
+
         list.lastReviewed = end;
+
+        list.content = list.content.map(term => {
+            const newTerm = {...term};
+            newTerm.saturation = saturate(newTerm);
+            return newTerm
+        });
+
         setPutRequest(() => putList(params.username, { _id: params.id, owner: list.owner }, list))
     }
 
@@ -194,21 +203,15 @@ const Review = memo((props) => {
             { list &&
                 <>
                     <div className="PageHeader Review__title">
-                        <div>
-                            Reviewing<span className="Review__title--name"><em>{list.name}</em></span>
-                        </div>
-                        <div>
-                            <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to list</Link>
-                        </div>
+                        <div> Reviewing<span className="Review__title--name"><em>{list.name}</em></span> </div>
+                        <div> <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to list</Link> </div>
                     </div>
                 </>
             }
 
             { list && !started
                 ?
-                    <>
-                        <PreReview/>
-                    </>
+                    <PreReview/>
                 :
                     <>
                         { !session.end && currentCard &&
@@ -261,9 +264,6 @@ const Review = memo((props) => {
                         }
                     </>
             }
-
-            {/* { !list && !error && <div className="Loading">Loading list...</div>} */}
-            { error && <div className="Error">List doesn't exist, or it exists but doesn't contain any terms to review.</div>}
         </div>
     )
 })

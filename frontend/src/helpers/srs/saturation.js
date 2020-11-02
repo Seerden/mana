@@ -1,9 +1,10 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
 import duration from 'dayjs/plugin/duration.js';
-  dayjs.extend(relativeTime);
-  dayjs.extend(duration);
 import { countDict } from '../count';
+  
+dayjs.extend(relativeTime);
+dayjs.extend(duration);
 
 /**
  * @module saturation Provides all necessary functionality to extract and set term saturation (i.e. 'how well does a user know this term?')
@@ -53,7 +54,7 @@ export const saturate = (term) => {
     }
 
     // if reviewed exactly n times, seeding has just ended, so we can saturate based on seeding round
-    if (term.history.length === 3) {
+    if (term.history.length === 3 || !term.saturation ) {
         return saturateUnseededTerm(term);
     }
     // if reviewed more than n times, saturate based on a combination of (1) time since last session, (2) current saturation level, (3) performance in the session that was just completed
@@ -85,14 +86,22 @@ export const saturateUnseededTerm = (term) => {
     return 1
 }
 
+/**
+ * Saturate a term that already has a saturation level.
+ * @todo Implement functionality
+ * @param {*} term 
+ */
 export const saturateSeededTerm = (term) => {
     // extract session
     const lastTwoSessions = term.history.reverse().slice(0,2);
     const currentSaturation = term.saturation;
+
+
 }
 
 /**
  * Determine whether the latest session was valuable, given the term's current saturation level, time between two sessions, and results in those two sessions
+ * @todo Implement functionality
  * @param {Object} firstSession term review session, like {date: ..., content: ...}. Session argument order doesn't matter.
  * @param {Object} secondSession term review session, like {date: ..., content: ...}. Session argument order doesn't matter.
  * @param {Array} saturationLevels Array containing saturation levels and corresponding timescales. Currently hardcoded, could become user-specified settings eventually.
@@ -105,7 +114,12 @@ export const isSessionValuable = (firstSession, secondSession, saturation, satur
         */
 
     const timeBetween = secondSession.date - firstSession.date;
-    const intendedTimescale = saturationLevels.find(d => d.level === saturation);
+    const intendedTimescale = saturationLevels.find(d => d.level === saturation)?.timescale;
+
+    // if timebetween < intendedtimescale for certain saturation levels
+
+
+
 
 
 }

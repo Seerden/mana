@@ -6,19 +6,20 @@ import TermHistory from './TermHistory';
 import { useRequest } from '../../hooks/useRequest';
 import { putList, handlePutList } from '../../helpers/apiHandlers'
 
+import './style/ListTerm.scss'
+
 /**
  * ListTerm component
  * @param {object}  props: handleTermDelete (passed down function), term (list.content entry), idx (Number)
  */
-const ListTerm = memo(({ handleTermDelete, term, idx }) => {
-    const [_term, setTerm] = useState(() => ({ from: term.from, to: term.to }))
-    const [isEditing, setIsEditing] = useState(false);
-    const [confirmingDelete, setConfirmingDelete] = useState(false);
-    const [isHovering, setIsHovering] = useState(false)
-    const { listContextValue, setListContextValue } = useContext(ListContext);
-    const [showHistory, setShowHistory] = useState(false);
-
-    const { response: putResponse, setRequest: setPutRequest } = useRequest({...handlePutList()});
+const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
+    const [term, setTerm] = useState(() => (termFromProps)),
+        [isEditing, setIsEditing] = useState(false),
+        [confirmingDelete, setConfirmingDelete] = useState(false),
+        [isHovering, setIsHovering] = useState(false),
+        { listContextValue, setListContextValue } = useContext(ListContext),
+        [showHistory, setShowHistory] = useState(false),
+        { response: putResponse, setRequest: setPutRequest } = useRequest({...handlePutList()});
 
     useEffect(() => { // cleanup
         return () => {
@@ -49,8 +50,8 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
     */
     const handleTermEdit = (e) => {
         let side = e.currentTarget.getAttribute('side');
-        if (e.target.value && _term[side] !== e.target.value) {
-            let newTerm = { ..._term, [side]: e.target.value }
+        if (e.target.value && term[side] !== e.target.value) {
+            let newTerm = { ...term, [side]: e.target.value }
             setTerm(newTerm)
             let newListContent = [...listContextValue.content];
             newListContent[idx] = { ...newTerm };
@@ -86,15 +87,17 @@ const ListTerm = memo(({ handleTermDelete, term, idx }) => {
                         style={{
                             backgroundColor: confirmingDelete ? 'orangered' : '',
                         }}
-                        onBlur={handleTermEdit} className="term--side term--from" side="from" type="text" defaultValue={_term.from} />
+                        onBlur={handleTermEdit} className="term--side term--from" side="from" type="text" defaultValue={term.from} />
                     <input 
                         disabled={confirmingDelete}
                         style={{
                             backgroundColor: confirmingDelete ? 'orangered' : '',
                         }}
-                        onBlur={handleTermEdit} className="term--side term--to" side="to" type="text" defaultValue={_term.to} />
+                        onBlur={handleTermEdit} className="term--side term--to" side="to" type="text" defaultValue={term.to} />
 
-                    { (showHistory || (isHovering && !confirmingDelete)) && <button className="List__term--historybutton" onClick={() => setShowHistory(!showHistory)}>hist</button> }
+                    { (showHistory || (isHovering && !confirmingDelete)) && 
+                        <button className="List__term--historybutton" onClick={() => setShowHistory(!showHistory)}>hist</button> 
+                    }
                 </div>
 
 

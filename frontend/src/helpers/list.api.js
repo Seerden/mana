@@ -6,8 +6,8 @@ export const extractSession = (list, i) => {
 
     let session = list.content
         .map(term => {
-            if (Date(sessionStartDate) === Date(term.history[i].date)) {
-                return term.history[i].content
+            if (Date(sessionStartDate) === Date(term.history[i]?.date)) {
+                return term.history[i]?.content
             }
 
             return null
