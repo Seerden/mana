@@ -1,0 +1,1 @@
+@todo: term histories are currently given sessionStart as date. Update this to take actual moment of clicking 'pass'

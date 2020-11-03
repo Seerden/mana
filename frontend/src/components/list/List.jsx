@@ -73,7 +73,9 @@ const List = memo((props) => {
 
                             <section className="List__info">
                                 <header className="List__info--header">List info</header>
-                                <p className="List__info--item">There {list.content.length === 1 ? 'is' : 'are'} <span className="List__info--datum">{list.numTerms}</span> term{list.content.length === 1 ? '' : 's'} in this list.</p>
+                                <p className="List__info--item">
+                                    There {list.content.length === 1 ? 'is' : 'are'} <span className="List__info--datum">{list.numTerms}</span> term{list.content.length === 1 ? '' : 's'} in this list.
+                                </p>
                                 {list.lastReviewed
                                     ?
                                     <>
@@ -82,11 +84,8 @@ const List = memo((props) => {
                                             
                                         </p>
                                         <p className="List__info--item">
-                                        Your most recent review was <span className="List__info--datum">{formatDate(list.lastReviewed, 'hh:mma, MMMM Do')}</span>.
+                                            Your most recent review was <span className="List__info--datum">{formatDate(list.lastReviewed, 'hh:mma, MMMM Do')}</span>.
                                         </p>
-                                        {/* <p className="List__info--item">
-                                            The last review was<span className="List__info--datum"> {formatDate(list.lastReviewed, 'hh:mma, MMMM Do')} </span>
-                                        </p> */}
                                     </>
                                     :
                                     <p className="List__info--item" style={{ width: 'max-content', backgroundColor: 'blueviolet' }}>You haven't reviewed this list yet. Get on it!</p>

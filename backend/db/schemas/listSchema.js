@@ -7,6 +7,7 @@ const termSchema = new mongoose.Schema({
     saturation: Number,
 })
 
+
 const sessionSchema = new mongoose.Schema({
     start: String,
     end: String,

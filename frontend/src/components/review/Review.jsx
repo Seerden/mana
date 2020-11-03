@@ -142,14 +142,23 @@ const Review = memo((props) => {
         let idx = content.findIndex(i => i.to === term.to && i.from === term.from)
 
         if (!content[idx].history || content[idx].history.length === 0) {
-            content[idx].history = [{ date: session.start, content: [] }]
+            content[idx].history = [{ 
+                date: session.start, 
+                content: [],
+                direction
+             }]
         }
         if (content[idx].history.length > 0) {
             let histLen = content[idx].history.length
             let lastHist = content[idx].history[histLen - 1];
 
             if (dayjs(lastHist.date) < dayjs(session.start)) {
-                content[idx].history.push({ date: session.start, content: [passfail] })
+                console.log('direction:', direction);
+                content[idx].history.push({ 
+                    date: session.start, 
+                    content: [passfail],
+                    direction
+                 })
             } else {
                 content[idx].history[histLen - 1].content.push(passfail)
             }

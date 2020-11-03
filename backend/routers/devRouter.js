@@ -64,3 +64,11 @@ devRouter.get('/updatepass', async (req, res) => {
         }
     })
 })
+
+devRouter.get('/onelistbyuser', (req, res) => {
+    const username = req.query.username;
+    console.log(username);
+    List.findOne({owner: username, name: "Test"}, (err, foundList) => {
+        res.send(foundList)
+    })
+})

@@ -17,3 +17,15 @@ export const extractSession = (list, i) => {
     return ({ start: sessionStartDate, end: sessionEndDate, session: session })
 
 }
+
+export const extractSessionsByDirection = (listObj, direction) => {
+    if (['forwards', 'backwards', 'forward', 'backward'].includes(direction)) {
+        return listObj.sessions?.filter(sess => sess.direction === direction);
+    } else {
+        return;
+    }
+}
+
+export const sessionsByDirectionFromTerm = (term) => {
+    
+}
