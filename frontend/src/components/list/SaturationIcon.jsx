@@ -1,6 +1,18 @@
 import React from "react";
 import { colorBySaturation } from '../../helpers/list.api';
 
+const makeTooltip = (direction, saturation) => {
+    if (!saturation) {
+        return 'Not enough reviews to judge memorization. Get on it!'
+    }
+
+    if (saturation < 2) {
+        return `${direction}: Review soon!`
+    }
+
+    return `${direction}: No need to review yet`
+}
+
 const SaturationIcon = ({direction, classes, saturation}) => {
     const saturationIconStyle = {
         width: '20px',
@@ -12,10 +24,10 @@ const SaturationIcon = ({direction, classes, saturation}) => {
         border: "2px solid transparent",
     }
 
-    let title = saturation ? saturation < 2 ? `${direction}: review soon` : `${direction}: no need to review yet` : ''
+
 
     return (
-        <span title={title} className={classes} style={saturationIconStyle} />
+        <span title={makeTooltip(direction, saturation)} className={classes} style={saturationIconStyle} />
     )
 }
 
