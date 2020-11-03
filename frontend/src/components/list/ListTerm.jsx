@@ -72,8 +72,8 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
                     <span className="Term__index">{idx}</span>
                     <span className="Term__from">{term.from}</span>
                     <span className="Term__to">{term.to}</span>
-                    <SaturationIcon classes={"Term__saturation"} direction="forwards" saturation={term.saturation.forwards}/>
-                    <SaturationIcon classes={"Term__saturation"} direction="backwards" saturation={term.saturation.backwards}/>
+                    <SaturationIcon classes={"Term__saturation"} direction="forwards" saturation={term.saturation?.forwards}/>
+                    <SaturationIcon classes={"Term__saturation"} direction="backwards" saturation={term.saturation?.backwards}/>
                 </li>
             { open && 
                 <TermModal 

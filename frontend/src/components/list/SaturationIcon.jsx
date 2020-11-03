@@ -7,12 +7,12 @@ const SaturationIcon = ({direction, classes, saturation}) => {
         height: '20px',
         padding: '0rem',
         borderRadius: '50%',
-        backgroundColor: colorBySaturation(saturation),
+        backgroundColor: colorBySaturation(saturation) || '#333',
         boxShadow: "0 0 1rem black",
         border: "2px solid transparent",
     }
 
-    let title = saturation < 2 ? `${direction}: review soon` : `${direction}: no need to review yet`
+    let title = saturation ? saturation < 2 ? `${direction}: review soon` : `${direction}: no need to review yet` : ''
 
     return (
         <span title={title} className={classes} style={saturationIconStyle} />

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const termSchema = new mongoose.Schema({
     to: String,
     from: String,
-    history: { type: Array, default: [] },
+    history: [{date: Date, content: Array, direction: String}],
     saturation: {
         forwards: Number, 
         backwards: Number

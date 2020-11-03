@@ -6,6 +6,8 @@ import path from 'path';
 import 'dotenv/config.js';
 import session from 'express-session';
 import passport from '../auth/passport.js';
+import connectMongo from 'connect-mongo';
+const MongoStore = connectMongo(session);
 
 import bcrypt from 'bcryptjs';
 const { hash } = bcrypt;
@@ -21,6 +23,9 @@ dbRouter.use(bodyParser.urlencoded({ extended: true }));
 dbRouter.use(bodyParser.json());
 dbRouter.use(session({
     secret: process.env.SESSION_SECRET,
+    store: new MongoStore({
+        mongooseConnection: dbConn
+    }),
     cookie: {
         maxAge: 1000*3600*24,  // TTL in milliseconds
         // secure: true // only set once I have https setup look at docs for handy if statement to set this only for production
