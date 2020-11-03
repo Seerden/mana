@@ -9,14 +9,13 @@ import { useRequest } from '../../hooks/useRequest';
 import './style/List.scss';
 
 const List = memo((props) => {
-    const [list, setList] = useState(null);
-    const [terms, setTerms] = useState(null);
-    const { params, location } = useRouteProps();
-    const { setListContextValue } = useContext(ListContext);
-
-    const { response: getResponse, setRequest: setGetRequest } = useRequest({ ...handleGetList() });
-    const { response: putResponse, setRequest: setPutRequest } = useRequest({ ...handlePutList() });
-    const { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() });
+    const [list, setList] = useState(null),
+        [terms, setTerms] = useState(null),
+        { params, location } = useRouteProps(),
+        { setListContextValue } = useContext(ListContext),
+        { response: getResponse, setRequest: setGetRequest } = useRequest({ ...handleGetList() }),
+        { response: putResponse, setRequest: setPutRequest } = useRequest({ ...handlePutList() }),
+        { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() });
 
     useEffect(() => {
         setGetRequest(() => getList(params.username, { _id: params.id }))
@@ -30,7 +29,7 @@ const List = memo((props) => {
     }, [getResponse])
 
     useEffect(() => {
-        if (list && list.content && list.content.length > 0) { updateTerms() };      /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list */
+        if (list && list.content) { updateTerms() };      /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list */
     }, [list])
 
     const updateTerms = () => {
@@ -74,14 +73,21 @@ const List = memo((props) => {
 
                             <section className="List__info">
                                 <header className="List__info--header">List info</header>
-                                <p className="List__info--item">There are <span className="List__info--datum">{list.numTerms}</span> terms in this list.</p>
+                                <p className="List__info--item">There {list.content.length === 1 ? 'is' : 'are'} <span className="List__info--datum">{list.numTerms}</span> term{list.content.length === 1 ? '' : 's'} in this list.</p>
                                 {list.lastReviewed
                                     ?
-                                    <p className="List__info--item">You last reviewed this list
-                                            <span className="List__info--datum">
-                                            {formatDate(list.lastReviewed, 'hh:mma, MMMM Do')}
-                                        </span>
-                                    </p>
+                                    <>
+                                        <p className="List__info--item">
+                                            You've reviewed this list <span className="List__info--datum">{list.sessions.length} time{list.sessions.length !== 1 ? 's' : ''}</span>, 
+                                            
+                                        </p>
+                                        <p className="List__info--item">
+                                        Your most recent review was <span className="List__info--datum">{formatDate(list.lastReviewed, 'hh:mma, MMMM Do')}</span>.
+                                        </p>
+                                        {/* <p className="List__info--item">
+                                            The last review was<span className="List__info--datum"> {formatDate(list.lastReviewed, 'hh:mma, MMMM Do')} </span>
+                                        </p> */}
+                                    </>
                                     :
                                     <p className="List__info--item" style={{ width: 'max-content', backgroundColor: 'blueviolet' }}>You haven't reviewed this list yet. Get on it!</p>
                                 }

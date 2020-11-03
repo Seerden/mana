@@ -42,6 +42,7 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     const handleConfirmClick = (e, action) => {
         e.preventDefault();
         setConfirmingDelete(false);
+        setOpen(false);
         if (action.type === 'delete') {
             handleTermDelete(idx);
         }
@@ -72,7 +73,14 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
                     <span className="Term__to">{term.to}</span>
                 </li>
             { open && 
-                <TermModal setOpen={setOpen} term={term} handleTermEdit={handleTermEdit} confirmingDelete={confirmingDelete}/>
+                <TermModal 
+                    handleConfirmClick={handleConfirmClick}
+                    setOpen={setOpen} 
+                    term={term} 
+                    handleTermEdit={handleTermEdit} 
+                    confirmingDelete={confirmingDelete}
+                    setConfirmingDelete={setConfirmingDelete}
+                />
             }
         </div>
     )
