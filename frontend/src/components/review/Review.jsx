@@ -16,7 +16,7 @@ import PostReview from "./PostReview";
 import ReviewInfo from "./ReviewInfo";
 
 import './style/Review.scss';
-
+import { timeout } from "d3";
 
 const Review = memo((props) => {
     const { params } = useRouteProps(),
@@ -27,13 +27,15 @@ const Review = memo((props) => {
         [progress, setProgress] = useState(0),  // percentage of terms marked 'pass' in the session
         { reviewContext } = useContext(ReviewContext),
         { n, direction, started } = reviewContext.settings,
+        [backWasShown, setBackWasShown] = useState(false),
         failRef = useRef(null), // refs for handleLeftRightArrowKeydown to target
         passRef = useRef(null);
+    let timeout = useRef(null);
 
     const { setRequest: setGetRequest } = useRequest({
         handleResponse: (res, setResponse) => {
             res = res.data
-            
+
             if (res.content && res.content.length > 0) {
                 setResponse(res);
                 setList(res)
@@ -43,13 +45,19 @@ const Review = memo((props) => {
                 })
             }
         },
-        handleError: handleGetList().handleError    
+        handleError: handleGetList().handleError
     })
-    const { setRequest: setPutRequest } = useRequest({...handlePutList()})
+    const { setRequest: setPutRequest } = useRequest({ ...handlePutList() })
 
     useEffect(() => {  // get list from database and initialize futureTerms
-        setGetRequest(() => getList(params.username, {_id: params.id}))
+        setGetRequest(() => getList(params.username, { _id: params.id }))
     }, [])
+
+    useEffect(() => {
+        return () => {
+                window.clearTimeout(timeout.current);
+        }
+    })
 
     useEffect(() => {
         if (list) {
@@ -60,20 +68,25 @@ const Review = memo((props) => {
         }
     }, [n]) // including list in deps causes session to be malformed somehow (progress doesn't change when moving to a new term)
 
-    useEffect(() => {
+    useEffect(() => {  // create new card to show, remove old and add new up/down key handler
         if (list && futureTerms) {
             let sessionLength = list.content.length * n;
             let termsCompleted = sessionLength - futureTerms.length;
             setProgress(Math.floor(100 * termsCompleted / sessionLength));
         }
 
-        futureTerms && futureTerms.length > 0 && setCurrentCard(<ReviewCard key={uuidv4()} direction={direction} term={futureTerms[0]} />)
+        futureTerms && futureTerms.length > 0 && setCurrentCard(
+            <ReviewCard
+                setBackWasShown={setBackWasShown}
+                key={uuidv4()}
+                direction={direction}
+                term={futureTerms[0]} />)
         futureTerms && futureTerms.length === 0 && endSession(list);
 
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
         return () => {
-            window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
             setCurrentCard(null)
+            window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
         }
     }, [futureTerms, direction])
 
@@ -97,11 +110,13 @@ const Review = memo((props) => {
         if (ref.current) {
             ref.current.focus()
             ref.current.click();
-            setTimeout(() => {  // highlight button for UX
+            setBackWasShown(false);
+            timeout.current = (setTimeout(() => {  // highlight button for UX
                 if (ref.current) {
                     ref.current.blur()
                 }
             }, 100)
+            )
         }
 
     }
@@ -142,23 +157,22 @@ const Review = memo((props) => {
         let idx = content.findIndex(i => i.to === term.to && i.from === term.from)
 
         if (!content[idx].history || content[idx].history.length === 0) {
-            content[idx].history = [{ 
-                date: session.start, 
+            content[idx].history = [{
+                date: session.start,
                 content: [],
                 direction
-             }]
+            }]
         }
         if (content[idx].history.length > 0) {
             let histLen = content[idx].history.length
             let lastHist = content[idx].history[histLen - 1];
 
             if (dayjs(lastHist.date) < dayjs(session.start)) {
-                console.log('direction:', direction);
-                content[idx].history.push({ 
-                    date: session.start, 
+                content[idx].history.push({
+                    date: session.start,
                     content: [passfail],
                     direction
-                 })
+                })
             } else {
                 content[idx].history[histLen - 1].content.push(passfail)
             }
@@ -177,6 +191,7 @@ const Review = memo((props) => {
         e.preventDefault();
         updateSessionHistory(futureTerms[0], passfail);
         reduceFutureTerms({ type: passfail })
+        setBackWasShown(false);
     }
 
     /**
@@ -199,8 +214,8 @@ const Review = memo((props) => {
         list.lastReviewed = end;
 
         list.content = list.content.map(term => {
-            const newTerm = {...term};
-            newTerm.saturation = {...newTerm.saturation, [direction]: saturate(newTerm, direction)};
+            const newTerm = { ...term };
+            newTerm.saturation = { ...newTerm.saturation, [direction]: saturate(newTerm, direction) };
             return newTerm
         });
 
@@ -220,58 +235,69 @@ const Review = memo((props) => {
 
             { list && !started
                 ?
-                    <PreReview/>
+                <PreReview />
                 :
-                    <>
-                        { !session.end && currentCard &&
-                            <>
-                                {currentCard}
+                <>
+                    { !session.end && currentCard &&
+                        <>
+                            {currentCard}
 
-                                <div className="Review__buttons">
-                                    <input 
-                                        ref={failRef} 
-                                        onClick={(e) => handlePassFailClick(e, 'fail')} 
-                                        className="Review__button" 
-                                        id="Review__button--fail" 
-                                        type="button" 
-                                        value="Fail" 
-                                    />
-                                    <input 
-                                        ref={passRef} 
-                                        onClick={(e) => handlePassFailClick(e, 'pass')} 
-                                        className="Review__button" 
-                                        id="Review__button--pass" 
-                                        type="button" 
-                                        value="Pass" 
-                                    />
-                                </div>
+                            { backWasShown
+                                ?
+                                <>
+                                    <div className="Review__buttons">
+                                        <input
+                                            ref={failRef}
+                                            onClick={(e) => { if (backWasShown) handlePassFailClick(e, 'fail') }}
+                                            disabled={!backWasShown}
+                                            className="Review__button"
+                                            id="Review__button--fail"
+                                            type="button"
+                                            value="Fail"
+                                        />
+                                        <input
+                                            ref={passRef}
+                                            onClick={(e) => { if (backWasShown) handlePassFailClick(e, 'pass') }}
+                                            disabled={!backWasShown}
+                                            className="Review__button"
+                                            id="Review__button--pass"
+                                            type="button"
+                                            value="Pass"
+                                        />
+                                    </div>
 
-                                <div className="Review__progress--wrapper">
-                                    <div id="Review__progress--bar" style={{ width: `${progress}%` }}></div>
-                                </div>
+                                </>
+                                :
+                                <div className="Review__prevent">
+                                    Cannot move on to the next term until you've seen the back of the card.
+                                    </div>
+                            }
+                            <div className="Review__progress--wrapper">
+                                <div id="Review__progress--bar" style={{ width: `${progress}%` }}></div>
+                            </div>
 
-                                { session.start && 
-                                    <ReviewInfo 
-                                        start={session.start} 
-                                        numTerms={list.content.length} 
-                                        n={n} 
-                                        progress={progress} 
-                                    />
-                                }
-
-                            </>
-                        }
-
-                        { session.end &&
-                            <>
-                                <PostReview
-                                    sessionStart={session.start}
-                                    sessionEnd={session.end}
-                                    list={list}
+                            { session.start &&
+                                <ReviewInfo
+                                    start={session.start}
+                                    numTerms={list.content.length}
+                                    n={n}
+                                    progress={progress}
                                 />
-                            </>
-                        }
-                    </>
+                            }
+
+                        </>
+                    }
+
+                    { session.end &&
+                        <>
+                            <PostReview
+                                sessionStart={session.start}
+                                sessionEnd={session.end}
+                                list={list}
+                            />
+                        </>
+                    }
+                </>
             }
         </div>
     )

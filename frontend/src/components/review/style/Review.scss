@@ -2,6 +2,18 @@
     --duration: 250ms;
 }
 
+.Review {
+    &__prevent {
+        margin-top: 1rem;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        color: #555;
+    }
+}
+
 .Review__title {
     display: flex;
     justify-content: space-between;
