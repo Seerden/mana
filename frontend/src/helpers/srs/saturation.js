@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
 import duration from 'dayjs/plugin/duration.js';
 import { countDict } from '../count';
+import { termSessionsByDirection } from '../list.api';
   
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
@@ -47,30 +48,32 @@ const saturationLevels = [
  * @note saturation should be done on a per-term basis, since object structure for review input might not be rigid
  * @param {Object} term List model contains .content, which is an array of terms, of which this ('term') is an entry.
  */
-export const saturate = (term) => {
-    // check if reviewed < n times (where n is seeding session count), return 
-    if (term.history.length < 3 ) {
+export const saturate = (term, direction) => {
+    // filter term's history by direction
+    const filteredHistory = termSessionsByDirection(term, direction);
+
+    if (!filteredHistory || filteredHistory.length < 3 ) {
         return null
     }
 
-    // if reviewed exactly n times, seeding has just ended, so we can saturate based on seeding round
-    if (term.history.length === 3 || !term.saturation ) {
-        return saturateUnseededTerm(term);
+    if (filteredHistory.length === 3 || !term.saturation?.direction ) {  // if reviewed exactly n times, seeding has just ended, so we can saturate based on seeding round
+        return saturateUnseededTerm(filteredHistory);
     }
     // if reviewed more than n times, saturate based on a combination of (1) time since last session, (2) current saturation level, (3) performance in the session that was just completed
+    // saturateSeededTerm(filteredHistory)
 }
 
 /**
  * Set saturation of a term that has finished undergoing seeding
  * @param {Object} term List model contains .content, which is an array of terms, of which this ('term') is an entry.
  */
-export const saturateUnseededTerm = (term) => {
+export const saturateUnseededTerm = (filteredHistory) => {
     /*  @note
            initial seeding does not take into consideration:
             - time between sessions. minimum time between sessions will be enforced elsewhere for UX purposes, though
             - performance of first n-1 seeding rounds  */
 
-    const latestSession = term.history.reverse()[0].content;  // extract last seeding session content
+    const latestSession = filteredHistory?.reverse()[0]?.content;  // extract last seeding session content
     const sessionSet = new Set(latestSession);
 
     if (!latestSession || (latestSession && !(latestSession.length > 0))) {

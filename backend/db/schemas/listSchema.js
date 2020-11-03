@@ -4,7 +4,10 @@ const termSchema = new mongoose.Schema({
     to: String,
     from: String,
     history: { type: Array, default: [] },
-    saturation: Number,
+    saturation: {
+        forwards: Number, 
+        backwards: Number
+    },
 })
 
 

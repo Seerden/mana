@@ -18,20 +18,21 @@ describe('saturateUnseededTerm', () => {
     ]
 
     test.each(cases)(`given %s, correctly returns %s`, (session, expectedReturn) => {
-        term.history[0].content = session;
-        expect(saturateUnseededTerm(term)).toEqual(expectedReturn)
+        let history = []
+        history[0] = {content: session};
+        expect(saturateUnseededTerm(history)).toEqual(expectedReturn)
     })
 })
 
-describe('saturate', () => {
-    const term = {history: null}
-    const cases = [
-        [[{content: ['pass', 'fail', 'pass']},{content: ['pass', 'fail', 'pass']},{content: ['pass', 'fail', 'pass']}], 1],
-        [[{}, {}], null]
-    ]
+// describe('saturate', () => {
+//     const term = {history: null}
+//     const cases = [
+//         [[{content: ['pass', 'fail', 'pass']},{content: ['pass', 'fail', 'pass']},{content: ['pass', 'fail', 'pass']}], 1],
+//         [[{}, {}], null]
+//     ]
 
-    test.each(cases)(`given %o, correctly returns %o`, (history, expectedReturn) => {
-        term.history = history;
-        expect(saturate(term)).toEqual(expectedReturn)
-    })
-})
+//     test.each(cases)(`given %o, correctly returns %o`, (history, expectedReturn) => {
+//         term.history = history;
+//         expect(saturate(term)).toEqual(expectedReturn)
+//     })
+// })

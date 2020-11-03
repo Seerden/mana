@@ -19,6 +19,8 @@ export const extractSession = (list, i) => {
 }
 
 export const extractSessionsByDirection = (listObj, direction) => {
+    // @note: currently implemented as 'forwards' and 'backwards'
+    // leaning to going for 'frontToBack' and 'backToFront' instead
     if (['forwards', 'backwards', 'forward', 'backward'].includes(direction)) {
         return listObj.sessions?.filter(sess => sess.direction === direction);
     } else {
@@ -26,6 +28,11 @@ export const extractSessionsByDirection = (listObj, direction) => {
     }
 }
 
-export const sessionsByDirectionFromTerm = (term) => {
-    
+/**
+ * Extract all sessions with a given direction from a term's history
+ * @param {Object} term 
+ * @param {String} direction 'forward(s)' or 'backward(s)'
+ */
+export const termSessionsByDirection = (term, direction) => {
+    return term.history?.filter(sess => sess.direction === direction)
 }

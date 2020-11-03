@@ -2,6 +2,7 @@ import { extractSessionsByDirection } from './list.api';
 
 let list = {sessions: []};
 
+// from list
 describe('extractSessionsByDirection', () => {
     let cases = [
         [['forward', 'backward', 'forward'], 'forward', 2],
@@ -34,3 +35,8 @@ describe('extractSessionsByDirection', () => {
     })
 
 });
+
+// from term
+describe('extractSessionsByDirectionFromTerm', () => {
+    
+})

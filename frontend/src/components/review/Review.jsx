@@ -200,7 +200,7 @@ const Review = memo((props) => {
 
         list.content = list.content.map(term => {
             const newTerm = {...term};
-            newTerm.saturation = saturate(newTerm);
+            newTerm.saturation = {...newTerm.saturation, [direction]: saturate(newTerm, direction)};
             return newTerm
         });
 
