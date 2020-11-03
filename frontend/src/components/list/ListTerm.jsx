@@ -4,6 +4,7 @@ import { ListContext } from '../../context/ListContext';
 import ListTermDeleteButton from "./ListTermDeleteButton";
 import TermHistory from './TermHistory';
 import TermModal from './TermModal';
+import SaturationIcon from './SaturationIcon';
 
 import { useRequest } from '../../hooks/useRequest';
 import { putList, handlePutList } from '../../helpers/apiHandlers'
@@ -71,6 +72,8 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
                     <span className="Term__index">{idx}</span>
                     <span className="Term__from">{term.from}</span>
                     <span className="Term__to">{term.to}</span>
+                    <SaturationIcon classes={"Term__saturation"} direction="forwards" saturation={term.saturation.forwards}/>
+                    <SaturationIcon classes={"Term__saturation"} direction="backwards" saturation={term.saturation.backwards}/>
                 </li>
             { open && 
                 <TermModal 

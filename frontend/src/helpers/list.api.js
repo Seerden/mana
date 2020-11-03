@@ -36,3 +36,16 @@ export const extractSessionsByDirection = (listObj, direction) => {
 export const termSessionsByDirection = (term, direction) => {
     return term.history?.filter(sess => sess.direction === direction)
 }
+
+export const colorBySaturation = saturation => {
+    let colorMap = {
+        null: '#444',
+        0: 'red',
+        1: 'orange',
+        2: 'seagreen',
+        3: 'deepskyblue',
+        4: 'green',
+    }
+
+    return colorMap[saturation]
+}

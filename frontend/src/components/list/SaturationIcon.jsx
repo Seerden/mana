@@ -1,0 +1,22 @@
+import React from "react";
+import { colorBySaturation } from '../../helpers/list.api';
+
+const SaturationIcon = ({direction, classes, saturation}) => {
+    const saturationIconStyle = {
+        width: '20px',
+        height: '20px',
+        padding: '0rem',
+        borderRadius: '50%',
+        backgroundColor: colorBySaturation(saturation),
+        boxShadow: "0 0 1rem black",
+        border: "2px solid transparent",
+    }
+
+    let title = saturation < 2 ? `${direction}: review soon` : `${direction}: no need to review yet`
+
+    return (
+        <span title={title} className={classes} style={saturationIconStyle} />
+    )
+}
+
+export default SaturationIcon

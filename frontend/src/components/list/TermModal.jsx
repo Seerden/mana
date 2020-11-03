@@ -65,6 +65,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                         <TermHistory history={term.history} />
                     </section>
 
+                    <div className="TermModal__delete--wrapper">
                     { !confirmingDelete
                         ?
                         <button onClick={() => setConfirmingDelete(true)} className="TermModal__delete">Delete this term</button>
@@ -77,6 +78,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                         </>
 
                     }
+                    </div>
                 </div>
 
         </>

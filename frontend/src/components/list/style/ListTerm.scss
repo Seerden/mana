@@ -12,7 +12,7 @@ $shadow: 5px 5px 0 -2px #222, -5px -5px 0 -3px #333, 0 0 1rem black;
     user-select: none;
 
     display: grid;
-    grid-template-columns: 30px repeat(2, 300px);
+    grid-template-columns: 30px repeat(2, 40%) repeat(2,30px);
     align-items: center;
     
     @media screen and (max-width: 768px) {
@@ -20,7 +20,7 @@ $shadow: 5px 5px 0 -2px #222, -5px -5px 0 -3px #333, 0 0 1rem black;
         width: 100%;
         display: grid;
 
-        .Term__index { // going &__index doesn't work, specificity becomes 0,0,0 for some reason
+        .Term__index, .Term__saturation { // going &__index doesn't work, specificity becomes 0,0,0 for some reason
             display: none;
         }
 
