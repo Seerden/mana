@@ -13,6 +13,7 @@ const List = memo((props) => {
         [terms, setTerms] = useState(null),
         { params, location } = useRouteProps(),
         { setListContextValue } = useContext(ListContext),
+        [sessions, setSessions] = useState(null),
         { response: getResponse, setRequest: setGetRequest } = useRequest({ ...handleGetList() }),
         { response: putResponse, setRequest: setPutRequest } = useRequest({ ...handlePutList() }),
         { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() });
@@ -72,7 +73,7 @@ const List = memo((props) => {
                             <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
 
                             <section className="List__info">
-                                <header className="List__info--header">List info</header>
+                                <header className="List__section--header">List info</header>
                                 <p className="List__info--item">
                                     There {list.content.length === 1 ? 'is' : 'are'} <span className="List__info--datum">{list.numTerms}</span> term{list.content.length === 1 ? '' : 's'} in this list.
                                 </p>
@@ -95,7 +96,7 @@ const List = memo((props) => {
 
                             <section className="List__content">
                                 <ul className="terms">
-                                    <header className="List__terms--header">Terms</header>
+                                    <header className="List__section--header">Terms</header>
                                     {terms}
                                 </ul>
                             </section>

@@ -52,6 +52,12 @@
     }
 
     input {
+        // $b1: limegreen;
+        // $b2: greenyellow;
+        
+        $b1: greenyellow;
+        $b2: limegreen;
+
         display: block;
         width: 450px;
         max-width: 100%;
@@ -62,16 +68,16 @@
         padding: 0.7rem 1rem;
         background-color: #191919;
         color: white;
-        border: 2px solid limegreen;
-        box-shadow: 0px 4px 0 -2px greenyellow, 0 -4px 0 -2px limegreen;
+        border: 2px solid $b2;
+        box-shadow: 0px 4px 0 -2px $b2, 0 -4px 0 -2px $b1;
 
-        transition: all 75ms ease;
+        transition: all 50ms linear;
         
         &:focus {
             background-color: #191919;
             color: azure;
             border: 2px solid transparent;
-            box-shadow: -8px -8px 0 -6px limegreen, 8px 8px 0 -5px greenyellow;
+            box-shadow: 0px 4px 0 -2px transparent, 0 -4px 0 -2px transparent, -8px -8px 0 -6px $b1, 8px 8px 0 -5px $b2;
             border-radius: 0px;
             // transform: translateY(2px);
 

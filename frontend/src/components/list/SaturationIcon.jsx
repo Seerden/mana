@@ -2,7 +2,7 @@ import React from "react";
 import { colorBySaturation } from '../../helpers/list.api';
 
 const makeTooltip = (direction, saturation) => {
-    if (!saturation) {
+    if (!(typeof saturation) == 'Number') {
         return 'Not enough reviews to judge memorization. Get on it!'
     }
 

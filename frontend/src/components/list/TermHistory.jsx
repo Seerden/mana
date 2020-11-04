@@ -14,24 +14,29 @@ const TermHistory = memo(({ visible, history }) => {
         (
             <Fragment key={uuidv4()}>
                 <div className="TermHistory__session">
-                    <div title={dayjs(el.date).format('MMMM DD, YYYY (HH:mm)')} className="TermHistory__date">
+                    <div
+                        title={dayjs(el.date).format('MMMM DD, YYYY (HH:mm)')}
+                        className="TermHistory__date"
+                    >
                         {timeSince(el.date)}
                     </div>
-                    <div key={uuidv4()} className="TermHistory__history">
-                        {
-                            el.content.map((i, index) =>
-                                <span
-                                    key={`passfail-${i}-${index}`}
-                                    style={{
-                                        width: "20px",
-                                        height: "20px",
-                                        display: "inline-block",
-                                        margin: "0.2rem",
-                                        borderRadius: "50%",
-                                        backgroundColor: i === 'pass' ? 'seagreen' : 'orangered'
-                                    }}
-                                > </span>
-                            )
+
+                    <div
+                        key={uuidv4()}
+                        className="TermHistory__history">
+                        { el.content.map((i, index) =>
+                            <span
+                                key={`passfail-${i}-${index}`}
+                                style={{
+                                    width: "20px",
+                                    height: "20px",
+                                    display: "inline-block",
+                                    margin: "0.2rem",
+                                    borderRadius: "50%",
+                                    backgroundColor: i === 'pass' ? 'seagreen' : 'orangered'
+                                }}
+                            > </span>
+                         )
                         }
                     </div>
                 </div>
@@ -42,27 +47,27 @@ const TermHistory = memo(({ visible, history }) => {
 
     return (
         <>
-            
-                <div className="TermHistory">
-                    <div className="TermHistory__header">
-                        <div
-                            className="TermHistory__desc">
-                            You've reviewed this term {histEl.length} time{histEl.length === 1 ? '' : 's'}
-                        </div>
-                        {histEl.length > 1 &&
-                            <button
-                                className="TermHistory__expand"
-                                onClick={() => setExpand(!expand)}
-                            >
-                                {!expand ? 'Expand' : 'Collapse'}
-                            </button>
-                        }
+
+            <div className="TermHistory">
+                <div className="TermHistory__header">
+                    <div
+                        className="TermHistory__desc">
+                        You've reviewed this term {histEl.length} time{histEl.length === 1 ? '' : 's'}
                     </div>
-                    <div className="TermHistory__content">
-                        {expand ? histEl.reverse() : histEl[histEl.length - 1]}
-                    </div>
+                    {histEl.length > 1 &&
+                        <button
+                            className="TermHistory__expand"
+                            onClick={() => setExpand(!expand)}
+                        >
+                            {!expand ? 'Expand' : 'Collapse'}
+                        </button>
+                    }
                 </div>
-            
+                <div className="TermHistory__content">
+                    {expand ? histEl.reverse() : histEl[histEl.length - 1]}
+                </div>
+            </div>
+
         </>
     )
 })

@@ -46,12 +46,12 @@ $shadow: 5px 5px 0 -2px #222, -5px -5px 0 -3px #333, 0 0 1rem black;
         color: #777;
     }
 
-    transition: all 100ms ease;
+    transition: all 100ms ease-in;
 
     &:hover {
         background-color: #111;
         color: azure;
-        box-shadow: $shadow, 10px 10px 0 -5px azure;  // @todo: refactor following https://tobiasahlin.com/blog/how-to-animate-box-shadow/
+        box-shadow: $shadow, 10px 10px 0 -3px #ccc;  // @todo: refactor following https://tobiasahlin.com/blog/how-to-animate-box-shadow/
     }
 
 }

@@ -16,7 +16,6 @@ import PostReview from "./PostReview";
 import ReviewInfo from "./ReviewInfo";
 
 import './style/Review.scss';
-import { timeout } from "d3";
 
 const Review = memo((props) => {
     const { params } = useRouteProps(),
@@ -27,7 +26,7 @@ const Review = memo((props) => {
         [progress, setProgress] = useState(0),  // percentage of terms marked 'pass' in the session
         { reviewContext } = useContext(ReviewContext),
         { n, direction, started } = reviewContext.settings,
-        [backWasShown, setBackWasShown] = useState(false),
+        [backWasShown, setBackWasShown] = useState(null),
         failRef = useRef(null), // refs for handleLeftRightArrowKeydown to target
         passRef = useRef(null);
     let timeout = useRef(null);
@@ -110,8 +109,8 @@ const Review = memo((props) => {
         if (ref.current) {
             ref.current.focus()
             ref.current.click();
-            setBackWasShown(false);
             timeout.current = (setTimeout(() => {  // highlight button for UX
+                setBackWasShown(false);
                 if (ref.current) {
                     ref.current.blur()
                 }
@@ -313,4 +312,5 @@ export default Review;
 
 @note: list loads with n = 2 terms by default, but is rebuilt when n changes. could be cleaned up into a single case, but I need time to work that out. functions for now.
 
+@todo? buttons are shown based on !!backWasShown, but this means flippign to next card instantly removes them, so I won't get the little 100ms light-up effect 
 */

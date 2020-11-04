@@ -29,6 +29,17 @@
         }
     }
 
+    &__session {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 0 1rem black;
+        padding: 0.5rem 0.5rem;
+        padding-right: 2rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
     &__content {  // actual history entries
         max-height: 200px;
         overflow-y: scroll;
@@ -38,11 +49,11 @@
         }
 
         &::-webkit-scrollbar {
-            background-color: #333;
-            width: 5px;
+            background-color: #111;
+            width: 14px;
 
             &-thumb {
-                background-color:#666;
+                background-color:white;
             }
 
             &-track {

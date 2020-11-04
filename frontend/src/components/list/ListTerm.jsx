@@ -69,7 +69,7 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     return (
         <div className="ListTerm">
             <li className="Term" title="Click to expand" onClick={() => setOpen(true)}>
-                    <span className="Term__index">{idx}</span>
+                    <span className="Term__index">{idx+1}</span>
                     <span className="Term__from">{term.from}</span>
                     <span className="Term__to">{term.to}</span>
                     <SaturationIcon classes={"Term__saturation"} direction="forwards" saturation={term.saturation?.forwards}/>

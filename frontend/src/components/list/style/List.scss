@@ -92,7 +92,7 @@
 }
 
 /* ----- LIST INFO ----- */
-.List__info {
+.List__info, .List__section {
     margin-top: 1rem;
     padding: 1rem;
     border: 2px solid #222;
@@ -101,7 +101,7 @@
 
     /* animation: 5000ms ease infinite colorcycle */
 }
-.List__info--header, .List__terms--header {
+.List__section--header {
     font-size: 1.7rem;
     font-weight: 600;
     width: max-content;
