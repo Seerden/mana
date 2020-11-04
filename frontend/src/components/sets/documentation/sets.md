@@ -21,8 +21,12 @@ In the database, a set will contain:
 - List: 
   - [] display set membership
   - [] allow user to add the list to sets
+    - implement API handlers
 ### Backend (API):
-
-### Database:
+- implement API routes for the following:
+  - set creation
+  - set updating (at Set document)
+  - appending list to set (at List document) (.put(/list) might already work)
+### Database: 
 - [x] implement setSchema
 - [x] import setSchema in any relevant files

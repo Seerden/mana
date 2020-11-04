@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
   mongoose.set('useCreateIndex', true)
 import { userSchema } from './schemas/userSchema.js';
 import { listSchema } from './schemas/listSchema.js';
+import { setSchema } from './schemas/setSchema.js';
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@mana-cluster0.8vpgs.gcp.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 export const dbConn = mongoose.createConnection(uri, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -11,3 +12,4 @@ export const dbConn = mongoose.createConnection(uri, {useNewUrlParser: true, use
 
 const User = dbConn.model('User', userSchema);
 const List = dbConn.model('List', listSchema);
+const Set = dbConn.model('Set', setSchema);

@@ -193,7 +193,6 @@ userRouter.post('/list', (req, res) => {
 })
 userRouter.put('/list', (req, res) => {
     const { query, body } = req.body.data;
-    // console.log(body);
 
     List.findOneAndUpdate(query, {
         $set: {
@@ -205,7 +204,6 @@ userRouter.put('/list', (req, res) => {
             else { res.status(200).send(updated) }
         })
 })
-
 userRouter.delete('/list', (req, res) => {
     List.findOneAndDelete({ ...req.query }, (err, deletedList) => {
         if (!err) {
@@ -222,3 +220,18 @@ userRouter.get('/lists', (req, res) => {
     })
 })
 
+userRouter.get('/set', (req, res) => {
+
+});
+
+userRouter.post('/set', (req, res) => {
+    
+});
+
+userRouter.put('/set', (req, res) => {
+    
+});
+
+userRouter.delete('/set', (req, res) => {
+    
+});

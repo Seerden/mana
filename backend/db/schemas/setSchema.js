@@ -1,8 +1,9 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const setSchema = new mongoose.Schema({
+export const setSchema = new mongoose.Schema({
     owner: String,
-    sets: Array
+    name: {type: String, unique: true},
+    description: {type: String, maxlength: 512},
+    tags: [{type: String}],
+    lists: [{type: mongoose.Schema.Types.ObjectId, ref: 'List'}]
 }, { collation: {locale: 'en', strength: 2}})
-
-module.exports = { setSchema }
