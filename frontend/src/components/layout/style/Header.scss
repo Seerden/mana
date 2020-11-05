@@ -1,8 +1,8 @@
-$maincolor: orange;
+$maincolor: deepskyblue;
 
 .Header {
 
-
+    box-shadow: 0 3px 0 -2px #333;
     position: sticky;
     top: 0;
     left: 0;
@@ -50,7 +50,7 @@ $maincolor: orange;
     font-size: 1.1rem;
     color: azure;
     text-decoration: none;
-    border-radius: 2px;
+    // border-radius: 2px;
     width: max-content;
     align-self: center;
     padding: 0.2rem 0.5rem;
