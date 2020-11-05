@@ -2,6 +2,14 @@ import axios from 'axios';
 
 axios.default.withCredentials = true;
 
+// New user registration: unprotected route, can't currently be called using useRequest
+export const postUser = newUser => {
+    return axios.post('/db/u/register', {newUser})
+        .then(r => r.data)
+        .catch(err => err)
+}
+
+
 // handleError and handleResponse are generic handlers
 export const handleError = function(err, setError) { setError(err) };
 
@@ -69,9 +77,27 @@ export const getLists = (username) => {
     return () => axios.get(`/db/u/${username}/lists`)
 }
 
-// New user registration: unprotected route, can't currently be called using useRequest
-export const postUser = newUser => {
-    return axios.post('/db/u/register', {newUser})
-        .then(r => r.data)
-        .catch(err => err)
+// ----- Set handlers -----
+export const getSet = (username, query) => {
+    return () => {
+        axios.get(`/db/u/${username}/set`, { params: query })
+    }
+}
+
+export const postSet = (username, body) => {
+    return () => {
+        axios.post(`/db/u/${username}/set`, { newSet: body })
+    }
+}
+
+export const putSet = (username, query, body) => {
+    return () => {
+        axios.put(`/db/u/${username}/set`, { data: { query, body } })
+    }
+}
+
+export const deleteSet = (username, query) => {
+    return () => {
+        axios.delete(`/db/u/${username}/set`, { params: query })
+    }
 }
