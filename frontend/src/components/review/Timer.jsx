@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from "react";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
+  dayjs.extend(relativeTime);
 
 /**
  * JSX <span> component displaying sessionStart.fromNow();

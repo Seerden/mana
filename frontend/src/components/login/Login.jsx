@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import { LoginContext } from '../../context/LoginContext';
+import React, { useState, useEffect } from "react";
 import './style/Login.scss';
-import { useLogState, handleFormBlur } from '../../hooks/state';
+import { handleFormBlur } from '../../hooks/state';
 import { useRouteProps } from '../../hooks/routerHooks';
 import { useAuthenticateUser } from '../../helpers/db.api';
 import { Link } from 'react-router-dom';
@@ -9,11 +8,10 @@ import { Link } from 'react-router-dom';
 
 const Login = (props) => {
     const [_user, _setUser] = useState({});
-    const { navigate, location } = useRouteProps();
-    const { currentUser } = useContext(LoginContext);
+    const { navigate } = useRouteProps();
     const [auth, setAuth] = useState(false);
 
-    const [authResponse, authError] = useAuthenticateUser(auth, _user);
+    const [authResponse] = useAuthenticateUser(auth, _user);
 
     useEffect(() => {
         if (authResponse) {

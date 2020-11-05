@@ -31,18 +31,18 @@ const ReviewCard = memo(({ setBackWasShown, direction, term }) => {
         }
     }, [])
 
-    const handleArrowUpDownKeyup = (e) => {
+    function handleArrowUpDownKeyup(e) {
         if (['ArrowUp', 'ArrowDown'].includes(e.code)) {
             flip();
         }
     }
 
-    const flip = () => {
-        let duration = 250  // match keyframes animation duration
+    function flip() {
+        let duration = 250; // match keyframes animation duration
         setFlipping(true);
-        timeouts.current.push(setTimeout(() => setFlipping(false), duration))
+        timeouts.current.push(setTimeout(() => setFlipping(false), duration));
         timeouts.current.push(setTimeout(() => toggleSide(), duration / 2));
-        setBackWasShown(true)
+        setBackWasShown(true);
     }
 
     return (

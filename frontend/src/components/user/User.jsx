@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouteProps } from '../../hooks/routerHooks';
 import './style/User.scss';
 
@@ -9,7 +9,7 @@ const User = () => {
     return (
         <div className="PageWrapper">
             <div className="User">
-                <div className="PageHeader UserHeader">User page for /u/{params.username}</div>
+                <div className="PageHeader UserHeader">User page for /u/{username}</div>
             </div>
         </div>
     )

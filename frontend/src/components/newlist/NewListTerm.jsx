@@ -23,9 +23,3 @@ const NewListTerm = memo(({ index, formOutput, setFormOutput }) => {
 })
 
 export default NewListTerm;
-
-/*
-Future:
-- might need multiple 'to' fields, which should be indicated by user through UI.
-
-*/

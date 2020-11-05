@@ -3,8 +3,8 @@ import { useRouteProps } from '../../hooks/routerHooks';
 import { useLogState } from '../../hooks/state'
 import { postList, handlePostList } from '../../helpers/apiHandlers';
 import { useRequest } from '../../hooks/useRequest';
-import './style/NewList.scss';
 import NewListTerm from './NewListTerm';
+import './style/NewList.scss';
 
 const NewList = memo((props) => {
     const { params } = useRouteProps();
@@ -51,7 +51,6 @@ const NewList = memo((props) => {
     const handleSubmit = e => {
         e.preventDefault();
 
-        console.log('user:', params.username);
         setPostRequest(() => postList(params.username, {
             owner: params.username, // @TODO: replace
             ...formOutput,

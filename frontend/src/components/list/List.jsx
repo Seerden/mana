@@ -13,9 +13,8 @@ const List = memo((props) => {
         [terms, setTerms] = useState(null),
         { params, location } = useRouteProps(),
         { setListContextValue } = useContext(ListContext),
-        [sessions, setSessions] = useState(null),
         { response: getResponse, setRequest: setGetRequest } = useRequest({ ...handleGetList() }),
-        { response: putResponse, setRequest: setPutRequest } = useRequest({ ...handlePutList() }),
+        { setRequest: setPutRequest } = useRequest({ ...handlePutList() }),
         { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() });
 
     useEffect(() => {

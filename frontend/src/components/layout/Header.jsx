@@ -1,7 +1,6 @@
 import React, { useContext, memo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LoginContext } from '../../context/LoginContext';
-import { useLogState } from '../../hooks/state';
 import './style/Header.scss';
 
 const Header = memo(() => {

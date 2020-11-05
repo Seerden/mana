@@ -17,7 +17,6 @@ const Lists = memo((props) => {
         { params } = useRouteProps();
 
 
-    // useRequest logic ends up being condensed to these three lines:
     const { response: lists, setRequest, loading, error } = useRequest({ handleError, handleResponse })
     
     useEffect(() => {

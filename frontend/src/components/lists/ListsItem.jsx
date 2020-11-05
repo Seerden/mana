@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo } from "react";
 import { Link } from 'react-router-dom';
 import { useRouteProps } from "../../hooks/routerHooks";
 import './style/ListsItem.scss'

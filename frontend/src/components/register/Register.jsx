@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import './style/Register.scss';
 import { useLogState, handleFormBlur } from '../../hooks/state';
 import { postUser } from '../../helpers/apiHandlers';
 
 const Register = (props) => {
-    const defaultUser = { username: null, password: null }
     const [response, setResponse] = useState(null);
+    const [newUser, setNewUser] = useState({username: null, password: null});
 
-    const [newUser, setNewUser] = useState(defaultUser);
-
-    useLogState('new user', newUser)
-
-    const handleSubmit = newUser => {
+    function handleSubmit(newUser) {
         postUser(newUser)
             .then(r => setResponse(r))
-            .catch(err => console.log(err.response.status))
+            .catch(err => console.log(err.response.status));
     }
 
     return (
@@ -36,13 +32,10 @@ const Register = (props) => {
                     }
 
                     { response && 
-                        <>
-                            <div>
-                                {JSON.stringify(response)}
-                            </div>
-                        </>
+                        <div>
+                            {JSON.stringify(response)}
+                        </div>
                     }
-
             </div>
         </div>
     )

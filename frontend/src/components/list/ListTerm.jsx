@@ -1,8 +1,6 @@
 import React, { memo, useContext, useState, useEffect } from "react";
 import { ListContext } from '../../context/ListContext';
 
-import ListTermDeleteButton from "./ListTermDeleteButton";
-import TermHistory from './TermHistory';
 import TermModal from './TermModal';
 import SaturationIcon from './SaturationIcon';
 
@@ -17,19 +15,14 @@ import './style/ListTerm.scss'
  */
 const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     const [term, setTerm] = useState(() => (termFromProps)),
-        [isEditing, setIsEditing] = useState(false),
         [confirmingDelete, setConfirmingDelete] = useState(false),
-        [isHovering, setIsHovering] = useState(false),
         { listContextValue, setListContextValue } = useContext(ListContext),
-        [showHistory, setShowHistory] = useState(false),
-        { response: putResponse, setRequest: setPutRequest } = useRequest({...handlePutList()}),
+        { setRequest: setPutRequest } = useRequest({...handlePutList()}),
         [open, setOpen] = useState(false);
 
     useEffect(() => { // cleanup
         return () => {
-            setIsEditing(false);
             setConfirmingDelete(false);
-            setIsHovering(false)
         }
     }, [])
 
@@ -86,51 +79,6 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
                 />
             }
         </div>
-    )
-
-    return (
-        <>
-            <li
-                className="List__term"
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-            >
-                <div className="term">
-
-                    {!isEditing && isHovering ?
-                        <>
-                            <ListTermDeleteButton
-                                confirmingDelete={confirmingDelete}
-                                isHovering={isHovering}
-                                setConfirmingDelete={setConfirmingDelete}
-                                handleConfirmClick={handleConfirmClick}
-                            />
-                        </> 
-                        : <div style={{ color: confirmingDelete ? 'orangered' : '' }} className="term--index">{idx + 1}</div>
-                    }
-
-                    <input 
-                        disabled={confirmingDelete}
-                        style={{
-                            backgroundColor: confirmingDelete ? 'orangered' : '',
-                        }}
-                        onBlur={handleTermEdit} className="term--side term--from" side="from" type="text" defaultValue={term.from} />
-                    <input 
-                        disabled={confirmingDelete}
-                        style={{
-                            backgroundColor: confirmingDelete ? 'orangered' : '',
-                        }}
-                        onBlur={handleTermEdit} className="term--side term--to" side="to" type="text" defaultValue={term.to} />
-
-                    { (showHistory || (isHovering && !confirmingDelete)) && 
-                        <button className="List__term--historybutton" onClick={() => setShowHistory(!showHistory)}>hist</button> 
-                    }
-                </div>
-
-            </li>
-
-            <TermHistory visible={showHistory} history={term.history} />
-        </>
     )
 })
 
