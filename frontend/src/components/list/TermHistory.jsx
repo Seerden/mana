@@ -1,10 +1,10 @@
-import React, { useState, useEffect, memo, Fragment } from "react";
+import React, { useState, memo, Fragment } from "react";
 import './style/TermHistory.scss'
 import dayjs from 'dayjs';
 import { timeSince } from '../../helpers/time';
 import { v4 as uuidv4 } from 'uuid';
 
-const TermHistory = memo(({ visible, history }) => {
+const TermHistory = memo(({ history }) => {
     const [expand, setExpand] = useState(false);
 
     const histEl = makeHistoryElement(history);

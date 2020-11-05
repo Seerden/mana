@@ -4,15 +4,15 @@ import TermHistory from './TermHistory';
 import './style/TermModal.scss';
 
 const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmingDelete, setConfirmingDelete }) => {
-    const closeModal = e => {
+    function closeModal(e) {
         if (e.currentTarget === e.target) {
-            setOpen(false)
+            setOpen(false);
         }
     }
 
-    const handleKeydown = (e) => {
+    function handleKeydown(e) {
         if (e.code === "Escape") {
-            setOpen(false)
+            setOpen(false);
         }
     }
 
@@ -86,13 +86,3 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
 }
 
 export default TermModal
-
-/* structure:
-    front (input)
-    back(input)
-
-    history
-    delete button
-
-
-*/
