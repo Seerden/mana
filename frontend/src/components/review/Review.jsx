@@ -7,7 +7,7 @@ import { useRouteProps } from '../../hooks/routerHooks';
 import { makeReviewList } from '../../helpers/reviewHelpers';
 import { ReviewContext } from '../../context/ReviewContext';
 import { useRequest } from '../../hooks/useRequest';
-import { handleGetList, getList, handlePutList, putList } from '../../helpers/apiHandlers';
+import { handleGetList, getList, handlePutList, putList } from '../../helpers/apiHandlers/listHandlers';
 import { saturate } from '../../helpers/srs/saturation';
 
 import ReviewCard from './ReviewCard';

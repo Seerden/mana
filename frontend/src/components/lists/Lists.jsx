@@ -2,11 +2,11 @@ import React, { memo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
 import { useRequest } from '../../hooks/useRequest';
-import { handleError, handleResponse } from '../../helpers/apiHandlers';
+import { handleError, handleResponse } from '../../helpers/apiHandlers/apiHandlers';
 import ListsItem from './ListsItem';
 import './style/Lists.scss'
 
-import { getLists } from '../../helpers/apiHandlers'
+import { getLists } from '../../helpers/apiHandlers/listHandlers'
 
 
 const Lists = memo((props) => {

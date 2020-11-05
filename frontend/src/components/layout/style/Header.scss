@@ -16,7 +16,6 @@ $maincolor: deepskyblue;
 
     nav {
         width: 100%;
-        // display: flex;
     }
 
     #Logo {
@@ -24,6 +23,7 @@ $maincolor: deepskyblue;
     }
 
     &__logout {
+        float: right;
         margin-left: 1rem;
         background-color: #111;
         border: none;

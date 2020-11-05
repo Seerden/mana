@@ -24,6 +24,7 @@ const HeaderLoggedIn = () => {
             <NavLink className="NavLink" to="/">Home</NavLink>
             <NavLink className="NavLink" to={`/u/${currentUser}`}>My Profile</NavLink>
             <NavLink className="NavLink" to={`/u/${currentUser}/lists`}>My Lists</NavLink>
+            <NavLink className="NavLink" to={`/u/${currentUser}/sets`}>My Sets</NavLink>
             
             <button 
                 className="Header__logout"

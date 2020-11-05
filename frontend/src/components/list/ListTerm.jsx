@@ -5,7 +5,7 @@ import TermModal from './TermModal';
 import SaturationIcon from './SaturationIcon';
 
 import { useRequest } from '../../hooks/useRequest';
-import { putList, handlePutList } from '../../helpers/apiHandlers'
+import { putList, handlePutList } from '../../helpers/apiHandlers/listHandlers'
 
 import './style/ListTerm.scss'
 

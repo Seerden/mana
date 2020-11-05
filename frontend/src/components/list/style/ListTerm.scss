@@ -8,17 +8,21 @@ $shadow: 5px 5px 0 -2px #222, -5px -5px 0 -3px #333, 0 0 1rem black;
     box-shadow: $shadow;
     border-radius: 2px;
     border: 2px solid transparent;
-    margin-bottom: 1rem;
+    margin-top: 1rem;
     user-select: none;
 
     display: grid;
     grid-template-columns: 30px repeat(2, 40%) repeat(2,30px);
     align-items: center;
     
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 768px), screen and (max-height: 700px) {
         grid-template-columns: 1fr;
         width: 100%;
         display: grid;
+        margin-top: 0.5rem;
+        
+        padding: 0.3rem;
+        padding-left: 1rem;
 
         .Term__index, .Term__saturation { // going &__index doesn't work, specificity becomes 0,0,0 for some reason
             display: none;
@@ -46,11 +50,11 @@ $shadow: 5px 5px 0 -2px #222, -5px -5px 0 -3px #333, 0 0 1rem black;
         color: #777;
     }
 
-    transition: all 100ms ease-in;
+    transition: all 50ms ease-out;
 
     &:hover {
         background-color: #111;
         color: azure;
-        box-shadow: $shadow, 10px 10px 0 -3px #ccc;  // @todo: refactor following https://tobiasahlin.com/blog/how-to-animate-box-shadow/
+        box-shadow: $shadow, 7px 7px 0 -1px #777;  // @todo: refactor following https://tobiasahlin.com/blog/how-to-animate-box-shadow/
     }
 }

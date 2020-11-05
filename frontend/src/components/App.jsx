@@ -12,6 +12,7 @@ import List from './list/List';
 import User from './user/User';
 import Lists from './lists/Lists';
 import NewList from './newlist/NewList';
+import Sets from './sets/Sets';
 import Test from './Test';
 import Home from './Home';
 import Register from './register/Register';
@@ -43,25 +44,33 @@ const App = memo(() => {
 
                                     {/* user routes */}
                                     <Route path="/u/:username">
-                                        <PrivateRoute path="/" component={User}/>
+                                        <PrivateRoute path="/" component={User} />
+
+                                        {/* Routes related to multiple lists */}
                                         <Route path="/lists">
                                             <PrivateRoute path="/" component={Lists} />
                                             <PrivateRoute path="/new" component={NewList} />
                                         </Route>
 
+                                        {/* Routes related to individual list */}
                                         <Route path="/list">
-
                                             <Route path="/:id">
-
                                                 <Route path="/review" element={
                                                     <ReviewProvider>
-                                                        <Private component={Review}/>
+                                                        <Private component={Review} />
                                                     </ReviewProvider>
                                                 }
                                                 />
-                                                <PrivateRoute path="/" component={List} />
 
+                                                <PrivateRoute path="/" component={List} />
                                             </Route>
+
+
+                                        </Route>
+                                        
+                                        {/* Routes related to sets */}
+                                        <Route path="/sets">
+                                            <PrivateRoute path="/" component={Sets} />
                                         </Route>
 
 

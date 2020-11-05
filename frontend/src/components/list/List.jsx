@@ -2,10 +2,11 @@ import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { ListContext } from '../../context/ListContext';
 import { formatDate } from '../../helpers/time';
-import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList } from '../../helpers/apiHandlers';
+import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList } from '../../helpers/apiHandlers/listHandlers';
 import { useRouteProps } from '../../hooks/routerHooks';
 import { useRequest } from '../../hooks/useRequest';
-import ListTerm from './ListTerm'
+import ListTerm from './ListTerm';
+import SetPicker from './SetPicker';
 import './style/List.scss';
 
 const List = memo((props) => {
@@ -71,30 +72,45 @@ const List = memo((props) => {
                             <button className="Button"><Link to={`${location.pathname}/review`}>Review</Link></button>
                             <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
 
-                            <section className="List__info">
-                                <header className="List__section--header">List info</header>
-                                <p className="List__info--item">
-                                    There {list.content.length === 1 ? 'is' : 'are'} <span className="List__info--datum">{list.numTerms}</span> term{list.content.length === 1 ? '' : 's'} in this list.
-                                </p>
-                                {list.lastReviewed
-                                    ?
-                                    <>
-                                        <p className="List__info--item">
-                                            You've reviewed this list <span className="List__info--datum">{list.sessions.length} time{list.sessions.length !== 1 ? 's' : ''}</span>, 
-                                            
-                                        </p>
-                                        <p className="List__info--item">
-                                            Your most recent review was <span className="List__info--datum">{formatDate(list.lastReviewed, 'hh:mma, MMMM Do')}</span>.
-                                        </p>
-                                    </>
-                                    :
-                                    <p className="List__info--item" style={{ width: 'max-content', backgroundColor: 'blueviolet' }}>You haven't reviewed this list yet. Get on it!</p>
-                                }
+                            <section
+                                className="List__header"
+                                style={{
+                                    gridTemplateColumns: list.sets ? '3fr 1fr' : '2fr 1fr'
+                                }}
+                            >
+                                <section className="List__info">
+                                    <header className="List__section--header">List info</header>
+                                    <p className="List__info--item">
+                                        There {list.content.length === 1 ? 'is' : 'are'} <span className="List__info--datum">{list.numTerms}</span> term{list.content.length === 1 ? '' : 's'} in this list.
+                                    </p>
+                                    {list.lastReviewed
+                                        ?
+                                        <>
+                                            <p className="List__info--item">
+                                                You've reviewed this list <span className="List__info--datum">{list.sessions.length} time{list.sessions.length !== 1 ? 's' : ''}</span>,
+
+                                            </p>
+                                            <p className="List__info--item">
+                                                Your most recent review was <span className="List__info--datum">{formatDate(list.lastReviewed, 'hh:mma, MMMM Do')}</span>.
+                                            </p>
+                                        </>
+                                        :
+                                        <p className="List__info--item" style={{ width: 'max-content', backgroundColor: 'blueviolet' }}>You haven't reviewed this list yet. Get on it!</p>
+                                    }
+                                </section>
+                                <section className="List__sets">
+                                    <header className="List__section--header">
+                                        Sets
+                                    </header>
+                                    <SetPicker/>
+                                    {!list.sets && <p>This list is not part of any sets.</p>}
+                                </section>
 
                             </section>
 
+
                             <section className="List__content">
-                                <ul className="terms">
+                                <ul className="List__terms">
                                     <header className="List__section--header">Terms</header>
                                     {terms}
                                 </ul>

@@ -1,20 +1,42 @@
 .List {
-    &__info, &__section {
+    &__header {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+
+        @media screen and (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    &__info, &__section, &__sets, &__terms {
         margin-top: 1rem;
         padding: 1rem;
         border: 2px solid #222;
         border-radius: 4px;
         box-shadow: 0 0 0.5rem #000;
+
+        @media screen and (max-width: 768px), screen and (max-height: 700px) {
+            margin-top: 0.5rem;
+            border-radius: 2px;
+            padding: 0.5rem;
+        }
     }
 
     &__section {
         &--header {
-            font-size: 1.7rem;
+            font-size: 1.5rem;
             font-weight: 600;
             width: max-content;
             margin-bottom: 0.5rem;
             background-color: #333;
             padding: 0 0.5rem;
+
+            @media screen and (max-width: 768px), screen and (max-height: 700px) {
+                font-size: 1.3rem;
+                font-weight: 500;
+                // margin-bottom: 0.3rem;
+            }
         }
     }
 
@@ -37,12 +59,12 @@
         }
     }
 
-    &__terms {
-        list-style: none;
-        padding: 2rem;
+    // &__terms {
+    //     list-style: none;
+    //     padding: 2rem;
      
-        border: 2px solid #222;
-        border-radius: 4px;
-        box-shadow: 0 0 0.5rem #000;
-    }
+    //     border: 2px solid #222;
+    //     border-radius: 4px;
+    //     box-shadow: 0 0 0.5rem #000;
+    // }
 }

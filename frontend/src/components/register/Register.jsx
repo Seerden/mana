@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import './style/Register.scss';
 import { handleFormBlur } from '../../hooks/state';
-import { postUser } from '../../helpers/apiHandlers';
+import { postUser } from '../../helpers/apiHandlers/apiHandlers';
+import './style/Register.scss';
 
 const Register = (props) => {
     const [response, setResponse] = useState(null);

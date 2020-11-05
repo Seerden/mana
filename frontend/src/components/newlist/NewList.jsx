@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useRouteProps } from '../../hooks/routerHooks';
 import { useLogState } from '../../hooks/state'
-import { postList, handlePostList } from '../../helpers/apiHandlers';
+import { postList, handlePostList } from '../../helpers/apiHandlers/listHandlers';
 import { useRequest } from '../../hooks/useRequest';
 import NewListTerm from './NewListTerm';
 import './style/NewList.scss';
