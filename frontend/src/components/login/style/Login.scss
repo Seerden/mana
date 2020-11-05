@@ -63,9 +63,7 @@
 
         width: $showpasswidth;
         transition: all 100ms ease;
-        &:hover {
-            background-color: darkturquoise;
-        }
+
     }
 
     &__button, &__register {
@@ -91,7 +89,8 @@
         }
 
         &:active {
-            background-color: darkturquoise;
+            background-color: #444;
+            color: azure;
         }
     }
 
@@ -148,8 +147,9 @@
         transition: all 80ms linear;
 
         &:hover {
-            background-color: deepskyblue;
-            color: black;
+            background-color: #444;
+            color: white;
+            // color: black;
         }
     }
 }

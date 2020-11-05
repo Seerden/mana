@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { LoginContext } from '../../context/LoginContext';
 import './style/Header.scss';
 
-const Header = memo(() => {
+const Header = () => {
     const { currentUser } = useContext(LoginContext);
 
     return (
@@ -11,7 +11,7 @@ const Header = memo(() => {
             { currentUser ? <HeaderLoggedIn/> : <HeaderLoggedOut/> }
         </div>
     )
-})
+}
 
 export default Header;
 
@@ -25,7 +25,12 @@ const HeaderLoggedIn = () => {
             <NavLink className="NavLink" to={`/u/${currentUser}`}>My Profile</NavLink>
             <NavLink className="NavLink" to={`/u/${currentUser}/lists`}>My Lists</NavLink>
             
-            <button onClick={() => logout()}>Log Out</button>
+            <button 
+                className="Header__logout"
+                onClick={() => logout()}
+            >
+                log out
+            </button>
         </nav>
     )
 }
