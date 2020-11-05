@@ -1,4 +1,3 @@
-
 /**
  * Takes an array and returns dictionary of all unique entries and their occurrence rate
  * @param {Array} array 

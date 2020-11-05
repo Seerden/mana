@@ -1,6 +1,6 @@
 import React, {memo, useState, useEffect, createContext } from 'react';
 import { useLogState } from '../hooks/state';
-import { storeUser } from '../hooks/auth';
+import { storeUser } from '../helpers/localStorageHelpers';
 export const LoginContext = createContext(null);
 
 export const LoginProvider = memo((props) => {

@@ -1,17 +1,10 @@
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime.js';
-import duration from 'dayjs/plugin/duration.js';
 import { countDict } from '../count';
 import { termSessionsByDirection } from '../list.api';
-  
-dayjs.extend(relativeTime);
-dayjs.extend(duration);
-
-/**
- * @module saturation Provides all necessary functionality to extract and set term saturation (i.e. 'how well does a user know this term?')
- * @note thought process for development of this 'algorithm' is described in /src/components/list/.md
- * @todo consider: updating the term itself from here, or just returning the new saturation level and handling database update elsewhere (better)
- */
+import duration from 'dayjs/plugin/duration.js';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime.js';
+  dayjs.extend(relativeTime);
+  dayjs.extend(duration);
 
 let day = 1000*3600*24
 const saturationLevels = [
@@ -48,15 +41,15 @@ const saturationLevels = [
  * @note saturation should be done on a per-term basis, since object structure for review input might not be rigid
  * @param {Object} term List model contains .content, which is an array of terms, of which this ('term') is an entry.
  */
-export const saturate = (term, direction) => {
+export function saturate(term, direction) {
     // filter term's history by direction
     const filteredHistory = termSessionsByDirection(term, direction);
 
-    if (!filteredHistory || filteredHistory.length < 3 ) {
-        return null
+    if (!filteredHistory || filteredHistory.length < 3) {
+        return null;
     }
 
-    if (filteredHistory.length === 3 || !term.saturation?.direction ) {  // if reviewed exactly n times, seeding has just ended, so we can saturate based on seeding round
+    if (filteredHistory.length === 3 || !term.saturation?.direction) { // if reviewed exactly n times, seeding has just ended, so we can saturate based on seeding round
         return saturateUnseededTerm(filteredHistory);
     }
     // if reviewed more than n times, saturate based on a combination of (1) time since last session, (2) current saturation level, (3) performance in the session that was just completed
@@ -67,13 +60,12 @@ export const saturate = (term, direction) => {
  * Set saturation of a term that has finished undergoing seeding
  * @param {Object} term List model contains .content, which is an array of terms, of which this ('term') is an entry.
  */
-export const saturateUnseededTerm = (filteredHistory) => {
+export function saturateUnseededTerm(filteredHistory) {
     /*  @note
            initial seeding does not take into consideration:
             - time between sessions. minimum time between sessions will be enforced elsewhere for UX purposes, though
             - performance of first n-1 seeding rounds  */
-
-    const latestSession = filteredHistory?.reverse()[0]?.content;  // extract last seeding session content
+    const latestSession = filteredHistory?.reverse()[0]?.content; // extract last seeding session content
     const sessionSet = new Set(latestSession);
 
     if (!latestSession || (latestSession && !(latestSession.length > 0))) {
@@ -81,12 +73,11 @@ export const saturateUnseededTerm = (filteredHistory) => {
     }
     // post-seeding saturation is relatively simple: by now, all terms should _definitely_ be in short-term memory, so mistakes are judged harhsly
     // @todo: transform all 'pass' and 'fail' mentions by 1 and 0 respectively
-    
     const passFailCount = countDict(latestSession);
 
-    if (!sessionSet.has('fail')) { return 2 }
-    if (passFailCount.fail > 1) { return 0 }
-    return 1
+    if (!sessionSet.has('fail')) { return 2; }
+    if (passFailCount.fail > 1) { return 0; }
+    return 1;
 }
 
 /**
@@ -94,9 +85,9 @@ export const saturateUnseededTerm = (filteredHistory) => {
  * @todo Implement functionality
  * @param {*} term 
  */
-export const saturateSeededTerm = (term) => {
+export function saturateSeededTerm(term) {
     // extract session
-    const lastTwoSessions = term.history.reverse().slice(0,2);
+    const lastTwoSessions = term.history.reverse().slice(0, 2);
     const currentSaturation = term.saturation;
 
 
@@ -109,29 +100,14 @@ export const saturateSeededTerm = (term) => {
  * @param {Object} secondSession term review session, like {date: ..., content: ...}. Session argument order doesn't matter.
  * @param {Array} saturationLevels Array containing saturation levels and corresponding timescales. Currently hardcoded, could become user-specified settings eventually.
  */
-export const isSessionValuable = (firstSession, secondSession, saturation, saturationLevels) => {
-    /* philosophy: 
+export function isSessionValuable(firstSession, secondSession, saturation, saturationLevels) {
+    /* philosophy:
         if I reviewed a term an hour ago, it doesn't matter that I got it correct this time around,
         if I reviewed it an hour ago, knew it then, but _don't_ know it now, this *does* carry meaning,
         if I'm on long-term sustain for a term, it doesn't really matter if I reviewed it two weeks ago instead of a month ago.
         */
-
     const timeBetween = secondSession.date - firstSession.date;
     const intendedTimescale = saturationLevels.find(d => d.level === saturation)?.timescale;
 
     // if timebetween < intendedtimescale for certain saturation levels
-
-
-
-
-
 }
-
-
-/* General saturation gradient (best to worst):
-    - no mistakes: 
-    - no mistake first time, one mistake thereafter
-    - mistake first time, no mistakes afterwards:
-    - mistake first time, one or more mistakes after (n_correct >= n_mistake)
-    - n_mistake > n_correct
-*/

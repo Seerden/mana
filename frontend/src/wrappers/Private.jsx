@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Login from '../components/login/Login';
 import { LoginContext } from '../context/LoginContext';
 import { useRouteProps } from '../hooks/routerHooks';
@@ -18,7 +18,7 @@ const Private = ({ component: Component, ...rest }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(currentUser ? true : false)
 
     useEffect(() => {
-        setComponent(<Component key={Date.now()} />)
+        setComponent(<Component key={new Date()} />)
     }, [Component, params, location, currentUser])
 
     useEffect(() => {

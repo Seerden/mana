@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 export const storeUser = (username, action) => {
     switch (action) {
         case 'set':
@@ -10,5 +8,7 @@ export const storeUser = (username, action) => {
         case 'remove':
             localStorage.removeItem("username");
             break;
+        default:
+            return;
     }
 }

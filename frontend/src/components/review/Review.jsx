@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 
 import { useRouteProps } from '../../hooks/routerHooks';
-import { makeReviewList } from '../../helpers/review.api';
+import { makeReviewList } from '../../helpers/reviewHelpers';
 import { ReviewContext } from '../../context/ReviewContext';
 import { useRequest } from '../../hooks/useRequest';
 import { handleGetList, getList, handlePutList, putList } from '../../helpers/apiHandlers';

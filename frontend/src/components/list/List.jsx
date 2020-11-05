@@ -1,11 +1,11 @@
 import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import ListTerm from './ListTerm'
 import { ListContext } from '../../context/ListContext';
 import { formatDate } from '../../helpers/time';
 import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList } from '../../helpers/apiHandlers';
 import { useRouteProps } from '../../hooks/routerHooks';
 import { useRequest } from '../../hooks/useRequest';
+import ListTerm from './ListTerm'
 import './style/List.scss';
 
 const List = memo((props) => {
@@ -32,18 +32,18 @@ const List = memo((props) => {
         if (list && list.content) { updateTerms() };      /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list */
     }, [list])
 
-    const updateTerms = () => {
+    function updateTerms() {
         setTerms(list.content.map((term, idx) => {
             let termProps = {
                 handleTermDelete,
                 key: `list-term-${term.to}-${term.from}`,
                 idx: idx,
                 term
-            }
+            };
 
-            return (<ListTerm {...termProps} />)
-        }))
-    };
+            return (<ListTerm {...termProps} />);
+        }));
+    }
 
     function handleTermDelete(idx) {
         const updatedList = { ...list }

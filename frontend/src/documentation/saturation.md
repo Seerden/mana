@@ -1,4 +1,5 @@
-# Term satiation, i.e. 'how well do I know this term?'
+
+# Term saturation, i.e. 'how well do I know this term?'
 
 Factors to consider
 
@@ -34,3 +35,12 @@ We need satiation because list-based studying only works up to a certain point. 
 Seed an entire list at a time - only allow for reviewing subsets and cross-list terms after initial seeding period.
 
 Seeding consists of a few initial review sessions. Say three review sessions initially, where every term should be passed `n` times (`n`=2 for me by default) for session completion. These initial sessions should be spaced at least a day apart to begin with. Could be strict about enforcing spacing here, but is more trouble than it's worth. If there's week between sessions, recollection will be worse and satiation after the initial sessions will reveal this anyway.
+
+## Gradient
+
+General saturation gradient (best to worst):
+- no mistakes: 
+- no mistake first time, one mistake thereafter
+- mistake first time, no mistakes afterwards:
+- mistake first time, one or more mistakes after (n_correct >= n_mistake)
+- n_mistake > n_correct
