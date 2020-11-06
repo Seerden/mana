@@ -50,7 +50,6 @@ $maincolor: deepskyblue;
     font-size: 1.1rem;
     color: azure;
     text-decoration: none;
-    // border-radius: 2px;
     width: max-content;
     align-self: center;
     padding: 0.2rem 0.5rem;
@@ -66,27 +65,28 @@ $maincolor: deepskyblue;
     z-index: 3;
 
     &:hover {
-        // transform: translateY(2px);
         color: white;
         background-size: 100% 20%;
-
-        
         transition: all 100ms ease-out;
+    }
 
-        // &::after {
-        //     content: "";
-        //     position: absolute;
-        //     z-index: -1;
-        //     bottom: 0%;
-        //     left: 0%;
-        //     width: 0%;
-        //     height: 0;
-        //     background-color: rgba(0, 191, 255, 0.76);
-    
+    &__active {  // double selector for specificity
+        $highlight-color: deepskyblue;
+        $hover-color: white;
 
-        //     // animation: 150ms linear fill;
-        //     // animation-fill-mode: forwards;
-        // }
+        background-color: $highlight-color;
+        color: black;
+        border-bottom: 2px solid $highlight-color;
+        box-shadow: 0 0.7rem 0 0 $highlight-color;
+
+        &:hover {
+            background-size: 0 0;
+            color: black;
+            background-color: $hover-color;
+            border-color: $hover-color;
+            box-shadow: 0 0.7rem 0 0 $hover-color;
+
+        }
     }
 }
 

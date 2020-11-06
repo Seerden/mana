@@ -59,14 +59,15 @@ body {
     border-bottom: 1px solid transparent;
 
     transition: all ease 100ms;
-}
-.Link:hover {
+
+    &:hover {
         transform: translateY(-2px);
         color: slateblue;
-}
+    }
 
-.Link:active {
+    &:active {
         border-bottom: 1px solid slateblue;
+    }
 }
 
 .PageWrapper {

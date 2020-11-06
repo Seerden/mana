@@ -1,6 +1,7 @@
 import React, { useContext, memo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LoginContext } from '../../context/LoginContext';
+import { useRouteProps } from '../../hooks/routerHooks';
 import './style/Header.scss';
 
 const Header = () => {
@@ -8,41 +9,95 @@ const Header = () => {
 
     return (
         <div className="Header">
-            { currentUser ? <HeaderLoggedIn/> : <HeaderLoggedOut/> }
+            { currentUser ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
         </div>
     )
 }
 
 export default Header;
 
+function isActive(to, location) {
+    if (to === location.pathname) {
+        return true;
+    }
+    return false;
+}
+
 const HeaderLoggedIn = () => {
     const { currentUser, logout } = useContext(LoginContext);
+    const { location } = useRouteProps();
 
     return (
         <nav>
             <span id="Logo">Mana</span>
-            <NavLink className="NavLink" to="/">Home</NavLink>
-            <NavLink className="NavLink" to={`/u/${currentUser}`}>My Profile</NavLink>
-            <NavLink className="NavLink" to={`/u/${currentUser}/lists`}>My Lists</NavLink>
-            <NavLink className="NavLink" to={`/u/${currentUser}/sets`}>My Sets</NavLink>
-            
-            <button 
+
+            <NavLink
+                className={`NavLink ${isActive(`/`, location) ? 'NavLink__active' : ''}`}
+                to="/"
+            >
+                Home
+            </NavLink>
+
+            <NavLink
+                className={`NavLink ${isActive(`/u/${currentUser}`, location) ? 'NavLink__active' : ''}`}
+                to={`/u/${currentUser}`}
+            >
+                My Profile
+            </NavLink>
+
+            <NavLink
+                className={`NavLink ${isActive(`/u/${currentUser}/lists`, location) ? 'NavLink__active' : ''}`}
+                to={`/u/${currentUser}/lists`}
+            >
+                My Lists
+            </NavLink>
+
+            <NavLink
+                className={`NavLink ${isActive(`/u/${currentUser}/sets`, location) ? 'NavLink__active' : ''}`}
+                to={`/u/${currentUser}/sets`}
+            >
+                My Sets
+            </NavLink>
+
+            <button
                 className="Header__logout"
                 onClick={() => logout()}
             >
                 log out
             </button>
+
         </nav>
     )
 }
 
-const HeaderLoggedOut = () =>
-    <nav>
-        <span id="Logo">Mana</span>
-        <NavLink className="NavLink" to="/">Home</NavLink>
-        <NavLink className="NavLink" to={`/login`}>Log in</NavLink>
-        <NavLink className="NavLink" to={`/register`}>Register</NavLink>
-    </nav>
+const HeaderLoggedOut = () => {
+    const { location } = useRouteProps();
+
+    return (
+        <nav>
+            <span id="Logo">Mana</span>
+            <NavLink
+                className={`NavLink ${isActive(`/`, location) ? 'NavLink__active' : ''}`}
+                to="/"
+            >
+                Home
+        </NavLink>
+            <NavLink
+                className={`NavLink ${isActive(`/login`, location) ? 'NavLink__active' : ''}`}
+                to={`/login`}
+            >
+                Log in
+        </NavLink>
+            <NavLink
+                className={`NavLink ${isActive(`/register`, location) ? 'NavLink__active' : ''}`}
+                to={`/register`}
+            >
+                Register
+        </NavLink>
+        </nav>
+
+    )
+}
 
 
 /*
