@@ -1,0 +1,65 @@
+.SaturationFilter {
+    width: max-content;
+    box-shadow: 0 0 2rem black;
+    
+    &__icons, &__label {
+        height: 3rem;
+        align-items: center;
+    }
+
+    &__icons {
+        width: 15rem;
+        padding: 0.2rem 0.6rem;
+        display: flex;
+        justify-content: center;
+    }
+    
+    &__icon {
+        &--wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: center;
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+
+            transition: all 70ms ease;
+
+            &:hover {
+                background-color: #333;
+            }
+        }
+        
+        display: flex;
+        transition: all 50ms ease-in;
+
+        box-shadow: 0 0 4px black !important;
+        
+        &:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 0.2rem black !important;
+        }
+    }
+
+    &__label {
+        background-color: inherit;
+        display: flex;
+        align-items: center;
+        justify-self: center;
+        justify-content: center;
+        width: 15rem;
+        padding: 0.2rem 1rem;
+        padding: 0.5rem 0.9rem;
+        border-radius: 3px;
+
+        border: none;
+        outline: none;
+        color: white;
+        transition: all 100ms ease;
+
+        &:hover {
+            background-color: #333 !important;
+        }
+    }
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import { colorBySaturation } from '../../helpers/list.api';
 
-const SaturationIcon = ({direction, classes, saturation}) => {
+const SaturationIcon = ({ direction, classes, saturation }) => {
     const saturationIconStyle = {
         width: '20px',
         height: '20px',
@@ -25,7 +25,11 @@ const SaturationIcon = ({direction, classes, saturation}) => {
     }
 
     return (
-        <span title={makeTooltip(direction, saturation)} className={classes} style={saturationIconStyle} />
+        <span 
+            title={direction ? makeTooltip(direction, saturation) : ''} 
+            style={saturationIconStyle} 
+            className={classes} 
+        />
     )
 }
 

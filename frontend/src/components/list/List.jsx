@@ -7,6 +7,7 @@ import { useRouteProps } from '../../hooks/routerHooks';
 import { useRequest } from '../../hooks/useRequest';
 import ListTerm from './ListTerm';
 import SetPicker from './SetPicker';
+import SaturationFilter from './SaturationFilter';
 import './style/List.scss';
 
 const List = memo((props) => {
@@ -111,7 +112,12 @@ const List = memo((props) => {
 
                             <section className="List__content">
                                 <ul className="List__terms">
-                                    <header className="List__section--header">Terms</header>
+                                    <div>
+                                        <div className="List__terms--header">
+                                            <span className="List__section--header">Terms</span>
+                                            <SaturationFilter />
+                                        </div>
+                                    </div>
                                     {terms}
                                 </ul>
                             </section>
