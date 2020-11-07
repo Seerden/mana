@@ -1,0 +1,98 @@
+$input-width: 15rem;
+
+%set-input {
+    font-size: 1rem;
+    position: relative;
+    z-index: 10;
+    width: $input-width;
+    font-family: inherit;
+    background-color: #252525;
+    color: white;
+    border: none;
+    outline: none;
+    padding: 0.4rem 1rem;
+    box-shadow: 0 0.2rem 0rem 0 deepskyblue, 0.1rem 0.2rem 0rem 2px #222, 1rem 1.3rem 0 -0.4rem #333;
+    transition: all 100ms linear;
+
+    &:focus {
+        background-color: #333;
+        box-shadow: none;
+    }
+}
+
+.NewSet {
+    width: max-content;
+    padding: 2rem;
+    border: 2px solid #333;
+    margin: 0 auto;
+
+    &__form--fields {
+        display: grid;
+        grid-template-columns: max-content max-content;
+        grid-template-areas: 
+            'setname lists'
+            'description lists'
+            'submit submit';
+
+        @media screen and (max-width: 768px) {
+            grid-template-areas: 
+            'setname'
+            'description'
+            'lists'
+            'submit';
+        } 
+    }
+
+    &__field {
+        &--name, &--desc, &--lists {
+            padding: 0 1rem;
+        }
+        &--name {
+            grid-area: setname;
+        }
+
+        &--desc {
+            grid-area: description;
+
+        }
+
+        &--lists {
+            grid-area: lists;
+        }
+    }
+
+    &__header {
+        width: max-content;
+        background-color: #333;
+        padding: 0.5rem 1rem;
+        font-size: 1.5rem;
+    }
+
+    &__label {
+        margin-top: 2rem;
+        background-color: #ccc;
+        color: #222;
+        width: max-content;
+        padding: 0.2rem 0.7rem;
+    }
+
+    &__description, &__name, &__lists--input {
+        @extend %set-input;
+    }
+
+    &__submit {
+        grid-area: submit;
+
+        border: none;
+        outline: none;
+        padding: 0.3rem 1rem;
+        margin-top: 2rem;
+        background-color: #333;
+        color: azure;
+
+        &:hover {
+            background-color: deepskyblue;
+            color: black;
+        }
+    }
+}

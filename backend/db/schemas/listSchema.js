@@ -35,4 +35,5 @@ export const listSchema = new mongoose.Schema({
     numTerms: { type: Number, default: function () { return this.content.length } },
     created: Date,
     lastReviewed: Date,
+    setMembership: [{type: mongoose.Schema.Types.ObjectId, ref: 'Set'}]
 }, { collation: { locale: 'en', strength: 2 } }) 
