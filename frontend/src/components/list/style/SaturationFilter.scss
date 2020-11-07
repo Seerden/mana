@@ -1,14 +1,55 @@
 .SaturationFilter {
+    $picker-width: 15rem;
     width: max-content;
     box-shadow: 0 0 2rem black;
     
+    &__filter {
+        position: relative;
+    }
+
+    &__options {
+        background-color: #222;
+        width: 100%;
+        position: absolute;
+
+        &--label {
+            padding-left: 0.5rem;
+        }
+        &--block {
+            display: flex;
+            justify-content: space-between;
+            height: max-content;
+            align-items: center;
+            height: 5rem;
+            padding-bottom: 2rem;
+        }
+
+        &--select {
+            display: inline-flex;
+            background-color: #333;
+            border: none;
+            outline: none;
+            padding: 0.5rem;
+            color: white;
+        }
+
+        &--option {
+            padding: 1rem;
+            color: white;
+            background-color: #333;
+                &:hover, &:focus {
+                background-color: #fff;
+            }
+        }
+    }
+
     &__icons, &__label {
         height: 3rem;
         align-items: center;
     }
 
     &__icons {
-        width: 15rem;
+        width: $picker-width;
         padding: 0.2rem 0.6rem;
         display: flex;
         justify-content: center;
@@ -20,9 +61,9 @@
             align-items: center;
             justify-content: center;
             justify-self: center;
-            height: 40px;
+            height: 100%;
             width: 40px;
-            border-radius: 50%;
+            border-radius: 10px;
 
             transition: all 70ms ease;
 
@@ -48,7 +89,7 @@
         align-items: center;
         justify-self: center;
         justify-content: center;
-        width: 15rem;
+        width: $picker-width;
         padding: 0.2rem 1rem;
         padding: 0.5rem 0.9rem;
         border-radius: 3px;
@@ -59,7 +100,7 @@
         transition: all 100ms ease;
 
         &:hover {
-            background-color: #333 !important;
+            background-color: #222;
         }
     }
 }

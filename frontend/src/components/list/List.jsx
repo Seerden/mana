@@ -12,6 +12,7 @@ import './style/List.scss';
 
 const List = memo((props) => {
     const [list, setList] = useState(null),
+        [filter, setFilter] = useState({}),
         [terms, setTerms] = useState(null),
         { params, location } = useRouteProps(),
         { setListContextValue } = useContext(ListContext),
@@ -19,11 +20,11 @@ const List = memo((props) => {
         { setRequest: setPutRequest } = useRequest({ ...handlePutList() }),
         { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() });
 
-    useEffect(() => {
+    useEffect(() => {  // retrieve list on component load
         setGetRequest(() => getList(params.username, { _id: params.id }))
     }, [])
 
-    useEffect(() => {
+    useEffect(() => {  // set list and list context when list is returned from API
         if (getResponse) {
             setList(getResponse);
             setListContextValue(getResponse);
@@ -43,7 +44,13 @@ const List = memo((props) => {
                 term
             };
 
-            return (<ListTerm {...termProps} />);
+            return (
+                {
+                    saturation: term.saturation,
+                    element: <ListTerm {...termProps} />,
+                }
+            )
+            
         }));
     }
 
@@ -115,10 +122,24 @@ const List = memo((props) => {
                                     <div>
                                         <div className="List__terms--header">
                                             <span className="List__section--header">Terms</span>
-                                            <SaturationFilter />
+                                            <div className="List__terms--saturationfilter">
+                                                <SaturationFilter
+                                                    filter={filter}
+                                                    setFilter={setFilter}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                    {terms}
+                                    { terms
+                                        ?.filter(term => {
+                                            if (filter) {
+                                                return term.saturation?.forwards == filter?.saturation || term.saturation?.backwards == filter?.saturation   
+                                            } else {
+                                                return true
+                                            }
+                                        })
+                                        ?.map(term => term?.element) 
+                                    }
                                 </ul>
                             </section>
 
