@@ -9,7 +9,7 @@ const SaturationFilter = ({filter, setFilter}) => {
 
     useEffect(() => {
         if (saturationFilter) {
-            setFilter(filter => ({...filter, saturation: saturationFilter}))
+            setFilter(({...filter, saturation: saturationFilter}))
         }
     }, [saturationFilter, setFilter])
 
@@ -18,7 +18,7 @@ const SaturationFilter = ({filter, setFilter}) => {
             return (
                 <div
                     onClick={() => {
-                        setSaturationFilter(Number(level));
+                        setSaturationFilter(level);
                         setTimeout(() => { setFocus(false) }, 0);
                     }}
                     className="SaturationFilter__icon--wrapper"

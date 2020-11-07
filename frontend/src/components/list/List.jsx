@@ -132,7 +132,7 @@ const List = memo((props) => {
                                     </div>
                                     { terms
                                         ?.filter(term => {
-                                            if (filter) {
+                                            if (Object.keys(filter).length > 0) {
                                                 return term.saturation?.forwards == filter?.saturation || term.saturation?.backwards == filter?.saturation   
                                             } else {
                                                 return true
