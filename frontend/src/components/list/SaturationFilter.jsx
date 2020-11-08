@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { colorMap, colorBySaturation } from "../../helpers/list.api";
 import SaturationIcon from './SaturationIcon';
 import './style/SaturationFilter.scss';
 
-const SaturationFilter = ({filter, setFilter}) => {
+const SaturationFilter = memo(({filter, setFilter}) => {
     const [saturationFilter, setSaturationFilter] = useState(null);
     const [focus, setFocus] = useState(false);
 
@@ -16,19 +16,21 @@ const SaturationFilter = ({filter, setFilter}) => {
     let icons = Object.keys(colorMap)
         .map(level => {
             return (
-                <div
-                    onClick={() => {
-                        setSaturationFilter(level);
-                        setTimeout(() => { setFocus(false) }, 0);
-                    }}
-                    className="SaturationFilter__icon--wrapper"
-                >
-                    <SaturationIcon
-                        classes="SaturationFilter__icon"
-                        key={`saturation-filter-level-${level}`}
-                        saturation={level}
-                    />
-                </div>
+                <React.Fragment key={`saturation-wrapper-${level}`}>
+                    <div
+                        onClick={() => {
+                            setSaturationFilter(level);
+                            setTimeout(() => { setFocus(false) }, 0);
+                        }}
+                        className="SaturationFilter__icon--wrapper"
+                    >
+                        <SaturationIcon
+                            classes="SaturationFilter__icon"
+                            key={`saturation-filter-level-${level}`}
+                            saturation={level}
+                        />
+                    </div>
+                </React.Fragment>
             )
         }
         )
@@ -92,6 +94,6 @@ const SaturationFilter = ({filter, setFilter}) => {
             </div>
         </>
     )
-}
+})
 
 export default SaturationFilter

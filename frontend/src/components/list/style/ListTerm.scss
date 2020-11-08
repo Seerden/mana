@@ -1,14 +1,15 @@
-$shadow: 5px 5px 0 -2px #222, -5px -5px 0 -3px #333, 0 0 1rem black;
+$shadow-color: #333;
+$shadow: -10px -10px 0 -7px $shadow-color, 10px 10px 0 -7px $shadow-color, 0 0 0.5rem black;
 
 .Term {
     width: 100%;
     max-width: 800px;
     padding: 0.5rem;
+    margin-top: 1.2rem;
 
     box-shadow: $shadow;
-    border-radius: 2px;
-    border: 2px solid transparent;
-    margin-top: 1rem;
+    border-radius: 10px;
+    border: 2px solid $shadow-color;
     user-select: none;
 
     display: grid;
@@ -53,8 +54,11 @@ $shadow: 5px 5px 0 -2px #222, -5px -5px 0 -3px #333, 0 0 1rem black;
     transition: all 50ms ease-out;
 
     &:hover {
-        background-color: #111;
+        $hover-color: $shadow-color;        
+        background-color: #151515;
         color: azure;
-        box-shadow: $shadow, 7px 7px 0 -1px #777;  // @todo: refactor following https://tobiasahlin.com/blog/how-to-animate-box-shadow/
+        border-color: $hover-color;
+        // box-shadow: $shadow, 7px 7px 0 -1px #777;  // @todo: refactor following https://tobiasahlin.com/blog/how-to-animate-box-shadow/
+        box-shadow: -6px -6px 0 -3px $shadow-color, 6px 6px 0 -3px $shadow-color, 0 0 0.5rem black;
     }
 }

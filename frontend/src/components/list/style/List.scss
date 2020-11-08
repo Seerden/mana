@@ -61,16 +61,11 @@
 
     &__terms {
         &--header {
+            max-width: 800px;
             display: flex;
             justify-content: space-between;
             height: 4rem;
             align-items: center;
-        }
-
-        &--saturationfilter {
-            // position: fixed;
-            // outline: 2px solid red;
-            // height: 3rem;
         }
     }
 }

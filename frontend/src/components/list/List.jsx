@@ -50,7 +50,7 @@ const List = memo((props) => {
                     element: <ListTerm {...termProps} />,
                 }
             )
-            
+
         }));
     }
 
@@ -110,7 +110,7 @@ const List = memo((props) => {
                                     <header className="List__section--header">
                                         Sets
                                     </header>
-                                    <SetPicker/>
+                                    <SetPicker />
                                     {!list.sets && <p>This list is not part of any sets.</p>}
                                 </section>
 
@@ -123,22 +123,25 @@ const List = memo((props) => {
                                         <div className="List__terms--header">
                                             <span className="List__section--header">Terms</span>
                                             <div className="List__terms--saturationfilter">
-                                                <SaturationFilter
+                                                {list.sessions?.length > 0 &&
+                                                    < SaturationFilter
                                                     filter={filter}
                                                     setFilter={setFilter}
                                                 />
+                                                }
                                             </div>
                                         </div>
                                     </div>
-                                    { terms
+                                    {terms
                                         ?.filter(term => {
                                             if (Object.keys(filter).length > 0) {
-                                                return term.saturation?.forwards == filter?.saturation || term.saturation?.backwards == filter?.saturation   
+                                                if (!term.saturation) { return true }
+                                                return term.saturation?.forwards == filter?.saturation || term.saturation?.backwards == filter?.saturation
                                             } else {
                                                 return true
                                             }
                                         })
-                                        ?.map(term => term?.element) 
+                                        ?.map(term => term?.element)
                                     }
                                 </ul>
                             </section>

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { memo } from "react";
 import { colorBySaturation } from '../../helpers/list.api';
 
-const SaturationIcon = ({ direction, classes, saturation }) => {
+const SaturationIcon = memo(({ direction, classes, saturation }) => {
     const saturationIconStyle = {
         width: '20px',
         height: '20px',
@@ -31,6 +31,6 @@ const SaturationIcon = ({ direction, classes, saturation }) => {
             className={classes} 
         />
     )
-}
+})
 
 export default SaturationIcon
