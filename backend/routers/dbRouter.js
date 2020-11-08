@@ -14,6 +14,7 @@ const { hash } = bcrypt;
 
 const User = dbConn.model('User');
 const List = dbConn.model('List');
+const Set = dbConn.model('Set');
 
 /**
  * Express router for /db routes, used as API endpoints for frontend interaction with the database.
@@ -221,17 +222,40 @@ userRouter.get('/lists', (req, res) => {
 })
 
 userRouter.get('/set', (req, res) => {
-
+    Set.findOne({
+        owner: req.params.username,
+        ...req.query
+    }, (err, doc) => {
+        if (doc) res.send(doc)
+    })
 });
 
 userRouter.post('/set', (req, res) => {
-    
+    const {owner, name} = req.body.newSet;
+    Set.findOne({owner, name}, (err, doc) => {
+        if (!err && !doc) {
+            let newSet = new Set({...req.body.newSet});
+            newSet.save((err, doc) => {
+                if (!err && doc) res.send(doc)
+            })
+        } else {
+            res.status(409).send('You already own a list with that name.')
+        }
+    })
 });
 
 userRouter.put('/set', (req, res) => {
-    
+    const { query, body } = req.body.data;
+
+    Set.findOneAndUpdate({ ...query }, { $set: body }, { new: true }, (err, doc) => {
+        if (doc) res.status(204).send('Set updated successfully.');
+        if (err) res.status(400).send('Error updating list.')
+    })
 });
 
 userRouter.delete('/set', (req, res) => {
-    
+    Set.findOneAndDelete({ ...req.query }, (err, doc) => {
+        if (err) res.status(400).send('Error deleting set.')
+        if (doc) res.status(200).send('Set deleted successfully.')
+    })   
 });
