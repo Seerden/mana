@@ -7,9 +7,7 @@ import axios from 'axios';
  * @param {Object} query mongoose query object
  */
 export const getSet = (username, query) => {
-    return () => {
-        axios.get(`/db/u/${username}/set`, { params: query })
-    }
+    return () => axios.get(`/db/u/${username}/set`, { params: query })
 }
 
 /**
@@ -18,9 +16,8 @@ export const getSet = (username, query) => {
  * @param {Object} body new Set object
  */
 export const postSet = (username, body) => {
-    return () => {
-        axios.post(`/db/u/${username}/set`, { newSet: body })
-    }
+    return () => axios.post(`/db/u/${username}/set`, { newSet: body })
+    
 }
 
 /**
@@ -30,9 +27,7 @@ export const postSet = (username, body) => {
  * @param {Object} body fields (with their corresponding new values) to be updated
  */
 export const putSet = (username, query, body) => {
-    return () => {
-        axios.put(`/db/u/${username}/set`, { data: { query, body } })
-    }
+    return () => axios.put(`/db/u/${username}/set`, { data: { query, body } })
 }
 
 /**
@@ -41,7 +36,9 @@ export const putSet = (username, query, body) => {
  * @param {Object} query mongoose query object
  */
 export const deleteSet = (username, query) => {
-    return () => {
-        axios.delete(`/db/u/${username}/set`, { params: query })
-    }
+    return () => axios.delete(`/db/u/${username}/set`, { params: query })
+}
+
+export const getSets = (username, query) => {
+    return () => axios.get(`db/u/${username}/sets`, { params: query})
 }

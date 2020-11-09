@@ -13,6 +13,7 @@ import User from './user/User';
 import Lists from './lists/Lists';
 import NewList from './newlist/NewList';
 import Sets from './sets/Sets';
+import NewSet from './sets/NewSet';
 import Test from './Test';
 import Home from './Home';
 import Register from './register/Register';
@@ -71,6 +72,7 @@ const App = memo(() => {
                                         {/* Routes related to sets */}
                                         <Route path="/sets">
                                             <PrivateRoute path="/" component={Sets} />
+                                            <PrivateRoute path="/new" component={NewSet} />
                                         </Route>
 
 

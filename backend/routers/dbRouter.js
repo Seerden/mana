@@ -155,6 +155,7 @@ userRouter.get('/user', (req, res) => {
     }
 })
 
+// ----- routes related to a single list -----
 userRouter.get('/list', (req, res) => {
     const { filter, ...query } = req.query;  // expect query like '?filter=-content&username=foo'
     List.findOne({ ...query }, filter, (err, found) => { res.json(found) })
@@ -215,12 +216,14 @@ userRouter.delete('/list', (req, res) => {
     })
 })
 
+// ----- routes related to multiple lists -----
 userRouter.get('/lists', (req, res) => {
     List.find({ owner: req.params.username }, '-content', (err, found) => {
         res.json(found);
     })
 })
 
+// ----- routes related to sets -----
 userRouter.get('/set', (req, res) => {
     Set.findOne({
         owner: req.params.username,
@@ -238,8 +241,10 @@ userRouter.post('/set', (req, res) => {
             newSet.save((err, doc) => {
                 if (!err && doc) res.send(doc)
             })
-        } else {
-            res.status(409).send('You already own a list with that name.')
+        } if (doc) {
+            res.status(409).send('You already own a set with that name.')
+        } if (err) {
+            res.status(400).send('Error creating set.')
         }
     })
 });

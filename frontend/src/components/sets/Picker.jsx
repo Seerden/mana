@@ -4,22 +4,20 @@ import { getLists } from "../../helpers/apiHandlers/listHandlers";
 import { useRequest } from "../../hooks/useRequest";
 import { useRouteProps } from '../../hooks/routerHooks';
 import './style/Picker.scss';
-import { useLogState } from "../../hooks/state";
+// import { useLogState } from "../../hooks/state";
 
-const Picker = memo((props) => {
-    const { params } = useRouteProps();
+const Picker = memo(({ chosen }) => {
+    const { params } = useRouteProps(),
 
+        // @note: currently I've hardcoded lists, since I'm initially trying to implement this in Sets, where we need to pick lists
+        // eventually, 'lists' will become an prop (e.g. 'inputArray')
+            { response: getListsResponse, setRequest: setGetListsRequest } = useRequest({ handleError, handleResponse }),
+            lists = useMemo(() => getListsResponse, [getListsResponse]),
+            options = useMemo(() => lists && makeItems(lists), [lists]),
 
-    // @note: currently I've hardcoded lists, since I'm initially trying to implement this in Sets, where we need to pick lists
-    // eventually, 'lists' will become an prop (e.g. 'inputArray')
-    const { response, setRequest } = useRequest({ handleError, handleResponse });
-    const lists = useMemo(() => response, [response]);
-    const options = useMemo(() => lists && makeItems(lists), [lists]);
-    const [filter, setFilter] = useState('');
-    const [isFocused, setIsFocused] = useState(false);
-    const [picked, setPicked] = useState([]);
-
-    useLogState('picked', picked)
+        [filter, setFilter] = useState(''),
+        [isFocused, setIsFocused] = useState(false),
+        [picked, setPicked] = chosen;
 
     function handleClick(e) {
         e.persist();
@@ -37,7 +35,7 @@ const Picker = memo((props) => {
     }
 
     useEffect(() => {
-        setRequest(() => getLists(params.username))
+        setGetListsRequest(() => getLists(params.username))
     }, [])
 
     return (
@@ -89,5 +87,4 @@ const PickerElement = memo(({ name, id, handleClick}) => {
             {name}
         </div>
     )
-
 })

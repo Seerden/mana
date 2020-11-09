@@ -1,0 +1,9 @@
+@use '../../style/shared' as s;
+
+.Sets__link {
+    @extend %shared-button;
+    width: max-content;
+    color: black;
+    text-decoration: none;
+}
+
