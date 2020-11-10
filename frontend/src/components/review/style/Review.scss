@@ -12,113 +12,79 @@
         align-items: center;
         color: #555;
     }
-}
 
-.Review__title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    &__title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-.Review__post {
-    border-left: 2px solid greenyellow;
-    padding-left: 1em;
-}
+        &--owner, &--name {
+            color: deepskyblue;
+            margin: 0 0.3em;
+        }
+    }
 
-.Review__title--owner, .Review__title--name {
-    color: deepskyblue;
-    margin: 0 0.3em;
-}
+    &__post {
+        border-left: 2px solid greenyellow;
+        padding-left: 1em;
+    }
 
-.ReviewCard {
-    display: flex;
-    justify-content: center;
-    padding: 3rem;
-    font-size: 1.6rem;    
-    line-height: 1.6rem;
-    font-weight: 200;
-    border: 2px solid transparent;
-    border-radius: 5px;
-    background: linear-gradient(-30deg, #eee, #ddd);
-    color: darkslategrey;
-    box-shadow: 0 0 1em black;
-    user-select: none;
-    perspective: 700px;
-}
+    &__buttons {
+        display: flex;
+        justify-content: space-around;
+    }
 
-.fadein {
-    animation: var(--duration) ease 1 fadein;
-    animation-fill-mode: forwards;
-}
+    &__button {
+        outline: none;
+        margin: none;
+        border: none;
+        color: azure;
+        box-shadow: 0 0 0.5em black;
+        margin-top: 1rem;
+        background-color: #333;
 
-.flip { 
-    transform: perspective(500px);
-    transform-style: preserve-3d;
-    transform-origin: 50% 50%; 
-    animation: 250ms linear flip;
-    animation-fill-mode: forwards;
-}
+        width: 120px;
+        height: 30px;
+        font-family: 'Roboto';
 
-@keyframes fadein {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
+        transition: all 80ms ease-in;
 
-@keyframes flip {
-    0% { opacity: 1 }
-    50% { transform: rotateX(90deg); }
-    100% { transform: rotateX(0deg); }
-}
+        &:hover {
+            padding: 0;   /* padding is non-zero by default which causes 'shifting' effect of text */
+            transform: translateY(-1px) scale(1.03);
+            transform-style: preserve-3d;
+            transform: center;
+            box-shadow: 0 5px 1em -6px #333;
+        }
 
-.Review__buttons {
-    display: flex;
-    justify-content: space-around;
-}
+        &--fail {
+            &:hover, &:focus {
+                background-color: orangered;
+            }
+        }
 
-.Review__button {
-    outline: none;
-    margin: none;
-    border: none;
-    color: azure;
-    box-shadow: 0 0 0.5em black;
-    margin-top: 1rem;
-    background-color: #333;
+        &--pass {
+            &:hover, &:focus {
+                background-color: seagreen;
+            }
+        }
+    }
 
-    width: 120px;
-    height: 30px;
-    font-family: 'Roboto';
+    &__progress {
+        &--bar {
+            background-color: deepskyblue;   
+            height: inherit;     
+            transition: width 300ms linear;
+        }
 
-    transition: all 80ms ease-in
-}
+        &--wrapper {
+            width: 100vw;
+            position: absolute;
+            top: 4.2rem;  /* should match Header component's height */
+            left: 0;
+            height: 4px;
+            background-color: #555;
+        }
+    }
 
-.Review__button:hover {
-    padding: 0;   /* padding is non-zero by default which causes 'shifting' effect of text */
-    transform: translateY(-1px) scale(1.03);
-    transform-style: preserve-3d;
-    transform: center;
-    box-shadow: 0 5px 1em -6px #333;
-
-}
-
-#Review__button--fail:hover, #Review__button--fail:focus {
-    background-color: orangered;
-}
-
-#Review__button--pass:hover, #Review__button--pass:focus {
-    background-color: seagreen;
-}
-
-.Review__progress--wrapper {
-    width: 100vw;
-    position: absolute;
-    top: 4.2rem;  /* should match Header component's height */
-    left: 0;
-    height: 4px;
-    background-color: #555;
-}
-
-#Review__progress--bar {
-    background-color: deepskyblue;   
-    height: inherit;     
-    transition: width 300ms linear;
 }

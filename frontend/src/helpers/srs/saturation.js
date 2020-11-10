@@ -82,7 +82,6 @@ export function saturateUnseededTerm(filteredHistory) {
 
 /**
  * Determine saturation of a term that already has a saturation level.
- * @todo Implement functionality
  * @param {[content: string[], date: Date, direction: String]} filteredHistory array of (at least 3) history entries, filtered by specified direction
  * @param {Number} saturation The term's current saturation level for the specified direction
  */

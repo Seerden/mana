@@ -1,4 +1,5 @@
 import React, { memo, useState, useRef, useEffect } from "react";
+import './style/ReviewCard.scss';
 
 const ReviewCard = memo(({ setBackWasShown, direction, term }) => {
     const [side, setSide] = useState(direction === 'forwards' ? 'from' : 'to'),
@@ -46,8 +47,11 @@ const ReviewCard = memo(({ setBackWasShown, direction, term }) => {
     }
 
     return (
-        <div onClick={flip} className={`Review__current ReviewCard ${fade ? 'fadein' : ''} ${flipping ? 'flip' : ''}`}>
-            { term[side]}
+        <div 
+            onClick={flip} 
+            className={`ReviewCard ${fade ? 'fadein' : ''} ${flipping ? 'flip' : ''}`}
+        >
+            { term[side] }
         </div>
     )
 })

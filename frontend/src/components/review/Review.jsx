@@ -74,15 +74,17 @@ const Review = memo((props) => {
             setProgress(Math.floor(100 * termsCompleted / sessionLength));
         }
 
-        futureTerms && futureTerms.length > 0 && setCurrentCard(
+        futureTerms?.length > 0 && setCurrentCard(
             <ReviewCard
                 setBackWasShown={setBackWasShown}
                 key={uuidv4()}
                 direction={direction}
                 term={futureTerms[0]} />)
-        futureTerms && futureTerms.length === 0 && endSession(list);
+
+        futureTerms?.length === 0 && endSession(list);
 
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
+        
         return () => {
             setCurrentCard(null)
             window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
