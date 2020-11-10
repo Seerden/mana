@@ -1,4 +1,4 @@
-import { saturate, saturateUnseededTerm } from './saturation';
+import { saturate, saturateSeededTerm, saturateUnseededTerm } from './saturation';
 
 const term = {
     history: [
@@ -23,6 +23,22 @@ describe('saturateUnseededTerm', () => {
         expect(saturateUnseededTerm(history)).toEqual(expectedReturn)
     })
 })
+
+describe('saturateSeededTerm', () => { // @todo expand tests, make a separate describe block for each initial saturation level
+    const cases = [
+        // [filteredHistory (least to most recent), saturation, expected]
+        [[{content: ['pass', 'pass']}, {content: ['fail', 'fail', 'pass', 'pass']}, {content: ['pass', 'pass']}], 0, 1],
+        [[{content: ['pass', 'pass']}, {content: ['fail', 'fail', 'pass', 'pass']}, {content: ['fail', 'pass']}], 1, 0],
+        [[{content: ['pass', 'pass']}, {content: ['pass', 'pass']}, {content: ['pass', 'pass']}], 2, 3],
+        [[{content: ['pass', 'pass']}, {content: ['pass', 'pass']}, {content: ['pass', 'pass']}], 3, 4],
+        [[{content: ['pass', 'pass']}, {content: ['pass', 'pass']}, {content: ['pass', 'fail']}], 4, 3],
+    ];
+
+    test.each(cases)(`given history: %p, saturation: %i, returns %i`, (filteredHistory, saturation, expectedReturn) => {
+        expect(saturateSeededTerm(filteredHistory, saturation)).toEqual(expectedReturn)
+    })
+})
+
 
 // describe('saturate', () => {
 //     const term = {history: null}

@@ -49,11 +49,11 @@ export function saturate(term, direction) {
         return null;
     }
 
-    if (filteredHistory.length === 3 || !term.saturation?.direction) { // if reviewed exactly n times, seeding has just ended, so we can saturate based on seeding round
+    if (filteredHistory.length === 3 || !term.saturation[direction]) { // if reviewed exactly n times, seeding has just ended, so we can saturate based on seeding round
         return saturateUnseededTerm(filteredHistory);
+    } else if (filteredHistory.length > 3 || term.saturation[direction]) {
+        return saturateSeededTerm(filteredHistory, term.saturation[direction])
     }
-    // if reviewed more than n times, saturate based on a combination of (1) time since last session, (2) current saturation level, (3) performance in the session that was just completed
-    // saturateSeededTerm(filteredHistory)
 }
 
 /**
@@ -81,15 +81,64 @@ export function saturateUnseededTerm(filteredHistory) {
 }
 
 /**
- * Saturate a term that already has a saturation level.
+ * Determine saturation of a term that already has a saturation level.
  * @todo Implement functionality
- * @param {*} term 
+ * @param {[content: string[], date: Date, direction: String]} filteredHistory array of (at least 3) history entries, filtered by specified direction
+ * @param {Number} saturation The term's current saturation level for the specified direction
  */
-export function saturateSeededTerm(term) {
-    // extract session
-    const lastTwoSessions = term.history.reverse().slice(0, 2);
-    const currentSaturation = term.saturation;
+export function saturateSeededTerm(filteredHistory, saturation) {
+    const [currentSession, previousSession, secondToLastSession] = filteredHistory.reverse().slice(0,3);
+    // const timeBetween = currentSession?.date - previousSession?.date;
+    // const currentTimescale = saturationLevels[Number(saturation)]?.timescale; 
 
+    const fail = countDict(currentSession.content).fail;
+    const previousFail = countDict(previousSession.content).fail;
+    const secondTolastFail = countDict(secondToLastSession.content).fail;
+
+    switch (saturation) {  // new saturation level depends on two things: current performance, current saturation level
+        case 0:
+            return fail ? 0 : 1;
+        case 1:
+            if (fail) {
+                if (fail > 1) return 0;
+                if (currentSession.content[0] === 'pass') return 1;
+                return 0;
+            } else {
+                if ( !previousFail && !secondTolastFail) {
+                    return 2
+                } 
+                return 1
+            }
+        case 2:
+            if (fail) {
+                if (fail > 2) return 0;
+                return currentSession.content[0] === 'pass' ? 2 : 1;
+            } else {
+                if (!previousFail) {
+                    return 3
+                }
+            }
+        case 3:
+            if (fail) {
+                if (fail === 1) {
+                    return 2
+                } else {
+                    return 1
+                }
+
+            } else {
+                if ( !previousFail && !secondTolastFail) {
+                    return 4
+                } 
+                return 3
+            }
+        case 4:
+            if (fail) {
+                return fail > 1 ? 2 : 3
+            } else return 4
+        default:
+            return saturation
+    }
 
 }
 

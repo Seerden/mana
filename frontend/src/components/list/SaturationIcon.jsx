@@ -3,6 +3,7 @@ import { colorBySaturation } from '../../helpers/list.api';
 
 const SaturationIcon = memo(({ direction, classes, saturation }) => {
     const saturationIconStyle = {
+        display: 'inline-block',
         width: '20px',
         height: '20px',
         padding: '0rem',

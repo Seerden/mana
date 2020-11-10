@@ -25,7 +25,6 @@
     margin: 0 auto;
     left: 25%;
     overflow-y: auto;
-    // max-width: 800px;
 
     @media screen and (max-height: 768px) {
         top: 0;
@@ -45,30 +44,36 @@
         padding: 1rem 2rem;
     }
     
+    $icon-width: 2rem;
 
     label {
-        margin-bottom: 0.5rem;
-        font-size: 0.8rem;
+        margin-top: 1rem;
+        margin-left: 2px;
+        font-size: 1rem;
+        background-color: #252525;
+        border-bottom: 2px solid #222;
+        border-radius: 3px 7px 0 0;
+        padding: 0.3rem 1rem;
+        width: max-content;
     }
 
     input {
         // $b1: limegreen;
         // $b2: greenyellow;
         
-        $b1: greenyellow;
-        $b2: limegreen;
+        $b1: #555;
+        $b2: #444;
 
         display: block;
         width: 450px;
         max-width: 100%;
-        border: 2px solid transparent;
-        border-radius: 3px;
+        border-radius: 0 3px 3px 3px;
         margin: 0;
         outline: none;
         padding: 0.7rem 1rem;
         background-color: #191919;
         color: white;
-        border: 2px solid $b2;
+        border: 3px solid $b2;
         box-shadow: 0px 4px 0 -2px $b2, 0 -4px 0 -2px $b1;
 
         transition: all 50ms linear;
@@ -76,15 +81,9 @@
         &:focus {
             background-color: #191919;
             color: azure;
-            border: 2px solid transparent;
+            border: 3px solid transparent;
             box-shadow: 0px 4px 0 -2px transparent, 0 -4px 0 -2px transparent, -8px -8px 0 -6px $b1, 8px 8px 0 -5px $b2;
             border-radius: 0px;
-            // transform: translateY(2px);
-
-        }
-
-        &:nth-of-type(1) {
-            margin-bottom: 0.5rem;
         }
     }
 
@@ -127,11 +126,25 @@
         }
     }
 
+    &__side {
+        display: grid;
+        grid-template-columns: repeat(2, max-content);
+        // gap: 1rem;
+        align-items: center;
+
+        &--saturation {
+            display: flex;
+            // background-color: #222;
+            justify-content: center;
+            width: $icon-width;
+            height: 100%;
+            align-items: center;
+        }
+    }
+
     &__wrapper {
         animation: 100ms linear fadein;
         animation-fill-mode: forwards;
-
-
         position: fixed;
         top: 0;    
         left: 0;
@@ -141,10 +154,7 @@
         z-index: 20;
     }
 
-    $this: &;
-
     &__delete {
-
         &--wrapper {
             height: 60px;
             width: max-content;
