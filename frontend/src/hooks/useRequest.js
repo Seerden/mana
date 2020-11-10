@@ -23,10 +23,10 @@ export const useRequest = ({ handleResponse, handleError }) => {
         [loading, setLoading] = useState(false),
         source = axios.CancelToken.source();
 
-    const authorizeUser = function (username, setError, next) {
+    function authorizeUser(username, setError, next) {
         if (username && (currentUser === username)) {
-            setError(null)  // this fixes error persisting on route change from unauthorized -> authorized  @IMPORANT not needed if I rerender component fully on params change
-            next()
+            setError(null); // this fixes error persisting on route change from unauthorized -> authorized  @IMPORANT not needed if I rerender component fully on params change
+            next();
 
         } else {
             setError('Route not accessible by current user.');
@@ -34,18 +34,18 @@ export const useRequest = ({ handleResponse, handleError }) => {
         }
     }
 
-    const executeRequest = function () {
+    function executeRequest() {
         request()
             .then(res => {
-                handleResponse(res, setResponse)
+                handleResponse(res, setResponse);
             })
             .catch(err => {
-                if(err && err.response && err.response.status === 401){
-                    logout()                    
+                if (err && err.response && err.response.status === 401) {
+                    logout();
                 }
                 console.log(typeof handleResponse);
                 handleError(err, setError);
-            })
+            });
 
         setLoading(false);
         setRequest(null); //  unsure if necessary
