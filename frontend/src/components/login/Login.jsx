@@ -15,30 +15,21 @@ const Login = (props) => {
         [showPass, setShowPass] = useState(false);
 
     const { login } = useContext(LoginContext);
-    const [authResponse, setResponse] = useState(null);
     const [authError, setErr] = useState(false);
 
     useEffect(() => {
         if (auth) {
             axios.post('/db/user', user)
                 .then(r => {
-                    setResponse(r.data.username)
                     login(r.data.username)
+                    navigate(`/u/${r.data.username}`)
                 })
-                .catch(e => setErr(e))
+                .catch(e => {
+                    setErr(e)
+                    setAuth(false);
+                })
         }
     }, [auth])
-
-
-    useEffect(() => {
-        if (authResponse) {
-            navigate(`/u/${authResponse}`)
-        }
-
-        if (authError) {
-            setAuth(false);
-        }
-    }, [authResponse, authError])
 
     function handleLogin(e) {
         if (user.username && user.password) {
