@@ -1,22 +1,34 @@
-import React, { useState, useEffect } from "react";
-
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-
-import './style/Login.scss';
-import { handleFormBlur, useLogState } from '../../hooks/state';
-import { useRouteProps } from '../../hooks/routerHooks';
-import { useAuthenticateUser } from '../../hooks/useAuthenticateUser';
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { LoginContext } from '../../context/LoginContext';
+import { useRouteProps } from '../../hooks/routerHooks';
+import { handleFormBlur } from '../../hooks/state';
+import './style/Login.scss';
 
 const Login = (props) => {
     const [user, setUser] = useState({}),
         { navigate } = useRouteProps(),
         [auth, setAuth] = useState(false),
         [message, setMessage] = useState(null),
-        [showPass, setShowPass] = useState(false),
-        [authResponse, authError] = useAuthenticateUser(auth, user);
+        [showPass, setShowPass] = useState(false);
 
-    useLogState('user', user)
+    const { login } = useContext(LoginContext);
+    const [authResponse, setResponse] = useState(null);
+    const [authError, setErr] = useState(false);
+
+    useEffect(() => {
+        if (auth) {
+            axios.post('/db/user', user)
+                .then(r => {
+                    setResponse(r.data.username)
+                    login(r.data.username)
+                })
+                .catch(e => setErr(e))
+        }
+    }, [auth])
+
 
     useEffect(() => {
         if (authResponse) {
@@ -26,7 +38,6 @@ const Login = (props) => {
         if (authError) {
             setAuth(false);
         }
-
     }, [authResponse, authError])
 
     function handleLogin(e) {
@@ -65,12 +76,14 @@ const Login = (props) => {
                     </header>
 
                     <div className="Login__form--field">
+
                         <label
                             className="Login__input--label"
                             htmlFor="username"
                         >
                             Username
                         </label>
+
                         <div className="Login__form--field--content">
                             <input
                                 className="Login__input--username"
@@ -81,6 +94,7 @@ const Login = (props) => {
                                 name="username"
                             />
                         </div>
+
                     </div>
 
                     <div className="Login__form--field">
