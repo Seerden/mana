@@ -14,7 +14,7 @@ import { useRouteProps } from './routerHooks';
  */
 export const useRequest = ({ handleResponse, handleError }) => {
     const
-        { currentUser, login, logout } = useContext(LoginContext),
+        { currentUser, logout } = useContext(LoginContext),
         mounted = useRef(false),
         { params } = useRouteProps(),
         [request, setRequest] = useState(null),
@@ -43,7 +43,6 @@ export const useRequest = ({ handleResponse, handleError }) => {
                 if (err && err.response && err.response.status === 401) {
                     logout();
                 }
-                console.log(typeof handleResponse);
                 handleError(err, setError);
             });
 
