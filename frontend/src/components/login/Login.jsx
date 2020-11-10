@@ -7,33 +7,25 @@ import { useRouteProps } from '../../hooks/routerHooks';
 import { handleFormBlur } from '../../hooks/state';
 import './style/Login.scss';
 
-const Login = (props) => {
+const Login = () => {
     const [user, setUser] = useState({}),
         { navigate } = useRouteProps(),
-        [auth, setAuth] = useState(false),
         [message, setMessage] = useState(null),
-        [showPass, setShowPass] = useState(false);
+        [showPass, setShowPass] = useState(false),
+        { login } = useContext(LoginContext),
+        [authError, setErr] = useState(false);
 
-    const { login } = useContext(LoginContext);
-    const [authError, setErr] = useState(false);
-
-    useEffect(() => {
-        if (auth) {
-            axios.post('/db/user', user)
+    function handleLogin(e) {
+        if (user.username?.length > 0 && user.password?.length > 0) {
+            axios
+                .post('/db/user', user)
                 .then(r => {
-                    login(r.data.username)
-                    navigate(`/u/${r.data.username}`)
+                    login(r.data.username);
+                    navigate(`/u/${r.data.username}`);
                 })
                 .catch(e => {
                     setErr(e)
-                    setAuth(false);
                 })
-        }
-    }, [auth])
-
-    function handleLogin(e) {
-        if (user.username && user.password) {
-            setAuth(true)
         } else {
             setMessage('Cannot log in without both username and password')
         }
