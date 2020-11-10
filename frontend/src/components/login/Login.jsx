@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import axios from 'axios';
-import { LoginContext } from '../../context/LoginContext';
-import { useRouteProps } from '../../hooks/routerHooks';
-import { handleFormBlur } from '../../hooks/state';
+import { LoginContext } from 'context/LoginContext';
+import { useRouteProps } from 'hooks/routerHooks';
+import { handleFormBlur } from 'hooks/state';
 import LoginForm from './LoginForm';
 
 const Login = () => {

@@ -3,6 +3,43 @@
     grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
     gap: 1.2rem;
     margin-top: 1rem;
+
+    &__header {
+        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 1rem 2.5rem;
+        outline: 1px solid #363636;
+        box-shadow:  0 0 1rem 0.1rem black;
+    }
+
+    &__filter {
+        width: 20rem;
+        white-space: nowrap;
+    }
+
+    &__sort {
+        width: max-content;
+
+        select {
+            direction: rtl;
+            display: flex;
+            outline: none;
+            padding: 0.5rem;
+            border: 2px solid transparent;
+            background-color: rgb(36,36,36);
+            box-shadow: 5px 5px 0.5em -2px black;
+
+            outline: 1px solid #444;
+            color: azure;
+            transition: all 100ms linear;
+
+            &:hover, &:focus {
+                border-color: deepskyblue;
+            }
+        }
+    }
 }
 
 #Lists__filter {
@@ -17,15 +54,17 @@
     transition: all 100ms linear;
     outline: none;
     border: 2px solid #333;
-}
-#Lists__filter::placeholder {
+
+    &::placeholder {
         color: #aaa;
     }
 
-#Lists__filter:focus {
+    &:focus {
         border-color: deepskyblue;
         box-shadow: 5px 5px 1.5em -2px black;
     }
+}
+
 
 #Lists__filter--label, #Lists__sort--label {
     font-size: 1.2rem;
@@ -34,50 +73,7 @@
     margin-bottom: 0.2rem;
 }
 
-.Lists__header {
-    overflow: hidden;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    /* align-items: center; */
-    padding: 1rem 2.5rem;
-    outline: 1px solid #363636;
-    box-shadow:  0 0 1rem 0.1rem black;
-
-}
-
-.Lists__filter {
-    /* grid-area: filter; */
-    width: 20rem;
-    white-space: nowrap;
-}
-
-
-.Lists__sort {
-    /* grid-area: sort; */
-    /* width: max-content; */
-    width: max-content;
-}
-
 #Lists__sort--label {
     justify-content: flex-end;
     /* width: max-content; */
-}
-
-.Lists__sort select {
-    direction: rtl;
-    display: flex;
-    outline: none;
-    padding: 0.5rem;
-    border: 2px solid transparent;
-    background-color: rgb(36,36,36);
-    box-shadow: 5px 5px 0.5em -2px black;
-
-    outline: 1px solid #444;
-    color: azure;
-    transition: all 100ms linear;
-}
-
-.Lists__sort select:hover, .Lists__sort select:focus {
-    border-color: deepskyblue;
 }

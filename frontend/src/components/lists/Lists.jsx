@@ -1,8 +1,8 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useRouteProps } from '../../hooks/routerHooks';
-import { useRequest } from '../../hooks/useRequest';
-import { handleError, handleResponse } from '../../helpers/apiHandlers/apiHandlers';
+import { useRouteProps } from 'hooks/routerHooks';
+import { useRequest } from 'hooks/useRequest';
+import { handleError, handleResponse } from 'helpers/apiHandlers/apiHandlers';
 import ListsItem from './ListsItem';
 import './style/Lists.scss'
 
@@ -17,43 +17,34 @@ const Lists = memo((props) => {
         { params } = useRouteProps();
 
 
-    const { response: lists, setRequest, loading, error } = useRequest({ handleError, handleResponse })
+    const { response: lists, setRequest } = useRequest({ handleError, handleResponse })
     
-    useEffect(() => {
+    useEffect(() => {  // request Lists on component load
         setRequest(() => getLists(params.username))
     }, [])
 
     useEffect(() => { if (lists) { setListsElement(makeListsElement(lists)) } }, [lists])
 
-    const handleFilterChange = e => {
+    function handleFilterChange(e) {
         let val = e.currentTarget.value;
-        setFilter(val.length > 0 ? val : '')
+        setFilter(val.length > 0 ? val : '');
     }
 
-    const handleSelectChange = e => {
-        setSortBy(e.currentTarget.value)
+    function handleSelectChange(e) {
+        setSortBy(e.currentTarget.value);
     }
 
-    const makeListsElement = (lists) => {
+    function makeListsElement(lists) {
         return lists.map(l => ({
             name: l.name,
             lastReviewed: l.lastReviewed,
             created: l.created,
             element: <ListsItem key={l._id} list={l} />
-        }))
+        }));
     }
 
     return (
         <>
-
-            { loading && 
-                <div className="PageWrapper">
-                    Loading lists..
-                </div>
-            }
-
-            { error && JSON.stringify(error)}
-
             { lists && lists.length > 0 &&
                 <div className="PageWrapper">
                     <div className="PageHeader">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
@@ -83,14 +74,12 @@ const Lists = memo((props) => {
                     </div>
 
                     <div className="Lists">
-
                         {listsElement &&
                             listsElement
                                 .filter(l => l.name.toLowerCase().includes(filter.toLowerCase()))
                                 .sort((first, second) => first[sortBy] < second[sortBy] ? -1 : 1)  // TODO: sort by lowercase, sort out undefined cases (lastReviewed may be undefined
                                 .map(l => l.element)
                         }
-
                     </div>
                 </div>
 
@@ -106,7 +95,6 @@ const Lists = memo((props) => {
 
                 </div>
             }
-
         </>
     )
 })

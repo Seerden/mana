@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { handleError, handleResponse } from "../../helpers/apiHandlers/apiHandlers";
-import { getSets } from "../../helpers/apiHandlers/setHandlers";
-import { useRouteProps } from "../../hooks/routerHooks";
-import { useRequest } from "../../hooks/useRequest";
+import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
+import { getSets } from "helpers/apiHandlers/setHandlers";
+import { useRouteProps } from "hooks/routerHooks";
+import { useRequest } from "hooks/useRequest";
 import './style/Sets.scss'
 
 const Sets = (props) => {
