@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
 import { handleError, handleResponse } from 'helpers/apiHandlers/apiHandlers';
+import { getLists } from 'helpers/apiHandlers/listHandlers'
 import ListsItem from './ListsItem';
-import './style/Lists.scss'
 
-import { getLists } from '../../helpers/apiHandlers/listHandlers'
+import './style/Lists.scss';
 
 
 const Lists = memo((props) => {
@@ -14,10 +14,8 @@ const Lists = memo((props) => {
         [filter, setFilter] = useState(''),
         [listsElement, setListsElement] = useState(null),
         [sortBy, setSortBy] = useState('created'),
-        { params } = useRouteProps();
-
-
-    const { response: lists, setRequest } = useRequest({ handleError, handleResponse })
+        { params } = useRouteProps(),
+        { response: lists, setRequest } = useRequest({ handleError, handleResponse })
     
     useEffect(() => {  // request Lists on component load
         setRequest(() => getLists(params.username))
@@ -45,7 +43,7 @@ const Lists = memo((props) => {
 
     return (
         <>
-            { lists && lists.length > 0 &&
+            { lists?.length > 0 &&
                 <div className="PageWrapper">
                     <div className="PageHeader">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
                     <button className="Button"><Link to={`/u/${params.username}/lists/new`}>Make a new list</Link></button>
@@ -56,7 +54,7 @@ const Lists = memo((props) => {
                             <input
                                 autoFocus
                                 onChange={handleFilterChange}
-                                placeholder="e.g. 'chapter 2'"
+                                placeholder="e.g. 'vocabulary'"
                                 id="Lists__filter"
                                 type="text"
                                 name="filter"
@@ -85,7 +83,7 @@ const Lists = memo((props) => {
 
             }
 
-            { lists && lists.length === 0 &&
+            { lists?.length === 0 &&
                 <div className="PageWrapper">
                     <div className="PageHeader">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
                     <div className="Lists__new">
