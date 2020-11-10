@@ -12,7 +12,7 @@ const Sets = (props) => {
         sets = useMemo(() => response, [response]);
 
     useEffect(() => {
-        setRequest(() => getSets({ owner: params.username }))
+        setRequest(() => getSets(params.username, { owner: params.username }))
     }, [])
 
     return (
@@ -24,6 +24,10 @@ const Sets = (props) => {
 
                 <section className="Banner__link">
                     <Link className="Sets__link" to="new">New Set</Link>
+                </section>
+
+                <section>
+                    {sets && JSON.stringify(sets)}
                 </section>
             </div>
         </div>

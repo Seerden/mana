@@ -232,7 +232,6 @@ userRouter.get('/set', (req, res) => {
         if (doc) res.send(doc)
     })
 });
-
 userRouter.post('/set', (req, res) => {
     const {owner, name} = req.body.newSet;
     Set.findOne({owner, name}, (err, doc) => {
@@ -248,7 +247,6 @@ userRouter.post('/set', (req, res) => {
         }
     })
 });
-
 userRouter.put('/set', (req, res) => {
     const { query, body } = req.body.data;
 
@@ -257,10 +255,15 @@ userRouter.put('/set', (req, res) => {
         if (err) res.status(400).send('Error updating list.')
     })
 });
-
 userRouter.delete('/set', (req, res) => {
     Set.findOneAndDelete({ ...req.query }, (err, doc) => {
         if (err) res.status(400).send('Error deleting set.')
         if (doc) res.status(200).send('Set deleted successfully.')
     })   
 });
+
+userRouter.get('/sets', (req, res) => {
+    Set.find({owner: req.query.owner}, (err,  doc) => {
+        res.json(doc)
+    })
+})

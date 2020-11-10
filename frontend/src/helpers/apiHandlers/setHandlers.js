@@ -40,5 +40,5 @@ export const deleteSet = (username, query) => {
 }
 
 export const getSets = (username, query) => {
-    return () => axios.get(`db/u/${username}/sets`, { params: query})
+    return () => axios.get(`/db/u/${username}/sets`, { params: query})
 }
