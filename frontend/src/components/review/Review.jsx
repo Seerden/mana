@@ -84,7 +84,7 @@ const Review = memo((props) => {
         futureTerms?.length === 0 && endSession(list);
 
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
-        
+
         return () => {
             setCurrentCard(null)
             window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
@@ -271,10 +271,13 @@ const Review = memo((props) => {
                                 :
                                 <div className="Review__prevent">
                                     Cannot move on to the next term until you've seen the back of the card.
-                                    </div>
+                                </div>
                             }
                             <div className="Review__progress--wrapper">
-                                <div id="Review__progress--bar" style={{ width: `${progress}%` }}></div>
+                                <div 
+                                    className="Review__progress--bar" 
+                                    style={{ width: `${progress}%` }}
+                                />
                             </div>
 
                             { session.start &&

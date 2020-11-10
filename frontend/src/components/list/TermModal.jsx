@@ -40,7 +40,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
 
                     <label htmlFor="front">Front:</label>
                     <div className="TermModal__side">
-                        
+
                         <input
                             tabIndex="1"
                             name="front"
@@ -57,7 +57,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
 
                     <label htmlFor="back">Back:</label>
                     <div className="TermModal__side">
-                        
+
                         <input
                             name="back"
                             tabIndex="2"
@@ -71,28 +71,29 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                             <SaturationIcon direction={'backwards'} saturation={term.saturation?.backwards} />
                         </span>
                     </div>
+
                 </section>
 
-                <section>
-                    <header> History </header>
-                    <TermHistory history={term.history} />
-                </section>
+            <section>
+                <header> History </header>
+                <TermHistory history={term.history} />
+            </section>
 
-                <div className="TermModal__delete--wrapper">
-                    {!confirmingDelete
-                        ?
-                        <button onClick={() => setConfirmingDelete(true)} className="TermModal__delete">Delete this term</button>
+            <div className="TermModal__delete--wrapper">
+                {!confirmingDelete
+                    ?
+                    <button onClick={() => setConfirmingDelete(true)} className="TermModal__delete">Delete this term</button>
 
-                        :
-                        <>
-                            <div className="TermModal__delete--confirm">Delete?</div>
-                            <button onClick={(e) => handleConfirmClick(e, { type: 'delete' })} className="TermModal__delete--confirm-yes">Yes</button>
-                            <button onClick={() => setConfirmingDelete(false)} className="TermModal__delete--confirm-no">No</button>
-                        </>
+                    :
+                    <>
+                        <div className="TermModal__delete--confirm">Delete?</div>
+                        <button onClick={(e) => handleConfirmClick(e, { type: 'delete' })} className="TermModal__delete--confirm-yes">Yes</button>
+                        <button onClick={() => setConfirmingDelete(false)} className="TermModal__delete--confirm-no">No</button>
+                    </>
 
-                    }
-                </div>
+                }
             </div>
+        </div>
 
         </>
     )

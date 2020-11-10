@@ -43,7 +43,7 @@ const ReviewCard = memo(({ setBackWasShown, direction, term }) => {
         setFlipping(true);
         timeouts.current.push(setTimeout(() => setFlipping(false), duration));
         timeouts.current.push(setTimeout(() => toggleSide(), duration / 2));
-        setBackWasShown(true);
+        !!setBackWasShown && setBackWasShown(true);
     }
 
     return (
