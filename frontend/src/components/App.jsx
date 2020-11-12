@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './style/App.scss';
@@ -26,67 +27,68 @@ import { ReviewProvider } from '../context/ReviewContext';
 const App = memo(() => {
     return (
         <>
-            <div className="App__wrapper">
-                <LoginProvider>
-                    <Router>
-                        <Header />
-                        <div className="App">
-                            <ListProvider>
-                                <Routes>
-                                    {/* test route */}
-                                    <Route path="/test" element={<Test />} />
+            <RecoilRoot>
+                <div className="App__wrapper">
+                    <LoginProvider>
+                        <Router>
+                            <Header />
+                            <div className="App">
+                                <ListProvider>
+                                    <Routes>
+                                        {/* test route */}
+                                        <Route path="/test" element={<Test />} />
 
-                                    {/* home route */}
-                                    <Route path="/" element={<Home />} />
+                                        {/* home route */}
+                                        <Route path="/" element={<Home />} />
 
-                                    <Route path="/register" element={<Register />} />
-                                    <Route path="/login" element={<Login />} />
+                                        <Route path="/register" element={<Register />} />
+                                        <Route path="/login" element={<Login />} />
 
 
-                                    {/* user routes */}
-                                    <Route path="/u/:username">
-                                        <PrivateRoute path="/" component={User} />
+                                        {/* user routes */}
+                                        <Route path="/u/:username">
+                                            <PrivateRoute path="/" component={User} />
 
-                                        {/* Routes related to multiple lists */}
-                                        <Route path="/lists">
-                                            <PrivateRoute path="/" component={Lists} />
-                                            <PrivateRoute path="/new" component={NewList} />
-                                        </Route>
+                                            {/* Routes related to multiple lists */}
+                                            <Route path="/lists">
+                                                <PrivateRoute path="/" component={Lists} />
+                                                <PrivateRoute path="/new" component={NewList} />
+                                            </Route>
 
-                                        {/* Routes related to individual list */}
-                                        <Route path="/list">
-                                            <Route path="/:id">
-                                                <Route path="/review" element={
-                                                    <ReviewProvider>
-                                                        <Private component={Review} />
-                                                    </ReviewProvider>
-                                                }
-                                                />
+                                            {/* Routes related to individual list */}
+                                            <Route path="/list">
+                                                <Route path="/:id">
+                                                    <Route path="/review" element={
+                                                        <ReviewProvider>
+                                                            <Private component={Review} />
+                                                        </ReviewProvider>
+                                                    }
+                                                    />
 
-                                                <PrivateRoute path="/" component={List} />
+                                                    <PrivateRoute path="/" component={List} />
+                                                </Route>
+
+
+                                            </Route>
+
+                                            {/* Routes related to sets */}
+                                            <Route path="/sets">
+                                                <PrivateRoute path="/" component={Sets} />
+                                                <PrivateRoute path="/new" component={NewSet} />
                                             </Route>
 
 
                                         </Route>
-                                        
-                                        {/* Routes related to sets */}
-                                        <Route path="/sets">
-                                            <PrivateRoute path="/" component={Sets} />
-                                            <PrivateRoute path="/new" component={NewSet} />
-                                        </Route>
-
-
-                                    </Route>
-                                    {/* catchall 404 route */}
-                                    <Route path="*" element={<div>404</div>} />
-                                </Routes>
-                            </ListProvider>
-                        </div>
-                        <Footer />
-                    </Router>
-                </LoginProvider>
-            </div>
-
+                                        {/* catchall 404 route */}
+                                        <Route path="*" element={<div>404</div>} />
+                                    </Routes>
+                                </ListProvider>
+                            </div>
+                            <Footer />
+                        </Router>
+                    </LoginProvider>
+                </div>
+            </RecoilRoot>
         </>
     )
 })

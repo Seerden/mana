@@ -16,7 +16,6 @@ const PreReview = (props) => {
 
     const handleSettingsChange = e => {
         setReviewContext({ ...reviewContext, settings: { ...reviewContext.settings, [e.target.name]: e.currentTarget.value } })  // todo: only set context if value is different
-
     }
 
     return (
