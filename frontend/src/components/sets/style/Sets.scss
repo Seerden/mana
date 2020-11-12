@@ -1,9 +1,17 @@
 @use '../../style/shared' as s;
 
-.Sets__link {
-    @extend %shared-button;
-    width: max-content;
-    color: black;
-    text-decoration: none;
+.Sets {
+    &__link {
+        @extend %shared-button;
+        width: max-content;
+        color: black;
+        text-decoration: none;
+    }
+
+    &__sets {
+        display: flex;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+    }
 }
 

@@ -1,41 +1,14 @@
-@keyframes slidedown {
-    0%{ 
-        visibility: collapse;
-        max-height: 0;
-    }
-    100% {
-        visibility: visible;
-        max-height: 800px;
-    }
-}
-
-.slidedown {
-    overflow: hidden;
-    animation: 600ms ease slidedown;
-    animation-fill-mode: forwards;
-}
-
-.slideup {
-    overflow: hidden;
-    animation: 600ms ease slidedown reverse;
-    animation-fill-mode: forwards;
-}
-
-.arrow {
-    user-select: none;
-}
-
 .SetCard {
     width: max-content;
     min-width: 400px;
-    border: 2px solid #333;
-    border-radius: 2px;
-    box-shadow: 0 0 1rem black, 1rem 0 0 -0.5rem #222;
+    border: 2px solid #222;
+    overflow: hidden;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 0 0.5rem black, 1rem 0 0 -0.5rem #222;
     margin-bottom: 1rem;
 
     section {
         margin-top: 1rem;
-
     }
 
     
@@ -49,20 +22,15 @@
     }
 
     &__header {
-        font-size: 1.3rem;
+        font-size: 1.35rem;
         font-weight: 600;
-        // margin-bottom: 0.5rem;
-        border-radius: 0 0 1rem 0;
-        background-color: #ccc;
-        border-bottom: 2px solid black;
-        color: black;
-        padding: 0.5rem 1rem;
+        background-color: #111;
+        border-bottom: 2px solid #222;
+        color: white;
+        padding: 1.5rem 1rem;
 
         display: flex;
-        justify-content: space-between;
-
-        
-
+        justify-content: center;
     }
 
     &__description {

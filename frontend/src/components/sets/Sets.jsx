@@ -30,7 +30,7 @@ const Sets = (props) => {
                     <Link className="Sets__link" to="new">New Set</Link>
                 </section>
 
-                <section>
+                <section className="Sets__sets">
                     {sets?.map(set => <SetCard key={set._id} set={set} />)}
                 </section>
             </div>
