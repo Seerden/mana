@@ -1,0 +1,119 @@
+@keyframes slidedown {
+    0%{ 
+        visibility: collapse;
+        max-height: 0;
+    }
+    100% {
+        visibility: visible;
+        max-height: 800px;
+    }
+}
+
+.slidedown {
+    overflow: hidden;
+    animation: 600ms ease slidedown;
+    animation-fill-mode: forwards;
+}
+
+.slideup {
+    overflow: hidden;
+    animation: 600ms ease slidedown reverse;
+    animation-fill-mode: forwards;
+}
+
+.arrow {
+    user-select: none;
+}
+
+.SetCard {
+    width: max-content;
+    min-width: 400px;
+    border: 2px solid #333;
+    border-radius: 2px;
+    box-shadow: 0 0 1rem black, 1rem 0 0 -0.5rem #222;
+    margin-bottom: 1rem;
+
+    section {
+        margin-top: 1rem;
+
+    }
+
+    
+    &__label {
+        margin: none;
+        padding: 0.3rem 1rem;
+        display: flex;
+        border-radius: 0 0 20px 0;
+        width: max-content;
+        background-color: #333;
+    }
+
+    &__header {
+        font-size: 1.3rem;
+        font-weight: 600;
+        // margin-bottom: 0.5rem;
+        border-radius: 0 0 1rem 0;
+        background-color: #ccc;
+        border-bottom: 2px solid black;
+        color: black;
+        padding: 0.5rem 1rem;
+
+        display: flex;
+        justify-content: space-between;
+
+        
+
+    }
+
+    &__description {
+        &--body {
+            padding: 1rem;
+            padding-bottom: 0;
+        }
+    }
+
+    &__lists {
+        margin-top: 0.5rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        &--body {
+            padding: 1rem;
+        }
+    }
+    &__list {
+        padding: 0.3rem 0;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        
+        $this: &;
+
+        &:hover {
+            $list-hover-color: #333;
+
+            #{$this}--link {
+                box-shadow: none;
+                transform: translateY(-3px);
+                box-shadow: 0 0 0.5rem black, 0 12px 0 -8px $list-hover-color;
+            }
+        }
+
+        &--link {
+            padding: 0.6rem 1.4rem;
+            width: 90%;
+            display: flex;
+            text-decoration: none;
+            background-color: #111;
+            color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+            box-shadow:  0 0 0.5rem 0 black;
+
+            transition: transform 50ms linear;
+
+            
+        }
+    }
+}

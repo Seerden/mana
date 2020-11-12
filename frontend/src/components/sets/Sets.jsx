@@ -4,16 +4,20 @@ import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
 import { getSets } from "helpers/apiHandlers/setHandlers";
 import { useRouteProps } from "hooks/routerHooks";
 import { useRequest } from "hooks/useRequest";
+import SetCard from './SetCard';
 import './style/Sets.scss'
+import { useLogState } from "hooks/state";
 
 const Sets = (props) => {
     const { params } = useRouteProps(),
         { response, setRequest } = useRequest({ handleResponse, handleError }),
         sets = useMemo(() => response, [response]);
 
-    useEffect(() => {
+    useEffect(() => {  // retrieve the user's sets on component load
         setRequest(() => getSets(params.username, { owner: params.username }))
     }, [])
+
+    useLogState('sets', sets)
 
     return (
         <div className="PageWrapper">
@@ -27,7 +31,7 @@ const Sets = (props) => {
                 </section>
 
                 <section>
-                    {sets && JSON.stringify(sets)}
+                    {sets?.map(set => <SetCard key={set._id} set={set} />)}
                 </section>
             </div>
         </div>

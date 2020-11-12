@@ -263,7 +263,12 @@ userRouter.delete('/set', (req, res) => {
 });
 
 userRouter.get('/sets', (req, res) => {
-    Set.find({owner: req.query.owner}, (err,  doc) => {
-        res.json(doc)
-    })
+    Set
+        .find({owner: req.query.owner})
+        .populate({path: 'lists', model: 'List', select: 'name' })
+        .exec((err, doc) => {
+            const setsArray = doc.length > 0 ? doc : [doc]
+            res.send(setsArray)
+        })
+    
 })
