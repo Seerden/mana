@@ -1,11 +1,15 @@
 import React, { memo, useContext, useState, useEffect } from "react";
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
+
 import { ListContext } from '../../context/ListContext';
+import { useRequest } from '../../hooks/useRequest';
+import { putList, handlePutList } from '../../helpers/apiHandlers/listHandlers'
+import { selectingTermsToReviewState } from 'recoil/atoms/listAtoms';
+import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 
 import TermModal from './TermModal';
 import SaturationIcon from './SaturationIcon';
-
-import { useRequest } from '../../hooks/useRequest';
-import { putList, handlePutList } from '../../helpers/apiHandlers/listHandlers'
 
 import './style/ListTerm.scss'
 
@@ -20,11 +24,31 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
         { setRequest: setPutRequest } = useRequest({...handlePutList()}),
         [open, setOpen] = useState(false);
 
-    useEffect(() => { // cleanup
-        return () => {
-            setConfirmingDelete(false);
-        }
+    // ----- REFACTOR
+    const selectingTerms = useRecoilValue(selectingTermsToReviewState);
+    const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
+    const [selected, setSelected] = useState(false);
+
+    // -----
+
+    useEffect(() => {  // cleanup
+        return () => { setConfirmingDelete(false); }
     }, [])
+
+    function handleSelect(e) {
+        e.stopPropagation();
+        
+        let idx = termsToReview.findIndex(t => t._id === term._id);
+        if (idx > -1) {
+            let currentTermsToReview = [...termsToReview];
+            currentTermsToReview.splice(idx, 1);
+            setTermsToReview(currentTermsToReview)
+            setSelected(false);
+        } else {
+            setTermsToReview(current => ([...current, term]))
+            setSelected(true)
+        }
+    }
 
     /**
      * Remove term from the list.
@@ -33,29 +57,29 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
      * @todo        remove term from database entirely from this hook? or is there another 'send changes to database' layer on the /list/:id page?
      * @param {object} action    currently only expects {type: 'delete'}
      */
-    const handleConfirmClick = (e, action) => {
-        e.preventDefault();
-        setConfirmingDelete(false);
-        setOpen(false);
-        if (action.type === 'delete') {
-            handleTermDelete(idx);
+    function handleConfirmClick(e, action) {
+            e.preventDefault();
+            setConfirmingDelete(false);
+            setOpen(false);
+            if (action.type === 'delete') {
+                handleTermDelete(idx);
+            }
         }
-    }
 
     /**
     * @param   {string}    field   'from'/'to', related to term.to and term.from properties (term is passed from props)
     * @todo update actual list itself, also update listContextValue, and then push new list state to db
     */
-    const handleTermEdit = (e) => {
+    function handleTermEdit(e) {
         let side = e.currentTarget.getAttribute('side');
         if (e.target.value && term[side] !== e.target.value) {
-            let newTerm = { ...term, [side]: e.target.value }
-            setTerm(newTerm)
+            let newTerm = { ...term, [side]: e.target.value };
+            setTerm(newTerm);
             let newListContent = [...listContextValue.content];
             newListContent[idx] = { ...newTerm };
-            let newList = { ...listContextValue, content: [...newListContent] }
+            let newList = { ...listContextValue, content: [...newListContent] };
             setListContextValue(newList);
-            setPutRequest(() => putList(listContextValue.owner, { _id: listContextValue._id, owner: listContextValue.owner }, newList))
+            setPutRequest(() => putList(listContextValue.owner, { _id: listContextValue._id, owner: listContextValue.owner }, newList));
         }
     }
 
@@ -67,7 +91,25 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
                     <span className="Term__to">{term.to}</span>
                     <SaturationIcon classes={"Term__saturation"} direction="forwards" saturation={term.saturation?.forwards}/>
                     <SaturationIcon classes={"Term__saturation"} direction="backwards" saturation={term.saturation?.backwards}/>
-                </li>
+                    {selectingTerms 
+                        ? 
+                            <div 
+                                className="Term__select"
+                                style={{
+                                    color: selected ? 'seagreen' : '#555',
+                                }}
+                                onClick={handleSelect}
+                            >
+                                {selected 
+                                ?
+                                <ImCheckboxChecked/>
+                                :
+                                <ImCheckboxUnchecked/>
+                                }
+                            </div>
+                        : '' 
+                    }
+            </li>
             { open && 
                 <TermModal 
                     handleConfirmClick={handleConfirmClick}

@@ -48,7 +48,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                             title="Click to edit"
                             style={inputStyle}
                             className="TermModal__input"
-                            onBlur={handleTermEdit} className="" side="from" type="text" defaultValue={term.from}
+                            onBlur={handleTermEdit} side="from" type="text" defaultValue={term.from}
                         />
                         <span className="TermModal__side--saturation">
                             <SaturationIcon direction='forwards' saturation={term.saturation?.forwards} />
@@ -65,7 +65,10 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                             title="Click to edit"
                             style={inputStyle}
                             className="TermModal__input"
-                            onBlur={handleTermEdit} className="" side="to" type="text" defaultValue={term.to}
+                            onBlur={handleTermEdit} 
+                            side="to" 
+                            type="text" 
+                            defaultValue={term.to}
                         />
                         <span className="TermModal__side--saturation">
                             <SaturationIcon direction={'backwards'} saturation={term.saturation?.backwards} />

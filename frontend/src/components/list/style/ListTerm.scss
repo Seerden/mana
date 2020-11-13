@@ -6,6 +6,23 @@ $shadow: -10px -10px 0 -7px $shadow-color, 10px 10px 0 -7px $shadow-color, 0 0 0
     max-width: 800px;
     padding: 0.5rem;
     margin-top: 1.2rem;
+    position: relative;
+
+    &__select {
+        display: flex;
+        justify-self: center;
+        color: white;
+
+        @media screen and (max-width: 768px), screen and (max-height: 700px) {
+            position: absolute;
+            display: flex;
+            height: 100%;
+            align-items: center;
+            right: 5%;
+
+        }
+
+    }
 
     &__saturation {
         @media screen and (max-width: 768px) {
@@ -19,7 +36,7 @@ $shadow: -10px -10px 0 -7px $shadow-color, 10px 10px 0 -7px $shadow-color, 0 0 0
     user-select: none;
 
     display: grid;
-    grid-template-columns: 30px repeat(2, 40%) repeat(2,30px);
+    grid-template-columns: 30px repeat(2, 40%) repeat(2,30px) auto;
     align-items: center;
     
     @media screen and (max-width: 768px), screen and (max-height: 700px) {

@@ -1,15 +1,5 @@
 import mongoose from 'mongoose';
-
-const termSchema = new mongoose.Schema({
-    to: String,
-    from: String,
-    history: [{date: Date, content: Array, direction: String}],
-    saturation: {
-        forwards: Number, 
-        backwards: Number
-    },
-})
-
+import { termSchema } from './termSchema.js';
 
 const sessionSchema = new mongoose.Schema({
     start: String,
@@ -27,11 +17,19 @@ export const listSchema = new mongoose.Schema({
     },
     name: { type: String, required: true },
     from: { type: String, required: true },  // original language
-    to: [{ type: String, required: true }],  // other languages (not just a string since want to be able to do multiple translations/definitions at a time)
+    to: [
+        { type: String, required: true }
+    ],  // other languages (not just a string since want to be able to do multiple translations/definitions at a time)
     content: [
-        { type: termSchema, required: true }
+        { 
+            type: termSchema
+            // type: mongoose.Schema.Types.ObjectId, 
+            // ref: 'Term',
+        }
     ],
-    sessions: [{ type: sessionSchema }],
+    sessions: [
+        { type: sessionSchema }
+    ],
     numTerms: { type: Number, default: function () { return this.content.length } },
     created: Date,
     lastReviewed: Date,

@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { handleError, handleResponse } from "../../helpers/apiHandlers/apiHandlers";
 import { postSet } from '../../helpers/apiHandlers/setHandlers';
 import { useRequest } from "../../hooks/useRequest";
 import { useRouteProps } from '../../hooks/routerHooks';
 import Picker from './Picker';
 import './style/NewSet.scss';
-// import { useLogState } from "../../hooks/state";
 
 const NewSet = (props) => {
     const [newSet, setNewSet] = useState({}),

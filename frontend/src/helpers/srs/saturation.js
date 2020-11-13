@@ -7,7 +7,7 @@ import relativeTime from 'dayjs/plugin/relativeTime.js';
   dayjs.extend(duration);
 
 let day = 1000*3600*24
-const saturationLevels = [
+export const saturationLevels = [
     {
         level: 0,
         description: 'Weak to no recollection.',
@@ -117,6 +117,7 @@ export function saturateSeededTerm(filteredHistory, saturation) {
                     return 3
                 }
             }
+            break;
         case 3:
             if (fail) {
                 if (fail === 1) {
@@ -139,23 +140,4 @@ export function saturateSeededTerm(filteredHistory, saturation) {
             return saturation
     }
 
-}
-
-/**
- * Determine whether the latest session was valuable, given the term's current saturation level, time between two sessions, and results in those two sessions
- * @todo Implement functionality
- * @param {Object} firstSession term review session, like {date: ..., content: ...}. Session argument order doesn't matter.
- * @param {Object} secondSession term review session, like {date: ..., content: ...}. Session argument order doesn't matter.
- * @param {Array} saturationLevels Array containing saturation levels and corresponding timescales. Currently hardcoded, could become user-specified settings eventually.
- */
-export function isSessionValuable(firstSession, secondSession, saturation, saturationLevels) {
-    /* philosophy:
-        if I reviewed a term an hour ago, it doesn't matter that I got it correct this time around,
-        if I reviewed it an hour ago, knew it then, but _don't_ know it now, this *does* carry meaning,
-        if I'm on long-term sustain for a term, it doesn't really matter if I reviewed it two weeks ago instead of a month ago.
-        */
-    const timeBetween = secondSession.date - firstSession.date;
-    const intendedTimescale = saturationLevels.find(d => d.level === saturation)?.timescale;
-
-    // if timebetween < intendedtimescale for certain saturation levels
 }

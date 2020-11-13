@@ -1,13 +1,19 @@
 import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import { ListContext } from '../../context/ListContext';
-import { formatDate } from '../../helpers/time';
-import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList } from '../../helpers/apiHandlers/listHandlers';
-import { useRouteProps } from '../../hooks/routerHooks';
-import { useRequest } from '../../hooks/useRequest';
+import { useRecoilState } from 'recoil';
+
+import { ListContext } from 'context/ListContext';
+import { formatDate } from 'helpers/time';
+import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList } from 'helpers/apiHandlers/listHandlers';
+import { useRouteProps } from 'hooks/routerHooks';
+import { useRequest } from 'hooks/useRequest';
+import { termsToReviewState } from 'recoil/atoms/reviewAtoms';
+import { selectingTermsToReviewState } from 'recoil/atoms/listAtoms';
+
 import ListTerm from './ListTerm';
 import SetPicker from './SetPicker';
 import SaturationFilter from './SaturationFilter';
+
 import './style/List.scss';
 
 const List = memo((props) => {
@@ -19,6 +25,11 @@ const List = memo((props) => {
         { response: getResponse, setRequest: setGetRequest } = useRequest({ ...handleGetList() }),
         { setRequest: setPutRequest } = useRequest({ ...handlePutList() }),
         { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() });
+
+    // ----- REFACTOR
+    const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
+    const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
+    // -----
 
     useEffect(() => {  // retrieve list on component load
         setGetRequest(() => getList(params.username, { _id: params.id }))
@@ -52,7 +63,7 @@ const List = memo((props) => {
             )
 
         }));
-    }
+    };
 
     function handleTermDelete(idx) {
         const updatedList = { ...list }
@@ -77,9 +88,14 @@ const List = memo((props) => {
                     {list &&
                         <>
                             <div className="PageHeader">{list.name} ({list.from} to {list.to})</div>
-                            <button className="Button"><Link to={`${location.pathname}/review`}>Review</Link></button>
-                            <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
 
+                            <section className="List__banner">
+                                <div className="List__banner--review">
+                                    <button className="Button"><Link to={`${location.pathname}/review`}>Review entire list</Link></button>
+                                    <button className="Button">Review selected terms</button>
+                                </div>
+                                <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
+                            </section>
                             <section
                                 className="List__header"
                                 style={{
@@ -121,22 +137,36 @@ const List = memo((props) => {
                                 <ul className="List__terms">
                                     <div>
                                         <div className="List__terms--header">
-                                            <span className="List__section--header">Terms</span>
+                                            <span className="List__section--header">
+                                                Terms
+                                            </span>
+
+                                            <span>
+                                                <input 
+                                                    type="button" 
+                                                    value="Select terms for review"
+                                                    onClick={() => setSelectingTerms(!selectingTerms)}
+                                                />
+                                            </span>
+
                                             <div className="List__terms--saturationfilter">
                                                 {list.sessions?.length > 0 &&
-                                                    < SaturationFilter
+                                                    <SaturationFilter
                                                     filter={filter}
                                                     setFilter={setFilter}
                                                 />
                                                 }
                                             </div>
+
+
                                         </div>
                                     </div>
+
                                     {terms
                                         ?.filter(term => {
                                             if (Object.keys(filter).length > 0) {
                                                 if (!term.saturation) { return true }
-                                                return term.saturation?.forwards == filter?.saturation || term.saturation?.backwards == filter?.saturation
+                                                return term.saturation?.forwards === Number(filter?.saturation) || term.saturation?.backwards === filter?.saturation
                                             } else {
                                                 return true
                                             }

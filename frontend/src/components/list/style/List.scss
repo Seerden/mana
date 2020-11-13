@@ -9,6 +9,11 @@
         }
     }
     
+    &__banner {
+        display: flex;
+        justify-content: space-between;
+    }
+
     &__info, &__section, &__sets, &__terms {
         margin-top: 1rem;
         padding: 1rem;

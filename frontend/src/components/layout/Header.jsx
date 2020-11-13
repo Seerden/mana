@@ -1,4 +1,4 @@
-import React, { useContext, memo } from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LoginContext } from '../../context/LoginContext';
 import { useRouteProps } from '../../hooks/routerHooks';

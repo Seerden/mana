@@ -1,19 +1,22 @@
 import React, { memo, useEffect, useState, useRef, useContext, useReducer } from "react";
+import { useRecoilValue } from 'recoil';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 
-import { useRouteProps } from '../../hooks/routerHooks';
-import { makeReviewList } from '../../helpers/reviewHelpers';
-import { ReviewContext } from '../../context/ReviewContext';
-import { useRequest } from '../../hooks/useRequest';
-import { handleGetList, getList, handlePutList, putList } from '../../helpers/apiHandlers/listHandlers';
-import { saturate } from '../../helpers/srs/saturation';
+import { useRouteProps } from 'hooks/routerHooks';
+import { makeReviewList } from 'helpers/reviewHelpers';
+import { ReviewContext } from 'context/ReviewContext';
+import { useRequest } from 'hooks/useRequest';
+import { handleGetList, getList, handlePutList, putList } from 'helpers/apiHandlers/listHandlers';
+import { saturate } from 'helpers/srs/saturation';
+
+import { termsToReviewState } from 'recoil/atoms/reviewAtoms';
 
 import ReviewCard from './ReviewCard';
 import PreReview from './PreReview';
-import PostReview from "./PostReview";
-import ReviewInfo from "./ReviewInfo";
+import PostReview from './PostReview';
+import ReviewInfo from './ReviewInfo';
 
 import './style/Review.scss';
 
@@ -27,7 +30,7 @@ const Review = memo((props) => {
         { reviewContext } = useContext(ReviewContext),
         { n, direction, started } = reviewContext.settings,
         [backWasShown, setBackWasShown] = useState(null),
-        failRef = useRef(null), // refs for handleLeftRightArrowKeydown to target
+        failRef = useRef(null),  // refs for handleLeftRightArrowKeydown to target
         passRef = useRef(null);
     let timeout = useRef(null);
 
@@ -47,6 +50,17 @@ const Review = memo((props) => {
         handleError: handleGetList().handleError
     })
     const { setRequest: setPutRequest } = useRequest({ ...handlePutList() })
+
+
+    // ----- REFACTOR
+    const termsToReview = useRecoilValue(termsToReviewState);
+    useEffect(() => {
+        if (termsToReview.length > 0) {
+            console.log(termsToReview);
+        }
+    }, [termsToReview])
+
+    // -----
 
     useEffect(() => {  // get list from database and initialize futureTerms
         setGetRequest(() => getList(params.username, { _id: params.id }))
@@ -153,7 +167,7 @@ const Review = memo((props) => {
      * @param {string} passfail 'pass'/'fail'
      * @return {object}         copy of newly set list state
      */
-    function updateSessionHistory(term, passfail) {
+    function updateTermHistory(term, passfail) {
         const content = [...list.content];
         let idx = content.findIndex(i => i.to === term.to && i.from === term.from)
 
@@ -178,9 +192,7 @@ const Review = memo((props) => {
                 content[idx].history[histLen - 1].content.push(passfail)
             }
         }
-        let newList = { ...list, content: [...content] };
-        setList(newList);
-        return newList
+        setList({ ...list, content: [...content] });
     }
 
     /**
@@ -190,7 +202,7 @@ const Review = memo((props) => {
      */
     function handlePassFailClick(e, passfail) {
         e.preventDefault();
-        updateSessionHistory(futureTerms[0], passfail);
+        updateTermHistory(futureTerms[0], passfail);
         reduceFutureTerms({ type: passfail })
         setBackWasShown(false);
     }
@@ -251,8 +263,7 @@ const Review = memo((props) => {
                                             ref={failRef}
                                             onClick={(e) => { if (backWasShown) handlePassFailClick(e, 'fail') }}
                                             disabled={!backWasShown}
-                                            className="Review__button"
-                                            id="Review__button--fail"
+                                            className="Review__button Review__button--fail"
                                             type="button"
                                             value="Fail"
                                         />
@@ -260,8 +271,7 @@ const Review = memo((props) => {
                                             ref={passRef}
                                             onClick={(e) => { if (backWasShown) handlePassFailClick(e, 'pass') }}
                                             disabled={!backWasShown}
-                                            className="Review__button"
-                                            id="Review__button--pass"
+                                            className="Review__button Review__button--pass"
                                             type="button"
                                             value="Pass"
                                         />

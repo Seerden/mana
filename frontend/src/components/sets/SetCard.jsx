@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import './style/SetCard.scss'
 import { Link } from 'react-router-dom'
 import { useRouteProps } from "hooks/routerHooks";
