@@ -1,17 +1,17 @@
-import React, { memo, useContext, useState, useEffect } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
 
-import { ListContext } from '../../context/ListContext';
 import { useRequest } from '../../hooks/useRequest';
-import { putList, handlePutList } from '../../helpers/apiHandlers/listHandlers'
-import { selectingTermsToReviewState } from 'recoil/atoms/listAtoms';
+import { putTerm } from '../../helpers/apiHandlers/listHandlers'
+import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 
 import TermModal from './TermModal';
 import SaturationIcon from './SaturationIcon';
 
 import './style/ListTerm.scss'
+import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
 
 /**
  * ListTerm component
@@ -20,11 +20,11 @@ import './style/ListTerm.scss'
 const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     const [term, setTerm] = useState(() => (termFromProps)),
         [confirmingDelete, setConfirmingDelete] = useState(false),
-        { listContextValue, setListContextValue } = useContext(ListContext),
-        { setRequest: setPutRequest } = useRequest({...handlePutList()}),
+        { response: putTermResponse, setRequest: setPutTermRequest, error: putTermError } = useRequest({handleResponse, handleError}),
         [open, setOpen] = useState(false);
 
     // ----- REFACTOR
+    const [listAtom, setListAtom] = useRecoilState(listState)
     const selectingTerms = useRecoilValue(selectingTermsToReviewState);
     const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
     let indexOfTermInTermsToReview = termsToReview.findIndex(t => t._id === term._id);
@@ -34,7 +34,6 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     }, [termsToReview])
 
     const [selected, setSelected] = useState(indexOfTermInTermsToReview > -1);
-
     // -----
 
     useEffect(() => {  // cleanup
@@ -80,11 +79,14 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
         if (e.target.value && term[side] !== e.target.value) {
             let newTerm = { ...term, [side]: e.target.value };
             setTerm(newTerm);
-            let newListContent = [...listContextValue.content];
+            setPutTermRequest(() => putTerm(listAtom.owner, { _id: term._id }, newTerm))
+
+            let newListContent = [...listAtom.terms];
             newListContent[idx] = { ...newTerm };
-            let newList = { ...listContextValue, content: [...newListContent] };
-            setListContextValue(newList);
-            setPutRequest(() => putList(listContextValue.owner, { _id: listContextValue._id, owner: listContextValue.owner }, newList));
+            let newList = { ...listAtom, terms: [...newListContent] };
+            setListAtom(newList);
+            
+            // setPutRequest(() => putList(listAtom.owner, { _id: listAtom._id, owner: listAtom.owner }, newList));
         }
     }
 

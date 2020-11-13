@@ -24,7 +24,7 @@ export const getLists = (username) => {
 
 // other
 export const handleGetList = () => {
-    const request = (username, query) => {axios.get(`/db/u/${username}/list`, { params: query })};
+    const request = (username, query) => { axios.get(`/db/u/${username}/list`, { params: query }) };
     return { request, handleResponse, handleError }
 }
 
@@ -61,3 +61,10 @@ export const handleGetLists = () => {
     const request = (username) => axios.get(`/db/u/${username}/lists`)
     return { request, handleResponse, handleError }
 }
+
+// ----- LIST REFACTOR
+// single call to remove a term: Remove term reference from the list, and remove the Term document itself.
+// export const deleteTerm = (username, listId, termId) => axios.delete(`/db/u/${username}/term`, {params: {listId, termId}})
+export const deleteTerm = (username, termId) => { return () => axios.delete(`/db/u/${username}/term`, { params: termId }) }
+
+export const putTerm = (username, query, body) => { return () => axios.put(`/db/u/${username}/term`, { data: { query, body } }) }

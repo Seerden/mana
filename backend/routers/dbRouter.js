@@ -15,6 +15,7 @@ const { hash } = bcrypt;
 const User = dbConn.model('User');
 const List = dbConn.model('List');
 const Set = dbConn.model('Set');
+const Term = dbConn.model('Term');
 
 /**
  * Express router for /db routes, used as API endpoints for frontend interaction with the database.
@@ -28,7 +29,7 @@ dbRouter.use(session({
         mongooseConnection: dbConn
     }),
     cookie: {
-        maxAge: 1000*3600*24,  // TTL in milliseconds
+        maxAge: 1000 * 3600 * 24,  // TTL in milliseconds
         // secure: true // only set once I have https setup look at docs for handy if statement to set this only for production
     },
     // store: @todo add mongo connect
@@ -102,19 +103,19 @@ dbRouter.get('/list/devpopulate', (req, res) => {
 /* note, however, that this just sends a 401 response without further customization if the authentication fails. using a callback (like option 1) gives us more options */
 dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
     console.log(`Authenticated user ${req.user.username}`);
-    res.json({username: req.user.username})
+    res.json({ username: req.user.username })
 })
 
 dbRouter.post('/u/register', (req, res) => {
     const { username, password } = req.body.newUser;
 
-    User.findOne({username}, async (err, foundUser) => {
+    User.findOne({ username }, async (err, foundUser) => {
         console.log('inside user.findone');
 
         if (!err) {
             if (!foundUser) {
                 let hashedPassword = await hash(password, 10);
-                let newUser = new User({username, password: hashedPassword})
+                let newUser = new User({ username, password: hashedPassword })
                 newUser.save((err, savedUser) => {
                     if (!err) {
                         console.log('saved new user');
@@ -135,9 +136,9 @@ dbRouter.post('/u/register', (req, res) => {
  * Subrouter for owner-protected routes (e.g. /u/admin/lists) 
  * @note Creation and authentication of users happens outside this subrouter.
  */
-const userRouter = express.Router({mergeParams: true});
-  userRouter.use(isLoggedIn);
-  userRouter.use(userOwnsRoute);
+const userRouter = express.Router({ mergeParams: true });
+    userRouter.use(isLoggedIn);
+    userRouter.use(userOwnsRoute);
 dbRouter.use('/u/:username', userRouter);
 
 userRouter.get('/user', (req, res) => {
@@ -168,7 +169,7 @@ userRouter.get('/list', (req, res) => {
 userRouter.post('/list', (req, res) => {
     const { owner, name, from, to, content } = req.body.newList;
 
-    if(req.user.username === owner) {
+    if (req.user.username === owner) {
         List.findOne({ owner, name }, (err, foundList) => {
             if (err) { throw err }
             if (foundList) {
@@ -203,7 +204,7 @@ userRouter.put('/list', (req, res) => {
 
     List.findOneAndUpdate(query, {
         $set: {
-            ...body            
+            ...body
         }
     },
         { new: true }, (err, updated) => {
@@ -218,6 +219,22 @@ userRouter.delete('/list', (req, res) => {
         } else if (err) {
             res.status(404).send('Could not delete requested list.')
         }
+    })
+})
+
+// ----- routes related to terms -----
+userRouter.delete('/term', (req, res) => {
+    Term.findOne({_id: req.query.termId}, (err, deletedDoc) => {
+        if (err) res.status(400).send('Error deleting term.')
+        if (deletedDoc) res.status(200).send('Term deleted successfully.')
+    })
+})
+
+userRouter.put('/term', (req, res) => {
+    const { query, body } = req.body.data;
+    Term.findOneAndUpdate({ ...query }, {$set: {...body} }, {new: true}, (err, doc) => {
+        if (err) res.status(400).send('Error updating term.');
+        res.status(200).json(doc)
     })
 })
 
@@ -238,10 +255,10 @@ userRouter.get('/set', (req, res) => {
     })
 });
 userRouter.post('/set', (req, res) => {
-    const {owner, name} = req.body.newSet;
-    Set.findOne({owner, name}, (err, doc) => {
+    const { owner, name } = req.body.newSet;
+    Set.findOne({ owner, name }, (err, doc) => {
         if (!err && !doc) {
-            let newSet = new Set({...req.body.newSet});
+            let newSet = new Set({ ...req.body.newSet });
             newSet.save((err, doc) => {
                 if (!err && doc) res.send(doc)
             })
@@ -264,16 +281,16 @@ userRouter.delete('/set', (req, res) => {
     Set.findOneAndDelete({ ...req.query }, (err, doc) => {
         if (err) res.status(400).send('Error deleting set.')
         if (doc) res.status(200).send('Set deleted successfully.')
-    })   
+    })
 });
 
 userRouter.get('/sets', (req, res) => {
     Set
-        .find({owner: req.query.owner})
-        .populate({path: 'lists', model: 'List', select: 'name' })
+        .find({ owner: req.query.owner })
+        .populate({ path: 'lists', model: 'List', select: 'name' })
         .exec((err, doc) => {
             const setsArray = doc.length > 0 ? doc : [doc]
             res.send(setsArray)
         })
-    
+
 })

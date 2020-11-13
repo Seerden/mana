@@ -25,7 +25,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
     const inputStyle = {
         backgroundColor: confirmingDelete ? 'orangered' : '',
         boxShadow: !confirmingDelete ? '' : '0 0 1rem black',
-        border: confirmingDelete ? '2px solid black' : ''
+        border: confirmingDelete ? '3px solid white' : ''
     }
 
     return (
@@ -47,7 +47,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                             disabled={confirmingDelete}
                             title="Click to edit"
                             style={inputStyle}
-                            className="TermModal__input"
+                            className={`TermModal__input`}
                             onBlur={handleTermEdit} side="from" type="text" defaultValue={term.from}
                         />
                         <span className="TermModal__side--saturation">
@@ -64,7 +64,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                             disabled={confirmingDelete}
                             title="Click to edit"
                             style={inputStyle}
-                            className="TermModal__input"
+                            className={`TermModal__input`}
                             onBlur={handleTermEdit} 
                             side="to" 
                             type="text" 

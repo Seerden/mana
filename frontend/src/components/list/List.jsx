@@ -1,34 +1,35 @@
-import React, { memo, useContext, useState, useEffect } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 
-import { ListContext } from 'context/ListContext';
 import { formatDate } from 'helpers/time';
-import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList } from 'helpers/apiHandlers/listHandlers';
+import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList, deleteTerm } from 'helpers/apiHandlers/listHandlers';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
-import { selectingTermsToReviewState } from 'recoil/atoms/listAtoms';
+import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 
 import ListTerm from './ListTerm';
 import SetPicker from './SetPicker';
 import SaturationFilter from './SaturationFilter';
 
 import './style/List.scss';
+import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
 
 const List = memo((props) => {
     const [list, setList] = useState(null),
         [filter, setFilter] = useState({}),
         [terms, setTerms] = useState(null),
         { params, location } = useRouteProps(),
-        { setListContextValue } = useContext(ListContext),
         { response: getResponse, setRequest: setGetRequest } = useRequest({ ...handleGetList() }),
         { setRequest: setPutRequest } = useRequest({ ...handlePutList() }),
-        { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() });
+        { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() }),
+        { response: termDeleteResponse, setRequest: setTermDeleteRequest } = useRequest({handleResponse, handleError});
 
     // ----- REFACTOR
     const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
+    const setListAtom = useSetRecoilState(listState);
     // -----
 
     useEffect(() => {  // retrieve list on component load
@@ -38,7 +39,7 @@ const List = memo((props) => {
     useEffect(() => {  // set list and list context when list is returned from API
         if (getResponse) {
             setList(getResponse);
-            setListContextValue(getResponse);
+            setListAtom(getResponse);
         }
     }, [getResponse])
 
@@ -67,12 +68,14 @@ const List = memo((props) => {
 
     function handleTermDelete(idx) {
         const updatedList = { ...list }
+        let termId = updatedList.terms[idx]._id
         updatedList.terms.splice(idx, 1);
         updatedList.numTerms = updatedList.terms.length
         setList(updatedList);
-        setListContextValue(updatedList)
+        setListAtom(updatedList)
 
-        setPutRequest(() => putList(params.username, { _id: updatedList._id, owner: updatedList.owner }, updatedList))
+        setPutRequest(() => putList(params.username, { _id: updatedList._id, owner: updatedList.owner }, updatedList));
+        setTermDeleteRequest(() => deleteTerm(params.username, termId))
     };
 
     function handleDelete() {

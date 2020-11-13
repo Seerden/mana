@@ -1,4 +1,5 @@
 import 'dotenv/config.js';
+import dayjs from 'dayjs';
 
 import express from 'express';
 import { dbRouter } from './routers/dbRouter.js'
@@ -9,7 +10,7 @@ const app = express();
  * Express middleware to log every route that is hit
  */
 const log = (req, res, next) => {
-    console.log(`${new Date()} - ${req.originalUrl}`);
+    console.log(`${dayjs(new Date()).format('MMM DD @ HH:mm')} - ${req.method} ${req.originalUrl}`);
     next()
 }
 

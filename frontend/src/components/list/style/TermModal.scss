@@ -6,6 +6,20 @@
     }
 }
 
+@keyframes flashupdate {
+    50% {
+        border-color: seagreen; 
+    }
+    100% {
+        border-color: #333;
+    }
+}
+
+.flashupdate {
+    animation: 500ms ease flashupdate;
+    animation-fill-mode: forwards;
+}
+
 .TermModal {
     opacity: 0;
     animation: 100ms linear fadein;

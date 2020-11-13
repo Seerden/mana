@@ -28,3 +28,6 @@ Leave less whitespace at top on smaller screens. Even fullscreen 1080p looks unb
 
 ### TermHistory
 Include direction of review for every single entry. Allow filtering by direction.
+
+### Requests:
+Deleting list: first a putRequest to update the list fires, then a request to delete the term itself fires. If an error occurs during list update, we shouldn't fire the delete request: easiest way to solve is to implement middleware into the term delete.

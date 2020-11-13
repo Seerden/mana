@@ -21,7 +21,6 @@ import Register from './register/Register';
 import Login from './login/Login';
 
 import { LoginProvider } from '../context/LoginContext';
-import { ListProvider } from '../context/ListContext';
 import { ReviewProvider } from '../context/ReviewContext';
 
 const App = memo(() => {
@@ -33,56 +32,54 @@ const App = memo(() => {
                         <Router>
                             <Header />
                             <div className="App">
-                                <ListProvider>
-                                    <Routes>
-                                        {/* test route */}
-                                        <Route path="/test" element={<Test />} />
+                                <Routes>
+                                    {/* test route */}
+                                    <Route path="/test" element={<Test />} />
 
-                                        {/* home route */}
-                                        <Route path="/" element={<Home />} />
+                                    {/* home route */}
+                                    <Route path="/" element={<Home />} />
 
-                                        <Route path="/register" element={<Register />} />
-                                        <Route path="/login" element={<Login />} />
-
-
-                                        {/* user routes */}
-                                        <Route path="/u/:username">
-                                            <PrivateRoute path="/" component={User} />
-
-                                            {/* Routes related to multiple lists */}
-                                            <Route path="/lists">
-                                                <PrivateRoute path="/" component={Lists} />
-                                                <PrivateRoute path="/new" component={NewList} />
-                                            </Route>
-
-                                            {/* Routes related to individual list */}
-                                            <Route path="/list">
-                                                <Route path="/:id">
-                                                    <Route path="/review" element={
-                                                        <ReviewProvider>
-                                                            <Private component={Review} />
-                                                        </ReviewProvider>
-                                                    }
-                                                    />
-
-                                                    <PrivateRoute path="/" component={List} />
-                                                </Route>
+                                    <Route path="/register" element={<Register />} />
+                                    <Route path="/login" element={<Login />} />
 
 
-                                            </Route>
+                                    {/* user routes */}
+                                    <Route path="/u/:username">
+                                        <PrivateRoute path="/" component={User} />
 
-                                            {/* Routes related to sets */}
-                                            <Route path="/sets">
-                                                <PrivateRoute path="/" component={Sets} />
-                                                <PrivateRoute path="/new" component={NewSet} />
+                                        {/* Routes related to multiple lists */}
+                                        <Route path="/lists">
+                                            <PrivateRoute path="/" component={Lists} />
+                                            <PrivateRoute path="/new" component={NewList} />
+                                        </Route>
+
+                                        {/* Routes related to individual list */}
+                                        <Route path="/list">
+                                            <Route path="/:id">
+                                                <Route path="/review" element={
+                                                    <ReviewProvider>
+                                                        <Private component={Review} />
+                                                    </ReviewProvider>
+                                                }
+                                                />
+
+                                                <PrivateRoute path="/" component={List} />
                                             </Route>
 
 
                                         </Route>
-                                        {/* catchall 404 route */}
-                                        <Route path="*" element={<div>404</div>} />
-                                    </Routes>
-                                </ListProvider>
+
+                                        {/* Routes related to sets */}
+                                        <Route path="/sets">
+                                            <PrivateRoute path="/" component={Sets} />
+                                            <PrivateRoute path="/new" component={NewSet} />
+                                        </Route>
+
+
+                                    </Route>
+                                    {/* catchall 404 route */}
+                                    <Route path="*" element={<div>404</div>} />
+                                </Routes>
                             </div>
                             <Footer />
                         </Router>
