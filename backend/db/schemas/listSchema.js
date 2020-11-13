@@ -20,13 +20,13 @@ export const listSchema = new mongoose.Schema({
     to: [
         { type: String, required: true }
     ],  // other languages (not just a string since want to be able to do multiple translations/definitions at a time)
-    content: [
-        { 
-            type: termSchema
-            // type: mongoose.Schema.Types.ObjectId, 
-            // ref: 'Term',
+    terms: [
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Term',
         }
     ],
+    
     sessions: [
         { type: sessionSchema }
     ],

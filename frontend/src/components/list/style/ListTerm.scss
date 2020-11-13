@@ -2,8 +2,7 @@ $shadow-color: #333;
 $shadow: -10px -10px 0 -7px $shadow-color, 10px 10px 0 -7px $shadow-color, 0 0 0.5rem black;
 
 .Term {
-    width: 100%;
-    max-width: 800px;
+    max-width: 1200px;
     padding: 0.5rem;
     margin-top: 1.2rem;
     position: relative;
@@ -19,9 +18,7 @@ $shadow: -10px -10px 0 -7px $shadow-color, 10px 10px 0 -7px $shadow-color, 0 0 0
             height: 100%;
             align-items: center;
             right: 5%;
-
         }
-
     }
 
     &__saturation {
@@ -39,10 +36,14 @@ $shadow: -10px -10px 0 -7px $shadow-color, 10px 10px 0 -7px $shadow-color, 0 0 0
     grid-template-columns: 30px repeat(2, 40%) repeat(2,30px) auto;
     align-items: center;
     
+    
+
     @media screen and (max-width: 768px), screen and (max-height: 700px) {
         grid-template-columns: 1fr;
-        width: 100%;
+        width: 90%;
+        justify-content: center;
         display: grid;
+        margin: 0 auto;
         margin-top: 0.5rem;
         
         padding: 0.3rem;
@@ -58,6 +59,12 @@ $shadow: -10px -10px 0 -7px $shadow-color, 10px 10px 0 -7px $shadow-color, 0 0 0
             justify-self: center;
             width: 100%;
         }
+    }
+
+    @media screen and (max-width: 1280px) {
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     span {

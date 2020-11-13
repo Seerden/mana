@@ -10,4 +10,5 @@ export const termSchema = new mongoose.Schema({
         forwards: Number, 
         backwards: Number
     },
+    listMembership: [{type: mongoose.Schema.Types.ObjectId, ref: 'List'}]
 })

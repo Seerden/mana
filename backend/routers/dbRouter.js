@@ -158,7 +158,12 @@ userRouter.get('/user', (req, res) => {
 // ----- routes related to a single list -----
 userRouter.get('/list', (req, res) => {
     const { filter, ...query } = req.query;  // expect query like '?filter=-content&username=foo'
-    List.findOne({ ...query }, filter, (err, found) => { res.json(found) })
+    List
+        .findOne({ ...query })
+        .populate('terms')
+        .exec((err, doc) => {
+            doc && res.json(doc)
+        })
 })
 userRouter.post('/list', (req, res) => {
     const { owner, name, from, to, content } = req.body.newList;

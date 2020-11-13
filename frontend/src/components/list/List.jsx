@@ -1,13 +1,13 @@
 import React, { memo, useContext, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { ListContext } from 'context/ListContext';
 import { formatDate } from 'helpers/time';
 import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList } from 'helpers/apiHandlers/listHandlers';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
-import { termsToReviewState } from 'recoil/atoms/reviewAtoms';
+import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
 import { selectingTermsToReviewState } from 'recoil/atoms/listAtoms';
 
 import ListTerm from './ListTerm';
@@ -27,8 +27,8 @@ const List = memo((props) => {
         { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() });
 
     // ----- REFACTOR
-    const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
     const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
+    const numTermsToReview = useRecoilValue(numTermsToReviewState);
     // -----
 
     useEffect(() => {  // retrieve list on component load
@@ -43,14 +43,14 @@ const List = memo((props) => {
     }, [getResponse])
 
     useEffect(() => {
-        if (list && list.content) { updateTerms() };      /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list */
+        if (list && list.terms) { updateTerms() };      /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list */
     }, [list])
 
     function updateTerms() {
-        setTerms(list.content.map((term, idx) => {
+        setTerms(list.terms.map((term, idx) => {
             let termProps = {
                 handleTermDelete,
-                // key: `term-${term._id}`,
+                key: `term-${term._id}`,
                 idx: idx,
                 term
             };
@@ -58,7 +58,7 @@ const List = memo((props) => {
             return (
                 {
                     saturation: term.saturation,
-                    element: <ListTerm key={`term-${term._id}`} {...termProps} />,
+                    element: <ListTerm {...termProps} />,
                 }
             )
 
@@ -67,8 +67,8 @@ const List = memo((props) => {
 
     function handleTermDelete(idx) {
         const updatedList = { ...list }
-        updatedList.content.splice(idx, 1);
-        updatedList.numTerms = updatedList.content.length
+        updatedList.terms.splice(idx, 1);
+        updatedList.numTerms = updatedList.terms.length
         setList(updatedList);
         setListContextValue(updatedList)
 
@@ -92,7 +92,18 @@ const List = memo((props) => {
                             <section className="List__banner">
                                 <div className="List__banner--review">
                                     <button className="Button"><Link to={`${location.pathname}/review`}>Review entire list</Link></button>
-                                    <button className="Button">Review selected terms</button>
+                                    {numTermsToReview > 0 &&
+                                        <button className="Button">Review selected terms</button>
+                                    }
+
+                                    <span>
+                                        <input
+                                            type="button"
+                                            className="Button"
+                                            value="Select terms for review"
+                                            onClick={() => setSelectingTerms(!selectingTerms)}
+                                        />
+                                    </span>
                                 </div>
                                 <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
                             </section>
@@ -105,7 +116,7 @@ const List = memo((props) => {
                                 <section className="List__info">
                                     <header className="List__section--header">List info</header>
                                     <p className="List__info--item">
-                                        There {list.content.length === 1 ? 'is' : 'are'} <span className="List__info--datum">{list.numTerms}</span> term{list.content.length === 1 ? '' : 's'} in this list.
+                                        There {list.terms.length === 1 ? 'is' : 'are'} <span className="List__info--datum">{list.numTerms}</span> term{list.terms.length === 1 ? '' : 's'} in this list.
                                     </p>
                                     {list.lastReviewed
                                         ?
@@ -139,25 +150,16 @@ const List = memo((props) => {
                                         <div className="List__terms--header">
                                             <span className="List__section--header">
                                                 Terms
-                                            </span>
-
-                                            <span>
-                                                <input 
-                                                    type="button" 
-                                                    value="Select terms for review"
-                                                    onClick={() => setSelectingTerms(!selectingTerms)}
-                                                />
-                                            </span>
+                                                    </span>
 
                                             <div className="List__terms--saturationfilter">
                                                 {list.sessions?.length > 0 &&
                                                     <SaturationFilter
-                                                    filter={filter}
-                                                    setFilter={setFilter}
-                                                />
+                                                        filter={filter}
+                                                        setFilter={setFilter}
+                                                    />
                                                 }
                                             </div>
-
 
                                         </div>
                                     </div>
