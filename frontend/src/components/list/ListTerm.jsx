@@ -27,7 +27,13 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     // ----- REFACTOR
     const selectingTerms = useRecoilValue(selectingTermsToReviewState);
     const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
-    const [selected, setSelected] = useState(false);
+    let indexOfTermInTermsToReview = termsToReview.findIndex(t => t._id === term._id);
+
+    useEffect(() => {  // might be superfluous
+        indexOfTermInTermsToReview = termsToReview.findIndex(t => t._id === term._id)
+    }, [termsToReview])
+
+    const [selected, setSelected] = useState(indexOfTermInTermsToReview > -1);
 
     // -----
 
@@ -38,10 +44,9 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     function handleSelect(e) {
         e.stopPropagation();
         
-        let idx = termsToReview.findIndex(t => t._id === term._id);
-        if (idx > -1) {
+        if (indexOfTermInTermsToReview > -1) {
             let currentTermsToReview = [...termsToReview];
-            currentTermsToReview.splice(idx, 1);
+            currentTermsToReview.splice(indexOfTermInTermsToReview, 1);
             setTermsToReview(currentTermsToReview)
             setSelected(false);
         } else {

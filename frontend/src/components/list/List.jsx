@@ -50,7 +50,7 @@ const List = memo((props) => {
         setTerms(list.content.map((term, idx) => {
             let termProps = {
                 handleTermDelete,
-                key: `list-term-${term.to}-${term.from}`,
+                // key: `term-${term._id}`,
                 idx: idx,
                 term
             };
@@ -58,7 +58,7 @@ const List = memo((props) => {
             return (
                 {
                     saturation: term.saturation,
-                    element: <ListTerm {...termProps} />,
+                    element: <ListTerm key={`term-${term._id}`} {...termProps} />,
                 }
             )
 
