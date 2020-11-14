@@ -1,21 +1,37 @@
-import React, { memo, useContext, useState, useEffect } from "react";
-import {v4 as uuidv4} from 'uuid';
-import { ReviewContext } from '../../context/ReviewContext';
+import React, { memo, useState, useEffect } from "react";
+import { useRecoilState } from 'recoil';
+import { reviewSettingsState } from "recoil/atoms/reviewAtoms";
+import { v4 as uuidv4 } from 'uuid';
 import './style/PreReview.scss';
 
 const PreReview = (props) => {
-    const { reviewContext, setReviewContext } = useContext(ReviewContext),
-        { settings } = reviewContext,
+    const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState),
         [buttons, setButtons] = useState(null),
         [directionButtons, setDirectionButtons] = useState(null);
 
     useEffect(() => {
-        setButtons([1, 2, 3, 4, 5].map(num => <SettingsButton key={uuidv4()} value={num} n={settings.n} handleSettingsChange={handleSettingsChange} />))
-        setDirectionButtons(['forwards', 'backwards'].map(d => <SettingsButton key={uuidv4()} value={d} current={settings.direction} direction={d} handleSettingsChange={handleSettingsChange}/>))
-    }, [settings])
+        setButtons([1, 2, 3, 4, 5]
+            .map(num => <SettingsButton
+                key={uuidv4()}
+                value={num}
+                n={reviewSettings.n}
+                handleSettingsChange={handleSettingsChange}
+            />
+            ));
+
+        setDirectionButtons(['forwards', 'backwards']
+            .map(d => <SettingsButton
+                key={uuidv4()}
+                value={d}
+                current={reviewSettings.direction}
+                direction={d}
+                handleSettingsChange={handleSettingsChange}
+            />
+            ))
+    }, [reviewSettings])
 
     const handleSettingsChange = e => {
-        setReviewContext({ ...reviewContext, settings: { ...reviewContext.settings, [e.target.name]: e.currentTarget.value } })  // todo: only set context if value is different
+        setReviewSettings(current => ({ ...current, [e.target.name]: e.currentTarget.value })) 
     }
 
     return (
@@ -47,15 +63,15 @@ const PreReview = (props) => {
                                 'Forwards' means you're shown the term in the original language, and need to recall the meaning in the secondary language. 'Backwards' is the other way around.
                             </p>
                             <div className="PreReview__settings--directionbuttons">
-                                { directionButtons }
+                                {directionButtons}
                             </div>
                         </li>
                     </ul>
 
-                    <input 
-                        onClick={() => setReviewContext({...reviewContext, settings: {...reviewContext.settings, started: true}})}
-                        id="PreReview__start" 
-                        type="button" 
+                    <input
+                        onClick={() => setReviewSettings(current => ({ ...current, sessionStart: new Date(), started: true } ))}
+                        id="PreReview__start"
+                        type="button"
                         value="Start the review with these settings"
                     />
                 </form>
@@ -75,8 +91,8 @@ const SettingsButton = memo(({ handleSettingsChange, direction, n, value, curren
     }
     return (
         <input
-            style={{ 
-                color: selected ? 'white' : 'black', 
+            style={{
+                color: selected ? 'white' : 'black',
                 backgroundColor: selected ? 'blueviolet' : 'white',
             }}
             onClick={handleSettingsChange}

@@ -21,7 +21,6 @@ import Register from './register/Register';
 import Login from './login/Login';
 
 import { LoginProvider } from '../context/LoginContext';
-import { ReviewProvider } from '../context/ReviewContext';
 
 const App = memo(() => {
     return (
@@ -56,13 +55,7 @@ const App = memo(() => {
                                         {/* Routes related to individual list */}
                                         <Route path="/list">
                                             <Route path="/:id">
-                                                <Route path="/review" element={
-                                                    <ReviewProvider>
-                                                        <Private component={Review} />
-                                                    </ReviewProvider>
-                                                }
-                                                />
-
+                                                <PrivateRoute path="/review" component={Review} />
                                                 <PrivateRoute path="/" component={List} />
                                             </Route>
 

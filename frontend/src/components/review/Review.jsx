@@ -1,17 +1,18 @@
-import React, { memo, useEffect, useState, useRef, useContext, useReducer } from "react";
-import { useRecoilValue } from 'recoil';
+import React, { memo, useEffect, useState, useRef, useReducer } from "react";
+import { useRecoilValue, useRecoilState, useResetRecoilState } from 'recoil';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 
 import { useRouteProps } from 'hooks/routerHooks';
-import { makeReviewList } from 'helpers/reviewHelpers';
-import { ReviewContext } from 'context/ReviewContext';
+import { useLogState } from "hooks/state";
 import { useRequest } from 'hooks/useRequest';
-import { handleGetList, getList, handlePutList, putList } from 'helpers/apiHandlers/listHandlers';
+import { makeReviewList } from 'helpers/reviewHelpers';
+import { handleGetList, getList, handlePutList, putList, putTerm, putTerms } from 'helpers/apiHandlers/listHandlers';
 import { saturate } from 'helpers/srs/saturation';
 
-import { termsToReviewState } from 'recoil/atoms/reviewAtoms';
+
+import { reviewSettingsState, termsToReviewState, newHistoryEntriesState } from 'recoil/atoms/reviewAtoms';
 
 import ReviewCard from './ReviewCard';
 import PreReview from './PreReview';
@@ -22,53 +23,67 @@ import './style/Review.scss';
 
 const Review = memo((props) => {
     const { params } = useRouteProps(),
-        [session, setSession] = useState(() => ({ start: new Date(), end: false })),
         [list, setList] = useState(null),
         [futureTerms, reduceFutureTerms] = useReducer(termReducer, null),
         [currentCard, setCurrentCard] = useState(null),
         [progress, setProgress] = useState(0),  // percentage of terms marked 'pass' in the session
-        { reviewContext } = useContext(ReviewContext),
-        { n, direction, started } = reviewContext.settings,
+        { n, direction, started, sessionStart } = useRecoilValue(reviewSettingsState),
         [backWasShown, setBackWasShown] = useState(null),
         failRef = useRef(null),  // refs for handleLeftRightArrowKeydown to target
         passRef = useRef(null);
     let timeout = useRef(null);
 
-    const { setRequest: setGetRequest } = useRequest({
+    const { response: getListResponse, setRequest: setGetRequest } = useRequest({
         handleResponse: (res, setResponse) => {
             res = res.data
 
-            if (res.content && res.content.length > 0) {
+            if (res.terms && res.terms.length > 0) {
                 setResponse(res);
                 setList(res)
                 reduceFutureTerms({
                     type: 'init',
-                    payload: makeReviewList(res.content, n)
+                    payload: makeReviewList(res.terms, n)
                 })
             }
         },
         handleError: handleGetList().handleError
     })
-    const { setRequest: setPutRequest } = useRequest({ ...handlePutList() })
+    const { setRequest: setPutRequest } = useRequest({ ...handlePutList() });
+    const { setRequest: setPutTermRequest } = useRequest({});
 
 
     // ----- REFACTOR
-    const termsToReview = useRecoilValue(termsToReviewState);
-    useEffect(() => {
-        if (termsToReview.length > 0) {
-            console.log(termsToReview);
-        }
-    }, [termsToReview])
+    const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
+    const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
+    const [newHistoryEntries, setNewHistoryEntries] = useRecoilState(newHistoryEntriesState);
+    const resetTermsToReview = useResetRecoilState(termsToReviewState);
+    const resetNewHistoryEntries = useResetRecoilState(newHistoryEntriesState);
 
-    // -----
+    useLogState('newHistoryEntries', newHistoryEntries)
+
+    useEffect(() => {
+        list && setTermsToReview(list.terms)
+    }, [list, termsToReview])
+
+    useEffect(() => {
+        if (reviewSettings.sessionEnd) {
+            setPutRequest(() => putList(params.username, { _id: params.id, owner: list.owner }, list));
+            setPutTermRequest(() => putTerms(params.username, {termsToUpdate: newHistoryEntries}));
+        }
+    }, [reviewSettings])
 
     useEffect(() => {  // get list from database and initialize futureTerms
         setGetRequest(() => getList(params.username, { _id: params.id }))
+
+        return () => {
+            resetTermsToReview();
+            resetNewHistoryEntries();
+        }
     }, [])
 
     useEffect(() => {
         return () => {
-                window.clearTimeout(timeout.current);
+            window.clearTimeout(timeout.current);
         }
     })
 
@@ -76,14 +91,14 @@ const Review = memo((props) => {
         if (list) {
             reduceFutureTerms({
                 type: 'init',
-                payload: makeReviewList(list.content, Number(n))
+                payload: makeReviewList(list.terms, Number(n))
             })
         }
     }, [n]) // including list in deps causes session to be malformed somehow (progress doesn't change when moving to a new term)
 
     useEffect(() => {  // create new card to show, remove old and add new up/down key handler
         if (list && futureTerms) {
-            let sessionLength = list.content.length * n;
+            let sessionLength = list.terms.length * n;
             let termsCompleted = sessionLength - futureTerms.length;
             setProgress(Math.floor(100 * termsCompleted / sessionLength));
         }
@@ -162,37 +177,19 @@ const Review = memo((props) => {
     }
 
     /**
-     * Find current term in list.content, update its history, and setList with updated list.content
+     * Find current term in newHistoryEntries and push 'pass' or 'fail' to it
      * @param {object} term     should always be futureTerms[0]
      * @param {string} passfail 'pass'/'fail'
-     * @return {object}         copy of newly set list state
      */
     function updateTermHistory(term, passfail) {
-        const content = [...list.content];
-        let idx = content.findIndex(i => i.to === term.to && i.from === term.from)
-
-        if (!content[idx].history || content[idx].history.length === 0) {
-            content[idx].history = [{
-                date: session.start,
-                content: [],
-                direction
-            }]
-        }
-        if (content[idx].history.length > 0) {
-            let histLen = content[idx].history.length
-            let lastHist = content[idx].history[histLen - 1];
-
-            if (dayjs(lastHist.date) < dayjs(session.start)) {
-                content[idx].history.push({
-                    date: session.start,
-                    content: [passfail],
-                    direction
-                })
-            } else {
-                content[idx].history[histLen - 1].content.push(passfail)
-            }
-        }
-        setList({ ...list, content: [...content] });
+        setNewHistoryEntries(current => {
+            return current.map(t => {
+                if (t.termId === term._id) {
+                    return {...t, newHistoryEntry: {...t.newHistoryEntry, content: [...(t.newHistoryEntry.content?.length > 0 ? t.newHistoryEntry.content : []), passfail]}}
+                }
+                return t
+            })
+        })
     }
 
     /**
@@ -213,26 +210,25 @@ const Review = memo((props) => {
      */
     function endSession(list) {
         let end = new Date();
-        setSession({ ...session, end });
-
+        setReviewSettings(current => ({...current, sessionEnd: end}))
+        
         list.sessions.push({
-            start: session.start,
-            end,
-            numTerms: list.content.length,
-            termsReviewed: Number(n) * list.content.length,
+            start: reviewSettings.sessionEnd,
+            end: end,
+            numTerms: list.terms.length,
+            termsReviewed: Number(n) * list.terms.length,
             n: Number(n),
             direction
         });
 
         list.lastReviewed = end;
 
-        list.content = list.content.map(term => {
+        list.terms = list.terms.map(term => {
             const newTerm = { ...term };
             newTerm.saturation = { ...newTerm.saturation, [direction]: saturate(newTerm, direction) };
             return newTerm
         });
-
-        setPutRequest(() => putList(params.username, { _id: params.id, owner: list.owner }, list))
+       
     }
 
     return (
@@ -251,7 +247,7 @@ const Review = memo((props) => {
                 <PreReview />
                 :
                 <>
-                    { !session.end && currentCard &&
+                    { !reviewSettings.sessionEnd && currentCard &&
                         <>
                             {currentCard}
 
@@ -284,16 +280,16 @@ const Review = memo((props) => {
                                 </div>
                             }
                             <div className="Review__progress--wrapper">
-                                <div 
-                                    className="Review__progress--bar" 
+                                <div
+                                    className="Review__progress--bar"
                                     style={{ width: `${progress}%` }}
                                 />
                             </div>
 
-                            { session.start &&
+                            { reviewSettings.sessionStart &&
                                 <ReviewInfo
-                                    start={session.start}
-                                    numTerms={list.content.length}
+                                    start={reviewSettings.sessionStart}
+                                    numTerms={list.terms.length}
                                     n={n}
                                     progress={progress}
                                 />
@@ -302,11 +298,11 @@ const Review = memo((props) => {
                         </>
                     }
 
-                    { session.end &&
+                    { reviewSettings.sessionEnd &&
                         <>
                             <PostReview
-                                sessionStart={session.start}
-                                sessionEnd={session.end}
+                                sessionStart={reviewSettings.sessionStart}
+                                sessionEnd={reviewSettings.sessionEnd}
                                 list={list}
                             />
                         </>
@@ -327,5 +323,5 @@ export default Review;
 
 @note: list loads with n = 2 terms by default, but is rebuilt when n changes. could be cleaned up into a single case, but I need time to work that out. functions for now.
 
-@todo? buttons are shown based on !!backWasShown, but this means flippign to next card instantly removes them, so I won't get the little 100ms light-up effect 
+@todo? buttons are shown based on !!backWasShown, but this means flippign to next card instantly removes them, so I won't get the little 100ms light-up effect
 */

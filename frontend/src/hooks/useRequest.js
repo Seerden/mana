@@ -2,6 +2,7 @@ import axios from 'axios';
 import { LoginContext } from '../context/LoginContext';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { useRouteProps } from './routerHooks';
+import { handleError as defaultHandleError, handleResponse as defaultHandleResponse } from 'helpers/apiHandlers/apiHandlers';
 
 /**
  * Request hook that handles a request and logs a user out if the API returns 401 Unauthorized.
@@ -37,13 +38,13 @@ export const useRequest = ({ handleResponse, handleError }) => {
     function executeRequest() {
         request()
             .then(res => {
-                handleResponse(res, setResponse);
+                (handleResponse && handleResponse(res, setResponse)) || defaultHandleResponse(res, setResponse);
             })
             .catch(err => {
                 if (err && err.response && err.response.status === 401) {
                     logout();
                 }
-                handleError(err, setError);
+                (handleError && handleError(err, setError)) || defaultHandleError(err, setError);
             });
 
         setLoading(false);

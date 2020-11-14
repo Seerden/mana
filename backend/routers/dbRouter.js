@@ -137,8 +137,8 @@ dbRouter.post('/u/register', (req, res) => {
  * @note Creation and authentication of users happens outside this subrouter.
  */
 const userRouter = express.Router({ mergeParams: true });
-    userRouter.use(isLoggedIn);
-    userRouter.use(userOwnsRoute);
+  userRouter.use(isLoggedIn);
+  userRouter.use(userOwnsRoute);
 dbRouter.use('/u/:username', userRouter);
 
 userRouter.get('/user', (req, res) => {
@@ -224,7 +224,7 @@ userRouter.delete('/list', (req, res) => {
 
 // ----- routes related to terms -----
 userRouter.delete('/term', (req, res) => {
-    Term.findOne({_id: req.query.termId}, (err, deletedDoc) => {
+    Term.findOne({ _id: req.query.termId }, (err, deletedDoc) => {
         if (err) res.status(400).send('Error deleting term.')
         if (deletedDoc) res.status(200).send('Term deleted successfully.')
     })
@@ -232,9 +232,28 @@ userRouter.delete('/term', (req, res) => {
 
 userRouter.put('/term', (req, res) => {
     const { query, body } = req.body.data;
-    Term.findOneAndUpdate({ ...query }, {$set: {...body} }, {new: true}, (err, doc) => {
+    Term.findOneAndUpdate({ ...query }, { $set: { ...body } }, { new: true }, (err, doc) => {
         if (err) res.status(400).send('Error updating term.');
         res.status(200).json(doc)
+    })
+})
+
+userRouter.put('/terms', (req, res) => {
+    const { termsToUpdate } = req.body;
+
+    const bulkUpdateOperations = [];
+    for (let term of termsToUpdate) {
+        bulkUpdateOperations.push({
+            updateOne: {
+                filter: { _id: term.termId },
+                update: { $push: { history: term.newHistoryEntry }}
+            }
+        })
+    }
+
+    Term.bulkWrite(bulkUpdateOperations, (err, res) => {
+        if (err) console.log(err);
+        else console.log(res);
     })
 })
 
