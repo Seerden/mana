@@ -4,12 +4,12 @@ import './style/NewList.scss'
 const NewListTerm = memo(({ index, formOutput, setFormOutput }) => {
     const handleTermBlur = (e, idx) => {
         let copy = { ...formOutput }
-        if (!copy.content[idx] && e.target.value) {
-            copy.content[idx] = { to: "", from: "" };
+        if (!copy.terms[idx] && e.target.value) {
+            copy.terms[idx] = { to: "", from: "" };
         }
-        if (e.target.value && e.target.value !== copy.content[idx][e.target.name]) {
-            copy.content[idx][e.target.name] = e.target.value
-            setFormOutput({ ...formOutput, content: copy.content })
+        if (e.target.value && e.target.value !== copy.terms[idx][e.target.name]) {
+            copy.terms[idx][e.target.name] = e.target.value
+            setFormOutput({ ...formOutput, terms: copy.terms })
         }
     }
 

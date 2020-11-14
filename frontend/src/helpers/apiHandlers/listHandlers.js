@@ -10,8 +10,8 @@ export const putList = (username, query, body) => {
     return () => axios.put(`/db/u/${username}/list`, { data: { query, body } })
 }
 
-export const postList = (username, body) => {
-    return () => axios.post(`/db/u/${username}/list`, { newList: body })
+export const postList = (username, newList) => {
+    return () => axios.post(`/db/u/${username}/list`, { newList })
 }
 
 export const deleteList = (username, query) => {

@@ -13,15 +13,13 @@ const NewList = memo((props) => {
         name: "",
         from: "",
         to: "",
-        content: new Array(numTerms),
+        terms: new Array(numTerms),
         created: null,
         numTerms: 0,
     }))
     const [termInputs, setTermInputs] = useState([]);
 
     const { response: postResponse, setRequest: setPostRequest } = useRequest({...handlePostList()});
-
-    useLogState('postresponse', postResponse)
 
     useEffect(() => {
         setTermInputs(makeTermInputElements(formOutput, numTerms))
@@ -54,7 +52,9 @@ const NewList = memo((props) => {
         setPostRequest(() => postList(params.username, {
             owner: params.username, // @TODO: replace
             ...formOutput,
-            content: formOutput.content.filter(i => i !== null)
+            created: new Date(),
+            terms: formOutput.terms.filter(i => i !== null),
+            numTerms: formOutput.terms.filter(i => i !== null).length,
         }))
 
     }
@@ -65,33 +65,42 @@ const NewList = memo((props) => {
                 New List
             </div>
 
-            <form className="NewList__form">
-                <input className="NewList__form--name" onBlur={handleBlur} type="text" name="name" placeholder="List name" />
-                <input className="NewList__form--language" onBlur={handleBlur} type="text" name="from" placeholder="Original language" />
-                <input className="NewList__form--language" onBlur={handleBlur} type="text" name="to" placeholder="Translated language" />
+            {!postResponse 
+            ? 
+                <form className="NewList__form">
+                    <input className="NewList__form--name" onBlur={handleBlur} type="text" name="name" placeholder="List name" />
+                    <input className="NewList__form--language" onBlur={handleBlur} type="text" name="from" placeholder="Original language" />
+                    <input className="NewList__form--language" onBlur={handleBlur} type="text" name="to" placeholder="Translated language" />
 
 
-                <div className="NewList__terms">
-                    <input className="Form__button" onClick={handleAddRows} type="button" value="Add rows" />
+                    <div className="NewList__terms">
+                        <input className="Form__button" onClick={handleAddRows} type="button" value="Add rows" />
 
-                    {termInputs.length > 0 &&
-                        <>
-                            <div className="NewList__terms--header">
-                                <span></span>
-                                {formOutput &&
-                                    <>
-                                        <span className="Terms__header--side">{formOutput.from}</span>
-                                        <span className="Terms__header--side">{formOutput.to}</span>
-                                    </>
-                                }
-                            </div>
-                            {termInputs}
-                        </>
-                    }
-                </div>
+                        {termInputs.length > 0 &&
+                            <>
+                                <div className="NewList__terms--header">
+                                    {formOutput &&
+                                        <>
+                                            <span className="Terms__header--side">{formOutput.from}</span>
+                                            <span className="Terms__header--side">{formOutput.to}</span>
+                                        </>
+                                    }
+                                </div>
+                                {termInputs}
+                            </>
+                        }
+                    </div>
 
-                <input className="Form__button" onClick={handleSubmit} type="button" value="Create list" />
-            </form>
+                    <input className="Form__button" onClick={handleSubmit} type="button" value="Create list" />
+                </form>
+
+            :
+                <>
+                    {JSON.stringify(postResponse)}
+                </>
+            
+            }
+
 
         </div>
     )

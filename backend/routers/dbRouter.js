@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import 'dotenv/config.js';
 import session from 'express-session';
+import mongoose from 'mongoose';
 import passport from '../auth/passport.js';
 import connectMongo from 'connect-mongo';
 const MongoStore = connectMongo(session);
@@ -137,8 +138,8 @@ dbRouter.post('/u/register', (req, res) => {
  * @note Creation and authentication of users happens outside this subrouter.
  */
 const userRouter = express.Router({ mergeParams: true });
-  userRouter.use(isLoggedIn);
-  userRouter.use(userOwnsRoute);
+userRouter.use(isLoggedIn);
+userRouter.use(userOwnsRoute);
 dbRouter.use('/u/:username', userRouter);
 
 userRouter.get('/user', (req, res) => {
@@ -166,39 +167,13 @@ userRouter.get('/list', (req, res) => {
             doc && res.json(doc)
         })
 })
-userRouter.post('/list', (req, res) => {
-    const { owner, name, from, to, content } = req.body.newList;
-
-    if (req.user.username === owner) {
-        List.findOne({ owner, name }, (err, foundList) => {
-            if (err) { throw err }
-            if (foundList) {
-                console.log('found list ')
-                res.json(foundList)
-            }
-            if (!foundList) {
-                const newList = new List({
-                    owner: owner,
-                    name: name,
-                    from: from,
-                    to: to,
-                    content: content
-                });
-                newList.save((err, savedList) => {
-                    if (err) { console.log(err.errors[Object.keys(err.errors)[0]]['properties'].message) };
-                    if (savedList) {
-                        console.log('new list saved to db:', savedList);
-                        User.findOneAndUpdate({ username: owner }, { $push: { lists: savedList } }, { new: true }, (err, updatedUser) => {
-                            console.log(`added list ${savedList.name} to user ${savedList.owner}`);
-                            res.json(savedList)
-                        }
-                        )
-                    }
-                })
-            }
-        })
-    }
+userRouter.post('/list', async (req, res) => {
+    const newList = new List(req.body.newList)
+    const newTerms = await Term.create(req.body.newList.terms);
+    newList.terms = newTerms.map(term => mongoose.Types.ObjectId(term._id))
+    newList.save((err, doc) => res.status(200).json(doc));
 })
+
 userRouter.put('/list', (req, res) => {
     const { query, body } = req.body.data;
 
@@ -246,7 +221,7 @@ userRouter.put('/terms', (req, res) => {
         bulkUpdateOperations.push({
             updateOne: {
                 filter: { _id: term.termId },
-                update: { $push: { history: term.newHistoryEntry }}
+                update: { $push: { history: term.newHistoryEntry } }
             }
         })
     }
@@ -313,3 +288,15 @@ userRouter.get('/sets', (req, res) => {
         })
 
 })
+
+function bulkPostTerms(terms) {
+    const bulkOperations = [];
+
+    for (let term of terms) {
+        bulkOperations.push({
+            insertOne: {
+                document: { ...term }
+            }
+        })
+    }
+}
