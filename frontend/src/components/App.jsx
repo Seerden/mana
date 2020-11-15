@@ -5,10 +5,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './style/App.scss';
 
 import PrivateRoute from '../wrappers/PrivateRoute';
-import Private from '../wrappers/Private';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
-import Review from './review/Review';
+import ReviewPage from 'components/review/ReviewPage';
 import List from './list/List';
 import User from './user/User';
 import Lists from './lists/Lists';
@@ -55,7 +54,7 @@ const App = memo(() => {
                                         {/* Routes related to individual list */}
                                         <Route path="/list">
                                             <Route path="/:id">
-                                                <PrivateRoute path="/review" component={Review} />
+                                                <PrivateRoute path="/review" component={ReviewPage} />
                                                 <PrivateRoute path="/" component={List} />
                                             </Route>
 

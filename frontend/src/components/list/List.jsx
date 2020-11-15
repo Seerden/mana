@@ -24,7 +24,7 @@ const List = memo((props) => {
         { response: getResponse, setRequest: setGetRequest } = useRequest({ ...handleGetList() }),
         { setRequest: setPutRequest } = useRequest({ ...handlePutList() }),
         { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() }),
-        { response: termDeleteResponse, setRequest: setTermDeleteRequest } = useRequest({handleResponse, handleError}),
+        { setRequest: setTermDeleteRequest } = useRequest({ handleResponse, handleError }),
         [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState),
         numTermsToReview = useRecoilValue(numTermsToReviewState),
         setListAtom = useSetRecoilState(listState);
@@ -170,7 +170,7 @@ const List = memo((props) => {
                                                 console.log(filter.saturation);
                                                 if (!term.saturation) { return true }
                                                 return (
-                                                    term.saturation?.forwards === Number(filter?.saturation) || 
+                                                    term.saturation?.forwards === Number(filter?.saturation) ||
                                                     term.saturation?.backwards === Number(filter?.saturation)
                                                 )
                                             } else {

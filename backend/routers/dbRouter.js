@@ -229,7 +229,7 @@ userRouter.put('/terms', (req, res) => {
                 })
             }
 
-            Term.bulkWrite(bulkUpdateOperations, (err, res) => {
+            Term.bulkWrite(bulkUpdateOperations, (err, bulkResponse) => {
                 if (err) {
                     console.log(err);
                     res.status(400).send('Error bulk updating term histories.')
@@ -252,7 +252,7 @@ userRouter.put('/terms', (req, res) => {
                 })
             }
 
-            Term.bulkWrite(bulkSaturationUpdate, (err, res) => {
+            Term.bulkWrite(bulkSaturationUpdate, (err, bulkResponse) => {
                 if (err) {
                     console.log(err);
                     res.status(400).send('Error bulk updating term saturation.')

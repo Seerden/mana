@@ -7,6 +7,27 @@
     border-radius: 12px;
     box-shadow: 0 0 1rem black, 1.3rem 1.3rem 0 -0.3rem #222;
 
+    &__start {
+        display: flex;
+        margin: 2rem auto 0 auto;
+        padding: 0.5rem;
+        border: none;
+        outline: none;
+        font-size: 0.9rem;
+    
+        color: white;
+        background-color: blueviolet;
+        border-radius: 3px;
+        box-shadow: 0 0 0.3rem black;
+        transition: all 40ms ease;
+    
+        &:hover {
+            backface-visibility: hidden;
+            box-shadow: 0 0.5rem 0 -0.4rem white, 0 0.2rem 0.5rem black;
+            transform: translateY(-3px) translateZ(0px);
+        }
+    }
+
     &__settings {
         &--list {
             list-style: square;
@@ -39,7 +60,8 @@
             margin-right: 3px;
             border: 2px solid transparent;
             outline: none;
-            transition: all 100ms ease;
+
+            transition: all 50ms ease-in;
 
             &:hover {
                 backface-visibility: hidden;
@@ -56,27 +78,6 @@
             width: max-content;
 
         }
-    }
-}
-
-#PreReview__start {
-    display: flex;
-    margin: 2rem auto 0 auto;
-    padding: 0.5rem;
-    border: none;
-    outline: none;
-    font-size: 0.9rem;
-
-    color: white;
-    background-color: blueviolet;
-    border-radius: 3px;
-    box-shadow: 0 0 0.3rem black;
-    transition: all 40ms ease;
-
-    &:hover {
-        backface-visibility: hidden;
-        box-shadow: 0 0 1rem black, 0 0.5rem 0 -0.4rem white;
-        transform: translateY(-3px) translateZ(0px);
     }
 }
 

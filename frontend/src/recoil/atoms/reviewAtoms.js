@@ -12,6 +12,11 @@ export const reviewSettingsState = atom({
     }
 });
 
+export const reviewStageState = atom({
+    key: 'reviewStageState',
+    default: 'before'
+})
+
 export const termsToReviewState = atom({
     key: 'termsToReviewState',
     default: [],

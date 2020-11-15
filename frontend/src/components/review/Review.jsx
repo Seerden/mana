@@ -1,27 +1,31 @@
 import React, { memo, useEffect, useState, useRef, useReducer } from "react";
-import { useRecoilValue, useRecoilState, useResetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
 import { makeReviewList } from 'helpers/reviewHelpers';
-import { handleGetList, getList, handlePutList, putList, putTerms } from 'helpers/apiHandlers/listHandlers';
+import { handleGetList, getList, putList, putTerms } from 'helpers/apiHandlers/listHandlers';
 import { saturate } from 'helpers/srs/saturation';
-import { reviewSettingsState, termsToReviewState, newHistoryEntriesState } from 'recoil/atoms/reviewAtoms';
+import { reviewSettingsState, termsToReviewState, newHistoryEntriesState, reviewStageState } from 'recoil/atoms/reviewAtoms';
 import ReviewCard from './ReviewCard';
-import PreReview from './PreReview';
-import PostReview from './PostReview';
 import ReviewInfo from './ReviewInfo';
 import './style/Review.scss';
 
 const Review = memo((props) => {
-    const { params } = useRouteProps(),
+    const
+        { params } = useRouteProps(),
+
+        // @note: will be factored out after cross-list and subset reviewing has been implemented
         [list, setList] = useState(null),
+
+        // review state:
+        setReviewStage = useSetRecoilState(reviewStageState),
         [futureTerms, reduceFutureTerms] = useReducer(termReducer, null),
         [currentCard, setCurrentCard] = useState(null),
         [progress, setProgress] = useState(0),  // percentage of terms marked 'pass' in the session
-        { n, direction, started, sessionStart } = useRecoilValue(reviewSettingsState),
         [backWasShown, setBackWasShown] = useState(null),
+
         failRef = useRef(null),  // refs for handleLeftRightArrowKeydown to target
         passRef = useRef(null);
     let timeout = useRef(null);
@@ -30,34 +34,39 @@ const Review = memo((props) => {
         handleResponse: (res, setResponse) => {
             res = res.data
 
-            if (res.terms && res.terms.length > 0) {
+            if (res.terms?.length > 0) {
                 setResponse(res);
                 setList(res)
                 reduceFutureTerms({
                     type: 'init',
-                    payload: makeReviewList(res.terms, n)
+                    payload: makeReviewList(res.terms, reviewSettings.n)
                 })
             }
         },
         handleError: handleGetList().handleError
     })
-    const { setRequest: setPutRequest } = useRequest({ ...handlePutList() });
-    const { setRequest: setPutTermRequest } = useRequest({});
-    const { setRequest: setPutTermSaturationRequest } = useRequest({});
+    const { response: resA, setRequest: setPutRequest } = useRequest({});
+    const { response: resB, setRequest: setPutTermRequest } = useRequest({});
+    const { response: resC, setRequest: setPutTermSaturationRequest } = useRequest({});
     const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
     const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
     const [newHistoryEntries, setNewHistoryEntries] = useRecoilState(newHistoryEntriesState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const resetNewHistoryEntries = useResetRecoilState(newHistoryEntriesState);
 
+    useEffect(() => {   // @TODO: move to PostReview once all three post-session requests have been successfully handled.
+        // this is temporary, until I've migrated these requests from here to ReviewPage
+        resA && resB && resC && setReviewStage('after');
+    }, [resA, resB, resC])
+
     useEffect(() => {
         list && setTermsToReview(list.terms)
     }, [list, termsToReview])
 
-    useEffect(() => {
+    useEffect(() => {  // end session
         if (reviewSettings.sessionEnd) {
             setPutRequest(() => putList(params.username, { _id: params.id, owner: params.username }, list));
-            setPutTermRequest(() => putTerms(params.username, { type: 'history' }, {termsToUpdate: newHistoryEntries}));
+            setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
         }
     }, [reviewSettings])
 
@@ -76,18 +85,21 @@ const Review = memo((props) => {
         }
     })
 
-    useEffect(() => {
+    useEffect(() => {   // make new initial futureTerms whenever 'n' changes (from PreReview). 
+        //Should probably only do this once, once 'started' becomes true
         if (list) {
             reduceFutureTerms({
                 type: 'init',
-                payload: makeReviewList(list.terms, Number(n))
+                payload: makeReviewList(list.terms, Number(reviewSettings.n))
             })
         }
-    }, [n]) // including list in deps causes session to be malformed somehow (progress doesn't change when moving to a new term)
+    }, [reviewSettings.n]) // including list in deps causes session to be malformed somehow (progress doesn't change when moving to a new term)
+    // @note: this was probably because I was updating a list.terms entry's history every time we moved to a new term,
+    // essentially causing the review to start over
 
     useEffect(() => {  // create new card to show, remove old and add new up/down key handler
         if (list && futureTerms) {
-            let sessionLength = list.terms.length * n;
+            let sessionLength = list.terms.length * reviewSettings.n;
             let termsCompleted = sessionLength - futureTerms.length;
             setProgress(Math.floor(100 * termsCompleted / sessionLength));
         }
@@ -96,7 +108,7 @@ const Review = memo((props) => {
             <ReviewCard
                 setBackWasShown={setBackWasShown}
                 key={uuidv4()}
-                direction={direction}
+                direction={reviewSettings.direction}
                 term={futureTerms[0]} />)
 
         futureTerms?.length === 0 && endSession(list);
@@ -107,7 +119,7 @@ const Review = memo((props) => {
             setCurrentCard(null)
             window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
         }
-    }, [futureTerms, direction])
+    }, [futureTerms, reviewSettings.direction])
 
     /**
      * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
@@ -174,7 +186,7 @@ const Review = memo((props) => {
         setNewHistoryEntries(current => {
             return current.map(t => {
                 if (t.termId === term._id) {
-                    return {...t, newHistoryEntry: {...t.newHistoryEntry, content: [...(t.newHistoryEntry.content?.length > 0 ? t.newHistoryEntry.content : []), passfail]}}
+                    return { ...t, newHistoryEntry: { ...t.newHistoryEntry, content: [...(t.newHistoryEntry.content?.length > 0 ? t.newHistoryEntry.content : []), passfail] } }
                 }
                 return t
             })
@@ -199,33 +211,33 @@ const Review = memo((props) => {
      */
     function endSession(list) {
         let end = new Date();
-        setReviewSettings(current => ({...current, sessionEnd: end}))
-        
+        setReviewSettings(current => ({ ...current, sessionEnd: end }))
+
         list.sessions.push({
             start: reviewSettings.sessionEnd,
             end: end,
             numTerms: list.terms.length,
-            termsReviewed: Number(n) * list.terms.length,
-            n: Number(n),
-            direction
+            termsReviewed: Number(reviewSettings.n) * list.terms.length,
+            n: Number(reviewSettings.n),
+            direction: reviewSettings.direction
         });
 
         list.lastReviewed = end;
 
         const newSaturationLevels = list.terms.map(term => {
-            let _term = {...term};
+            let _term = { ...term };
             if (!term.saturation.forwards) {
-                _term = Object.assign(_term, {saturation: {..._term.saturation, forwards: null}})
+                _term = Object.assign(_term, { saturation: { ..._term.saturation, forwards: null } })
             }
             if (!term.saturation.backwards) {
-                _term = Object.assign(_term, {saturation: {..._term.saturation, backwards: null}})
+                _term = Object.assign(_term, { saturation: { ..._term.saturation, backwards: null } })
             }
-            const saturation = { ...(_term.saturation ? _term.saturation : []), [direction]: saturate(_term, direction) };
-            return ({termId: _term._id, saturation})
+            const saturation = { ...(_term.saturation ? _term.saturation : []), [reviewSettings.direction]: saturate(_term, reviewSettings.direction) };
+            return ({ termId: _term._id, saturation })
         });
 
-        setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, {termsToUpdate: newSaturationLevels}));
-       
+        setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: newSaturationLevels }));
+
     }
 
     return (
@@ -236,15 +248,7 @@ const Review = memo((props) => {
                         <div> Reviewing<span className="Review__title--name"><em>{list.name}</em></span> </div>
                         <div> <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to list</Link> </div>
                     </div>
-                </>
-            }
-
-            { list && !started
-                ?
-                <PreReview />
-                :
-                <>
-                    { !reviewSettings.sessionEnd && currentCard &&
+                    { currentCard &&
                         <>
                             {currentCard}
 
@@ -276,6 +280,7 @@ const Review = memo((props) => {
                                     Cannot move on to the next term until you've seen the back of the card.
                                 </div>
                             }
+                            
                             <div className="Review__progress--wrapper">
                                 <div
                                     className="Review__progress--bar"
@@ -283,24 +288,11 @@ const Review = memo((props) => {
                                 />
                             </div>
 
-                            { reviewSettings.sessionStart &&
-                                <ReviewInfo
-                                    start={reviewSettings.sessionStart}
-                                    numTerms={list.terms.length}
-                                    n={n}
-                                    progress={progress}
-                                />
-                            }
-
-                        </>
-                    }
-
-                    { reviewSettings.sessionEnd &&
-                        <>
-                            <PostReview
-                                sessionStart={reviewSettings.sessionStart}
-                                sessionEnd={reviewSettings.sessionEnd}
-                                list={list}
+                            <ReviewInfo
+                                start={reviewSettings.sessionStart}
+                                numTerms={list.terms.length}
+                                n={reviewSettings.n}
+                                progress={progress}
                             />
                         </>
                     }
@@ -313,12 +305,7 @@ const Review = memo((props) => {
 export default Review;
 
 /*
-@todo?  set progress bar color based in session cycle. go to 100% n time with various colors, instead of slowly progress a single bar
-        makes it feel like progress is faster
-
-@todo postsession: let user know session has been stored in db
-
-@note: list loads with n = 2 terms by default, but is rebuilt when n changes. could be cleaned up into a single case, but I need time to work that out. functions for now.
-
-@todo? buttons are shown based on !!backWasShown, but this means flippign to next card instantly removes them, so I won't get the little 100ms light-up effect
+@todo   in PostReview: let user know session has been stored in db
+@todo   buttons are shown based on !!backWasShown, this means simulated click doesn't show hover animation,
+        since backWasShown is triggered immediately on click
 */
