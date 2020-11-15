@@ -9,9 +9,17 @@
     }
 
     &__sets {
-        display: flex;
-        gap: 2.5rem;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(20rem, max-content));
+        gap: 0.8rem;
+        justify-content: center;
     }
 }
 
+.Banner {
+    &__link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

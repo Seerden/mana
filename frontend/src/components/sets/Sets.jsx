@@ -1,23 +1,20 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
 import { getSets } from "helpers/apiHandlers/setHandlers";
 import { useRouteProps } from "hooks/routerHooks";
 import { useRequest } from "hooks/useRequest";
 import SetCard from './SetCard';
+import PageInfo from './PageInfo';
 import './style/Sets.scss'
-import { useLogState } from "hooks/state";
+
 
 const Sets = (props) => {
     const { params } = useRouteProps(),
-        { response, setRequest } = useRequest({ handleResponse, handleError }),
-        sets = useMemo(() => response, [response]);
+        { response: sets, setRequest } = useRequest({});
 
     useEffect(() => {  // retrieve the user's sets on component load
         setRequest(() => getSets(params.username, { owner: params.username }))
     }, [])
-
-    useLogState('sets', sets)
 
     return (
         <div className="PageWrapper">
@@ -28,11 +25,18 @@ const Sets = (props) => {
 
                 <section className="Banner__link">
                     <Link className="Sets__link" to="new">New Set</Link>
+                    <PageInfo>
+                        All your sets are displayed here. Click on one of the set cards to be taken to the set's page, 
+                        where you're given a full view of the set's history, status, and from where you can specify your review settings.
+                    </PageInfo>
                 </section>
 
-                <section className="Sets__sets">
-                    {sets?.map(set => <SetCard key={set._id} set={set} />)}
-                </section>
+
+                { sets && 
+                    <section className="Sets__sets">
+                        {sets.map(set => <SetCard key={set._id} set={set} />)}
+                    </section>
+                }
             </div>
         </div>
     )

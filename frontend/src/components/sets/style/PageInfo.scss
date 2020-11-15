@@ -1,0 +1,71 @@
+.PageInfo {
+    height: 2rem;
+    user-select: none;
+    // position: absolute;
+    right: 10%;
+    &__wrapper {
+        position: relative;
+        display: flex;
+    }
+
+    &__button, &__info {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    &__button {
+        z-index: 3;
+        padding: 0.5rem;
+    }
+
+    &__info {
+        z-index: 1;
+        padding: 1rem;
+        padding-right: 1.8rem;
+        border: 2px solid #333;
+        background-color: #222;
+        box-shadow: 0.5rem 0.5rem 1.5rem 0 black;
+        border-radius: 10px;
+        min-width: min-content;
+        width: max-content;
+        max-width: 400px;
+
+        animation: fadeinfo 200ms ease-out forwards;
+    }
+
+    &__close {
+        user-select: none;
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        padding: 0.3rem;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border: none;
+        outline: none;
+        color: white;
+        background-color: #666;
+        border-radius: 50%;
+
+        transition: all 100ms linear;
+
+        &:hover {
+            background-color: orangered;
+            border-radius: 2px;
+        }
+    }
+}
+
+@keyframes fadeinfo {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
