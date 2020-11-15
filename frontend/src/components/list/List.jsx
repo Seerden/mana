@@ -24,13 +24,10 @@ const List = memo((props) => {
         { response: getResponse, setRequest: setGetRequest } = useRequest({ ...handleGetList() }),
         { setRequest: setPutRequest } = useRequest({ ...handlePutList() }),
         { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() }),
-        { response: termDeleteResponse, setRequest: setTermDeleteRequest } = useRequest({handleResponse, handleError});
-
-    // ----- REFACTOR
-    const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
-    const numTermsToReview = useRecoilValue(numTermsToReviewState);
-    const setListAtom = useSetRecoilState(listState);
-    // -----
+        { response: termDeleteResponse, setRequest: setTermDeleteRequest } = useRequest({handleResponse, handleError}),
+        [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState),
+        numTermsToReview = useRecoilValue(numTermsToReviewState),
+        setListAtom = useSetRecoilState(listState);
 
     useEffect(() => {  // retrieve list on component load
         setGetRequest(() => getList(params.username, { _id: params.id }))
@@ -169,14 +166,18 @@ const List = memo((props) => {
 
                                     {terms
                                         ?.filter(term => {
-                                            if (Object.keys(filter).length > 0) {
+                                            if (filter.saturation) {
+                                                console.log(filter.saturation);
                                                 if (!term.saturation) { return true }
-                                                return term.saturation?.forwards === Number(filter?.saturation) || term.saturation?.backwards === filter?.saturation
+                                                return (
+                                                    term.saturation?.forwards === Number(filter?.saturation) || 
+                                                    term.saturation?.backwards === Number(filter?.saturation)
+                                                )
                                             } else {
                                                 return true
                                             }
                                         })
-                                        ?.map(term => term?.element)
+                                        ?.map(term => term.element)
                                     }
                                 </ul>
                             </section>

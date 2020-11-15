@@ -3,37 +3,39 @@ import { colorMap, colorBySaturation } from "../../helpers/list.api";
 import SaturationIcon from './SaturationIcon';
 import './style/SaturationFilter.scss';
 
-const SaturationFilter = memo(({filter, setFilter}) => {
+const SaturationFilter = memo(({ filter, setFilter }) => {
     const [saturationFilter, setSaturationFilter] = useState(null);
     const [focus, setFocus] = useState(false);
 
     useEffect(() => {
-        if (saturationFilter) {
-            setFilter(({...filter, saturation: saturationFilter}))
-        }
+        setFilter(({ ...filter, saturation: saturationFilter }))
     }, [saturationFilter, setFilter])
 
-    let icons = Object.keys(colorMap)
-        .map(level => {
-            return (
-                <React.Fragment key={`saturation-wrapper-${level}`}>
-                    <div
-                        onClick={() => {
-                            setSaturationFilter(level);
-                            setTimeout(() => { setFocus(false) }, 0);
-                        }}
-                        className="SaturationFilter__icon--wrapper"
-                    >
-                        <SaturationIcon
-                            classes="SaturationFilter__icon"
-                            key={`saturation-filter-level-${level}`}
-                            saturation={level}
-                        />
-                    </div>
-                </React.Fragment>
-            )
-        }
-        )
+    function makeIcons() {
+        let icons = Object.keys(colorMap)
+            .map(level => {
+                return (
+                    <React.Fragment key={`saturation-wrapper-${level}`}>
+                        <div
+                            onClick={() => {
+                                setSaturationFilter(level);
+                                setTimeout(() => { setFocus(false) }, 0);
+                            }}
+                            className="SaturationFilter__icon--wrapper"
+                        >
+                            <SaturationIcon
+                                classes="SaturationFilter__icon"
+                                key={`saturation-filter-level-${level}`}
+                                saturation={level}
+                            />
+                        </div>
+                    </React.Fragment>
+                )
+            })
+        return icons;
+    }
+
+    let icons = makeIcons();
 
     return (
         <>
@@ -42,16 +44,29 @@ const SaturationFilter = memo(({filter, setFilter}) => {
             >
                 {!focus
                     ?
-                    <button
-                        onClick={() => setFocus(true)}
-                        className="SaturationFilter__label"
-                        style={{
-                            boxShadow: `0 8px 0 -7px ${saturationFilter ? colorBySaturation(saturationFilter) : '#333'}, 0 0 1rem black`,
-                            border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter) : '#333'}`,
-                        }}
-                    >
-                        Filter by saturation level
+                    <>
+                        <button
+                            onClick={() => setFocus(true)}
+                            className="SaturationFilter__label"
+                            style={{
+                                boxShadow: `0 8px 0 -7px ${saturationFilter ? colorBySaturation(saturationFilter) : '#333'}, 0 0 1rem black`,
+                                border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter) : '#333'}`,
+                            }}
+                        >
+                            Filter by saturation level
+                        <div
+                                className="SaturationFilter__reset"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSaturationFilter(null);
+                                    setFocus(false);
+                                }}
+
+                            >
+                                Reset
+                    </div>
                         </button>
+                    </>
                     :
                     <div className="SaturationFilter__filter">
                         <div
@@ -59,8 +74,9 @@ const SaturationFilter = memo(({filter, setFilter}) => {
                             style={{ border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter) : '#333'}` }}
                         >
                             {icons}
+
                         </div>
-                        
+
                         {/* ----- WIP: implement filter by direction ----- */}
                         {/* <div 
                             style={{ 

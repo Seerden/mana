@@ -6,70 +6,78 @@
     border: 2px solid blueviolet;
     border-radius: 12px;
     box-shadow: 0 0 1rem black, 1.3rem 1.3rem 0 -0.3rem #222;
+
+    &__settings {
+        &--list {
+            list-style: square;
+            margin: 0;
+            padding: 0;
+            margin-left: 1rem;
+
+            list-style: square;
+            margin: 0;
+            padding: 0;
+            margin-left: 1rem;
+            
+            li {
+                &::marker {
+                    color: blueviolet;                
+                }
+            }
+        }
+
+        &--cycles, &--directionbuttons {
+            display: block;
+            padding-left: 1rem;        
+        }
+
+        &--n, &--direction {
+            display: inline-flex;
+            text-align: center;
+            justify-content: center;
+            line-height: 1.2rem;
+            margin-right: 3px;
+            border: 2px solid transparent;
+            outline: none;
+            transition: all 100ms ease;
+
+            &:hover {
+                backface-visibility: hidden;
+                box-shadow: 0 0 0.5rem black, 0 -0.3rem 0 -0.1rem white;
+                transform: translateY(2px) translateZ(1px);
+            }
+        }
+
+        &--n {
+            width: 40px;
+        }
+
+        &--direction {
+            width: max-content;
+
+        }
+    }
 }
 
-.PreReview__settings--list {
-    list-style: square;
-    margin: 0;
-    padding: 0;
-    margin-left: 1rem;
-}
-
-.PreReview__settings--list li::marker {
-    color: blueviolet;
-}
-
-.PreReview__settings--cycles, .PreReview__settings--directionbuttons  {
-    display: block;
-    padding-left: 1rem;
-}
-
-.PreReview__settings--n, .PreReview__settings--direction {
-    display: inline-flex;
-    text-align: center;
-    justify-content: center;
-    line-height: 1.2rem;
-    margin-right: 3px;
-    border: 2px solid transparent;
-    outline: none;
-    transition: all 100ms ease;
-}
-
-.PreReview__settings--n {
-    width: 40px;
-}
-
-.PreReview__settings--direction {
-    width: max-content;
-}
-
-.PreReview__settings--n:hover, .PreReview__settings--direction:hover {
-    /*without !important, this gets overwritten by the inline style defined in the JSX component */
-    /* border: 2px solid blueviolet !important; */
-    backface-visibility: hidden;
-    box-shadow: 0 0 0.5rem black, 0 -0.3rem 0 -0.1rem white;
-    transform: translateY(2px) translateZ(1px);
-}
-
-#PreReview__start:hover {
-    backface-visibility: hidden;
-    box-shadow: 0 0 1rem black, 0 0.5rem 0 -0.4rem white;
-    transform: translateY(-3px) translateZ(0px);
-}
 #PreReview__start {
     display: flex;
     margin: 2rem auto 0 auto;
     padding: 0.5rem;
     border: none;
     outline: none;
-    font-size: 1rem;
-    font-family: monospace;
+    font-size: 0.9rem;
 
     color: white;
     background-color: blueviolet;
     border-radius: 3px;
     box-shadow: 0 0 0.3rem black;
     transition: all 40ms ease;
+
+    &:hover {
+        backface-visibility: hidden;
+        box-shadow: 0 0 1rem black, 0 0.5rem 0 -0.4rem white;
+        transform: translateY(-3px) translateZ(0px);
+    }
 }
 
 .PreReview__settings--label {

@@ -1,5 +1,4 @@
 import { atom, atomFamily, selector } from 'recoil';
-import { initialNewHistoryEntriesState } from '../selectors/reviewSelectors';
 
 export const reviewSettingsState = atom({
     key: 'reviewSettingsState',

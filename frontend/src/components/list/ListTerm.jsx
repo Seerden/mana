@@ -1,22 +1,15 @@
 import React, { memo, useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
-
 import { useRequest } from '../../hooks/useRequest';
 import { putTerm } from '../../helpers/apiHandlers/listHandlers'
 import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
-
 import TermModal from './TermModal';
 import SaturationIcon from './SaturationIcon';
-
 import './style/ListTerm.scss'
 import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
 
-/**
- * ListTerm component
- * @param {object}  props: handleTermDelete (passed down function), term (list.content entry), idx (Number)
- */
 const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     const [term, setTerm] = useState(() => (termFromProps)),
         [confirmingDelete, setConfirmingDelete] = useState(false),
@@ -57,8 +50,6 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     /**
      * Remove term from the list.
      * Triggered on deletion confirmation.
-     * 
-     * @todo        remove term from database entirely from this hook? or is there another 'send changes to database' layer on the /list/:id page?
      * @param {object} action    currently only expects {type: 'delete'}
      */
     function handleConfirmClick(e, action) {

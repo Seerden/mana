@@ -31,7 +31,7 @@ const PreReview = (props) => {
     }, [reviewSettings])
 
     const handleSettingsChange = e => {
-        setReviewSettings(current => ({ ...current, [e.target.name]: e.currentTarget.value })) 
+        setReviewSettings(current => ({ ...current, [e.target.name]: e.currentTarget.value }))
     }
 
     return (
@@ -43,7 +43,7 @@ const PreReview = (props) => {
 
                 <form className="PreReview__settings">
                     <ul className="PreReview__settings--list">
-                        <li key={uuidv4()}>
+                        <li key='review-cycles'>
                             <label className="PreReview__settings--label" htmlFor="n">
                                 Number of cycles:
                             </label>
@@ -55,13 +55,18 @@ const PreReview = (props) => {
                             </div>
                         </li>
 
-                        <li key={uuidv4()}>
+                        <li key='review-direction'>
                             <label className="PreReview__settings--label" htmlFor="direction">
                                 Direction:
                             </label>
-                            <p className="PreReview__settings--tip">
-                                'Forwards' means you're shown the term in the original language, and need to recall the meaning in the secondary language. 'Backwards' is the other way around.
-                            </p>
+                            <div className="PreReview__settings--tip">
+                                <div>
+                                    'Forwards' means you're shown the front, and need to recall the back of the card.
+                                </div>
+                                <div>
+                                    'Backwards' is the other way around.
+                                </div>
+                            </div>
                             <div className="PreReview__settings--directionbuttons">
                                 {directionButtons}
                             </div>
@@ -69,7 +74,7 @@ const PreReview = (props) => {
                     </ul>
 
                     <input
-                        onClick={() => setReviewSettings(current => ({ ...current, sessionStart: new Date(), started: true } ))}
+                        onClick={() => setReviewSettings(current => ({ ...current, sessionStart: new Date(), started: true }))}
                         id="PreReview__start"
                         type="button"
                         value="Start the review with these settings"

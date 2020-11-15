@@ -2,23 +2,16 @@ import React, { memo, useEffect, useState, useRef, useReducer } from "react";
 import { useRecoilValue, useRecoilState, useResetRecoilState } from 'recoil';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import dayjs from 'dayjs';
-
 import { useRouteProps } from 'hooks/routerHooks';
-import { useLogState } from "hooks/state";
 import { useRequest } from 'hooks/useRequest';
 import { makeReviewList } from 'helpers/reviewHelpers';
-import { handleGetList, getList, handlePutList, putList, putTerm, putTerms } from 'helpers/apiHandlers/listHandlers';
+import { handleGetList, getList, handlePutList, putList, putTerms } from 'helpers/apiHandlers/listHandlers';
 import { saturate } from 'helpers/srs/saturation';
-
-
 import { reviewSettingsState, termsToReviewState, newHistoryEntriesState } from 'recoil/atoms/reviewAtoms';
-
 import ReviewCard from './ReviewCard';
 import PreReview from './PreReview';
 import PostReview from './PostReview';
 import ReviewInfo from './ReviewInfo';
-
 import './style/Review.scss';
 
 const Review = memo((props) => {
@@ -33,7 +26,7 @@ const Review = memo((props) => {
         passRef = useRef(null);
     let timeout = useRef(null);
 
-    const { response: getListResponse, setRequest: setGetRequest } = useRequest({
+    const { setRequest: setGetRequest } = useRequest({
         handleResponse: (res, setResponse) => {
             res = res.data
 
@@ -51,16 +44,11 @@ const Review = memo((props) => {
     const { setRequest: setPutRequest } = useRequest({ ...handlePutList() });
     const { setRequest: setPutTermRequest } = useRequest({});
     const { setRequest: setPutTermSaturationRequest } = useRequest({});
-
-
-    // ----- REFACTOR
     const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
     const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
     const [newHistoryEntries, setNewHistoryEntries] = useRecoilState(newHistoryEntriesState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const resetNewHistoryEntries = useResetRecoilState(newHistoryEntriesState);
-
-    useLogState('newHistoryEntries', newHistoryEntries)
 
     useEffect(() => {
         list && setTermsToReview(list.terms)
