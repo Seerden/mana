@@ -3,10 +3,10 @@ import { termSessionsByDirection } from '../list.api';
 import duration from 'dayjs/plugin/duration.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
-  dayjs.extend(relativeTime);
-  dayjs.extend(duration);
+dayjs.extend(relativeTime);
+dayjs.extend(duration);
 
-let day = 1000*3600*24
+let day = 1000 * 3600 * 24
 export const saturationLevels = [
     {
         level: 0,
@@ -16,22 +16,22 @@ export const saturationLevels = [
     {
         level: 1,
         description: 'Middling short-term recollection.',
-        timescale: 3*day
+        timescale: 3 * day
     },
     {
         level: 2,
         description: 'Good short-term recollection.',
-        timescale: 7*day
+        timescale: 7 * day
     },
     {
         level: 3,
         description: 'Working towards long-term recollection',
-        timescale: 14*day
+        timescale: 14 * day
     },
     {
         level: 4,
         description: 'Long-term recollection achieved. Low review priority',
-        timescale: 30*day
+        timescale: 30 * day
     },
 ]
 
@@ -86,7 +86,7 @@ export function saturateUnseededTerm(filteredHistory) {
  * @param {Number} saturation The term's current saturation level for the specified direction
  */
 export function saturateSeededTerm(filteredHistory, saturation) {
-    const [currentSession, previousSession, secondToLastSession] = filteredHistory.reverse().slice(0,3);
+    const [currentSession, previousSession, secondToLastSession] = filteredHistory.reverse().slice(0, 3);
     // const timeBetween = currentSession?.date - previousSession?.date;
     // const currentTimescale = saturationLevels[Number(saturation)]?.timescale; 
 
@@ -103,9 +103,9 @@ export function saturateSeededTerm(filteredHistory, saturation) {
                 if (currentSession.content[0] === 'pass') return 1;
                 return 0;
             } else {
-                if ( !previousFail && !secondTolastFail) {
+                if (!previousFail && !secondTolastFail) {
                     return 2
-                } 
+                }
                 return 1
             }
         case 2:
@@ -127,9 +127,9 @@ export function saturateSeededTerm(filteredHistory, saturation) {
                 }
 
             } else {
-                if ( !previousFail && !secondTolastFail) {
+                if (!previousFail && !secondTolastFail) {
                     return 4
-                } 
+                }
                 return 3
             }
         case 4:

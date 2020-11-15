@@ -30,7 +30,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
 
     return (
         <>
-            <div onClick={closeModal} className="TermModal__wrapper"></div>
+            <div onClick={closeModal} className="TermModal__wrapper"/>
             <div className="TermModal">
                 <section>
                     <div className="TermModal__header">
@@ -51,7 +51,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                             onBlur={handleTermEdit} side="from" type="text" defaultValue={term.from}
                         />
                         <span className="TermModal__side--saturation">
-                            <SaturationIcon direction='forwards' saturation={term.saturation?.forwards} />
+                            <SaturationIcon direction='backwards' saturation={term.saturation?.backwards} />
                         </span>
                     </div>
 
@@ -71,7 +71,7 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                             defaultValue={term.to}
                         />
                         <span className="TermModal__side--saturation">
-                            <SaturationIcon direction={'backwards'} saturation={term.saturation?.backwards} />
+                            <SaturationIcon direction={'forwards'} saturation={term.saturation?.forwards} />
                         </span>
                     </div>
 
@@ -79,7 +79,9 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
 
             <section>
                 <header> History </header>
-                <TermHistory history={term.history} />
+                <TermHistory 
+                    history={term.history} 
+                />
             </section>
 
             <div className="TermModal__delete--wrapper">

@@ -50,6 +50,7 @@ const Review = memo((props) => {
     })
     const { setRequest: setPutRequest } = useRequest({ ...handlePutList() });
     const { setRequest: setPutTermRequest } = useRequest({});
+    const { setRequest: setPutTermSaturationRequest } = useRequest({});
 
 
     // ----- REFACTOR
@@ -67,8 +68,8 @@ const Review = memo((props) => {
 
     useEffect(() => {
         if (reviewSettings.sessionEnd) {
-            setPutRequest(() => putList(params.username, { _id: params.id, owner: list.owner }, list));
-            setPutTermRequest(() => putTerms(params.username, {termsToUpdate: newHistoryEntries}));
+            setPutRequest(() => putList(params.username, { _id: params.id, owner: params.username }, list));
+            setPutTermRequest(() => putTerms(params.username, { type: 'history' }, {termsToUpdate: newHistoryEntries}));
         }
     }, [reviewSettings])
 
@@ -223,11 +224,19 @@ const Review = memo((props) => {
 
         list.lastReviewed = end;
 
-        list.terms = list.terms.map(term => {
-            const newTerm = { ...term };
-            newTerm.saturation = { ...newTerm.saturation, [direction]: saturate(newTerm, direction) };
-            return newTerm
+        const newSaturationLevels = list.terms.map(term => {
+            let _term = {...term};
+            if (!term.saturation.forwards) {
+                _term = Object.assign(_term, {saturation: {..._term.saturation, forwards: null}})
+            }
+            if (!term.saturation.backwards) {
+                _term = Object.assign(_term, {saturation: {..._term.saturation, backwards: null}})
+            }
+            const saturation = { ...(_term.saturation ? _term.saturation : []), [direction]: saturate(_term, direction) };
+            return ({termId: _term._id, saturation})
         });
+
+        setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, {termsToUpdate: newSaturationLevels}));
        
     }
 

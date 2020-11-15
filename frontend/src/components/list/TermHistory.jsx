@@ -21,10 +21,16 @@ const TermHistory = memo(({ history }) => {
                         {timeSince(el.date)}
                     </div>
 
+                    <div className="TermHistory__direction">
+                        {el.direction === 'forwards'
+                            ? 'front to back'
+                            : 'back to front'}
+                    </div>
+
                     <div
                         key={uuidv4()}
                         className="TermHistory__history">
-                        { el.content.map((i, index) =>
+                        {el.content.map((i, index) =>
                             <span
                                 key={`passfail-${i}-${index}`}
                                 style={{
@@ -35,8 +41,8 @@ const TermHistory = memo(({ history }) => {
                                     borderRadius: "50%",
                                     backgroundColor: i === 'pass' ? 'seagreen' : 'orangered'
                                 }}
-                            > </span>
-                         )
+                            />
+                        )
                         }
                     </div>
                 </div>
@@ -64,7 +70,7 @@ const TermHistory = memo(({ history }) => {
                     }
                 </div>
                 <div className="TermHistory__content">
-                    {expand ? histEl.reverse() : histEl[histEl.length - 1]}
+                    {expand ? histEl.reverse() : histEl.reverse()[0]}
                 </div>
             </div>
 

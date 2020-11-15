@@ -29,7 +29,7 @@
 
     position: fixed;
     z-index: 21;
-    top: 20%;
+    top: 10%;
     padding: 2rem;
     background-color: #111;
     color: white;
@@ -40,7 +40,7 @@
     left: 25%;
     overflow-y: auto;
 
-    @media screen and (max-height: 768px) {
+    @media screen and (max-height: 900px) {
         top: 0;
         height: 100vh;
         background-color: rgba(0, 0, 0, 0.815);

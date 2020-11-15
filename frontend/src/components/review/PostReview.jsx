@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useResetRecoilState } from 'recoil';
 import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
+import { reviewSettingsState } from 'recoil/atoms/reviewAtoms';
 import dayjs from 'dayjs';
 
 const PostReview = ({ sessionStart, sessionEnd, list }) => {
     const { navigate, params } = useRouteProps();
     const formatDate = (date) => dayjs(date).format('HH:mm:ss');
+    const resetReviewSettings = useResetRecoilState(reviewSettingsState);
+
+    useEffect(() => {
+        resetReviewSettings();
+    }, [])
 
     return (
         <div className="Review__post">
@@ -14,18 +21,18 @@ const PostReview = ({ sessionStart, sessionEnd, list }) => {
             <div>Completed at {formatDate(sessionEnd)}</div>
 
             <button className="Button">
-                <Link to={`/u/${list.owner}/list/${params.id}`}>Back to list</Link>
+                <Link to={`/u/${params.username}/list/${params.id}`}>Back to list</Link>
             </button>
 
             <button className="Button">
-                <Link to={`/u/${list.owner}/lists`}>Back to lists overview</Link>
+                <Link to={`/u/${params.username}/lists`}>Back to lists overview</Link>
             </button>
 
             <button 
                 onClick={() => navigate(0)}
                 className="Button"
             >
-                <Link to={`/u/${list.owner}/list/${params.id}/review`}>Review this list again</Link>
+                <Link to={`/u/${params.username}/list/${params.id}/review`}>Review this list again</Link>
             </button>
         </div>
     )

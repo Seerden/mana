@@ -6,9 +6,9 @@ export const termSchema = new mongoose.Schema({
     to: String,
     from: String,
     history: [{date: Date, content: Array, direction: String}],
-    saturation: {
+    saturation: {type: Object, default: {
         forwards: Number, 
         backwards: Number
-    },
+    }},
     listMembership: [{type: mongoose.Schema.Types.ObjectId, ref: 'List'}]
 })

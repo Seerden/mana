@@ -69,4 +69,4 @@ export const deleteTerm = (username, termId) => { return () => axios.delete(`/db
 
 export const putTerm = (username, query, body) => { return () => axios.put(`/db/u/${username}/term`, { data: { query, body } }) }
 
-export const putTerms = (username, body) => { return () => axios.put(`/db/u/${username}/terms`, body)}
+export const putTerms = (username, query, body) => { return () => axios.put(`/db/u/${username}/terms`, { data: { query, body } }) }

@@ -22,7 +22,7 @@ const Term = dbConn.model('Term');
  * Express router for /db routes, used as API endpoints for frontend interaction with the database.
  */
 export const dbRouter = express.Router();
-dbRouter.use(bodyParser.urlencoded({ extended: true }));
+dbRouter.use(bodyParser.urlencoded({ limit: '5mb', parameterLimit: 10000, extended: true }));
 dbRouter.use(bodyParser.json());
 dbRouter.use(session({
     secret: process.env.SESSION_SECRET,
@@ -214,22 +214,57 @@ userRouter.put('/term', (req, res) => {
 })
 
 userRouter.put('/terms', (req, res) => {
-    const { termsToUpdate } = req.body;
+    const { body, query } = req.body.data;
+    const { termsToUpdate } = body;
 
-    const bulkUpdateOperations = [];
-    for (let term of termsToUpdate) {
-        bulkUpdateOperations.push({
-            updateOne: {
-                filter: { _id: term.termId },
-                update: { $push: { history: term.newHistoryEntry } }
+    switch (query.type) {
+        case 'history':
+            const bulkUpdateOperations = [];
+            for (let term of termsToUpdate) {
+                bulkUpdateOperations.push({
+                    updateOne: {
+                        filter: { _id: term.termId },
+                        update: { $push: { history: term.newHistoryEntry } }
+                    }
+                })
             }
-        })
+
+            Term.bulkWrite(bulkUpdateOperations, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    res.status(400).send('Error bulk updating term histories.')
+                }
+                else {
+                    console.log('Bulk wrote term histories.');
+                    res.status(200).send('Term histories updated.')
+                };
+            })
+            break;
+
+        case 'saturation':
+            const bulkSaturationUpdate = [];
+            for (let term of termsToUpdate) {
+                bulkSaturationUpdate.push({
+                    updateOne: {
+                        filter: { _id: term.termId },
+                        update: { $set: { saturation: term.saturation } }
+                    }
+                })
+            }
+
+            Term.bulkWrite(bulkSaturationUpdate, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    res.status(400).send('Error bulk updating term saturation.')
+                }
+                else {
+                    console.log('Bulk wrote term saturation.');
+                    res.status(200).send('Term saturations updated.')
+                }
+            })
+            break;
     }
 
-    Term.bulkWrite(bulkUpdateOperations, (err, res) => {
-        if (err) console.log(err);
-        else console.log(res);
-    })
 })
 
 // ----- routes related to multiple lists -----
@@ -289,14 +324,7 @@ userRouter.get('/sets', (req, res) => {
 
 })
 
-function bulkPostTerms(terms) {
-    const bulkOperations = [];
-
-    for (let term of terms) {
-        bulkOperations.push({
-            insertOne: {
-                document: { ...term }
-            }
-        })
-    }
-}
+// List
+//     .find({owner: 'seerden'})
+//     .where('numTerms').gt(100)
+//     .exec((err, docs) => console.log(docs.map(doc => doc.name)))
