@@ -98,7 +98,7 @@ const List = memo((props) => {
                                     >
                                         <Link
                                             onClick={() => setTermsToReview(list.terms)}
-                                            to={`${location.pathname}/review`}
+                                            to={`${location.pathname}/review?kind=full`}
                                         >
                                             Review entire list
                                         </Link>

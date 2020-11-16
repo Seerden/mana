@@ -12,6 +12,8 @@ import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
 import ReviewCard from './ReviewCard';
 import ReviewInfo from './ReviewInfo';
 import './style/Review.scss';
+import { useLogState } from "hooks/state";
+
 
 const Review = memo((props) => {
     const { params } = useRouteProps();
@@ -31,6 +33,7 @@ const Review = memo((props) => {
             return Math.floor(100 * termsCompleted / sessionLength);
         }
     }, [futureTerms]);
+
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const resetNewHistoryEntries = useResetRecoilState(newHistoryEntriesState);
 
@@ -45,7 +48,7 @@ const Review = memo((props) => {
             resetNewHistoryEntries();
         }
     }, [])
-    
+
     useEffect(() => {  // whenever backWasShown changes, remake LeftArrow/RightArrow keydown handler
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
 
@@ -56,11 +59,16 @@ const Review = memo((props) => {
 
     useEffect(() => {  // end review session once futureTerms.length reaches 0.
         if (futureTerms?.length === 0) {
-            setReviewSettings(current => ({ ...current, sessionEnd: new Date() }));  
+            setReviewSettings(current => ({ ...current, sessionEnd: new Date() }));
+        }
+    }, [futureTerms])
+
+    useEffect(() => {  // send PUT requests (needs to not be in the useEffect above, since then history lags one update behind)
+        if (reviewSettings.sessionEnd) {
             setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
             setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevels() }));
-        } 
-    }, [futureTerms])
+        }
+    }, [reviewSettings.sessionEnd])
 
     useEffect(() => {  // move to PostReview component once all post-session API requests are handled
         resB && resC && setReviewStage('after');
@@ -122,6 +130,7 @@ const Review = memo((props) => {
                 return t
             })
         })
+
     }
 
     /**
@@ -131,7 +140,7 @@ const Review = memo((props) => {
      */
     function handlePassFailClick(e, passfail) {
         updateTermHistory(futureTerms[0].term, passfail);
-        reduceFutureTerms({ type: passfail })
+        reduceFutureTerms({ type: passfail });
         setBackWasShown(false);
     }
 

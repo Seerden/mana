@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { RecoilRoot } from 'recoil';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './style/App.scss';
 
