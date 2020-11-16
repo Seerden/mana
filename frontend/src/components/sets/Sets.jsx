@@ -4,7 +4,7 @@ import { getSets } from "helpers/apiHandlers/setHandlers";
 import { useRouteProps } from "hooks/routerHooks";
 import { useRequest } from "hooks/useRequest";
 import SetCard from './SetCard';
-import PageInfo from './PageInfo';
+import PageInfo from '../_shared/PageInfo';
 import './style/Sets.scss'
 
 

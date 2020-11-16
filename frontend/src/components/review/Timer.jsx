@@ -4,7 +4,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
   dayjs.extend(relativeTime);
 
 /**
- * JSX <span> component displaying sessionStart.fromNow();
+ * JSX component that renders time (in seconds) since mount.
  */
 const Timer = memo(({ start }) => {
     const [timer, setTimer] = useState(null);

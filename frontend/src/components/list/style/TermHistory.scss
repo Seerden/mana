@@ -36,16 +36,21 @@
         }
 
         &:active {
-            background-color: seagreen;
+            background-color: #666;
             transform: translateY(0);
         }
     }
 
     &__session {
         display: flex;
+        margin-right: 0.5rem;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 1px solid #333;
+
+        &:not(:nth-last-of-type(1)) {
+            border-bottom: 1px solid #222;
+        }
+        
         padding: 0.5rem 0.5rem;
         padding-right: 2rem;
 
@@ -73,7 +78,7 @@
             width: 8px;
             
             &-thumb {
-                background-color:#ccc;
+                background-color:#555;
                 border-radius: 5px;
             }
             

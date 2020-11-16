@@ -17,7 +17,7 @@ const PageInfo = ({ children }) => {
                         ?
                         <AiFillInfoCircle
                             size={25}
-                            fill="deepskyblue"
+                            className="PageInfo__icon"
                             onClick={toggleOpen}
                         />
                         :
@@ -34,7 +34,6 @@ const PageInfo = ({ children }) => {
                 {isOpen &&
                     <div className="PageInfo__info">
                         {children}
-
                     </div>
                 }
 

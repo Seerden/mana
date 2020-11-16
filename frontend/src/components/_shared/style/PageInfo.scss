@@ -1,7 +1,6 @@
 .PageInfo {
     height: 2rem;
     user-select: none;
-    // position: absolute;
     right: 10%;
     &__wrapper {
         position: relative;
@@ -19,13 +18,23 @@
         padding: 0.5rem;
     }
 
+    &__icon {
+        fill: azure;
+
+        transition: all 100ms ease-in;
+
+        &:hover {
+            fill: deepskyblue
+        }
+    }
+
     &__info {
         z-index: 1;
         padding: 1rem;
         padding-right: 1.8rem;
         border: 2px solid #333;
         background-color: #222;
-        box-shadow: 0.5rem 0.5rem 1.5rem 0 black;
+        box-shadow: 0.2rem 0.2rem 0.5rem 0 black;
         border-radius: 10px;
         min-width: min-content;
         width: max-content;

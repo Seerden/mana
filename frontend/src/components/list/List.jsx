@@ -12,6 +12,7 @@ import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 import ListTerm from './ListTerm';
 import SetPicker from './SetPicker';
 import SaturationFilter from './SaturationFilter';
+import PageInfo from 'components/_shared/PageInfo';
 
 import './style/List.scss';
 import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
@@ -88,15 +89,15 @@ const List = memo((props) => {
 
                     {list &&
                         <>
-                            <div className="PageHeader">{list.name} ({list.from} to {list.to})</div>
+                            <h1 className="PageHeader">{list.name} ({list.from} to {list.to})</h1>
 
                             <section className="List__banner">
                                 <div className="List__banner--review">
-                                    <button 
+                                    <button
                                         className="Button"
                                     >
-                                        <Link 
-                                            onClick={() => setTermsToReview(list.terms)}    
+                                        <Link
+                                            onClick={() => setTermsToReview(list.terms)}
                                             to={`${location.pathname}/review`}
                                         >
                                             Review entire list
@@ -123,7 +124,9 @@ const List = memo((props) => {
                                 }}
                             >
                                 <section className="List__info">
-                                    <header className="List__section--header">List info</header>
+                                    <header className="List__section--heading">
+                                        <span className="List__section--header">List info</span>
+                                    </header>
                                     <p className="List__info--item">
                                         There {list.terms.length === 1 ? 'is' : 'are'} <span className="List__info--datum">{list.numTerms}</span> term{list.terms.length === 1 ? '' : 's'} in this list.
                                     </p>
@@ -142,10 +145,14 @@ const List = memo((props) => {
                                         <p className="List__info--item" style={{ width: 'max-content', backgroundColor: 'blueviolet' }}>You haven't reviewed this list yet. Get on it!</p>
                                     }
                                 </section>
+
                                 <section className="List__sets">
-                                    <header className="List__section--header">
-                                        Sets
-                                    </header>
+                                        <header className="List__section--heading">
+                                            <span className="List__section--header">Sets</span>
+                                        <PageInfo>
+                                                To add this list to a set, go to your Sets overview, or your Lists overview.
+                                        </PageInfo>
+                                        </header>
                                     <SetPicker />
                                     {!list.sets && <p>This list is not part of any sets.</p>}
                                 </section>
@@ -157,9 +164,9 @@ const List = memo((props) => {
                                 <ul className="List__terms">
                                     <div>
                                         <div className="List__terms--header">
-                                            <span className="List__section--header">
+                                            <header className="List__section--header">
                                                 Terms
-                                                    </span>
+                                            </header>
 
                                             <div className="List__terms--saturationfilter">
                                                 {list.sessions?.length > 0 &&
