@@ -328,3 +328,9 @@ userRouter.get('/sets', (req, res) => {
 //     .find({owner: 'seerden'})
 //     .where('numTerms').gt(100)
 //     .exec((err, docs) => console.log(docs.map(doc => doc.name)))
+
+// List.findOne({name: 'Kanji 1-30'}, (err, doc) => {
+//     Term.findById(doc.terms[0]._id, (err, doc) => {
+//         console.log(doc);
+//     });
+// })

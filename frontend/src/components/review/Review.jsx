@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
-import { useLogState } from "hooks/state";
 import { makeReviewList } from 'helpers/reviewHelpers';
 import { putTerms } from 'helpers/apiHandlers/listHandlers';
 import { saturate } from 'helpers/srs/saturation';
@@ -18,37 +17,24 @@ const Review = memo((props) => {
     const { params } = useRouteProps();
     const setReviewStage = useSetRecoilState(reviewStageState);
     const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
+    const [newHistoryEntries, setNewHistoryEntries] = useRecoilState(newHistoryEntriesState);
     const termsToReview = useRecoilValue(termsToReviewState);
+    const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const [backWasShown, setBackWasShown] = useState(false);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, null);
     const { response: resB, setRequest: setPutTermRequest } = useRequest({});
     const { response: resC, setRequest: setPutTermSaturationRequest } = useRequest({});
     const progress = useMemo(() => {
         if (futureTerms) {
-            let sessionLength = termsToReview.length * reviewSettings.n;
+            let sessionLength = numTermsToReview * reviewSettings.n;
             let termsCompleted = sessionLength - futureTerms.length;
             return Math.floor(100 * termsCompleted / sessionLength);
         }
     }, [futureTerms]);
-    const [newHistoryEntries, setNewHistoryEntries] = useRecoilState(newHistoryEntriesState);
-    const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const resetNewHistoryEntries = useResetRecoilState(newHistoryEntriesState);
 
-    useLogState('futureterms', futureTerms)
-
-    useEffect(() => {   // this is temporary, until I've migrated these requests from here to ReviewPage
-        resB && resC && setReviewStage('after');
-    }, [resB, resC])
-
-    useEffect(() => {  // end session
-        if (reviewSettings.sessionEnd) {
-            setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
-            setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevels() }));
-        }
-    }, [reviewSettings.sessionEnd])
-
-    useEffect(() => {
+    useEffect(() => {  // on mount: initialize futureTerms. on unmount: reset termsToReview and newHistoryEntries
         reduceFutureTerms({
             type: 'init',
             payload: makeReviewList(termsToReview, Number(reviewSettings.n))
@@ -59,12 +45,8 @@ const Review = memo((props) => {
             resetNewHistoryEntries();
         }
     }, [])
-
-    useEffect(() => {  // create new card to show, remove old and add new up/down key handler
-        futureTerms?.length === 0 && setReviewSettings(current => ({ ...current, sessionEnd: new Date() }));
-    }, [futureTerms])
-
-    useEffect(() => {
+    
+    useEffect(() => {  // whenever backWasShown changes, remake LeftArrow/RightArrow keydown handler
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
 
         return () => {
@@ -72,6 +54,17 @@ const Review = memo((props) => {
         }
     }, [backWasShown])
 
+    useEffect(() => {  // end review session once futureTerms.length reaches 0.
+        if (futureTerms?.length === 0) {
+            setReviewSettings(current => ({ ...current, sessionEnd: new Date() }));  
+            setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
+            setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevels() }));
+        } 
+    }, [futureTerms])
+
+    useEffect(() => {  // move to PostReview component once all post-session API requests are handled
+        resB && resC && setReviewStage('after');
+    }, [resB, resC])
 
     /**
   * case init:       Initialize futureTerms with termsToReview
@@ -107,7 +100,7 @@ const Review = memo((props) => {
     }
 
     /**
-     * Find current term in newHistoryEntries and push 'pass' or 'fail' to it
+     * Push 'pass'/'fail' to term's newHistoryEntry
      * @param {object} term     should always be futureTerms[0]
      * @param {string} passfail 'pass'/'fail'
      */
@@ -137,7 +130,7 @@ const Review = memo((props) => {
      * @param {string} passfail 'pass'/'fail'
      */
     function handlePassFailClick(e, passfail) {
-        updateTermHistory(futureTerms[0], passfail);
+        updateTermHistory(futureTerms[0].term, passfail);
         reduceFutureTerms({ type: passfail })
         setBackWasShown(false);
     }
@@ -164,25 +157,6 @@ const Review = memo((props) => {
         }
     }
 
-    // shouldn't have to be here at all: add .saturation property to term if it doesn't have one yet.
-    function addEmptySaturationIfTermHasNone(term) {
-        let _term = { ...term };
-
-        if (!_term.saturation) {
-            _term = Object.assign(_term, { saturation: { forwards: null, backwards: null } });
-        }
-
-        if (!_term.saturation.forwards) {
-            _term = Object.assign(_term, { saturation: { ..._term.saturation, forwards: null } });
-        }
-
-        if (!_term.saturation.backwards) {
-            _term = Object.assign(_term, { saturation: { ..._term.saturation, backwards: null } });
-        }
-
-        return _term;
-    }
-
     function makeNewSaturationLevels() {
         return termsToReview.map(term => {
             let _term = {  // copy term, add this session's history to it
@@ -192,8 +166,6 @@ const Review = memo((props) => {
                     newHistoryEntries.find(t => t.termId === term._id).newHistoryEntry
                 ]
             };
-
-            _term = addEmptySaturationIfTermHasNone(_term);
 
             const saturation = { ...(_term.saturation ? _term.saturation : []), [reviewSettings.direction]: saturate(_term, reviewSettings.direction) };
 
