@@ -1,8 +1,9 @@
 import React, { useState, memo, Fragment } from "react";
-import './style/TermHistory.scss'
 import dayjs from 'dayjs';
-import { timeSince } from '../../helpers/time';
 import { v4 as uuidv4 } from 'uuid';
+import { BiArrowToLeft, BiArrowToRight } from 'react-icons/bi'
+import { timeSince } from '../../helpers/time';
+import './style/TermHistory.scss'
 
 const TermHistory = memo(({ history }) => {
     const [expand, setExpand] = useState(false);
@@ -14,36 +15,51 @@ const TermHistory = memo(({ history }) => {
         (
             <Fragment key={uuidv4()}>
                 <div className="TermHistory__session">
-                    <div
-                        title={dayjs(el.date).format('MMMM DD, YYYY (HH:mm)')}
-                        className="TermHistory__date"
-                    >
-                        {timeSince(el.date)}
+                    <div className="TermHistory__session--block">
+                        <span className="TermHistory__direction">
+                            {el.direction === 'forwards'
+                                ? 
+                                    <BiArrowToRight 
+                                        title="Reviewed front to back"
+                                        fill="deepskyblue"
+                                        size={18}
+                                    />
+                                : 
+                                    <BiArrowToLeft 
+                                        title="Reviewed back to front"
+                                        fill="limegreen" 
+                                        size={18}
+                                    />
+                            }
+                        </span>
+
+                        <span
+                            title={dayjs(el.date).format('MMMM DD, YYYY (HH:mm)')}
+                            className="TermHistory__date"
+                        >
+                            {timeSince(el.date)}
+                        </span>
                     </div>
 
-                    <div className="TermHistory__direction">
-                        {el.direction === 'forwards'
-                            ? 'front to back'
-                            : 'back to front'}
-                    </div>
-
-                    <div
-                        key={uuidv4()}
-                        className="TermHistory__history">
-                        {el.content.map((i, index) =>
-                            <span
-                                key={`passfail-${i}-${index}`}
-                                style={{
-                                    width: "20px",
-                                    height: "20px",
-                                    display: "inline-block",
-                                    margin: "0.2rem",
-                                    borderRadius: "50%",
-                                    backgroundColor: i === 'pass' ? 'seagreen' : 'orangered'
-                                }}
-                            />
-                        )
-                        }
+                    <div className="TermHistory__session--block">
+                        <div
+                            key={uuidv4()}
+                            className="TermHistory__history">
+                            {el.content.map((i, index) =>
+                                <span
+                                    key={`passfail-${i}-${index}`}
+                                    style={{
+                                        width: "20px",
+                                        height: "20px",
+                                        display: "inline-block",
+                                        margin: "0.2rem",
+                                        borderRadius: "50%",
+                                        backgroundColor: i === 'pass' ? 'seagreen' : 'orangered'
+                                    }}
+                                />
+                            )
+                            }
+                        </div>
                     </div>
                 </div>
             </Fragment>
@@ -53,7 +69,6 @@ const TermHistory = memo(({ history }) => {
 
     return (
         <>
-
             <div className="TermHistory">
                 <div className="TermHistory__header">
                     <div
@@ -65,7 +80,7 @@ const TermHistory = memo(({ history }) => {
                             className="TermHistory__expand"
                             onClick={() => setExpand(!expand)}
                         >
-                            {!expand ? 'Expand' : 'Collapse'}
+                            {!expand ? 'Showing one' : 'Showing all'}
                         </button>
                     }
                 </div>
@@ -73,7 +88,6 @@ const TermHistory = memo(({ history }) => {
                     {expand ? histEl.reverse() : histEl.reverse()[0]}
                 </div>
             </div>
-
         </>
     )
 })
