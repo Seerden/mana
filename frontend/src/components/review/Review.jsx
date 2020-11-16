@@ -1,77 +1,58 @@
-import React, { memo, useEffect, useState, useRef, useReducer } from "react";
-import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
+import React, { memo, useEffect, useState, useMemo, useReducer } from "react";
+import { useRecoilState, useSetRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
+import { useLogState } from "hooks/state";
 import { makeReviewList } from 'helpers/reviewHelpers';
-import { handleGetList, getList, putList, putTerms } from 'helpers/apiHandlers/listHandlers';
+import { putTerms } from 'helpers/apiHandlers/listHandlers';
 import { saturate } from 'helpers/srs/saturation';
 import { reviewSettingsState, termsToReviewState, newHistoryEntriesState, reviewStageState } from 'recoil/atoms/reviewAtoms';
+import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
 import ReviewCard from './ReviewCard';
 import ReviewInfo from './ReviewInfo';
 import './style/Review.scss';
 
 const Review = memo((props) => {
-    const
-        { params } = useRouteProps(),
-
-        // @note: will be factored out after cross-list and subset reviewing has been implemented
-        [list, setList] = useState(null),
-
-        // review state:
-        setReviewStage = useSetRecoilState(reviewStageState),
-        [futureTerms, reduceFutureTerms] = useReducer(termReducer, null),
-        [currentCard, setCurrentCard] = useState(null),
-        [progress, setProgress] = useState(0),  // percentage of terms marked 'pass' in the session
-        [backWasShown, setBackWasShown] = useState(null),
-
-        failRef = useRef(null),  // refs for handleLeftRightArrowKeydown to target
-        passRef = useRef(null);
-    let timeout = useRef(null);
-
-    const { setRequest: setGetRequest } = useRequest({
-        handleResponse: (res, setResponse) => {
-            res = res.data
-
-            if (res.terms?.length > 0) {
-                setResponse(res);
-                setList(res)
-                reduceFutureTerms({
-                    type: 'init',
-                    payload: makeReviewList(res.terms, reviewSettings.n)
-                })
-            }
-        },
-        handleError: handleGetList().handleError
-    })
-    const { response: resA, setRequest: setPutRequest } = useRequest({});
+    const { params } = useRouteProps();
+    const setReviewStage = useSetRecoilState(reviewStageState);
+    const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
+    const termsToReview = useRecoilValue(termsToReviewState);
+    const [backWasShown, setBackWasShown] = useState(false);
+    const [futureTerms, reduceFutureTerms] = useReducer(termReducer, null);
     const { response: resB, setRequest: setPutTermRequest } = useRequest({});
     const { response: resC, setRequest: setPutTermSaturationRequest } = useRequest({});
-    const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
-    const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
+    const progress = useMemo(() => {
+        if (futureTerms) {
+            let sessionLength = termsToReview.length * reviewSettings.n;
+            let termsCompleted = sessionLength - futureTerms.length;
+            return Math.floor(100 * termsCompleted / sessionLength);
+        }
+    }, [futureTerms]);
     const [newHistoryEntries, setNewHistoryEntries] = useRecoilState(newHistoryEntriesState);
+    const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const resetNewHistoryEntries = useResetRecoilState(newHistoryEntriesState);
 
-    useEffect(() => {   // @TODO: move to PostReview once all three post-session requests have been successfully handled.
-        // this is temporary, until I've migrated these requests from here to ReviewPage
-        resA && resB && resC && setReviewStage('after');
-    }, [resA, resB, resC])
+    useLogState('futureterms', futureTerms)
 
-    useEffect(() => {
-        list && setTermsToReview(list.terms)
-    }, [list, termsToReview])
+    useEffect(() => {   // this is temporary, until I've migrated these requests from here to ReviewPage
+        resB && resC && setReviewStage('after');
+    }, [resB, resC])
 
     useEffect(() => {  // end session
         if (reviewSettings.sessionEnd) {
-            setPutRequest(() => putList(params.username, { _id: params.id, owner: params.username }, list));
             setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
+            setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevels() }));
         }
-    }, [reviewSettings])
+    }, [reviewSettings.sessionEnd])
 
-    useEffect(() => {  // get list from database and initialize futureTerms
-        setGetRequest(() => getList(params.username, { _id: params.id }))
+    useEffect(() => {
+        reduceFutureTerms({
+            type: 'init',
+            payload: makeReviewList(termsToReview, Number(reviewSettings.n))
+        })
 
         return () => {
             resetTermsToReview();
@@ -79,95 +60,43 @@ const Review = memo((props) => {
         }
     }, [])
 
-    useEffect(() => {
-        return () => {
-            window.clearTimeout(timeout.current);
-        }
-    })
-
-    useEffect(() => {   // make new initial futureTerms whenever 'n' changes (from PreReview). 
-        //Should probably only do this once, once 'started' becomes true
-        if (list) {
-            reduceFutureTerms({
-                type: 'init',
-                payload: makeReviewList(list.terms, Number(reviewSettings.n))
-            })
-        }
-    }, [reviewSettings.n]) // including list in deps causes session to be malformed somehow (progress doesn't change when moving to a new term)
-    // @note: this was probably because I was updating a list.terms entry's history every time we moved to a new term,
-    // essentially causing the review to start over
-
     useEffect(() => {  // create new card to show, remove old and add new up/down key handler
-        if (list && futureTerms) {
-            let sessionLength = list.terms.length * reviewSettings.n;
-            let termsCompleted = sessionLength - futureTerms.length;
-            setProgress(Math.floor(100 * termsCompleted / sessionLength));
-        }
+        futureTerms?.length === 0 && setReviewSettings(current => ({ ...current, sessionEnd: new Date() }));
+    }, [futureTerms])
 
-        futureTerms?.length > 0 && setCurrentCard(
-            <ReviewCard
-                setBackWasShown={setBackWasShown}
-                key={uuidv4()}
-                direction={reviewSettings.direction}
-                term={futureTerms[0]} />)
-
-        futureTerms?.length === 0 && endSession(list);
-
+    useEffect(() => {
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
 
         return () => {
-            setCurrentCard(null)
             window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
         }
-    }, [futureTerms, reviewSettings.direction])
+    }, [backWasShown])
+
 
     /**
-     * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
-     * @param {*} e event object
-     */
-    function handleLeftRightArrowKeyDown(e) {
-        let ref;
-        switch (e.code) {
-            case 'ArrowLeft':
-                ref = failRef;
-                break;
-            case 'ArrowRight':
-                ref = passRef
-                break;
-            default:
-                return
-        }
-
-        if (ref.current) {
-            ref.current.focus()
-            ref.current.click();
-            timeout.current = (setTimeout(() => {  // highlight button for UX
-                setBackWasShown(false);
-                if (ref.current) {
-                    ref.current.blur()
-                }
-            }, 100)
-            )
-        }
-
-    }
-
-    /**
-     * case init: initialize futureTerms using list.content from database
-     * case pass/fail: Handle what happens to current term after pass/fail is chosen.
-     * @param {Array} terms     array of terms
-     * @param {Object} action   properties: type (init, pass, fail). if type 'init', send terms as action.payload
-     */
+  * case init:       Initialize futureTerms with termsToReview
+  * case pass/fail:  Handle what happens to current term after pass/fail is chosen.
+  * @param {Array} terms     array of terms
+  * @param {Object} action   properties: type (init, pass, fail). if type 'init', send terms as action.payload
+  */
     function termReducer(terms, action) {
-
         switch (action.type) {
             case 'init':
-                return action.payload
+                return action.payload.map(term => (
+                    {
+                        term: term,
+                        card: <ReviewCard
+                            setBackWasShown={setBackWasShown}
+                            key={uuidv4()}
+                            direction={reviewSettings.direction}
+                            term={term}
+                        />
+                    })
+                )
             case 'pass':
-                return terms.slice(1,);  // remove the term
+                return terms.slice(1,);
             case 'fail':
                 let newIndex = Math.floor((terms.length + 1) * Math.random());
-
                 let newTerms = [...terms];
                 let currentTerm = newTerms.shift();
                 newTerms.splice(newIndex, 0, currentTerm);
@@ -183,10 +112,19 @@ const Review = memo((props) => {
      * @param {string} passfail 'pass'/'fail'
      */
     function updateTermHistory(term, passfail) {
-        setNewHistoryEntries(current => {
-            return current.map(t => {
+        setNewHistoryEntries(currentState => {
+            return currentState.map(t => {
                 if (t.termId === term._id) {
-                    return { ...t, newHistoryEntry: { ...t.newHistoryEntry, content: [...(t.newHistoryEntry.content?.length > 0 ? t.newHistoryEntry.content : []), passfail] } }
+                    return {
+                        ...t,
+                        newHistoryEntry: {
+                            ...t.newHistoryEntry,
+                            content: [
+                                ...(t.newHistoryEntry.content?.length > 0 ? t.newHistoryEntry.content : []),
+                                passfail
+                            ]
+                        }
+                    }
                 }
                 return t
             })
@@ -199,103 +137,121 @@ const Review = memo((props) => {
      * @param {string} passfail 'pass'/'fail'
      */
     function handlePassFailClick(e, passfail) {
-        e.preventDefault();
         updateTermHistory(futureTerms[0], passfail);
         reduceFutureTerms({ type: passfail })
         setBackWasShown(false);
     }
 
     /**
-     * Append this session's information to the list, determine each term's saturation level, and update list in database.
-     * @param {Array} list list state
-     */
-    function endSession(list) {
-        let end = new Date();
-        setReviewSettings(current => ({ ...current, sessionEnd: end }))
+        * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
+        * @param {*} e event object
+        */
+    const handleLeftRightArrowKeyDown = (e) => {
+        let passfail;
+        switch (e.code) {
+            case 'ArrowLeft':
+                passfail = 'fail';
+                break;
+            case 'ArrowRight':
+                passfail = 'pass';
+                break;
+            default:
+                return
+        }
 
-        list.sessions.push({
-            start: reviewSettings.sessionEnd,
-            end: end,
-            numTerms: list.terms.length,
-            termsReviewed: Number(reviewSettings.n) * list.terms.length,
-            n: Number(reviewSettings.n),
-            direction: reviewSettings.direction
-        });
+        if (backWasShown) {
+            handlePassFailClick(null, passfail)
+        }
+    }
 
-        list.lastReviewed = end;
+    // shouldn't have to be here at all: add .saturation property to term if it doesn't have one yet.
+    function addEmptySaturationIfTermHasNone(term) {
+        let _term = { ...term };
 
-        const newSaturationLevels = list.terms.map(term => {
-            let _term = { ...term };
-            if (!term.saturation.forwards) {
-                _term = Object.assign(_term, { saturation: { ..._term.saturation, forwards: null } })
-            }
-            if (!term.saturation.backwards) {
-                _term = Object.assign(_term, { saturation: { ..._term.saturation, backwards: null } })
-            }
+        if (!_term.saturation) {
+            _term = Object.assign(_term, { saturation: { forwards: null, backwards: null } });
+        }
+
+        if (!_term.saturation.forwards) {
+            _term = Object.assign(_term, { saturation: { ..._term.saturation, forwards: null } });
+        }
+
+        if (!_term.saturation.backwards) {
+            _term = Object.assign(_term, { saturation: { ..._term.saturation, backwards: null } });
+        }
+
+        return _term;
+    }
+
+    function makeNewSaturationLevels() {
+        return termsToReview.map(term => {
+            let _term = {  // copy term, add this session's history to it
+                ...term,
+                history: [
+                    ...term.history,
+                    newHistoryEntries.find(t => t.termId === term._id).newHistoryEntry
+                ]
+            };
+
+            _term = addEmptySaturationIfTermHasNone(_term);
+
             const saturation = { ...(_term.saturation ? _term.saturation : []), [reviewSettings.direction]: saturate(_term, reviewSettings.direction) };
+
             return ({ termId: _term._id, saturation })
         });
-
-        setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: newSaturationLevels }));
-
     }
 
     return (
         <div className="PageWrapper Review">
-            { list &&
+            <div className="PageHeader Review__title">
+                <div> Reviewing. </div>
+                <div> <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to list</Link> </div>
+            </div>
+
+            { futureTerms?.length > 0 &&
                 <>
-                    <div className="PageHeader Review__title">
-                        <div> Reviewing<span className="Review__title--name"><em>{list.name}</em></span> </div>
-                        <div> <Link className="Button" to={`/u/${params.username}/list/${params.id}`}>Back to list</Link> </div>
-                    </div>
-                    { currentCard &&
+                    {futureTerms[0].card}
+
+                    { backWasShown
+                        ?
                         <>
-                            {currentCard}
-
-                            { backWasShown
-                                ?
-                                <>
-                                    <div className="Review__buttons">
-                                        <input
-                                            ref={failRef}
-                                            onClick={(e) => { if (backWasShown) handlePassFailClick(e, 'fail') }}
-                                            disabled={!backWasShown}
-                                            className="Review__button Review__button--fail"
-                                            type="button"
-                                            value="Fail"
-                                        />
-                                        <input
-                                            ref={passRef}
-                                            onClick={(e) => { if (backWasShown) handlePassFailClick(e, 'pass') }}
-                                            disabled={!backWasShown}
-                                            className="Review__button Review__button--pass"
-                                            type="button"
-                                            value="Pass"
-                                        />
-                                    </div>
-
-                                </>
-                                :
-                                <div className="Review__prevent">
-                                    Cannot move on to the next term until you've seen the back of the card.
-                                </div>
-                            }
-                            
-                            <div className="Review__progress--wrapper">
-                                <div
-                                    className="Review__progress--bar"
-                                    style={{ width: `${progress}%` }}
+                            <div className="Review__buttons">
+                                <input
+                                    onClick={(e) => { if (backWasShown) handlePassFailClick(e, 'fail') }}
+                                    disabled={!backWasShown}
+                                    className="Review__button Review__button--fail"
+                                    type="button"
+                                    value="Fail"
+                                />
+                                <input
+                                    onClick={(e) => { if (backWasShown) handlePassFailClick(e, 'pass') }}
+                                    disabled={!backWasShown}
+                                    className="Review__button Review__button--pass"
+                                    type="button"
+                                    value="Pass"
                                 />
                             </div>
 
-                            <ReviewInfo
-                                start={reviewSettings.sessionStart}
-                                numTerms={list.terms.length}
-                                n={reviewSettings.n}
-                                progress={progress}
-                            />
                         </>
+                        :
+                        <div className="Review__prevent">
+                            Cannot move on to the next term until you've seen the back of the card.
+                        </div>
                     }
+
+                    <div className="Review__progress--wrapper">
+                        <div
+                            className="Review__progress--bar"
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+
+                    <ReviewInfo
+                        start={reviewSettings.sessionStart}
+                        numTerms={numTermsToReview}
+                        n={reviewSettings.n}
+                        progress={progress}
+                    />
                 </>
             }
         </div>
@@ -303,9 +259,3 @@ const Review = memo((props) => {
 })
 
 export default Review;
-
-/*
-@todo   in PostReview: let user know session has been stored in db
-@todo   buttons are shown based on !!backWasShown, this means simulated click doesn't show hover animation,
-        since backWasShown is triggered immediately on click
-*/

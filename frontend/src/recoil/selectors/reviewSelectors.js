@@ -1,5 +1,5 @@
 import { selector } from 'recoil'
-import { termsToReviewState, reviewSettingsState } from '../atoms/reviewAtoms';
+import { termsToReviewState } from '../atoms/reviewAtoms';
 
 export const numTermsToReviewState = selector({
     key: 'numTermsToReviewState',

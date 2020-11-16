@@ -30,8 +30,6 @@ const PreReview = (props) => {
                 />
                 ), [reviewSettings.direction])
 
-    useLogState('settings', reviewSettings)
-
     function handleSettingsChange(e) {
         const val = e.currentTarget.value;
         let newVal = (isNaN(Number(val)) && val) || Number(val);

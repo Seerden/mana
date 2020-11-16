@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 
 import { formatDate } from 'helpers/time';
-import { handleGetList, getList, putList, handlePutList, handleDeleteList, deleteList, deleteTerm } from 'helpers/apiHandlers/listHandlers';
+import { getList, putList, deleteList, deleteTerm } from 'helpers/apiHandlers/listHandlers';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
@@ -15,19 +15,21 @@ import SaturationFilter from './SaturationFilter';
 
 import './style/List.scss';
 import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
+import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 
 const List = memo((props) => {
     const [list, setList] = useState(null),
         [filter, setFilter] = useState({}),
         [terms, setTerms] = useState(null),
         { params, location } = useRouteProps(),
-        { response: getResponse, setRequest: setGetRequest } = useRequest({ ...handleGetList() }),
-        { setRequest: setPutRequest } = useRequest({ ...handlePutList() }),
-        { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({ ...handleDeleteList() }),
+        { response: getResponse, setRequest: setGetRequest } = useRequest({}),
+        { setRequest: setPutRequest } = useRequest({}),
+        { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({}),
         { setRequest: setTermDeleteRequest } = useRequest({ handleResponse, handleError }),
         [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState),
         numTermsToReview = useRecoilValue(numTermsToReviewState),
-        setListAtom = useSetRecoilState(listState);
+        setListAtom = useSetRecoilState(listState),
+        setTermsToReview = useSetRecoilState(termsToReviewState);
 
     useEffect(() => {  // retrieve list on component load
         setGetRequest(() => getList(params.username, { _id: params.id }))
@@ -70,7 +72,6 @@ const List = memo((props) => {
         updatedList.numTerms = updatedList.terms.length
         setList(updatedList);
         setListAtom(updatedList)
-
         setPutRequest(() => putList(params.username, { _id: updatedList._id, owner: updatedList.owner }, updatedList));
         setTermDeleteRequest(() => deleteTerm(params.username, termId))
     };
@@ -91,10 +92,18 @@ const List = memo((props) => {
 
                             <section className="List__banner">
                                 <div className="List__banner--review">
-                                    <button className="Button"><Link to={`${location.pathname}/review`}>Review entire list</Link></button>
-                                    {numTermsToReview > 0 &&
-                                        <button className="Button">Review selected terms</button>
-                                    }
+                                    <button 
+                                        className="Button"
+                                    >
+                                        <Link 
+                                            onClick={() => setTermsToReview(list.terms)}    
+                                            to={`${location.pathname}/review`}
+                                        >
+                                            Review entire list
+                                        </Link>
+                                    </button>
+
+                                    {numTermsToReview > 0 && <button className="Button">Review selected terms</button>}
 
                                     <span>
                                         <input

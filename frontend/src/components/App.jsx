@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { RecoilRoot } from 'recoil';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './style/App.scss';
 
@@ -57,8 +57,6 @@ const App = memo(() => {
                                                 <PrivateRoute path="/review" component={ReviewPage} />
                                                 <PrivateRoute path="/" component={List} />
                                             </Route>
-
-
                                         </Route>
 
                                         {/* Routes related to sets */}
@@ -67,10 +65,11 @@ const App = memo(() => {
                                             <PrivateRoute path="/new" component={NewSet} />
                                         </Route>
 
-
                                     </Route>
+
                                     {/* catchall 404 route */}
                                     <Route path="*" element={<div>404</div>} />
+
                                 </Routes>
                             </div>
                             <Footer />

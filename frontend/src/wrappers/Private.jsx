@@ -12,7 +12,7 @@ import { useRouteProps } from '../hooks/routerHooks';
  * @return {React.NamedExoticComponent} React component that displays login form or desired component based on auth state
  */
 const Private = ({ component: Component, ...rest }) => {
-    const [component, setComponent] = useState(null);
+    const [component, setComponent] = useState(<Component key={new Date()}/>);
     const { currentUser } = useContext(LoginContext);
     const { params, location } = useRouteProps();
     const [isLoggedIn, setIsLoggedIn] = useState(currentUser ? true : false)
@@ -29,9 +29,14 @@ const Private = ({ component: Component, ...rest }) => {
         <>
             { isLoggedIn
                 ?
-                <>
-                    { component && component}
-                </>
+                (currentUser === params.username 
+                    ? 
+                        <>
+                            { (component && component) }
+                        </>
+                    :
+                        <div>You're not authorized to view this page.</div>
+                )
                 :
                 <Login />
             }

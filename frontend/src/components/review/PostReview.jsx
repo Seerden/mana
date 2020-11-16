@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { useResetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
+import { useResetRecoilState, useRecoilValue } from 'recoil';
 import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { reviewSettingsState } from 'recoil/atoms/reviewAtoms';
+import { reviewSettingsState, termsToReviewState } from 'recoil/atoms/reviewAtoms';
 import dayjs from 'dayjs';
 
 const PostReview = () => {
@@ -10,9 +10,13 @@ const PostReview = () => {
     const formatDate = (date) => dayjs(date).format('HH:mm:ss');
     const { sessionStart, sessionEnd } = useRecoilValue(reviewSettingsState);
     const resetReviewSettings = useResetRecoilState(reviewSettingsState);
+    const resetTermsToReview = useResetRecoilState(termsToReviewState);
 
     useEffect(() => {
-        return () => resetReviewSettings();
+        return () => {
+            resetReviewSettings();
+            resetTermsToReview();
+        }
     }, [])
 
     return (
