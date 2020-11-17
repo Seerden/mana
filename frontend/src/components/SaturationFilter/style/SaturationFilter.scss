@@ -20,7 +20,7 @@
         display: flex;
         align-items: center;
         height: 60%;
-        padding: 0 0.5rem;
+        padding: 0 0.3rem;
         border: none;
         outline: none;
         color: white;
@@ -36,6 +36,7 @@
 
     &__filter {
         position: relative;
+        border-radius: 5px;
     }
 
     &__icons, &__label, &__direction {
@@ -78,15 +79,22 @@
 
     &__direction {
         justify-content: space-evenly;
+        height: 100%;
+        align-items: center;
 
         &--button {
             justify-content: space-between;
-            gap: 0.4rem;
             align-items: center;
-            span {
-
-            }
+            gap: 0.5rem;
+            align-items: center;
+            
         }
+    }
+
+    &__filter {
+        height: 3rem;
+        width: 17rem;
+        align-items: center;
     }
 
     &__label {

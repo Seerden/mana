@@ -108,9 +108,13 @@
 
             &--display {
                 border-radius: 8px;
-                background-color: goldenrod;
-                color: black;
+                background-color: #222;
+                color: white;
                 padding: 0.5rem 1rem;
+
+                @media screen and (max-width: 768px) {
+                    display: none;
+                }
             }
         }
 

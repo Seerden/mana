@@ -75,8 +75,8 @@ const SaturationFilter = memo(({ filter, setFilter }) => {
                             onClick={() => setFilterDisplayState('level')}
                             className="SaturationFilter__label"
                             style={{
-                                boxShadow: `0 8px 0 -7px ${saturationFilter ? colorBySaturation(saturationFilter) : '#333'}, 0 0 1rem black`,
-                                border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter) : '#333'}`,
+                                boxShadow: `0 8px 0 -7px ${saturationFilter ? colorBySaturation(saturationFilter.level) : '#333'}, 0 0 1rem black`,
+                                border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter.level) : '#333'}`,
                             }}
                         >
                             Filter by saturation level
@@ -95,20 +95,21 @@ const SaturationFilter = memo(({ filter, setFilter }) => {
                 }
 
                 {filterDisplayState === 'level' &&
-                    <div className="SaturationFilter__filter">
                         <div
                             className="SaturationFilter__icons"
-                            style={{ border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter) : '#333'}` }}
+                            style={{ border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter.level) : '#333'}` }}
                         >
                             {icons}
 
                         </div>
 
-                    </div>
                 }
 
                 {filterDisplayState === 'direction' && 
-                    <div className="SaturationFilter__filter">
+                    <div 
+                        className="SaturationFilter__filter"
+                        style={{ border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter.level) : '#333'}` }}
+                    >
                         <div className="SaturationFilter__direction">
                             {directionButtons}
                         </div>                        
