@@ -190,7 +190,14 @@ userRouter.put('/list', (req, res) => {
 userRouter.delete('/list', (req, res) => {
     List.findOneAndDelete({ ...req.query }, (err, deletedList) => {
         if (!err) {
-            res.status(200).json(deletedList)
+            // remove all terms
+            Term.deleteMany({_id: [...deletedList.terms]}, (err, deletedTerms) => {
+                if (!err) {
+                    console.log(deletedTerms);
+                    res.status(200).send('List and its terms successfully deleted.')
+
+                }
+            })
         } else if (err) {
             res.status(404).send('Could not delete requested list.')
         }
@@ -323,14 +330,3 @@ userRouter.get('/sets', (req, res) => {
         })
 
 })
-
-// List
-//     .find({owner: 'seerden'})
-//     .where('numTerms').gt(100)
-//     .exec((err, docs) => console.log(docs.map(doc => doc.name)))
-
-// List.findOne({name: 'Kanji 1-30'}, (err, doc) => {
-//     Term.findById(doc.terms[0]._id, (err, doc) => {
-//         console.log(doc);
-//     });
-// })

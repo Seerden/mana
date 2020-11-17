@@ -13,6 +13,7 @@ import ListTerm from './ListTerm';
 import SetPicker from './SetPicker';
 import SaturationFilter from './SaturationFilter';
 import PageInfo from 'components/_shared/PageInfo';
+import ListDeleteButton from './ListDeleteButton';
 
 import './style/List.scss';
 import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
@@ -67,9 +68,9 @@ const List = memo((props) => {
     };
 
     function handleTermDelete(idx) {
-        const updatedList = { ...list }
-        let termId = updatedList.terms[idx]._id
-        updatedList.terms.splice(idx, 1);
+        const updatedList = {...list, terms: [...list.terms]};  // need to spread the .terms property since otherwise it's not a (deep?/shallow?) copy
+        const termId = updatedList.terms[idx]._id;
+        updatedList.terms.splice(idx, 1); 
         updatedList.numTerms = updatedList.terms.length
         setList(updatedList);
         setListAtom(updatedList)
@@ -115,7 +116,7 @@ const List = memo((props) => {
                                         />
                                     </span>
                                 </div>
-                                <button className="Button danger" onClick={() => handleDelete()}>Delete this list</button>
+                                <ListDeleteButton {...{handleDelete}}/>
                             </section>
                             <section
                                 className="List__header"

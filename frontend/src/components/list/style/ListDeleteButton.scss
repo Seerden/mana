@@ -1,0 +1,47 @@
+.ListDeleteButton {
+    display: flex;
+    align-items: center;
+    color: white;
+    background-color: #222;
+    border: none;
+    outline: none;
+    transition: all 100ms ease-in;
+    border-radius: 3px;
+
+    &__label {
+        display: inline;
+        width: max-content;
+        background-color: #222;
+        padding: 0 0.4rem;
+        height: 100%;
+    }
+
+    &__button {
+        &--initial, &--confirm {
+            padding: 0.5rem 1rem;
+            background-color: #222;
+            color: azure;
+            border: none;
+            outline: none;
+
+        }
+        
+        &--initial {
+            
+        }
+        
+        &--confirm {
+            border-radius: 3px;
+            &--yes {
+                &:hover {
+                    background-color: orangered;
+                }
+            }
+            &--no {
+                &:hover {
+                    background-color: #555;
+                }
+            }
+        }
+    }
+}
