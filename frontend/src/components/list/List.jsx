@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useMemo, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 
@@ -11,7 +11,7 @@ import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 
 import ListTerm from './ListTerm';
 import SetPicker from './SetPicker';
-import SaturationFilter from './SaturationFilter';
+import SaturationFilter from 'components/SaturationFilter/SaturationFilter';
 import PageInfo from 'components/_shared/PageInfo';
 import ListDeleteButton from './ListDeleteButton';
 
@@ -21,7 +21,7 @@ import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 
 const List = memo((props) => {
     const [list, setList] = useState(null),
-        [filter, setFilter] = useState({}),
+        [filter, setFilter] = useState({ saturation: { level: null, direction: 'any' } }),
         [terms, setTerms] = useState(null),
         { params, location } = useRouteProps(),
         { response: getResponse, setRequest: setGetRequest } = useRequest({}),
@@ -32,6 +32,30 @@ const List = memo((props) => {
         numTermsToReview = useRecoilValue(numTermsToReviewState),
         setListAtom = useSetRecoilState(listState),
         setTermsToReview = useSetRecoilState(termsToReviewState);
+
+    const termsToDisplay = useMemo(() => {
+        return filterTermsBySaturation(terms)
+            ?.map(term => term.element)
+    }, [terms, filter]);
+
+    function filterTermsBySaturation(terms) {
+        return terms
+            ?.filter(term => {
+                if (filter.saturation?.level) {
+                    if (!term.saturation) { return true }
+
+                    if (filter.saturation.direction !== 'any') {
+                        return term.saturation?.[filter.saturation.direction] === Number(filter?.saturation.level)
+                    }
+                    return (
+                        term.saturation?.forwards === Number(filter?.saturation.level) ||
+                        term.saturation?.backwards === Number(filter?.saturation.level)
+                    )
+                } else {
+                    return true
+                }
+            })
+    };
 
     useEffect(() => {  // retrieve list on component load
         setGetRequest(() => getList(params.username, { _id: params.id }))
@@ -68,9 +92,9 @@ const List = memo((props) => {
     };
 
     function handleTermDelete(idx) {
-        const updatedList = {...list, terms: [...list.terms]};  // need to spread the .terms property since otherwise it's not a (deep?/shallow?) copy
+        const updatedList = { ...list, terms: [...list.terms] };  // need to spread the .terms property since otherwise it's not a (deep?/shallow?) copy
         const termId = updatedList.terms[idx]._id;
-        updatedList.terms.splice(idx, 1); 
+        updatedList.terms.splice(idx, 1);
         updatedList.numTerms = updatedList.terms.length
         setList(updatedList);
         setListAtom(updatedList)
@@ -78,6 +102,9 @@ const List = memo((props) => {
         setTermDeleteRequest(() => deleteTerm(params.username, termId))
     };
 
+    /**
+     * Calling this will trigger the delete request for the entire list. 
+     */
     function handleDelete() {
         setDeleteRequest(() => deleteList(params.username, { _id: params.id }))
     };
@@ -116,7 +143,7 @@ const List = memo((props) => {
                                         />
                                     </span>
                                 </div>
-                                <ListDeleteButton {...{handleDelete}}/>
+                                <ListDeleteButton {...{ handleDelete }} />
                             </section>
                             <section
                                 className="List__header"
@@ -148,12 +175,12 @@ const List = memo((props) => {
                                 </section>
 
                                 <section className="List__sets">
-                                        <header className="List__section--heading">
-                                            <span className="List__section--header">Sets</span>
+                                    <header className="List__section--heading">
+                                        <span className="List__section--header">Sets</span>
                                         <PageInfo>
-                                                To add this list to a set, go to your Sets overview, or your Lists overview.
+                                            To add this list to a set, go to your Sets overview, or your Lists overview.
                                         </PageInfo>
-                                        </header>
+                                    </header>
                                     <SetPicker />
                                     {!list.sets && <p>This list is not part of any sets.</p>}
                                 </section>
@@ -169,7 +196,19 @@ const List = memo((props) => {
                                                 Terms
                                             </header>
 
+
                                             <div className="List__terms--saturationfilter">
+                                                {filter.saturation.level
+                                                    ?
+                                                    <span className="List__terms--saturationfilter--display">
+                                                        Showing filtered list.
+                                                    </span>
+                                                    :
+                                                    <span className="List__terms--saturationfilter--display">
+                                                        Showing all terms.
+                                                    </span>
+                                                }
+
                                                 {list.sessions?.length > 0 &&
                                                     <SaturationFilter
                                                         filter={filter}
@@ -181,21 +220,8 @@ const List = memo((props) => {
                                         </div>
                                     </div>
 
-                                    {terms
-                                        ?.filter(term => {
-                                            if (filter.saturation) {
-                                                console.log(filter.saturation);
-                                                if (!term.saturation) { return true }
-                                                return (
-                                                    term.saturation?.forwards === Number(filter?.saturation) ||
-                                                    term.saturation?.backwards === Number(filter?.saturation)
-                                                )
-                                            } else {
-                                                return true
-                                            }
-                                        })
-                                        ?.map(term => term.element)
-                                    }
+
+                                    {termsToDisplay ? termsToDisplay : <div>Loading terms..</div>}
                                 </ul>
                             </section>
 

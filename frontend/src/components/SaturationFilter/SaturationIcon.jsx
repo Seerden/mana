@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { colorBySaturation } from '../../helpers/list.api';
+import { colorBySaturation } from 'helpers/list.api';
 
 const SaturationIcon = memo(({ direction, classes, saturation }) => {
     const saturationIconStyle = {

@@ -4,16 +4,28 @@
     box-shadow: 0 0 0.3rem black;
 
     transition: all 100ms linear;
-    
+    border-radius: 7px;
+    background-color: #111;
+
+    &:hover {
+        background-color: #222;
+    }
+
     &__reset {
+        margin-left: 1rem;
+    }
+
+    &__reset, &__direction--button {
         user-select: none;
         display: flex;
         align-items: center;
         height: 60%;
         padding: 0 0.5rem;
+        border: none;
+        outline: none;
+        color: white;
 
         border-radius: 5px;
-        margin-left: 1rem;
         background-color: #333;
         transition: all 100ms ease-in;
 
@@ -26,50 +38,11 @@
         position: relative;
     }
 
-    &__options {
-        background-color: #222;
-        width: 100%;
-        position: absolute;
-
-        &--label {
-            padding-left: 0.5rem;
-        }
-        &--block {
-            display: flex;
-            justify-content: space-between;
-            height: max-content;
-            align-items: center;
-            height: 5rem;
-            padding-bottom: 2rem;
-        }
-
-        &--select {
-            display: inline-flex;
-            background-color: #333;
-            border: none;
-            outline: none;
-            padding: 0.5rem;
-            color: white;
-        }
-
-        &--option {
-            padding: 1rem;
-            color: white;
-            background-color: #333;
-                &:hover, &:focus {
-                background-color: #fff;
-            }
-        }
-    }
-
-    &__icons, &__label {
+    &__icons, &__label, &__direction {
         height: 3rem;
         align-items: center;
-    }
-
-    &__icons {
         width: $picker-width;
-        padding: 0.2rem 0.6rem;
+        padding: 0rem 0.6rem;
         display: flex;
         justify-content: center;
         border-radius: 5px;
@@ -103,6 +76,19 @@
         }
     }
 
+    &__direction {
+        justify-content: space-evenly;
+
+        &--button {
+            justify-content: space-between;
+            gap: 0.4rem;
+            align-items: center;
+            span {
+
+            }
+        }
+    }
+
     &__label {
         background-color: inherit;
         display: flex;
@@ -110,8 +96,6 @@
         justify-self: center;
         justify-content: center;
         width: $picker-width;
-        // padding: 0.2rem 1rem;
-        // padding: 0.5rem 0.9rem;
         border-radius: 5px;
 
         border: none;
@@ -123,4 +107,6 @@
             background-color: #222;
         }
     }
+
+    
 }

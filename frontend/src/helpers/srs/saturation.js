@@ -94,10 +94,10 @@ export function saturateSeededTerm(filteredHistory, saturation) {
     const previousFail = countDict(previousSession.content).fail;
     const secondTolastFail = countDict(secondToLastSession.content).fail;
 
-    switch (saturation) {  // new saturation level depends on two things: current performance, current saturation level
-        case 0:
+    switch (String(saturation)) {  // new saturation level depends on two things: current performance, current saturation level
+        case '0':
             return fail ? 0 : 1;
-        case 1:
+        case '1':
             if (fail) {
                 if (fail > 1) return 0;
                 if (currentSession.content[0] === 'pass') return 1;
@@ -108,7 +108,7 @@ export function saturateSeededTerm(filteredHistory, saturation) {
                 }
                 return 1
             }
-        case 2:
+        case '2':
             if (fail) {
                 if (fail > 2) return 0;
                 return currentSession.content[0] === 'pass' ? 2 : 1;
@@ -118,7 +118,7 @@ export function saturateSeededTerm(filteredHistory, saturation) {
                 }
             }
             break;
-        case 3:
+        case '3':
             if (fail) {
                 if (fail === 1) {
                     return 2
@@ -132,7 +132,7 @@ export function saturateSeededTerm(filteredHistory, saturation) {
                 }
                 return 3
             }
-        case 4:
+        case '4':
             if (fail) {
                 return fail > 1 ? 2 : 3
             } else return 4

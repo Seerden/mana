@@ -10,7 +10,9 @@ Thoughts for possible changes or refactoring opportunities.
 - @todo: Include reset-like 'show all terms' option.
 
 ### Review only selected terms
-Need to link Review component to List component through `termsToReviewState` atom.
+Two types of reviews are available for a single List:
+- Complete review: Review every single term.
+- Partial review: Review only user-specified terms.
 
 Add a button inside 'terms' block to toggle checkmarks ('select this term for review'). Include a piece of state to track the terms that have been checked. 
 
@@ -19,15 +21,16 @@ Allow 'select all displayed terms'.
 If at least one (but not every single) term has been selected, render a 'review selected terms' button.
 
 ### Layout
-Currently displaying list info and sets at the top, and terms below that, extending as far as necessary.
-
-Instead, think about starting sets at the top, and having list info, sets, and any other utility/info blocks to the right side, collapsing to top-down on small screens.
-
-### TermModal
-Leave less whitespace at top on smaller screens. Even fullscreen 1080p looks unbalanced currently.
+Currently displaying list info and sets at the top, and terms below that, extending as far as necessary. Instead, think about starting sets at the top, and having list info, sets, and any other utility/info blocks to the right side, collapsing to top-down on small screens.
 
 ### TermHistory
-Include direction of review for every single entry. Allow filtering by direction.
+Allow filtering by direction.
 
-### Requests:
-Deleting list: first a putRequest to update the list fires, then a request to delete the term itself fires. If an error occurs during list update, we shouldn't fire the delete request: easiest way to solve is to implement middleware into the term delete.
+# Flow
+[]      setGetRequest       -->     setList, setListArom
+[list]  updateTerms()       -->     setTerms({term, element})  // term is the term info from the DB, element is the JSX to render
+
+## Terms to render:
+terms
+    .filter( -filter by saturation- )
+    .map( term => term.element )

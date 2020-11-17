@@ -1,12 +1,12 @@
 import React, { memo, useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
-import { useRequest } from '../../hooks/useRequest';
-import { putTerm } from '../../helpers/apiHandlers/listHandlers'
+import { useRequest } from 'hooks/useRequest';
+import { putTerm } from 'helpers/apiHandlers/listHandlers'
 import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import TermModal from './TermModal';
-import SaturationIcon from './SaturationIcon';
+import SaturationIcon from 'components/SaturationFilter/SaturationIcon';
 import './style/ListTerm.scss'
 import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
 

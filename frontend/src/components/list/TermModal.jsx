@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import TermHistory from './TermHistory';
-import SaturationIcon from './SaturationIcon';
+import SaturationIcon from 'components/SaturationFilter/SaturationIcon';
 import './style/TermModal.scss';
 
 const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmingDelete, setConfirmingDelete }) => {

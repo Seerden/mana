@@ -1,15 +1,30 @@
 import React, { useState, useEffect, memo } from "react";
-import { colorMap, colorBySaturation } from "../../helpers/list.api";
+import { colorMap, colorBySaturation } from "helpers/list.api";
 import SaturationIcon from './SaturationIcon';
 import './style/SaturationFilter.scss';
+import { BiArrowToLeft, BiArrowToRight } from 'react-icons/bi'
 
 const SaturationFilter = memo(({ filter, setFilter }) => {
-    const [saturationFilter, setSaturationFilter] = useState(null);
-    const [focus, setFocus] = useState(false);
+    const [saturationFilter, setSaturationFilter] = useState({level: null, direction: 'any'});
+    const [filterDisplayState, setFilterDisplayState] = useState('initial');
 
     useEffect(() => {
-        setFilter(({ ...filter, saturation: saturationFilter }))
+        setFilter(cur => ({ ...cur, saturation: saturationFilter }))
     }, [saturationFilter, setFilter])
+
+    useEffect(() => {
+        console.log(saturationFilter);
+    }, [saturationFilter])
+
+    const handleIconClick = (level) => {
+        setSaturationFilter(cur => ({...cur, level}));
+        setFilterDisplayState('direction')
+    };
+
+    const handleDirectionIconClick = (direction) => {
+        setSaturationFilter(cur => ({...cur, direction}));
+        setFilterDisplayState('initial');
+    };
 
     function makeIcons() {
         let icons = Object.keys(colorMap)
@@ -17,10 +32,7 @@ const SaturationFilter = memo(({ filter, setFilter }) => {
                 return (
                     <React.Fragment key={`saturation-wrapper-${level}`}>
                         <div
-                            onClick={() => {
-                                setSaturationFilter(level);
-                                setTimeout(() => { setFocus(false) }, 0);
-                            }}
+                            onClick={() => { handleIconClick(level) }}
                             className="SaturationFilter__icon--wrapper"
                         >
                             <SaturationIcon
@@ -37,16 +49,30 @@ const SaturationFilter = memo(({ filter, setFilter }) => {
 
     let icons = makeIcons();
 
+    const directionButtons = ['forwards', 'backwards', 'any'].map(direction => {
+        return (
+            <button
+                className="SaturationFilter__direction--button"
+                key={`saturation-filter-${direction}`}
+                value={direction}
+                onClick={() => handleDirectionIconClick(direction)}
+            >
+                <span>{direction}</span>
+
+                { direction !== 'any' && <span>{direction === 'forwards' ? <BiArrowToRight/> : <BiArrowToLeft/>}</span> }
+            </button>
+        )
+    })
+
     return (
         <>
             <div
                 className="SaturationFilter"
             >
-                {!focus
-                    ?
+                {filterDisplayState === 'initial' &&
                     <>
                         <button
-                            onClick={() => setFocus(true)}
+                            onClick={() => setFilterDisplayState('level')}
                             className="SaturationFilter__label"
                             style={{
                                 boxShadow: `0 8px 0 -7px ${saturationFilter ? colorBySaturation(saturationFilter) : '#333'}, 0 0 1rem black`,
@@ -54,20 +80,21 @@ const SaturationFilter = memo(({ filter, setFilter }) => {
                             }}
                         >
                             Filter by saturation level
-                        <div
+                            <input type="button"
+                                value="Reset"
                                 className="SaturationFilter__reset"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setSaturationFilter(null);
-                                    setFocus(false);
+                                    setSaturationFilter({level: null, direction: 'any'});
                                 }}
 
-                            >
-                                Reset
-                    </div>
+                            />
                         </button>
                     </>
-                    :
+
+                }
+
+                {filterDisplayState === 'level' &&
                     <div className="SaturationFilter__filter">
                         <div
                             className="SaturationFilter__icons"
@@ -77,36 +104,17 @@ const SaturationFilter = memo(({ filter, setFilter }) => {
 
                         </div>
 
-                        {/* ----- WIP: implement filter by direction ----- */}
-                        {/* <div 
-                            style={{ 
-                                border: `2px solid ${filter ? colorBySaturation(filter) : '#333'}`,
-                                borderTop: 'none',
-                            }}
-                            className="SaturationFilter__options"
-                        >
-                            <div className="SaturationFilter__options--block">
-                                <label 
-                                    className="SaturationFilter__options--label"
-                                    htmlFor="direction"
-                                >
-                                    Direction
-                                </label>
-                                <select className="SaturationFilter__options--select">
-                                    <option 
-                                        className="SaturationFilter__options--option"
-                                        value="forwards">forwards</option>
-                                    <option 
-                                        className="SaturationFilter__options--option"
-                                        value="backwards">backwards</option>
-                                </select>
-                            </div>
-                        </div> */}
-
                     </div>
                 }
 
-
+                {filterDisplayState === 'direction' && 
+                    <div className="SaturationFilter__filter">
+                        <div className="SaturationFilter__direction">
+                            {directionButtons}
+                        </div>                        
+                    </div>
+                
+                }
             </div>
         </>
     )
