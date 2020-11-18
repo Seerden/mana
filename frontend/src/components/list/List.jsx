@@ -18,6 +18,7 @@ import ListDeleteButton from './ListDeleteButton';
 import './style/List.scss';
 import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
+import ListSaturationState from "./ListSaturationState";
 
 const List = memo((props) => {
     const [list, setList] = useState(null),
@@ -185,6 +186,13 @@ const List = memo((props) => {
                                     {!list.sets && <p>This list is not part of any sets.</p>}
                                 </section>
 
+                            </section>
+
+                            <section className="List__section">
+                                <header className="List__section--header">
+                                    <span className="List__section--heading">Saturation</span>
+                                </header>
+                                { terms && <ListSaturationState terms={terms}/> }
                             </section>
 
 

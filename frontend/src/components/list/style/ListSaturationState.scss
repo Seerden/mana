@@ -1,0 +1,31 @@
+.ListSaturationState {
+    &__table {
+        $table-color: #222;
+        border: 2px solid $table-color;
+        border-collapse: collapse;
+        box-shadow: 0 0 0.5rem black;
+
+        th {
+            border-bottom: 2px solid $table-color;            
+            background-color: #222;
+            padding: 0.5rem 1rem;
+        }
+
+        td {
+            border-right: 2px solid $table-color;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid $table-color;
+        }
+
+        tr {
+            text-align: center;
+        }
+    }
+
+    &__info {
+        padding: 0 1rem;
+        border-radius: 3px;
+        margin:  0 1rem;
+        box-shadow: 0 0 0.5rem black;
+    }
+}

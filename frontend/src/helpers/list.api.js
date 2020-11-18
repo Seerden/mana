@@ -38,7 +38,7 @@ export const termSessionsByDirection = (term, direction) => {
 }
 
 export const colorMap = {
-    null: '#444',
+    // null: '#444',
     0: 'orangered',
     1: 'goldenrod',
     2: 'seagreen',

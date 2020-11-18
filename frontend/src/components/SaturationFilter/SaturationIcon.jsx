@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { colorBySaturation } from 'helpers/list.api';
 
-const SaturationIcon = memo(({ direction, classes, saturation }) => {
+const SaturationIcon = memo(({ direction, classes, saturation, style }) => {
     const saturationIconStyle = {
         width: '20px',
         height: '20px',
@@ -10,6 +10,7 @@ const SaturationIcon = memo(({ direction, classes, saturation }) => {
         backgroundColor: colorBySaturation(saturation) || '#333',
         boxShadow: "0 0 1rem black",
         border: "2px solid transparent",
+        ...style
     }
 
     function makeTooltip(direction, saturation) {
