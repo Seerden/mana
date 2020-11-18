@@ -48,6 +48,7 @@ const CompleteReview = ({ children }) => {
                 putListRequest(() => putList(params.username, {_id: list._id }, 
                     {
                         ...list, 
+                        terms: list.terms.map(t => t._id),
                         sessions: [...list.sessions, session],
                         lastReviewed: session.end,
                     }));

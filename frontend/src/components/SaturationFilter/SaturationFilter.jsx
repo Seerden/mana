@@ -75,8 +75,8 @@ const SaturationFilter = memo(({ filter, setFilter }) => {
                             onClick={() => setFilterDisplayState('level')}
                             className="SaturationFilter__label"
                             style={{
-                                boxShadow: `0 8px 0 -7px ${saturationFilter ? colorBySaturation(saturationFilter.level) : '#333'}, 0 0 1rem black`,
-                                border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter.level) : '#333'}`,
+                                boxShadow: `0 8px 0 -7px ${saturationFilter ? colorBySaturation(saturationFilter.level) || '#333' : '#333'}, 0 0 1rem black`,
+                                border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter.level) || '#333' : '#333'}`,
                             }}
                         >
                             Filter by saturation level

@@ -30,7 +30,7 @@ const ListSaturationState = ({ terms }) => {
         let occurrences = saturationOccurrence();
 
         return Object.keys(colorMap).map(i => {
-            if (i) {
+            if (occurrences.forwards[i] || occurrences.backwards[i]) {
                 return (
                     <tr
                         key={`saturation-overview-${i}`}
@@ -40,20 +40,24 @@ const ListSaturationState = ({ terms }) => {
                         <td>{occurrences.backwards[i] || 0}</td>
                     </tr>
                 )
-
             }
+
         })
     }
 
     return (
         <div className="ListSaturationState">
             <table className="ListSaturationState__table">
-                <tr>
-                    <th>level</th>
-                    <th># forwards</th>
-                    <th># backwards</th>
-                </tr>
-            {saturationOverviewElements()}
+                <thead>
+                    <tr>
+                        <th>level</th>
+                        <th>forwards</th>
+                        <th>backwards</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {saturationOverviewElements()}
+                </tbody>
             </table>
         </div>
     )

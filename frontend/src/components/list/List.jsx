@@ -2,7 +2,7 @@ import React, { memo, useMemo, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 
-import { formatDate } from 'helpers/time';
+import { formatDate, timeSince } from 'helpers/time';
 import { getList, putList, deleteList, deleteTerm } from 'helpers/apiHandlers/listHandlers';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
@@ -19,6 +19,7 @@ import './style/List.scss';
 import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import ListSaturationState from "./ListSaturationState";
+import { useLogState } from "hooks/state";
 
 const List = memo((props) => {
     const [list, setList] = useState(null),
@@ -27,8 +28,9 @@ const List = memo((props) => {
         { params, location } = useRouteProps(),
         { response: getResponse, setRequest: setGetRequest } = useRequest({}),
         { setRequest: setPutRequest } = useRequest({}),
+        { setRequest: setPutListTitleRequest } = useRequest({}),
         { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({}),
-        { setRequest: setTermDeleteRequest } = useRequest({ handleResponse, handleError }),
+        { setRequest: setTermDeleteRequest } = useRequest({}),
         [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState),
         numTermsToReview = useRecoilValue(numTermsToReviewState),
         setListAtom = useSetRecoilState(listState),
@@ -92,6 +94,13 @@ const List = memo((props) => {
         }));
     };
 
+    function handleListTitleBlur(e) {
+        e.persist();
+        let updatedList = { ...list, name: e.currentTarget.innerText }
+        setList(updatedList);
+        setPutListTitleRequest(() => putList(params.username, { _id: params.id }, {...updatedList, terms: updatedList.terms.map(t => t._id)}))
+    }
+
     function handleTermDelete(idx) {
         const updatedList = { ...list, terms: [...list.terms] };  // need to spread the .terms property since otherwise it's not a (deep?/shallow?) copy
         const termId = updatedList.terms[idx]._id;
@@ -118,7 +127,16 @@ const List = memo((props) => {
 
                     {list &&
                         <>
-                            <h1 className="PageHeader">{list.name} ({list.from} to {list.to})</h1>
+                            <h1 className="PageHeader">
+                                <span 
+                                    contentEditable
+                                    suppressContentEditableWarning
+                                    onBlur={handleListTitleBlur}
+                                >
+                                    {list.name}
+                                </span>
+                                ({list.from} to {list.to})
+                            </h1>
 
                             <section className="List__banner">
                                 <div className="List__banner--review">
@@ -163,11 +181,7 @@ const List = memo((props) => {
                                         ?
                                         <>
                                             <p className="List__info--item">
-                                                You've reviewed this list <span className="List__info--datum">{list.sessions.length} time{list.sessions.length !== 1 ? 's' : ''}</span>,
-
-                                            </p>
-                                            <p className="List__info--item">
-                                                Your most recent review was <span className="List__info--datum">{formatDate(list.lastReviewed, 'hh:mma, MMMM Do')}</span>.
+                                                Your latest review was <span className="List__info--datum">{formatDate(list.lastReviewed, 'hh:mma, MMMM Do')} ({timeSince(list.lastReviewed)})</span>.
                                             </p>
                                         </>
                                         :
@@ -186,14 +200,19 @@ const List = memo((props) => {
                                     {!list.sets && <p>This list is not part of any sets.</p>}
                                 </section>
 
+                                <section className="List__section">
+                                    Recommended review:
                             </section>
 
-                            <section className="List__section">
-                                <header className="List__section--header">
-                                    <span className="List__section--heading">Saturation</span>
-                                </header>
-                                { terms && <ListSaturationState terms={terms}/> }
+                                <section className="List__section">
+                                    <header className="List__section--header">
+                                        <span className="List__section--heading">Saturation</span>
+                                    </header>
+                                    {terms && <ListSaturationState terms={terms} />}
+                                </section>
+
                             </section>
+
 
 
                             <section className="List__content">

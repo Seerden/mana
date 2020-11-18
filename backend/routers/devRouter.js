@@ -6,6 +6,7 @@ const User = dbConn.model('User');
 const List = dbConn.model('List');
 const Set = dbConn.model('Set');
 const Term = dbConn.model('Term');
+const Test = dbConn.model('Test');
 
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -196,4 +197,23 @@ async function removeAllContentEntries() {
     // NOTE: using $unset only works if the field still currently exists in the schema/model
     let res = await List.updateMany({_id: {$exists: true}}, {$unset: {content: 1}})
     console.log(res);
+}
+
+function makeTestDocumentInstance(){
+    let newTestInstance = new Test({items: [1,2,3]});
+    newTestInstance.save((err, savedDoc) => {
+        console.log({savedDoc})
+        Test.deleteMany({}, (err, deleted) => console.log('cleaned up Test collection, deletedCount:', deleted.deletedCount))
+    });
+
+}
+
+function logOneListByAdmin(){
+List
+    .findOne({owner: process.env.MANA_ADMIN_USER})
+    .populate('terms')
+    .exec((err, doc) => {
+        doc && console.log(doc.terms[0]);
+    })
+
 }

@@ -2,13 +2,18 @@ import mongoose from 'mongoose';
 
 export const termSchema = new mongoose.Schema({
     owner: String,
-    languages: {from: String, to: String},
+    languages: { from: String, to: String },
     to: String,
     from: String,
-    history: [{date: Date, content: Array, direction: String}],
-    saturation: {type: mongoose.Schema.Types.Mixed, default: {
-        forwards: null, 
-        backwards: null
-    }},
-    listMembership: [{type: mongoose.Schema.Types.ObjectId, ref: 'List'}]
-})
+    history: [{ date: Date, content: Array, direction: String }],
+    saturation: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {
+            forwards: null,
+            backwards: null
+        }
+    },
+    listMembership: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }],
+    lastReviewed: { type: mongoose.Schema.Types.Mixed, default: function () { return this.history[this.history.length - 1]?.date || null } }
+}
+)
