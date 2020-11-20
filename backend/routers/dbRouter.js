@@ -330,3 +330,7 @@ userRouter.get('/sets', (req, res) => {
         })
 
 })
+
+List.findOne({owner: 'a'}, (e, doc) => {
+    console.log(doc);
+})

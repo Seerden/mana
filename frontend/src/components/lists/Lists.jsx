@@ -13,7 +13,7 @@ const Lists = memo((props) => {
     const
         [filter, setFilter] = useState(''),
         [listsElement, setListsElement] = useState(null),
-        [sortBy, setSortBy] = useState('created'),
+        [sortBy, setSortBy] = useState('name'),
         { params } = useRouteProps(),
         { response: lists, setRequest } = useRequest({ handleError, handleResponse })
     

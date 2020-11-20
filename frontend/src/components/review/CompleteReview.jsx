@@ -5,6 +5,7 @@ import { useRequest } from "hooks/useRequest";
 import { getList, putList } from "helpers/apiHandlers/listHandlers";
 import { termsToReviewState, reviewStageState, reviewSettingsState } from 'recoil/atoms/reviewAtoms';
 import { numTermsToReviewState } from "recoil/selectors/reviewSelectors";
+import { maybeUpdateListStateAfterReview } from "helpers/list.api";
 
 /**
  * Wrapper for full-list or full-set reviews.
@@ -51,10 +52,12 @@ const CompleteReview = ({ children }) => {
                         terms: list.terms.map(t => t._id),
                         sessions: [...list.sessions, session],
                         lastReviewed: session.end,
+                        state: maybeUpdateListStateAfterReview(list, reviewSettings.direction)
                     }));
             }
         }
     }, [reviewStage, listOrSetResponse])
+
     return (
         <>
             { termsToReview?.length > 0 || reviewStage !== 'before' ? <>{children}</> : <>Loading...</>}

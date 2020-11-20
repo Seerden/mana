@@ -36,9 +36,10 @@ const ListsItem = memo(({ list }) => {
             <div className="ListsItem__name">
                 <Link className="Link" to={`/u/${params.username}/list/${list._id}`}>{list.name}</Link>
             </div>
+            <div className="ListsItem__numTerms">{list.numTerms} terms in this list</div>
             <div className="ListsItem__from">{list.from}</div>
             <div className="ListsItem__to">{list.to}</div>
-            <div className="ListsItem__numTerms">{list.numTerms} terms in this list</div>
+            <div className="ListsItem__state">{list.state.forwards} {list.state.backwards}</div>
         { list.sessions.length > 0 && 
             <div className="ListsItem__since">
                 <em>last reviewed {timeSince(list.sessions[list.sessions.length-1].end)}</em>

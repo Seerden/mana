@@ -15,56 +15,57 @@
         'since';
 
     transition: background 200ms linear, box-shadow 100ms ease-in;
-}
 
-.ListsItem__name {
-    grid-area: name;
+    &__name {
+        grid-area: name;
 
-    font-size: 1.3rem;
-    font-weight: 600;
-    border-bottom: 1px solid #333;
-    padding-bottom: 0.3rem;
-    margin-bottom: 0.3rem;
-}
+        font-size: 1.3rem;
+        font-weight: 600;
+        border-bottom: 1px solid #333;
+        padding-bottom: 0.3rem;
+        margin-bottom: 0.3rem;
 
-.ListsItem__name--link {
-    display: inline-block;
-    color: deepskyblue;
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
+        &--link {
+            display: inline-block;
+            color: deepskyblue;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all ease 100ms;
 
-    transition: all ease 100ms;
-}
-.ListsItem__name--link:hover {
-    transform: translateY(-2px);
-    color: slateblue;
-}
+            &:hover {
+                transform: translateY(-2px);
+                color: slateblue;
+            }
 
-.ListsItem__name--link:active {
-    border-bottom: 1px solid slateblue;
-}
+            &:active {
+                border-bottom: 1px solid slateblue;
+            };
+        }
+    }
 
-.ListsItem__from, .ListsItem__to, .ListsItem__numTerms, .ListsItem__since {
-    font-size: 0.8rem;
-}
 
-.ListsItem__numTerms {
-    grid-area: count;
-    font-size: 0.9rem;
-}
+    &__from, &__to, &__numTerms, &__since {
+        font-size: 0.8rem;
+    }
 
-.ListsItem__from {
-    grid-area: from;
-}
+    &__from {
+        grid-area: from;
+    }
 
-.ListsItem__to {
-    grid-area: to;
-}
+    &__numTerms {
+        grid-area: count;
+        font-size: 0.9rem;
+    }
 
-.ListsItem__since {
-    display: flex;
-    grid-area: since;
-    color: #777;
-    justify-content: flex-end;
+    &__to {
+        grid-area: to;
 
+    }
+
+    &__since {
+        display: flex;
+        grid-area: since;
+        color: #777;
+        justify-content: flex-end;
+    }
 }

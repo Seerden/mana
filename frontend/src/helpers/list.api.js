@@ -18,14 +18,14 @@ export const extractSession = (list, i) => {
 
 }
 
+/**
+ * Takes a list, returns all its sessions with the specified direction, and its length.
+ * @param {Object} listObj 
+ * @param {'forwards' | 'backwards'} direction
+ */
 export const extractSessionsByDirection = (listObj, direction) => {
-    // @note: currently implemented as 'forwards' and 'backwards'
-    // leaning to going for 'frontToBack' and 'backToFront' instead
-    if (['forwards', 'backwards', 'forward', 'backward'].includes(direction)) {
-        return listObj.sessions?.filter(sess => sess.direction === direction);
-    } else {
-        return;
-    }
+    const sessionsByDirection = listObj.sessions?.filter(sess => sess.direction === direction);
+    return [sessionsByDirection.length, sessionsByDirection]
 }
 
 /**
@@ -48,4 +48,27 @@ export const colorMap = {
 
 export const colorBySaturation = saturation => {
     return colorMap[saturation]
+}
+
+/**
+ * Takes a list, returns new list.state based on review session that was just completed.
+ * @param {Object} list List document
+ * @param {'forwards' | 'backwards'} direction direction of review session that was completed right before this function was called
+ * @returns {{forwards: String, backwards: String}}
+ */
+export function maybeUpdateListStateAfterReview(list, direction) {
+    const [previousSessionLength] = extractSessionsByDirection(list, direction);
+    console.log(previousSessionLength);
+    let newState;
+    switch (previousSessionLength) {
+        case 0:
+            newState = { ...list.state, [direction]: 'seeding' };
+            return newState
+        case 2:
+            newState = { ...list.state, [direction]: 'seeded' };
+            return newState;
+        default:
+            return list.state
+    }
+
 }

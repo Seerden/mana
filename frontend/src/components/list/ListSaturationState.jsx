@@ -15,34 +15,52 @@ const ListSaturationState = ({ terms }) => {
         )
     })
 
-    function saturationOccurrence() {
+    let termCountPerLevel = getTermCountPerLevel(terms);
+    let progress = getProgress(termCountPerLevel);
+    let overviewElements = makeSaturationOverviewElements(termCountPerLevel)
+
+    function getTermCountPerLevel(terms) {
         const occurrences = {};
 
         ['forwards', 'backwards'].map(direction => {
             occurrences[direction] = countDict(terms.map(t => t.saturation[direction]))
+
+            return null;
         })
 
         return occurrences;
 
     }
 
-    const saturationOverviewElements = () => {
-        let occurrences = saturationOccurrence();
+    function getProgress(occurrences) {
+        let progress = {};
 
+        ['forwards', 'backwards'].forEach(direction => {
+            progress[direction] = Math.floor(100 * Object.entries(occurrences[direction]).reduce((acc, [key, val]) => {
+                if (+key > 2) {
+                    return acc + +val;
+                } return +acc;
+            }, 0) / (terms.length));
+        });
+
+        return progress;
+    }
+
+    function makeSaturationOverviewElements(termCounts) {
         return Object.keys(colorMap).map(i => {
-            if (occurrences.forwards[i] || occurrences.backwards[i]) {
+            if (termCounts.forwards[i] || termCounts.backwards[i]) {
                 return (
                     <tr
                         key={`saturation-overview-${i}`}
                     >
                         <td>{icons[i]}</td>
-                        <td>{occurrences.forwards[i] || 0}</td>
-                        <td>{occurrences.backwards[i] || 0}</td>
+                        <td>{termCounts.forwards[i] || 0}</td>
+                        <td>{termCounts.backwards[i] || 0}</td>
                     </tr>
-                )
+                );
             }
-
-        })
+            return null;
+        });
     }
 
     return (
@@ -56,9 +74,18 @@ const ListSaturationState = ({ terms }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {saturationOverviewElements()}
+                    {overviewElements}
                 </tbody>
             </table>
+
+            <div>
+                <header>
+                    Progress (percentage of terms at saturation level 3 or 4):
+                </header>
+                <div>Forwards: {progress.forwards}%</div>
+                <div>Backwards: {progress.backwards}%</div>
+            </div>
+
         </div>
     )
 }

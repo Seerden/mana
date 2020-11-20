@@ -16,7 +16,6 @@ import PageInfo from 'components/_shared/PageInfo';
 import ListDeleteButton from './ListDeleteButton';
 
 import './style/List.scss';
-import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import ListSaturationState from "./ListSaturationState";
 import { useLogState } from "hooks/state";
@@ -98,7 +97,7 @@ const List = memo((props) => {
         e.persist();
         let updatedList = { ...list, name: e.currentTarget.innerText }
         setList(updatedList);
-        setPutListTitleRequest(() => putList(params.username, { _id: params.id }, {...updatedList, terms: updatedList.terms.map(t => t._id)}))
+        setPutListTitleRequest(() => putList(params.username, { _id: params.id }, { ...updatedList, terms: updatedList.terms.map(t => t._id) }))
     }
 
     function handleTermDelete(idx) {
@@ -128,7 +127,7 @@ const List = memo((props) => {
                     {list &&
                         <>
                             <h1 className="PageHeader">
-                                <span 
+                                <span
                                     contentEditable
                                     suppressContentEditableWarning
                                     onBlur={handleListTitleBlur}
@@ -200,16 +199,18 @@ const List = memo((props) => {
                                     {!list.sets && <p>This list is not part of any sets.</p>}
                                 </section>
 
-                                <section className="List__section">
+                                {/* <section className="List__section">
                                     Recommended review:
-                            </section>
+                                </section> */}
 
-                                <section className="List__section">
-                                    <header className="List__section--header">
-                                        <span className="List__section--heading">Saturation</span>
-                                    </header>
-                                    {terms && <ListSaturationState terms={terms} />}
-                                </section>
+                                {terms?.[0].saturation.forwards &&
+                                    <section className="List__section">
+                                        <header className="List__section--header">
+                                            <span className="List__section--heading">Saturation</span>
+                                        </header>
+                                        {terms && <ListSaturationState terms={terms} />}
+                                    </section>
+                                }
 
                             </section>
 

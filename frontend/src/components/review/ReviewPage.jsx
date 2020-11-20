@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useRecoilValue, useRecoilState, useResetRecoilState } from 'recoil';
-import { reviewStageState, termsToReviewState } from 'recoil/atoms/reviewAtoms';
+import { reviewStageState, reviewSettingsState, termsToReviewState } from 'recoil/atoms/reviewAtoms';
 import Review from './Review';
 import PartialReview from './PartialReview';
 import CompleteReview from './CompleteReview';
@@ -14,6 +14,8 @@ const ReviewPage = (props) => {
     const [reviewStage, setReviewStage] = useRecoilState(reviewStageState);
     const termsToReview = useRecoilValue(termsToReviewState);
     const resetReviewStage = useResetRecoilState(reviewStageState);
+    const resetReviewSettings = useResetRecoilState(reviewSettingsState);
+
     const ReviewStageToRender = useMemo(() => {
         switch (reviewStage) {
             case 'before':
@@ -44,6 +46,8 @@ const ReviewPage = (props) => {
 
         return () => {
             setReviewStage(null);
+            resetReviewSettings();
+
         }
     }, []);
 

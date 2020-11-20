@@ -9,12 +9,10 @@ const PostReview = () => {
     const { navigate, params } = useRouteProps();
     const formatDate = (date) => dayjs(date).format('HH:mm:ss');
     const { sessionStart, sessionEnd } = useRecoilValue(reviewSettingsState);
-    const resetReviewSettings = useResetRecoilState(reviewSettingsState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
 
     useEffect(() => {
         return () => {
-            resetReviewSettings();
             resetTermsToReview();
         }
     }, [])
