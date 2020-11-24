@@ -6,14 +6,6 @@
 
     padding: 1rem;
 
-    display: grid;
-    grid-template-areas: 
-        'name'
-        'count'
-        'from'
-        'to'
-        'since';
-
     transition: background 200ms linear, box-shadow 100ms ease-in;
 
     &__name {
@@ -43,28 +35,22 @@
         }
     }
 
+    &__languages {
+        gap: 0.5rem;
+    }
 
-    &__from, &__to, &__numTerms, &__since {
+    &__languages, &__numTerms, &__since {
+        display: flex;
+        align-items: center;
         font-size: 0.8rem;
     }
 
-    &__from {
-        grid-area: from;
-    }
-
     &__numTerms {
-        grid-area: count;
         font-size: 0.9rem;
-    }
-
-    &__to {
-        grid-area: to;
-
     }
 
     &__since {
         display: flex;
-        grid-area: since;
         color: #777;
         justify-content: flex-end;
     }

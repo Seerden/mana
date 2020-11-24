@@ -28,9 +28,15 @@ export const listSchema = new mongoose.Schema({
     sessions: [
         { type: sessionSchema }
     ],
-    numTerms: { type: Number, default: function () { return this.terms.length } },
+    numTerms: { 
+        type: Number, 
+        default: function () { return this.terms.length } 
+    },
     created: Date,
     lastReviewed: Date,
     setMembership: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Set' }],
-    state: { forwards: { type: String, default: 'untouched' }, backwards: { type: String, default: 'untouched' } }
+    state: {
+        type: mongoose.Schema.Types.Mixed, 
+        default: {forwards: 'untouched', backwards: 'untouched'}
+    },
 }, { collation: { locale: 'en', strength: 2 } }) 

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
@@ -12,16 +12,14 @@ import './style/Lists.scss';
 const Lists = memo((props) => {
     const
         [filter, setFilter] = useState(''),
-        [listsElement, setListsElement] = useState(null),
         [sortBy, setSortBy] = useState('name'),
         { params } = useRouteProps(),
-        { response: lists, setRequest } = useRequest({ handleError, handleResponse })
-    
+        { response: lists, setRequest } = useRequest({ handleError, handleResponse }),
+        listsElement = useMemo(() => {if (lists) return makeListsElement(lists)}, [lists]);
+
     useEffect(() => {  // request Lists on component load
         setRequest(() => getLists(params.username))
     }, [])
-
-    useEffect(() => { if (lists) { setListsElement(makeListsElement(lists)) } }, [lists])
 
     function handleFilterChange(e) {
         let val = e.currentTarget.value;
@@ -35,6 +33,7 @@ const Lists = memo((props) => {
     function makeListsElement(lists) {
         return lists.map(l => ({
             name: l.name,
+            state: l.state,
             lastReviewed: l.lastReviewed,
             created: l.created,
             element: <ListsItem key={l._id} list={l} />
@@ -44,7 +43,7 @@ const Lists = memo((props) => {
     return (
         <>
             { lists?.length > 0 &&
-                <div className="PageWrapper">
+                <div className="PageWrapper Lists">
                     <div className="PageHeader">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
                     <button className="Button"><Link to={`/u/${params.username}/lists/new`}>Make a new list</Link></button>
 
@@ -71,14 +70,33 @@ const Lists = memo((props) => {
                         </div>
                     </div>
 
-                    <div className="Lists">
-                        {listsElement &&
-                            listsElement
-                                .filter(l => l.name.toLowerCase().includes(filter.toLowerCase()))
+                    <section className="Lists__active">
+                        <header className="Lists__heading">Active lists</header>
+                        <div className="Lists__lists">
+                            {listsElement
+                                .filter(l => {
+                                    return (
+                                        (l.state.forwards !== 'untouched' || l.state.backwards !== 'untouched') &&
+                                        l.name.toLowerCase().includes(filter.toLowerCase())
+                                    )
+                                })
                                 .sort((first, second) => first[sortBy] < second[sortBy] ? -1 : 1)  // TODO: sort by lowercase, sort out undefined cases (lastReviewed may be undefined
                                 .map(l => l.element)
-                        }
-                    </div>
+                            }
+                        </div>
+                    </section>
+
+                    <section className="Lists__all">
+                        <header className="Lists__heading">All lists</header>
+                        <div className="Lists__lists">
+                            {listsElement &&
+                                listsElement
+                                    .filter(l => l.name.toLowerCase().includes(filter.toLowerCase()))
+                                    .sort((first, second) => first[sortBy] < second[sortBy] ? -1 : 1)  // TODO: sort by lowercase, sort out undefined cases (lastReviewed may be undefined
+                                    .map(l => l.element)
+                            }
+                        </div>
+                    </section>
                 </div>
 
             }

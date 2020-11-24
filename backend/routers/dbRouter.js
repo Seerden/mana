@@ -191,7 +191,7 @@ userRouter.delete('/list', (req, res) => {
     List.findOneAndDelete({ ...req.query }, (err, deletedList) => {
         if (!err) {
             // remove all terms
-            Term.deleteMany({_id: [...deletedList.terms]}, (err, deletedTerms) => {
+            Term.deleteMany({ _id: [...deletedList.terms] }, (err, deletedTerms) => {
                 if (!err) {
                     console.log(deletedTerms);
                     res.status(200).send('List and its terms successfully deleted.')
@@ -331,6 +331,7 @@ userRouter.get('/sets', (req, res) => {
 
 })
 
-List.findOne({owner: 'a'}, (e, doc) => {
-    console.log(doc);
+List.findOne({ owner: 'a' }, (e, doc) => {
+    // console.log(doc);
+
 })

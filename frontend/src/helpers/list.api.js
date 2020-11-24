@@ -58,15 +58,11 @@ export const colorBySaturation = saturation => {
  */
 export function maybeUpdateListStateAfterReview(list, direction) {
     const [previousSessionLength] = extractSessionsByDirection(list, direction);
-    console.log(previousSessionLength);
-    let newState;
     switch (previousSessionLength) {
         case 0:
-            newState = { ...list.state, [direction]: 'seeding' };
-            return newState
+            return { ...list.state, [direction]: 'seeding' }
         case 2:
-            newState = { ...list.state, [direction]: 'seeded' };
-            return newState;
+            return { ...list.state, [direction]: 'seeded' };
         default:
             return list.state
     }

@@ -5,7 +5,7 @@ import { useRequest } from "hooks/useRequest";
 import { getList, putList } from "helpers/apiHandlers/listHandlers";
 import { termsToReviewState, reviewStageState, reviewSettingsState } from 'recoil/atoms/reviewAtoms';
 import { numTermsToReviewState } from "recoil/selectors/reviewSelectors";
-import { maybeUpdateListStateAfterReview } from "helpers/list.api";
+import { maybeUpdateListStateAfterReview } from 'helpers/list.api'
 
 /**
  * Wrapper for full-list or full-set reviews.
