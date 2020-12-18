@@ -39,23 +39,23 @@ const NewList = memo((props) => {
         setNumTerms(numTerms + 10);
     }
 
+
     function handleBlur(e) {
-        ;
         if (e.currentTarget.value !== formOutput[e.currentTarget.name]) {
             setFormOutput({ ...formOutput, [e.currentTarget.name]: e.currentTarget.value });
         }
     }
 
-    const handleSubmit = e => {
+    function handleSubmit(e) {
         e.preventDefault();
 
         setPostRequest(() => postList(params.username, {
-            owner: params.username, // @TODO: replace
+            owner: params.username,
             ...formOutput,
             created: new Date(),
             terms: formOutput.terms.filter(i => i !== null),
             numTerms: formOutput.terms.filter(i => i !== null).length,
-        }))
+        }));
 
     }
 
