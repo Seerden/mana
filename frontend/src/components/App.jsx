@@ -14,7 +14,6 @@ import Lists from './lists/Lists';
 import NewList from './newlist/NewList';
 import Sets from './sets/Sets';
 import NewSet from './sets/NewSet';
-import Test from './Test';
 import Home from './Home';
 import Register from './register/Register';
 import Login from './login/Login';
@@ -31,9 +30,6 @@ const App = memo(() => {
                             <Header />
                             <div className="App">
                                 <Routes>
-                                    {/* test route */}
-                                    <Route path="/test" element={<Test />} />
-
                                     {/* home route */}
                                     <Route path="/" element={<Home />} />
 

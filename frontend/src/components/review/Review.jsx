@@ -148,7 +148,7 @@ const Review = memo((props) => {
         * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
         * @param {*} e event object
         */
-    const handleLeftRightArrowKeyDown = (e) => {
+    function handleLeftRightArrowKeyDown(e) {
         let passfail;
         switch (e.code) {
             case 'ArrowLeft':
@@ -158,11 +158,11 @@ const Review = memo((props) => {
                 passfail = 'pass';
                 break;
             default:
-                return
+                return;
         }
 
         if (backWasShown) {
-            handlePassFailClick(null, passfail)
+            handlePassFailClick(null, passfail);
         }
     }
 

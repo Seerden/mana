@@ -35,14 +35,14 @@ const NewList = memo((props) => {
         return termElements
     }
 
-    const handleAddRows = e => {
+    function handleAddRows(e) {
         setNumTerms(numTerms + 10);
     }
 
-
-    const handleBlur = e => {;
+    function handleBlur(e) {
+        ;
         if (e.currentTarget.value !== formOutput[e.currentTarget.name]) {
-            setFormOutput({ ...formOutput, [e.currentTarget.name]: e.currentTarget.value })
+            setFormOutput({ ...formOutput, [e.currentTarget.name]: e.currentTarget.value });
         }
     }
 
