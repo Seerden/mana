@@ -7,11 +7,11 @@ import { devRouter } from './routers/devRouter.js'
 const app = express();
 
 /**
- * Express middleware to log every route that is hit
+ * Express middleware to log every API call that is accessed
  */
-const log = (req, res, next) => {
+function log(req, res, next) {
     console.log(`${dayjs(new Date()).format('MMM DD @ HH:mm')} - ${req.method} ${req.originalUrl}`);
-    next()
+    next();
 }
 
 app.use(log)

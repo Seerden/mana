@@ -217,3 +217,9 @@ List
     })
 
 }
+
+function runDevCodeOnServerStart() {
+    return
+}
+
+runDevCodeOnServerStart();

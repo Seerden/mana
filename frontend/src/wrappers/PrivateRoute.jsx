@@ -2,7 +2,6 @@ import React from "react";
 import { Route } from 'react-router-dom';
 import Private from './Private';
 
-
 const PrivateRoute = ({component: Component, children, ...rest}) => {
 
     if (children) {

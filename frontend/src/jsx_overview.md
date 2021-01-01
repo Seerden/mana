@@ -3,7 +3,7 @@ Overview of all JSX files and the functions declared within them.
 
 ---
 
-App
+# App
 
 # list
     List

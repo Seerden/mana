@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useMemo, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
 import { useRequest } from 'hooks/useRequest';
@@ -21,13 +21,13 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }) => {
     const selectingTerms = useRecoilValue(selectingTermsToReviewState);
     const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
     let indexOfTermInTermsToReview = termsToReview.findIndex(t => t._id === term._id);
+    const [selected, setSelected] = useState(indexOfTermInTermsToReview > -1);
 
     useEffect(() => {  // might be superfluous
         indexOfTermInTermsToReview = termsToReview.findIndex(t => t._id === term._id)
+        setSelected(indexOfTermInTermsToReview > -1)
     }, [termsToReview])
 
-    const [selected, setSelected] = useState(indexOfTermInTermsToReview > -1);
-    // -----
 
     useEffect(() => {  // cleanup
         return () => { setConfirmingDelete(false); }

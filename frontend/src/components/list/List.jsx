@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
+import { useSetRecoilState, useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 
 import { formatDate, timeSince } from 'helpers/time';
 import { getList, putList, deleteList, deleteTerm } from 'helpers/apiHandlers/listHandlers';
@@ -19,6 +19,7 @@ import './style/List.scss';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import ListSaturationState from "./ListSaturationState";
 import { useLogState } from "hooks/state";
+import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
 
 const List = memo((props) => {
     const [list, setList] = useState(null),
@@ -33,12 +34,13 @@ const List = memo((props) => {
         [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState),
         numTermsToReview = useRecoilValue(numTermsToReviewState),
         setListAtom = useSetRecoilState(listState),
-        setTermsToReview = useSetRecoilState(termsToReviewState);
+        setTermsToReview = useSetRecoilState(termsToReviewState),
+        resetTermsToReview = useResetRecoilState(termsToReviewState);
 
     const termsToDisplay = useMemo(() => {
         return filterTermsBySaturation(terms)
             ?.map(term => term.element)
-    }, [terms, filter]);
+    }, [terms, filter, numTermsToReview]);
 
     function filterTermsBySaturation(terms) {
         return terms
@@ -118,6 +120,22 @@ const List = memo((props) => {
         setDeleteRequest(() => deleteList(params.username, { _id: params.id }))
     };
 
+    function updateTermsToReview({ type }) {
+        switch(type) {
+            case 'all':
+                setTermsToReview(list.terms);
+                break;
+            case 'visible':
+                setTermsToReview(filterTermsBySaturation(list.terms));
+                break;
+            case 'none':
+                resetTermsToReview();
+                break;
+            default:
+                break;
+        }
+    }
+
     return (
         <>
             <div className="PageWrapper">
@@ -138,29 +156,6 @@ const List = memo((props) => {
                             </h1>
 
                             <section className="List__banner">
-                                <div className="List__banner--review">
-                                    <button
-                                        className="Button"
-                                    >
-                                        <Link
-                                            onClick={() => setTermsToReview(list.terms)}
-                                            to={`${location.pathname}/review?kind=full`}
-                                        >
-                                            Review entire list
-                                        </Link>
-                                    </button>
-
-                                    {numTermsToReview > 0 && <button className="Button">Review selected terms</button>}
-
-                                    <span>
-                                        <input
-                                            type="button"
-                                            className="Button"
-                                            value="Select terms for review"
-                                            onClick={() => setSelectingTerms(!selectingTerms)}
-                                        />
-                                    </span>
-                                </div>
                                 <ListDeleteButton {...{ handleDelete }} />
                             </section>
                             <section
@@ -199,10 +194,6 @@ const List = memo((props) => {
                                     {!list.sets && <p>This list is not part of any sets.</p>}
                                 </section>
 
-                                {/* <section className="List__section">
-                                    Recommended review:
-                                </section> */}
-
                                 {terms?.[0].saturation.forwards &&
                                     <section className="List__section">
                                         <header className="List__section--header">
@@ -214,7 +205,19 @@ const List = memo((props) => {
 
                             </section>
 
-
+                            <section className="List__review">
+                                <div className="List__review--links">
+                                    <Link className="List__review--button" to={`${location.pathname}/review?kind=full`}>Review all terms</Link>
+                                    { numTermsToReview > 0 && <Link className="List__review--button" to={`${location.pathname}/review?kind=partial`}>Review {numTermsToReview} selected terms</Link> }
+                                </div>
+                                <div className="List__review--select">
+                                    <label className="List__review--select--label">Select terms to review:</label>
+                                    <button onClick={() => setSelectingTerms(cur => !cur)} className="List__review--button">select manually { selectingTerms ? <ImCheckboxChecked /> : <ImCheckboxUnchecked /> }</button>
+                                    <button onClick={() => updateTermsToReview({type: 'all'})} className="List__review--button">select all</button>
+                                    <button onClick={() => updateTermsToReview({type: 'visible'})} className="List__review--button">select visible</button>
+                                    <button onClick={() => updateTermsToReview({type: 'none'})} className="List__review--button">select none</button>
+                                </div>
+                            </section>
 
                             <section className="List__content">
                                 <ul className="List__terms">

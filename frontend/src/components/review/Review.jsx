@@ -37,7 +37,8 @@ const Review = memo((props) => {
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const resetNewHistoryEntries = useResetRecoilState(newHistoryEntriesState);
 
-    useEffect(() => {  // on mount: initialize futureTerms. on unmount: reset termsToReview and newHistoryEntries
+    // on mount: initialize futureTerms. on unmount: reset termsToReview and newHistoryEntries
+    useEffect(() => {  
         reduceFutureTerms({
             type: 'init',
             payload: makeReviewList(termsToReview, Number(reviewSettings.n))
@@ -49,7 +50,8 @@ const Review = memo((props) => {
         }
     }, [])
 
-    useEffect(() => {  // whenever backWasShown changes, remake LeftArrow/RightArrow keydown handler
+    // whenever backWasShown changes, remake LeftArrow/RightArrow keydown handler
+    useEffect(() => {  
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
 
         return () => {
@@ -57,13 +59,15 @@ const Review = memo((props) => {
         }
     }, [backWasShown])
 
-    useEffect(() => {  // end review session once futureTerms.length reaches 0.
+    // end review session once futureTerms.length reaches 0
+    useEffect(() => {  
         if (futureTerms?.length === 0) {
             setReviewSettings(current => ({ ...current, sessionEnd: new Date() }));
         }
     }, [futureTerms])
 
-    useEffect(() => {  // send PUT requests (needs to not be in the useEffect above, since then history lags one update behind)
+    // send PUT requests (needs to not be in the useEffect above, since then history lags one update behind)
+    useEffect(() => {  
         if (reviewSettings.sessionEnd) {
             setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
             setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevels() }));
@@ -75,11 +79,11 @@ const Review = memo((props) => {
     }, [resB, resC])
 
     /**
-  * case init:       Initialize futureTerms with termsToReview
-  * case pass/fail:  Handle what happens to current term after pass/fail is chosen.
-  * @param {Array} terms     array of terms
-  * @param {Object} action   properties: type (init, pass, fail). if type 'init', send terms as action.payload
-  */
+    * case init:       Initialize futureTerms with termsToReview
+    * case pass/fail:  Handle what happens to current term after pass/fail is chosen.
+    * @param {Array} terms     array of terms
+    * @param {Object} action   properties: type (init, pass, fail). if type 'init', send terms as action.payload
+    */
     function termReducer(terms, action) {
         switch (action.type) {
             case 'init':

@@ -47,7 +47,6 @@ const ReviewPage = (props) => {
         return () => {
             setReviewStage(null);
             resetReviewSettings();
-
         }
     }, []);
 

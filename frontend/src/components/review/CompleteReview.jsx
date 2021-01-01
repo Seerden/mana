@@ -19,6 +19,7 @@ const CompleteReview = ({ children }) => {
     const reviewSettings = useRecoilValue(reviewSettingsState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
 
+    // on component mount, get list from database  @todo: implement full-set review functionality
     useEffect(() => {
         if (location.pathname.includes('list')) {
             getListOrSetRequest(() => getList(params.username, { _id: params.id }));
@@ -27,12 +28,16 @@ const CompleteReview = ({ children }) => {
         }
     }, [])
 
+    // once list is received from backend, set termsToReview to all terms from the list  
+    // @todo: implement set functionality
     useEffect(() => {
         if (listOrSetResponse && !termsToReview?.length > 0) {
             setTermsToReview(listOrSetResponse.terms);
         }
     }, [listOrSetResponse])
 
+    // on completion of full list review, push current session to list.sessions,
+    // update list.lastReviewed, and maybe update list.state
     useEffect(() => {
         if (reviewStage === 'after') {
             const session = {
