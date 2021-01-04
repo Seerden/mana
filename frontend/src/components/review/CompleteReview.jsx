@@ -51,6 +51,9 @@ const CompleteReview = ({ children }) => {
 
             if (listOrSetResponse && location.pathname.includes('list')) {
                 let list = listOrSetResponse;
+
+                console.log('new state:', maybeUpdateListStateAfterReview(list, reviewSettings.direction));                
+
                 putListRequest(() => putList(params.username, {_id: list._id }, 
                     {
                         ...list, 

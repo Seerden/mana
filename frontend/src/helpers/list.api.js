@@ -58,6 +58,18 @@ export const colorBySaturation = saturation => {
  */
 export function maybeUpdateListStateAfterReview(list, direction) {
     const [previousSessionLength] = extractSessionsByDirection(list, direction);
+    console.log('previousSessionLength', previousSessionLength, 'state:', list.state[direction]);
+
+    // ----- dev functionality (some old lists have recorded sessions from before this feature was implemented):
+    if (previousSessionLength > 0 && list.state[direction] === 'untouched') {
+        if (previousSessionLength > 2) {
+            return { ...list.state, [direction]: 'seeded' }
+        } return { ...list.state, [direction]: 'seeding' }
+
+    }
+
+    // -----
+
     switch (previousSessionLength) {
         case 0:
             return { ...list.state, [direction]: 'seeding' }

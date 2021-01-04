@@ -12,10 +12,6 @@ const SaturationFilter = memo(({ filter, setFilter }) => {
         setFilter(cur => ({ ...cur, saturation: saturationFilter }))
     }, [saturationFilter, setFilter])
 
-    useEffect(() => {
-        console.log(saturationFilter);
-    }, [saturationFilter])
-
     const handleIconClick = (level) => {
         setSaturationFilter(cur => ({...cur, level}));
         setFilterDisplayState('direction')

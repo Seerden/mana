@@ -121,7 +121,7 @@ const List = memo((props) => {
     };
 
     function updateTermsToReview({ type }) {
-        switch(type) {
+        switch (type) {
             case 'all':
                 setTermsToReview(list.terms);
                 break;
@@ -143,6 +143,7 @@ const List = memo((props) => {
                     {deleteResponse && JSON.stringify(deleteResponse)}
 
                     {list &&
+
                         <>
                             <h1 className="PageHeader">
                                 <span
@@ -208,14 +209,14 @@ const List = memo((props) => {
                             <section className="List__review">
                                 <div className="List__review--links">
                                     <Link className="List__review--button" to={`${location.pathname}/review?kind=full`}>Review all terms</Link>
-                                    { numTermsToReview > 0 && <Link className="List__review--button" to={`${location.pathname}/review?kind=partial`}>Review {numTermsToReview} selected terms</Link> }
+                                    {numTermsToReview > 0 && <Link className="List__review--button" to={`${location.pathname}/review?kind=partial`}>Review {numTermsToReview} selected terms</Link>}
                                 </div>
                                 <div className="List__review--select">
                                     <label className="List__review--select--label">Select terms to review:</label>
-                                    <button onClick={() => setSelectingTerms(cur => !cur)} className="List__review--button">select manually { selectingTerms ? <ImCheckboxChecked /> : <ImCheckboxUnchecked /> }</button>
-                                    <button onClick={() => updateTermsToReview({type: 'all'})} className="List__review--button">select all</button>
-                                    <button onClick={() => updateTermsToReview({type: 'visible'})} className="List__review--button">select visible</button>
-                                    <button onClick={() => updateTermsToReview({type: 'none'})} className="List__review--button">select none</button>
+                                    <button onClick={() => setSelectingTerms(cur => !cur)} className="List__review--button">select manually {selectingTerms ? <ImCheckboxChecked /> : <ImCheckboxUnchecked />}</button>
+                                    <button onClick={() => updateTermsToReview({ type: 'all' })} className="List__review--button">select all</button>
+                                    <button onClick={() => updateTermsToReview({ type: 'visible' })} className="List__review--button">select visible</button>
+                                    <button onClick={() => updateTermsToReview({ type: 'none' })} className="List__review--button">select none</button>
                                 </div>
                             </section>
 

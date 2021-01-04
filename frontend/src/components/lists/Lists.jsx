@@ -76,8 +76,7 @@ const Lists = memo((props) => {
                             {listsElement
                                 .filter(l => {
                                     return (
-                                        (l.state.forwards !== 'untouched' || l.state.backwards !== 'untouched') &&
-                                        l.name.toLowerCase().includes(filter.toLowerCase())
+                                        l.state.forwards !== 'untouched'
                                     )
                                 })
                                 .sort((first, second) => first[sortBy] < second[sortBy] ? -1 : 1)  // TODO: sort by lowercase, sort out undefined cases (lastReviewed may be undefined
@@ -111,6 +110,7 @@ const Lists = memo((props) => {
 
                 </div>
             }
+
         </>
     )
 })
