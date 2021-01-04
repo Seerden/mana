@@ -72,3 +72,7 @@ GET {{base}}/dev/users
 GET {{base}}/dev/updatepass
 ###
 GET {{base}}/dev/user/a
+###
+GET {{base}}/dev/term
+###
+GET {{base}}/dev/onelist

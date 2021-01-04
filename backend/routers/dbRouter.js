@@ -62,6 +62,12 @@ function userOwnsRoute(req, res, next) {
     }
 }
 
+// function logActiveSessions(req, res, next) {
+//     req.sessionStore.all((err, sessions) => console.log(sessions))
+
+//     next();
+// }
+
 dbRouter.get('/list/devpopulate', (req, res) => {
     const base = path.join(__dirname, '../dev/wrts');
     const filenames = fs.readdirSync(base)
@@ -140,6 +146,7 @@ dbRouter.post('/u/register', (req, res) => {
 const userRouter = express.Router({ mergeParams: true });
 userRouter.use(isLoggedIn);
 userRouter.use(userOwnsRoute);
+// userRouter.use(logActiveSessions);
 dbRouter.use('/u/:username', userRouter);
 
 userRouter.get('/user', (req, res) => {
@@ -169,7 +176,8 @@ userRouter.get('/list', (req, res) => {
 })
 userRouter.post('/list', async (req, res) => {
     const newList = new List(req.body.newList)
-    const newTerms = await Term.create(req.body.newList.terms);
+    let terms = req.body.newList.terms.map(term => ({...term, owner: req.body.newList.owner}))
+    const newTerms = await Term.create(terms);
     newList.terms = newTerms.map(term => mongoose.Types.ObjectId(term._id))
     newList.save((err, doc) => res.status(200).json(doc));
 })
@@ -328,10 +336,5 @@ userRouter.get('/sets', (req, res) => {
             const setsArray = doc.length > 0 ? doc : [doc]
             res.send(setsArray)
         })
-
-})
-
-List.findOne({ owner: 'a' }, (e, doc) => {
-    // console.log(doc);
 
 })

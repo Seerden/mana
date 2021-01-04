@@ -223,3 +223,15 @@ function runDevCodeOnServerStart() {
 }
 
 runDevCodeOnServerStart();
+
+devRouter.get('/term', (req, res) => {
+    Term.findOne({owner: 'a'}, (err, doc) => {
+        res.send(doc)
+    })
+})
+
+devRouter.get('/onelist', (req, res) => {
+    List.findOne({owner: 'a', name: '1'}, (err, doc) => {
+        res.send(doc)
+    })
+})
