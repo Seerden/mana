@@ -52,21 +52,6 @@ const Lists = memo((props) => {
                     <div className="PageHeader">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
                     <button className="Button"><Link to={`/u/${params.username}/lists/new`}>Make a new list</Link></button>
 
-                    {/* META STATS */}
-                    {lists &&
-                        <section className="Lists__stats">
-                            <header className="Lists__heading">
-                                Meta
-                            </header>
-                            <div>
-                                You own {listCount} {lists.length === 1 ? 'list' : 'lists'}.
-
-                                You've reviewed {reviewedCount} of them at least once. If you start reviewing a new list every day, you'll be done by {dayjs(new Date()).add(listCount - reviewedCount, 'days').format('MMMM DD[th]')}.
-                            </div>
-                        </section>
-                    }
-                    {/* END OF STATS */}
-
                     <div className="Lists__header">
                         <div className="Lists__filter">
                             <label htmlFor="filter" id="Lists__filter--label">Filter lists by name</label>
@@ -90,7 +75,7 @@ const Lists = memo((props) => {
                         </div>
                     </div>
 
-                    {/* ACTIVE LISTS SECTION */}
+                    {/* ---- ACTIVE LISTS SECTION */}
                     <section className="Lists__active">
                         <header className="Lists__heading">Active lists</header>
                         <div className="Lists__lists">
@@ -105,19 +90,22 @@ const Lists = memo((props) => {
                             }
                         </div>
                     </section>
+                    {/* END ACTIVE LISTS SECTION ---- */}
 
-                    {/* ALL LISTS SECTION */}
+                    {/* ---- ALL LISTS SECTION */}
                     <section className="Lists__all">
                         <header className="Lists__heading">All lists</header>
                         <div className="Lists__lists">
                             {listsElement &&
                                 listsElement
                                     .filter(l => l.name.toLowerCase().includes(filter.toLowerCase()))
-                                    .sort((first, second) => first[sortBy] < second[sortBy] ? -1 : 1)  // TODO: sort by lowercase, sort out undefined cases (lastReviewed may be undefined
+                                    .sort((first, second) => first[sortBy] < second[sortBy] ? -1 : 1)  // TODO: sort by lowercase, sort out undefined cases (lastReviewed may be undefined)
                                     .map(l => l.element)
                             }
                         </div>
                     </section>
+                    {/* END ALL LISTS SECTION ---- */}
+
                 </div>
 
             }

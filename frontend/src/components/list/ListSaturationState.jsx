@@ -77,15 +77,6 @@ const ListSaturationState = ({ terms }) => {
                     {overviewElements}
                 </tbody>
             </table>
-
-            <div>
-                <header>
-                    Progress (percentage of terms at saturation level 3 or 4):
-                </header>
-                <div>Forwards: {progress.forwards}%</div>
-                <div>Backwards: {progress.backwards}%</div>
-            </div>
-
         </div>
     )
 }
