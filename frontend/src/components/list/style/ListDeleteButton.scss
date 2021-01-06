@@ -2,11 +2,16 @@
     display: flex;
     align-items: center;
     color: white;
-    background-color: #222;
+    background-color: #333;
     border: none;
     outline: none;
-    transition: all 100ms ease-in;
-    border-radius: 3px;
+    transition: all 50ms ease;
+    border-radius: 5px;
+
+    &:hover {
+        box-shadow: 0 0 0.5rem black;
+        
+    }
 
     &__label {
         display: inline;
@@ -19,17 +24,19 @@
     &__button {
         &--initial, &--confirm {
             padding: 0.5rem 1rem;
-            background-color: #222;
+            background-color: #333;
             color: azure;
             border: none;
             outline: none;
 
         }
-        
+
         &--initial {
-            
+            &:hover {
+                background-color: orangered;
+            }
         }
-        
+
         &--confirm {
             border-radius: 3px;
             &--yes {

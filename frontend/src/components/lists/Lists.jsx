@@ -16,7 +16,7 @@ const Lists = memo((props) => {
         [sortBy, setSortBy] = useState('name'),
         { params } = useRouteProps(),
         { response: lists, setRequest } = useRequest({ handleError, handleResponse }),
-        listsElement = useMemo(() => {if (lists) return makeListsElement(lists)}, [lists]),
+        listsElement = useMemo(() => { if (lists) return makeListsElement(lists) }, [lists]),
         listCount = lists?.length,
         reviewedCount = lists?.filter(list => list.sessions.length > 0)?.length;
 
@@ -24,12 +24,6 @@ const Lists = memo((props) => {
     useEffect(() => {
         setRequest(() => getLists(params.username))
     }, [])
-
-    useEffect(() => {
-        if (lists) {
-            console.log(lists[0]);
-        }
-    }, [lists])
 
     function handleFilterChange(e) {
         let val = e.currentTarget.value;
@@ -58,6 +52,21 @@ const Lists = memo((props) => {
                     <div className="PageHeader">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
                     <button className="Button"><Link to={`/u/${params.username}/lists/new`}>Make a new list</Link></button>
 
+                    {/* META STATS */}
+                    {lists &&
+                        <section className="Lists__stats">
+                            <header className="Lists__heading">
+                                Meta
+                            </header>
+                            <div>
+                                You own {listCount} {lists.length === 1 ? 'list' : 'lists'}.
+
+                                You've reviewed {reviewedCount} of them at least once. If you start reviewing a new list every day, you'll be done by {dayjs(new Date()).add(listCount - reviewedCount, 'days').format('MMMM DD[th]')}.
+                            </div>
+                        </section>
+                    }
+                    {/* END OF STATS */}
+
                     <div className="Lists__header">
                         <div className="Lists__filter">
                             <label htmlFor="filter" id="Lists__filter--label">Filter lists by name</label>
@@ -81,13 +90,14 @@ const Lists = memo((props) => {
                         </div>
                     </div>
 
+                    {/* ACTIVE LISTS SECTION */}
                     <section className="Lists__active">
                         <header className="Lists__heading">Active lists</header>
                         <div className="Lists__lists">
                             {listsElement
                                 .filter(l => {
                                     return (
-                                        l.state.forwards !== 'untouched'
+                                        l.state.forwards !== 'untouched' || l.state.backwards !== 'untouched'
                                     )
                                 })
                                 .sort((first, second) => first[sortBy] < second[sortBy] ? -1 : 1)  // TODO: sort by lowercase, sort out undefined cases (lastReviewed may be undefined)
@@ -96,21 +106,7 @@ const Lists = memo((props) => {
                         </div>
                     </section>
 
-                    {/* META STATS */}
-                    { lists && 
-                        <section className="Lists__stats">
-                            <header className="Lists__heading">
-                                Meta
-                            </header>
-                            <div>
-                                You own {listCount} {lists.length === 1 ? 'list' : 'lists'}.
-
-                                You've reviewed {reviewedCount} of them at least once. If you start reviewing a new list every day, you'll be done by {dayjs(new Date()).add(listCount-reviewedCount, 'days').format('MMMM DD[th]')}.
-                            </div>
-                        </section>
-                    }
-                    {/* END OF STATS */}
-
+                    {/* ALL LISTS SECTION */}
                     <section className="Lists__all">
                         <header className="Lists__heading">All lists</header>
                         <div className="Lists__lists">

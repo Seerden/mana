@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import { useRouteProps } from "hooks/routerHooks";
 import { useRequest } from "hooks/useRequest";
 import { getList, putList } from "helpers/apiHandlers/listHandlers";
@@ -15,12 +15,14 @@ const CompleteReview = ({ children }) => {
     const { response: listOrSetResponse, setRequest: getListOrSetRequest } = useRequest({});
     const { response: putListResponse, setRequest: putListRequest } = useRequest({});
     const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
+    const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const reviewStage = useRecoilValue(reviewStageState);
     const reviewSettings = useRecoilValue(reviewSettingsState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
 
     // on component mount, get list from database  @todo: implement full-set review functionality
     useEffect(() => {
+        resetTermsToReview();
         if (location.pathname.includes('list')) {
             getListOrSetRequest(() => getList(params.username, { _id: params.id }));
         } else if (location.pathname.includes('set')) {

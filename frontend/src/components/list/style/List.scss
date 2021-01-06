@@ -9,6 +9,11 @@
         }
     }
     
+    &__titlebar {
+        display: flex;
+        justify-content: space-between;
+    }
+
     &__review {
         display: flex;
         justify-content: space-between;

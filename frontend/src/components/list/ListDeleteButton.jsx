@@ -6,7 +6,7 @@ const ListDeleteButton = ({ handleDelete }) => {
     const [confirming, toggleConfirming] = useToggle(false);
 
     return (
-            <button className="ListDeleteButton">
+            <span className="ListDeleteButton">
                 <input
                     onClick={() => toggleConfirming()}
                     type="button"
@@ -31,7 +31,7 @@ const ListDeleteButton = ({ handleDelete }) => {
                         />
                     </>
                 }
-            </button>
+            </span>
     )
 }
 

@@ -146,19 +146,24 @@ const List = memo((props) => {
 
                         <>
                             <h1 className="PageHeader">
-                                <span
-                                    contentEditable
-                                    suppressContentEditableWarning
-                                    onBlur={handleListTitleBlur}
-                                >
-                                    {list.name}
-                                </span>
-                                ({list.from} to {list.to})
+                                <section className="List__titlebar">
+                                    <div>
+                                        <span
+                                            contentEditable
+                                            suppressContentEditableWarning
+                                            onBlur={handleListTitleBlur}
+                                            className="List__section--header"
+                                        >
+                                            {list.name}
+                                        </span>
+                                        <span> ({list.from} to {list.to})</span>
+                                    </div>
+                                    <div>
+                                        <ListDeleteButton {...{ handleDelete }} />
+                                    </div>
+                                </section>
                             </h1>
 
-                            <section className="List__banner">
-                                <ListDeleteButton {...{ handleDelete }} />
-                            </section>
                             <section
                                 className="List__header"
                                 style={{
