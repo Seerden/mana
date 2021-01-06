@@ -73,7 +73,7 @@ const List = memo((props) => {
     }, [getResponse])
 
     useEffect(() => {
-        if (list && list.terms) { updateTerms() };      /*  updateTerms needs to be called only AFTER list has been put into state, since this depends on list */
+        if (list && list.terms) { updateTerms() };      // updateTerms needs to be called only AFTER list has been put into state, since this depends on list
     }, [list])
 
     function updateTerms() {
@@ -114,7 +114,7 @@ const List = memo((props) => {
     };
 
     /**
-     * Calling this will trigger the delete request for the entire list. 
+     * Trigger the API to DELETE the entire list
      */
     function handleDelete() {
         setDeleteRequest(() => deleteList(params.username, { _id: params.id }))
@@ -147,8 +147,12 @@ const List = memo((props) => {
 
                         <>
                             <h1 className="PageHeader">
+
+                                {/* ---- TITLE BAR (list name and delete button) ---- */}
                                 <section className="List__titlebar">
                                     <div>
+
+                                        {/* ---- LIST NAME ---- */}
                                         <span
                                             contentEditable
                                             suppressContentEditableWarning
@@ -159,18 +163,22 @@ const List = memo((props) => {
                                         </span>
                                         <span> ({list.from} to {list.to})</span>
                                     </div>
+
+                                    {/* ---- LIST DELETE BUTTON ---- */}
                                     <div>
                                         <ListDeleteButton {...{ handleDelete }} />
                                     </div>
                                 </section>
                             </h1>
 
+                            {/* ---- LIST INFO AND SET MEMBERSHIP INFO ---- */}
                             <section
                                 className="List__header"
                                 style={{
                                     gridTemplateColumns: list.sets ? '3fr 1fr' : '2fr 1fr'
                                 }}
                             >
+                                {/* ---- LIST INFO ---- */}
                                 <section className="List__info">
                                     <header className="List__section--heading">
                                         <span className="List__section--header">List info</span>
@@ -190,6 +198,7 @@ const List = memo((props) => {
                                     }
                                 </section>
 
+                                {/* ---- SET MEMBERSHIP INFO ---- */}
                                 <section className="List__sets">
                                     <header className="List__section--heading">
                                         <span className="List__section--header">Sets</span>
@@ -201,6 +210,7 @@ const List = memo((props) => {
                                     {!list.sets && <p>This list is not part of any sets.</p>}
                                 </section>
 
+                                {/* ---- SATURATION TABLE ---- */}
                                 {terms?.[0].saturation.forwards &&
                                     <section className="List__section">
                                         <header className="List__section--header">
@@ -212,6 +222,7 @@ const List = memo((props) => {
 
                             </section>
 
+                            {/* ---- LIST REVIEW BUTTON BANNER ---- */}
                             <section className="List__review">
                                 <div className="List__review--links">
                                     <Link className="List__review--button" to={`${location.pathname}/review?kind=full`}>Review all terms</Link>
@@ -226,6 +237,7 @@ const List = memo((props) => {
                                 </div>
                             </section>
 
+                            {/* ---- TERMS ---- */}
                             <section className="List__content">
                                 <ul className="List__terms">
                                     <div>
@@ -234,8 +246,8 @@ const List = memo((props) => {
                                                 Terms
                                             </header>
 
-
                                             <div className="List__terms--saturationfilter">
+                                                {/* ---- FILTER STATUS ---- */}
                                                 {filter.saturation.level
                                                     ?
                                                     <span className="List__terms--saturationfilter--display">
@@ -247,6 +259,7 @@ const List = memo((props) => {
                                                     </span>
                                                 }
 
+                                                {/* ---- FILTER ---- */}
                                                 {list.sessions?.length > 0 &&
                                                     <SaturationFilter
                                                         filter={filter}
@@ -258,7 +271,7 @@ const List = memo((props) => {
                                         </div>
                                     </div>
 
-
+                                    {/* ---- TERM DISPLAY ---- */}
                                     {termsToDisplay ? termsToDisplay : <div>Loading terms..</div>}
                                 </ul>
                             </section>
