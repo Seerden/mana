@@ -5,6 +5,10 @@ import advancedFormat from 'dayjs/plugin/advancedFormat'
   dayjs.extend(relativeTime);
 
 /**
+ * @module time functions to compute, parse and format dates and times
+ */
+
+/**
  * Return time to or from the given date
  * @param {Date} date date to which relative distance should be returned
  * @returns {String} e.g. '2 days ago'

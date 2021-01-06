@@ -20,6 +20,7 @@ import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import ListSaturationState from "./ListSaturationState";
 import { useLogState } from "hooks/state";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
+import { suggestTermsForReview } from "helpers/srs/saturation";
 
 const List = memo((props) => {
     const [list, setList] = useState(null),
@@ -35,7 +36,8 @@ const List = memo((props) => {
         numTermsToReview = useRecoilValue(numTermsToReviewState),
         setListAtom = useSetRecoilState(listState),
         setTermsToReview = useSetRecoilState(termsToReviewState),
-        resetTermsToReview = useResetRecoilState(termsToReviewState);
+        resetTermsToReview = useResetRecoilState(termsToReviewState),
+        suggestedTermsForReview = useMemo(() => list && suggestTermsForReview(list.terms), [list]);
 
     const termsToDisplay = useMemo(() => {
         return filterTermsBySaturation(terms)
@@ -189,9 +191,13 @@ const List = memo((props) => {
                                     {list.lastReviewed
                                         ?
                                         <>
-                                            <p className="List__info--item">
-                                                Your latest review was <span className="List__info--datum">{formatDate(list.lastReviewed, 'hh:mma, MMMM Do')} ({timeSince(list.lastReviewed)})</span>.
-                                            </p>
+                                            <p className="List__info--item">Your latest review was <span className="List__info--datum">{formatDate(list.lastReviewed, 'hh:mma, MMMM Do')} ({timeSince(list.lastReviewed)})</span></p>
+                                            <div>
+                                                <p>Forwards state: {list.state.forwards}.</p>
+                                                <p>Backwards state: {list.state.backwards}</p>
+                                                {terms && <>Number of terms due for review: Forwards: {suggestedTermsForReview.forwards.length} | Backwards: {suggestedTermsForReview.backwards.length}</>}
+
+                                            </div>
                                         </>
                                         :
                                         <p className="List__info--item" style={{ width: 'max-content', backgroundColor: 'blueviolet' }}>You haven't reviewed this list yet. Get on it!</p>
@@ -217,6 +223,8 @@ const List = memo((props) => {
                                             <span className="List__section--heading">Saturation</span>
                                         </header>
                                         {terms && <ListSaturationState terms={terms} />}
+
+                                        
                                     </section>
                                 }
 

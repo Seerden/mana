@@ -3,6 +3,7 @@ import { termSessionsByDirection } from '../list.api';
 import duration from 'dayjs/plugin/duration.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
+import { timeSince } from 'helpers/time';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
@@ -140,4 +141,30 @@ export function saturateSeededTerm(filteredHistory, saturation) {
             return saturation
     }
 
+}
+
+/**
+ * Use a term's history and the user's saturation timescales to extract terms past due for review (also includes terms that don't have a saturation level yet).
+ * @note    currently there's a single saturationLevels object used for timescales. Eventually this might become user-defined
+ * @note    currently including all terms without saturation level (i.e. terms in untouched or seeding stage). 
+ *              this doesn't work for terms that are in seeding that have been reviewed within a day (seeding spacing should be at least a day, I feel)
+ * @param {Array} terms array of terms
+ * @returns {{forwards: Array, backwards: Array}} object containing 'forwards' and 'backwards' array of term indices.
+ */
+export function suggestTermsForReview(terms) {
+    let now = Date.now();
+
+    return terms.reduce((acc, curTerm, index) => {
+        for (let direction of ['forwards', 'backwards']) {
+            let sat = curTerm.saturation[direction];
+            if ([0,1,2,3,4].includes(sat)) {
+                if (now - new Date(curTerm.lastReviewed[direction]) > saturationLevels[sat].timescale) {
+                    acc = {...acc, [direction]: [...acc[direction], index]}
+                }
+            } else {
+                acc = {...acc, [direction]: [...acc[direction], index]}
+            }
+        }
+        return acc
+    }, {forwards: [], backwards: []})
 }
