@@ -47,3 +47,23 @@ export const newHistoryEntriesState = atom({
         }
     })
 })
+
+export const passfailState = atom({
+    key: 'passfailState',
+    default: []
+})
+
+export const timePerCardState = atom({
+    key: 'timePerCardState',
+    default: []
+})
+
+export const futureTermsState = atom({
+    key: 'futureTermsState',
+    default: []
+})
+
+export const timerState = atom({
+    key: 'timerState',
+    default: 0
+})

@@ -155,16 +155,35 @@ export function suggestTermsForReview(terms) {
     let now = Date.now();
 
     return terms.reduce((acc, curTerm, index) => {
-        for (let direction of ['forwards', 'backwards']) {
+        for (const direction of ['forwards', 'backwards']) {
             let sat = curTerm.saturation[direction];
-            if ([0,1,2,3,4].includes(sat)) {
-                if (now - new Date(curTerm.lastReviewed[direction]) > saturationLevels[sat].timescale) {
-                    acc = {...acc, [direction]: [...acc[direction], index]}
+            const lastReviewed = getLastReviewDate(curTerm);
+            if ([0, 1, 2, 3, 4].includes(sat)) {
+                if (now - new Date(lastReviewed[direction]) > saturationLevels[sat].timescale) {
+                    acc = { ...acc, [direction]: [...acc[direction], index] }
                 }
             } else {
-                acc = {...acc, [direction]: [...acc[direction], index]}
+                acc = { ...acc, [direction]: [...acc[direction], index] }
             }
         }
         return acc
-    }, {forwards: [], backwards: []})
+    }, { forwards: [], backwards: [] })
+}
+
+/**
+ * Extract date of last 'forwards' and 'backwards' review from a term's history
+ * @param {*} term 
+ */
+function getLastReviewDate(term) {
+    let history = term.history;
+
+    let filterByDirection = (direction) => history.filter(entry => entry.direction === direction);
+
+    let forwards = filterByDirection('forwards');
+    let backwards = filterByDirection('backwards');
+
+    return ({
+        forwards: forwards.reverse()[0]?.date || null,
+        backwards: backwards.reverse()[0]?.date || null
+    })
 }

@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { useResetRecoilState, useRecoilValue } from 'recoil';
 import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { reviewSettingsState, termsToReviewState } from 'recoil/atoms/reviewAtoms';
+import { timePerCardState, reviewSettingsState, termsToReviewState } from 'recoil/atoms/reviewAtoms';
+
 import dayjs from 'dayjs';
 
 const PostReview = () => {
@@ -10,10 +11,13 @@ const PostReview = () => {
     const formatDate = (date) => dayjs(date).format('HH:mm:ss');
     const { sessionStart, sessionEnd } = useRecoilValue(reviewSettingsState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
+    const timePerCard = useRecoilValue(timePerCardState);
+    const resetTimePerCard = useResetRecoilState(timePerCardState)
 
     useEffect(() => {
         return () => {
             resetTermsToReview();
+            resetTimePerCard();
         }
     }, [])
 
@@ -22,6 +26,7 @@ const PostReview = () => {
             <h2>Session completed.</h2>
             <div>Started at {formatDate(sessionStart)}</div>
             <div>Completed at {formatDate(sessionEnd)}</div>
+            <div>Time per card: {JSON.stringify(timePerCard)}</div>
 
             <button className="Button">
                 <Link to={`/u/${params.username}/list/${params.id}`}>Back to list</Link>

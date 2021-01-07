@@ -113,12 +113,7 @@ const Review = memo((props) => {
                         />
                     </div>
 
-                    <ReviewInfo
-                        start={reviewSettings.sessionStart}
-                        numTerms={numTermsToReview}
-                        n={reviewSettings.n}
-                        progress={progress}
-                    />
+                    <ReviewInfo progress={progress} />
                 </>
             }
         </div>
