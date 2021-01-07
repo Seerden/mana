@@ -9,7 +9,7 @@ import { handleError as defaultHandleError, handleResponse as defaultHandleRespo
  * @param {Function} request axios request initialized wrapper inside an anonymous function, e.g. () => axios.get('/home')
  * @param {Function} handleResponse function to handle successful response, will be called as request().then(r => handleResponse(r))
  * @param {Function} handleError function to handle error, form similar to handleResponse
- * @returns {{response: *, error: Boolean, loading: Boolean, setRequest: Function}} [response, error] are returned states set by the handleResponse/handleError functions. loading is the loading state (true while request is being made), and makeRequest can be called to trigger a request
+ * @returns {{response: *, error, loading: Boolean, setRequest: Function}} [response, error] are returned states set by the handleResponse/handleError functions. loading is the loading state (true while request is being made), and makeRequest can be called to trigger a request
  * @param {Function} setRequest request is expected to wrapper in a function, so usage should be like setRequest(() => axios.get('/'))
  * 
  */

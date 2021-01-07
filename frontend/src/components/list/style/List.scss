@@ -1,17 +1,35 @@
 .List {
-    &__header {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
-
-        @media screen and (max-width: 768px) {
-            grid-template-columns: 1fr;
-        }
-    }
-    
     &__titlebar {
         display: flex;
         justify-content: space-between;
+    }
+
+    &__meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 0.5rem;
+    }
+
+    &__review {
+        &--button {
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.5rem 0.7rem;
+            border: none;
+            outline: none;
+            color: azure;
+
+            svg {
+                margin-right: 0.5rem;
+            }
+            
+            &:not(:nth-of-type(1)) {
+                margin-top: 0.5rem;
+            }
+
+        }
     }
 
     &__review {
@@ -30,7 +48,7 @@
             padding: 0.3rem 0.5rem;
 
             &--label {
-                display: inline-block;
+                margin: 0 0;
                 margin-right: 0.5rem;
             }
         }
@@ -63,7 +81,7 @@
 
     }
 
-    &__info, &__section, &__sets, &__terms, &__content {
+    &__section, &__sets, &__terms, &__suggested {
         margin-top: 0;
         padding: 1rem;
         border: 2px solid #222;
@@ -78,12 +96,20 @@
     }
 
     &__section {
+        margin-top: 0.4rem;
         &--heading {
             display: flex;
             justify-content: space-between;
             
         }
         
+        &--text {
+            font-size: 0.8rem;
+            max-width: 30rem;
+            background-color: #111;
+            padding: 0.5rem 1rem;
+        }
+
         &--header {
             @media screen and (max-width: 768px), screen and (max-height: 700px) {
                 font-size: 1.3rem;
@@ -100,42 +126,11 @@
         }
     }
 
-    &__info {
-        &--item {
-            font-size: 0.9rem;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        &--datum {
-            color: deepskyblue;
-            white-space: nowrap;
-            word-break: keep-all;
-            font-weight: 600;
-            margin: 0 5px;
-            background-color: #222;
-            padding: 0 2px;
-        }
-    }
-
-    &__content {
-        display: flex;
-        margin-top: 0.5rem;
-
-        @media screen and (max-width: 1280px) {
-            justify-content: start;
-            box-shadow: none;
-            border: none;
-            margin-top: 0;
-            padding: 0;
-        }
-    }
-
     &__terms {
         margin-top: 0.5rem;
         padding-left: 1rem;
         padding-right: 1rem;
+        max-width: 1200px;
         &--header {
             max-width: 1200px;
             display: flex;

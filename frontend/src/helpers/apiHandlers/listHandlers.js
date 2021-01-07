@@ -45,7 +45,6 @@ export const handlePostList = () => {
      *                      - allow user to specify fields that need to be updated
      *                      - implement this field udpating in the database     *      
      */
-
 export const handlePutList = () => { return { handleResponse, handleError } }
 
 export const handleDeleteList = () => {

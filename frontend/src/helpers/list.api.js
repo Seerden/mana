@@ -62,12 +62,11 @@ export function maybeUpdateListStateAfterReview(list, direction) {
 
     // ----- dev functionality (some old lists have recorded sessions from before this feature was implemented):
     if (previousSessionLength > 0 && list.state[direction] === 'untouched') {
-        if (previousSessionLength > 2) {
+        if (previousSessionLength === 2) {
             return { ...list.state, [direction]: 'seeded' }
         } return { ...list.state, [direction]: 'seeding' }
 
     }
-
     // -----
 
     switch (previousSessionLength) {

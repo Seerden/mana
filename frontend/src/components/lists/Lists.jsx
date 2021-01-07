@@ -75,24 +75,7 @@ const Lists = memo((props) => {
                         </div>
                     </div>
 
-                    {/* ---- ACTIVE LISTS SECTION */}
-                    <section className="Lists__active">
-                        <header className="Lists__heading">Active lists</header>
-                        <div className="Lists__lists">
-                            {listsElement
-                                .filter(l => {
-                                    return (
-                                        l.state.forwards !== 'untouched' || l.state.backwards !== 'untouched'
-                                    )
-                                })
-                                .sort((first, second) => first[sortBy] < second[sortBy] ? -1 : 1)  // TODO: sort by lowercase, sort out undefined cases (lastReviewed may be undefined)
-                                .map(l => l.element)
-                            }
-                        </div>
-                    </section>
-                    {/* END ACTIVE LISTS SECTION ---- */}
-
-                    {/* ---- ALL LISTS SECTION */}
+                    {/* ---- ALL LISTS ---- */}
                     <section className="Lists__all">
                         <header className="Lists__heading">All lists</header>
                         <div className="Lists__lists">
@@ -104,7 +87,6 @@ const Lists = memo((props) => {
                             }
                         </div>
                     </section>
-                    {/* END ALL LISTS SECTION ---- */}
 
                 </div>
 

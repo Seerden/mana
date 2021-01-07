@@ -8,15 +8,17 @@ import session from 'express-session';
 import mongoose from 'mongoose';
 import passport from '../auth/passport.js';
 import connectMongo from 'connect-mongo';
-const MongoStore = connectMongo(session);
-
 import bcrypt from 'bcryptjs';
+
+const MongoStore = connectMongo(session);
 const { hash } = bcrypt;
 
 const User = dbConn.model('User');
 const List = dbConn.model('List');
 const Set = dbConn.model('Set');
 const Term = dbConn.model('Term');
+
+import sessionRouter from './db/sessionRouter';
 
 /**
  * Express router for /db routes, used as API endpoints for frontend interaction with the database.
@@ -62,50 +64,6 @@ function userOwnsRoute(req, res, next) {
     }
 }
 
-// function logActiveSessions(req, res, next) {
-//     req.sessionStore.all((err, sessions) => console.log(sessions))
-
-//     next();
-// }
-
-dbRouter.get('/list/devpopulate', (req, res) => {
-    const base = path.join(__dirname, '../dev/wrts');
-    const filenames = fs.readdirSync(base)
-    const jsonFiles = filenames.filter(f => f.includes('json'))
-
-    const populate = async () => {
-        for (let file of jsonFiles) {
-            let data = fs.readFileSync((path.join(base, file)), 'UTF-8');
-            let { name, content, from, to } = JSON.parse(data);
-            content = content.filter(i => (i.from !== null && i.to !== null))
-            const newList = new List({
-                owner: 'seerden',
-                name,
-                from: from || 'Japanese',
-                to: to || "English",
-                created: new Date(),
-                numTerms: content.length,
-                content
-            })
-
-            newList.save((err, saved) => {
-                if (!err) {
-                    User.findOneAndUpdate({ username: 'seerden' }, { $push: { lists: newList } }, (err, updated) => {
-                        if (!err) {
-                            console.log('updated:', updated)
-                        }
-                    })
-                }
-            })
-        }
-    }
-
-    populate().then(() => {
-        console.log('populated');
-        res.send('populated')
-    })
-})
-
 // currently, registration and login go through this same route (registration is done in the passport local strategy, see my passport.js file)
 /* note, however, that this just sends a 401 response without further customization if the authentication fails. using a callback (like option 1) gives us more options */
 dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
@@ -139,6 +97,7 @@ dbRouter.post('/u/register', (req, res) => {
         }
     })
 })
+
 /**
  * Subrouter for owner-protected routes (e.g. /u/admin/lists) 
  * @note Creation and authentication of users happens outside this subrouter.
@@ -146,7 +105,6 @@ dbRouter.post('/u/register', (req, res) => {
 const userRouter = express.Router({ mergeParams: true });
 userRouter.use(isLoggedIn);
 userRouter.use(userOwnsRoute);
-// userRouter.use(logActiveSessions);
 dbRouter.use('/u/:username', userRouter);
 
 userRouter.get('/user', (req, res) => {
@@ -174,6 +132,7 @@ userRouter.get('/list', (req, res) => {
             doc && res.json(doc)
         })
 })
+
 userRouter.post('/list', async (req, res) => {
     const newList = new List(req.body.newList)
     let terms = req.body.newList.terms.map(term => ({...term, owner: req.body.newList.owner}))
@@ -195,6 +154,7 @@ userRouter.put('/list', (req, res) => {
             else { res.status(200).send(updated) }
         })
 })
+
 userRouter.delete('/list', (req, res) => {
     List.findOneAndDelete({ ...req.query }, (err, deletedList) => {
         if (!err) {
@@ -284,9 +244,9 @@ userRouter.put('/terms', (req, res) => {
 
 // ----- routes related to multiple lists -----
 userRouter.get('/lists', (req, res) => {
-    List.find({ owner: req.params.username }, '-content', (err, found) => {
-        res.json(found);
-    })
+    // List.find({ owner: req.params.username }, '-terms', (err, found) => {
+    //     res.json(found);
+    // })
 })
 
 // ----- routes related to sets -----
@@ -298,6 +258,7 @@ userRouter.get('/set', (req, res) => {
         if (doc) res.send(doc)
     })
 });
+
 userRouter.post('/set', (req, res) => {
     const { owner, name } = req.body.newSet;
     Set.findOne({ owner, name }, (err, doc) => {
@@ -313,6 +274,7 @@ userRouter.post('/set', (req, res) => {
         }
     })
 });
+
 userRouter.put('/set', (req, res) => {
     const { query, body } = req.body.data;
 
@@ -321,6 +283,7 @@ userRouter.put('/set', (req, res) => {
         if (err) res.status(400).send('Error updating list.')
     })
 });
+
 userRouter.delete('/set', (req, res) => {
     Set.findOneAndDelete({ ...req.query }, (err, doc) => {
         if (err) res.status(400).send('Error deleting set.')
@@ -338,3 +301,5 @@ userRouter.get('/sets', (req, res) => {
         })
 
 })
+
+userRouter.use('/session', sessionRouter)

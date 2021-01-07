@@ -6,7 +6,6 @@ const User = dbConn.model('User');
 const List = dbConn.model('List');
 const Set = dbConn.model('Set');
 const Term = dbConn.model('Term');
-const Test = dbConn.model('Test');
 
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -135,15 +134,6 @@ function migrateTermsFromListContentToTermDocument() {
     })
 }
 
-// ----- DELETE ALL EXISTING TERM DOCUMENTS
-function deleteAllTermDocuments() {
-    Term.deleteMany({}, (err, deleted) => {
-        console.log(deleted);
-    })
-
-}
-
-// ---- FIND ONE LIST BY a
 function migrateOne(){
     List.findOne({ owner: 'a', name: 'sa' }, (err, doc) => {
         console.log(doc.content);
@@ -198,40 +188,3 @@ async function removeAllContentEntries() {
     let res = await List.updateMany({_id: {$exists: true}}, {$unset: {content: 1}})
     console.log(res);
 }
-
-function makeTestDocumentInstance(){
-    let newTestInstance = new Test({items: [1,2,3]});
-    newTestInstance.save((err, savedDoc) => {
-        console.log({savedDoc})
-        Test.deleteMany({}, (err, deleted) => console.log('cleaned up Test collection, deletedCount:', deleted.deletedCount))
-    });
-
-}
-
-function logOneListByAdmin(){
-List
-    .findOne({owner: process.env.MANA_ADMIN_USER})
-    .populate('terms')
-    .exec((err, doc) => {
-        doc && console.log(doc.terms[0]);
-    })
-
-}
-
-function runDevCodeOnServerStart() {
-    return
-}
-
-runDevCodeOnServerStart();
-
-devRouter.get('/term', (req, res) => {
-    Term.findOne({owner: 'a'}, (err, doc) => {
-        res.send(doc)
-    })
-})
-
-devRouter.get('/onelist', (req, res) => {
-    List.findOne({owner: 'a', name: '1'}, (err, doc) => {
-        res.send(doc)
-    })
-})

@@ -21,6 +21,7 @@ import ListSaturationState from "./ListSaturationState";
 import { useLogState } from "hooks/state";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
 import { suggestTermsForReview } from "helpers/srs/saturation";
+import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 
 const List = memo((props) => {
     const [list, setList] = useState(null),
@@ -173,116 +174,96 @@ const List = memo((props) => {
                                 </section>
                             </h1>
 
-                            {/* ---- LIST INFO AND SET MEMBERSHIP INFO ---- */}
-                            <section
-                                className="List__header"
-                                style={{
-                                    gridTemplateColumns: list.sets ? '3fr 1fr' : '2fr 1fr'
-                                }}
-                            >
-                                {/* ---- LIST INFO ---- */}
-                                <section className="List__info">
-                                    <header className="List__section--heading">
-                                        <span className="List__section--header">List info</span>
-                                    </header>
-                                    <p className="List__info--item">
-                                        There {list.terms.length === 1 ? 'is' : 'are'} <span className="List__info--datum">{list.numTerms}</span> term{list.terms.length === 1 ? '' : 's'} in this list.
-                                    </p>
-                                    {list.lastReviewed
-                                        ?
-                                        <>
-                                            <p className="List__info--item">Your latest review was <span className="List__info--datum">{formatDate(list.lastReviewed, 'hh:mma, MMMM Do')} ({timeSince(list.lastReviewed)})</span></p>
-                                            <div>
-                                                <p>Forwards state: {list.state.forwards}.</p>
-                                                <p>Backwards state: {list.state.backwards}</p>
-                                                {terms && <>Number of terms due for review: Forwards: {suggestedTermsForReview.forwards.length} | Backwards: {suggestedTermsForReview.backwards.length}</>}
-
-                                            </div>
-                                        </>
-                                        :
-                                        <p className="List__info--item" style={{ width: 'max-content', backgroundColor: 'blueviolet' }}>You haven't reviewed this list yet. Get on it!</p>
-                                    }
-                                </section>
-
-                                {/* ---- SET MEMBERSHIP INFO ---- */}
-                                <section className="List__sets">
-                                    <header className="List__section--heading">
-                                        <span className="List__section--header">Sets</span>
-                                        <PageInfo>
-                                            To add this list to a set, go to your Sets overview, or your Lists overview.
-                                        </PageInfo>
-                                    </header>
-                                    <SetPicker />
-                                    {!list.sets && <p>This list is not part of any sets.</p>}
-                                </section>
-
+                            <section className="List__meta">
                                 {/* ---- SATURATION TABLE ---- */}
                                 {terms?.[0].saturation.forwards &&
                                     <section className="List__section">
                                         <header className="List__section--header">
-                                            <span className="List__section--heading">Saturation</span>
+                                            <span className="List__section--heading">Progress</span>
                                         </header>
                                         {terms && <ListSaturationState terms={terms} />}
 
-                                        
+                                        { (suggestedTermsForReview.forwards.length > 0 || suggestedTermsForReview.backwards.length > 0) 
+                                            ?
+                                            <div>
+                                                <h4 className="List__section--header" style={{backgroundColor: 'orangered', marginTop: '0.5rem'}}>Due for review:</h4>
+                                                <div>
+                                                    <BiArrowToRight /> {suggestedTermsForReview.forwards.length} terms due.
+                                                </div>
+                                                <div>
+                                                    <BiArrowToLeft /> {suggestedTermsForReview.backwards.length} terms due.
+                                                </div>
+                                            </div>
+                                            :
+                                            <div className="List__section--header" style={{color: 'black', backgroundColor: 'deepskyblue', marginTop: '0.5rem'}}>
+                                                No terms due for review yet.
+                                            </div>
+                                        }
                                     </section>
                                 }
 
-                            </section>
+                                {/* ---- REVIEW SELECTION SECTION ---- */}
+                                <section className="List__section">
+                                    <header className="List__section--header">Review</header>
 
-                            {/* ---- LIST REVIEW BUTTON BANNER ---- */}
-                            <section className="List__review">
-                                <div className="List__review--links">
-                                    <Link className="List__review--button" to={`${location.pathname}/review?kind=full`}>Review all terms</Link>
-                                    {numTermsToReview > 0 && <Link className="List__review--button" to={`${location.pathname}/review?kind=partial`}>Review {numTermsToReview} selected terms</Link>}
-                                </div>
-                                <div className="List__review--select">
-                                    <label className="List__review--select--label">Select terms to review:</label>
-                                    <button onClick={() => setSelectingTerms(cur => !cur)} className="List__review--button">select manually {selectingTerms ? <ImCheckboxChecked /> : <ImCheckboxUnchecked />}</button>
-                                    <button onClick={() => updateTermsToReview({ type: 'all' })} className="List__review--button">select all</button>
-                                    <button onClick={() => updateTermsToReview({ type: 'visible' })} className="List__review--button">select visible</button>
-                                    <button onClick={() => updateTermsToReview({ type: 'none' })} className="List__review--button">select none</button>
-                                </div>
-                            </section>
-
-                            {/* ---- TERMS ---- */}
-                            <section className="List__content">
-                                <ul className="List__terms">
-                                    <div>
-                                        <div className="List__terms--header">
-                                            <header className="List__section--header">
-                                                Terms
-                                            </header>
-
-                                            <div className="List__terms--saturationfilter">
-                                                {/* ---- FILTER STATUS ---- */}
-                                                {filter.saturation.level
-                                                    ?
-                                                    <span className="List__terms--saturationfilter--display">
-                                                        Showing filtered list.
-                                                    </span>
-                                                    :
-                                                    <span className="List__terms--saturationfilter--display">
-                                                        Showing all terms.
-                                                    </span>
-                                                }
-
-                                                {/* ---- FILTER ---- */}
-                                                {list.sessions?.length > 0 &&
-                                                    <SaturationFilter
-                                                        filter={filter}
-                                                        setFilter={setFilter}
-                                                    />
-                                                }
-                                            </div>
-
-                                        </div>
+                                    <div className="List__section">
+                                        <header className="List__section--header">All</header>
+                                        <Link className="List__review--button" to={`${location.pathname}/review?kind=full`}>Review all terms</Link>
                                     </div>
 
-                                    {/* ---- TERM DISPLAY ---- */}
-                                    {termsToDisplay ? termsToDisplay : <div>Loading terms..</div>}
-                                </ul>
+                                    <div className="List__section">
+                                        <h4 className="List__section--header">Selective</h4>
+                                        {numTermsToReview > 0 &&
+                                            <Link style={{ marginBottom: '0.4rem' }} className="List__review--button" to={`${location.pathname}/review?kind=partial`}>Review {numTermsToReview} selected terms</Link>
+                                        }
+                                        <div>
+                                            <button onClick={() => setSelectingTerms(cur => !cur)} className="List__review--button">select manually {selectingTerms ? <ImCheckboxChecked /> : <ImCheckboxUnchecked />}</button>
+                                        </div>
+                                        <div>
+                                            <button onClick={() => updateTermsToReview({ type: 'all' })} className="List__review--button">select all</button>
+                                            <button onClick={() => updateTermsToReview({ type: 'visible' })} className="List__review--button">select visible</button>
+                                            <button onClick={() => updateTermsToReview({ type: 'none' })} className="List__review--button">select none</button>
+                                        </div>
+                                    </div>
+                                </section>
                             </section>
+
+
+                            {/* ---- TERMS ---- */}
+                            <ul className="List__terms">
+                                <div className="List__terms--header">
+                                    <header className="List__section--header">
+                                        Terms
+                                            </header>
+
+                                    <div className="List__terms--saturationfilter">
+                                        {/* ---- FILTER STATUS ---- */}
+                                        {filter.saturation.level
+                                            ?
+                                            <span className="List__terms--saturationfilter--display">
+                                                Showing filtered list.
+                                                    </span>
+                                            :
+                                            <span className="List__terms--saturationfilter--display">
+                                                Showing all terms.
+                                                    </span>
+                                        }
+
+                                        {/* ---- FILTER ---- */}
+                                        {list.sessions?.length > 0 &&
+                                            <SaturationFilter
+                                                filter={filter}
+                                                setFilter={setFilter}
+                                            />
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                                {/* ---- TERM DISPLAY ---- */}
+                                {termsToDisplay ? termsToDisplay : <div>Loading terms..</div>}
+                            </ul>
 
                         </>
                     }

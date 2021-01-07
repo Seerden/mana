@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ import Login from './login/Login';
 
 import { LoginProvider } from '../context/LoginContext';
 
-const App = memo(() => {
+const App = () => {
     return (
         <>
             <RecoilRoot>
@@ -75,6 +75,6 @@ const App = memo(() => {
             </RecoilRoot>
         </>
     )
-})
+}
 
 export default App;

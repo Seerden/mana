@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const sessionSchema = new mongoose.Schema({
+const reviewSessionSchema = new mongoose.Schema({
     start: String,
     end: String,
     termsReviewed: Number,
@@ -26,7 +26,7 @@ export const listSchema = new mongoose.Schema({
         }
     ],
     sessions: [
-        { type: sessionSchema }
+        { type: reviewSessionSchema }
     ],
     numTerms: { 
         type: Number, 
@@ -37,6 +37,6 @@ export const listSchema = new mongoose.Schema({
     setMembership: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Set' }],
     state: {
         type: mongoose.Schema.Types.Mixed, 
-        default: {forwards: 'untouched', backwards: 'untouched'}
+        default: {forwards: 'untouched', backwards: 'untouched'}  // untouched -> seeding -> seeded at 0, 1 and 3 reviews for that direction
     },
 }, { collation: { locale: 'en', strength: 2 } }) 
