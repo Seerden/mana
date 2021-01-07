@@ -134,15 +134,15 @@ function migrateTermsFromListContentToTermDocument() {
     })
 }
 
-function migrateOne(){
+function migrateOne() {
     List.findOne({ owner: 'a', name: 'sa' }, (err, doc) => {
         console.log(doc.content);
-    
+
         for (let idx = 0; idx < doc.content.length; idx++) {
             let term = doc.content[idx];
             console.log(mongoose.Types.ObjectId(term._id));
             doc.content[idx] = mongoose.Types.ObjectId(term._id)
-    
+
             doc.save((err, savedDoc) => {
                 if (!err) console.log(savedDoc);
                 console.log(err);
@@ -152,18 +152,18 @@ function migrateOne(){
 
 }
 
-function makeTerms(){
+function makeTerms() {
     List.find({}, (err, docs) => {
         for (let doc of docs) {
             if (doc.terms?.length > 0) {
                 console.log('already has terms')
             } else {
                 let terms = [];
-        
+
                 for (let term of doc.content) {
                     terms.push(mongoose.Types.ObjectId(term._id))
                 }
-        
+
                 doc.terms = terms;
                 doc.save((err, saved) => {
                     if (err) console.log(err);
@@ -174,17 +174,22 @@ function makeTerms(){
     })
 }
 
-function findOne(){
+function findOne() {
     List
-        .findOne({owner: 'a', name: 'Test'})
+        .findOne({ owner: 'a', name: 'Test' })
         .populate('terms')
         .exec((err, doc) => {
-            console.log(doc.terms[0]);
+            if(!err)
+            {
+                console.log(doc.terms[0]);
+            } else {
+                console.log(err);
+            }
         })
 }
 
 async function removeAllContentEntries() {
     // NOTE: using $unset only works if the field still currently exists in the schema/model
-    let res = await List.updateMany({_id: {$exists: true}}, {$unset: {content: 1}})
+    let res = await List.updateMany({ _id: { $exists: true } }, { $unset: { content: 1 } })
     console.log(res);
 }
