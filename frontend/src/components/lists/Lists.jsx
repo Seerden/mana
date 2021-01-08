@@ -20,8 +20,7 @@ const Lists = memo((props) => {
         listCount = lists?.length,
         reviewedCount = lists?.filter(list => list.sessions.length > 0)?.length;
 
-    // request Lists on mount
-    useEffect(() => {
+    useEffect(() => {  // request Lists on mount
         setRequest(() => getLists(params.username))
     }, [])
 
@@ -43,7 +42,6 @@ const Lists = memo((props) => {
             element: <ListsItem key={l._id} list={l} />
         }));
     }
-
 
     return (
         <>

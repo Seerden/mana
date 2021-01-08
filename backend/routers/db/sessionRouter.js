@@ -5,7 +5,7 @@ import express from 'express';
 const ReviewSession = dbConn.model('ReviewSession');
 const List = dbConn.model('List');
 
-const sessionRouter = express.Router({mergeParams: true});
+export const sessionRouter = express.Router({mergeParams: true});
 
 sessionRouter.get('/', (req, res) => {  // GET all sessions for a given user
     ReviewSession.find({owner: req.params.username}, (err, docs) => {
@@ -20,8 +20,8 @@ sessionRouter.get('/list', (req, res) => {  // GET all sessions involving any te
 sessionRouter.post('/', (req, res) => {  // POST a session to the database
     let newReviewSession = new ReviewSession(req.body.newReviewSession);
     newReviewSession.save((err, savedDoc) => {
-        if (err) res.status(500);
-        if (savedDoc) res.status(201)
+        if (err) res.status(500).send('Failed to send session to database.');
+        if (savedDoc) res.status(201).send('Successfully posted review session to database')
     })
 })
 

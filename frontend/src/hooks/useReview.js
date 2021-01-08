@@ -30,23 +30,6 @@ export function useReview() {
     const [timer, resetTimer] = useReviewTimer({tick: 50});
     const [timePerCard, setTimePerCard] = useRecoilState(timePerCardState);
 
-    // /---- BUILD REVIEW SESSION
-    // @todo: figure out how to get .terms into correct format. Need to rework termsToReview for this to be possible
-    // const [reviewSession, setReviewSession] = useState({
-    //     owner: params.username,
-    //     parentLists: [],
-    //     start: reviewSettings.sessionStart,
-    //     end: reviewSettings.sessionEnd, // might not exist, make sure this updates when review completes
-    //     terms: [],  // can't just use termsToReview, since we want to map each term to its parent list
-    //     settings: {
-    //         cycles: reviewSettings.n,
-    //         direction: reviewSettings.direction
-    //     },
-    //     timePerCard,
-    //     passfail
-    // });
-    // ----/
-
     /**
     * case init:       Initialize futureTerms with termsToReview
     * case pass/fail:  Handle what happens to current term after pass/fail is chosen.
@@ -164,7 +147,7 @@ export function useReview() {
             setReviewSettings(current => ({ ...current, sessionEnd: new Date() }));
         }
 
-        setFutureTerms(futureTerms)
+        setFutureTerms(futureTerms)  // sets the atom
     }, [futureTerms])
     
     return [

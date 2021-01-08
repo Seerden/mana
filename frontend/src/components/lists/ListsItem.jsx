@@ -4,7 +4,7 @@ import { useRouteProps } from "../../hooks/routerHooks";
 import './style/ListsItem.scss'
 import { timeSince } from '../../helpers/time';
 import dayjs from 'dayjs';
-import { BiArrowToRight } from "react-icons/bi";
+import { BiArrowToRight, BiArrowToLeft } from "react-icons/bi";
 
 const ListsItem = memo(({ list }) => {
     const { params } = useRouteProps();
@@ -44,8 +44,45 @@ const ListsItem = memo(({ list }) => {
                     <em>last reviewed {timeSince(list.sessions[list.sessions.length - 1].end)}</em>
                 </div>
             }
+
+            <div>
+                {['forwards', 'backwards'].map(direction => <StateRectangle size={15} direction={direction} state={list.state[direction]} />)}
+            </div>
         </div>
     )
 })
 
 export default ListsItem
+
+function getfillColor(state) {
+    switch(state) {
+        case 'untouched':
+            return 'red'
+        case 'seeding':
+            return 'yellow'
+        case 'seeded':
+            return 'seagreen'
+        default:
+            return 'black'
+    }
+}
+
+function StateRectangle({size, direction, state}) {
+    let fillColor = getfillColor(state);
+
+    return (
+        <svg 
+            width={size} 
+            height={size}
+            style={{marginLeft: direction === 'backwards' ? '0.4rem' : '0'}}
+        >
+            <rect 
+                width={size} 
+                height={size} 
+                fill={fillColor}
+            >
+                <title> {direction} seeding state</title>
+            </rect>
+        </svg>
+    )
+}

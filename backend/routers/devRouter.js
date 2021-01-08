@@ -6,6 +6,7 @@ const User = dbConn.model('User');
 const List = dbConn.model('List');
 const Set = dbConn.model('Set');
 const Term = dbConn.model('Term');
+const ReviewSession = dbConn.model('ReviewSession');
 
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -95,7 +96,6 @@ devRouter.get('/onelistbyuser', (req, res) => {
 //     console.log(found.content[0].history);
 // })
 
-// ---- DEV: figure out a way to migrate all existing List.content entries into their own Term document (preserving _id)
 function migrateTermsFromListContentToTermDocument() {
     List.find({}, (err, docs) => {
         for (let doc of docs) {
@@ -174,22 +174,56 @@ function makeTerms() {
     })
 }
 
-function findOne() {
-    List
-        .findOne({ owner: 'a', name: 'Test' })
-        .populate('terms')
-        .exec((err, doc) => {
-            if(!err)
-            {
-                console.log(doc.terms[0]);
-            } else {
-                console.log(err);
-            }
-        })
-}
-
 async function removeAllContentEntries() {
     // NOTE: using $unset only works if the field still currently exists in the schema/model
     let res = await List.updateMany({ _id: { $exists: true } }, { $unset: { content: 1 } })
     console.log(res);
 }
+
+// ---- fix all list states
+function updateListStates() {
+    List.find({}, (err, lists) => {
+        for (let list of lists) {
+            list.state = computeListState(list, getDirectionalSessionCount(list.sessions))
+            list.save()
+        }
+    
+        console.log('updated list states');
+    })
+}
+
+function getDirectionalSessionCount(sessions) {
+    const sessionCount = { forwards: null, backwards: null }
+
+    for (const direction of ['forwards', 'backwards']) {
+        const count = sessions.filter(sess => sess.direction === direction).length;
+        sessionCount[direction] = count;
+    }
+
+    console.log(sessionCount);
+    return sessionCount;
+}
+
+function computeListState(list, sessionCount) {
+    const newState = {}
+    for (const direction of ['forwards', 'backwards']) {
+        let stateVal = null;
+
+        const count = sessionCount[direction]
+        if (count < 1) {
+            stateVal = 'unseeded'
+        } else if (count < 3) {
+            stateVal = 'seeding'
+        } else if (count >= 3) {
+            stateVal = 'seeded'
+        }
+
+        console.log(stateVal);
+        newState[direction] = stateVal;
+
+    }
+
+
+    return newState
+}
+// ----

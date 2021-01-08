@@ -18,7 +18,7 @@ const List = dbConn.model('List');
 const Set = dbConn.model('Set');
 const Term = dbConn.model('Term');
 
-import sessionRouter from './db/sessionRouter';
+import { sessionRouter } from './db/sessionRouter';
 
 /**
  * Express router for /db routes, used as API endpoints for frontend interaction with the database.
@@ -135,7 +135,7 @@ userRouter.get('/list', (req, res) => {
 
 userRouter.post('/list', async (req, res) => {
     const newList = new List(req.body.newList)
-    let terms = req.body.newList.terms.map(term => ({...term, owner: req.body.newList.owner}))
+    let terms = req.body.newList.terms.map(term => ({ ...term, owner: req.body.newList.owner }))
     const newTerms = await Term.create(terms);
     newList.terms = newTerms.map(term => mongoose.Types.ObjectId(term._id))
     newList.save((err, doc) => res.status(200).json(doc));
@@ -244,8 +244,8 @@ userRouter.put('/terms', (req, res) => {
 
 // ----- routes related to multiple lists -----
 userRouter.get('/lists', (req, res) => {
-    List.find({ owner: req.params.username }, (err, found) => {
-        res.json(found);
+    List.find({owner: req.params.username}, (err, docs) => {
+        res.json(docs)
     })
 })
 
