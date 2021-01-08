@@ -16,16 +16,16 @@ export const listSchema = new mongoose.Schema({
     },
     name: { type: String, required: true },
     from: { type: String, required: true },  // original language
-    to: [
+    to: [  // note: array, to allow for multiple target languages 
         { type: String, required: true }
-    ],  // other languages (not just a string since want to be able to do multiple translations/definitions at a time)
+    ],  
     terms: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Term',
         }
     ],
-    sessions: [
+    sessions: [  // will become obsolete once ReviewSession is fully implemented
         { type: reviewSessionSchema }
     ],
     numTerms: { 
@@ -33,7 +33,7 @@ export const listSchema = new mongoose.Schema({
         default: function () { return this.terms.length } 
     },
     created: Date,
-    lastReviewed: Date,
+    lastReviewed: Date,  // refers to last ?kind=full review
     setMembership: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Set' }],
     state: {
         type: mongoose.Schema.Types.Mixed, 

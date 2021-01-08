@@ -128,8 +128,7 @@ const List = memo((props) => {
             case 'all':
                 setTermsToReview(list.terms);
                 break;
-            case 'visible':
-                // add all visible terms to termsToReview, as long as they're not already in there
+            case 'visible':  // add all visible terms to termsToReview, as long as they're not already in there
                 setTermsToReview(cur => Array.from(new Set([...cur, ...filterTermsBySaturation(list.terms)])));
                 break;
             case 'none':
