@@ -36,7 +36,7 @@ const ListsItem = memo(({ list }) => {
             <div className="ListsItem__name">
                 <Link className="Link" to={`/u/${params.username}/list/${list._id}`}>{list.name}</Link>
             </div>
-            <div className="ListsItem__numTerms">{list.numTerms} terms</div>
+            <div className="ListsItem__numTerms">{list.terms.length} terms</div>
             <div className="ListsItem__languages">{list.from} <BiArrowToRight /> {list.to} </div>
 
             { list.sessions.length > 0 &&

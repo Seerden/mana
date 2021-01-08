@@ -244,7 +244,7 @@ userRouter.put('/terms', (req, res) => {
 
 // ----- routes related to multiple lists -----
 userRouter.get('/lists', (req, res) => {
-    List.find({ owner: req.params.username }, '-terms', (err, found) => {
+    List.find({ owner: req.params.username }, (err, found) => {
         res.json(found);
     })
 })

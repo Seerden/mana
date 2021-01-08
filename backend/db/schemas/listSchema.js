@@ -28,10 +28,6 @@ export const listSchema = new mongoose.Schema({
     sessions: [  // will become obsolete once ReviewSession is fully implemented
         { type: reviewSessionSchema }
     ],
-    numTerms: { 
-        type: Number, 
-        default: function () { return this.terms.length } 
-    },
     created: Date,
     lastReviewed: Date,  // refers to last ?kind=full review
     setMembership: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Set' }],

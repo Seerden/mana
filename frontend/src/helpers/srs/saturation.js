@@ -160,10 +160,10 @@ export function suggestTermsForReview(terms) {
             const lastReviewed = getLastReviewDate(curTerm);
             if ([0, 1, 2, 3, 4].includes(sat)) {
                 if (now - new Date(lastReviewed[direction]) > saturationLevels[sat].timescale) {
-                    acc = { ...acc, [direction]: [...acc[direction], index] }
+                    acc = { ...acc, [direction]: [...acc[direction], curTerm] }
                 }
             } else {
-                acc = { ...acc, [direction]: [...acc[direction], index] }
+                acc = { ...acc, [direction]: [...acc[direction], curTerm] }
             }
         }
         return acc

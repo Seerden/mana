@@ -15,11 +15,10 @@ const NewList = memo((props) => {
         to: "",
         terms: new Array(numTerms),
         created: null,
-        numTerms: 0,
     }))
     const [termInputs, setTermInputs] = useState([]);
 
-    const { response: postResponse, setRequest: setPostRequest } = useRequest({...handlePostList()});
+    const { response: postResponse, setRequest: setPostRequest } = useRequest({ ...handlePostList() });
 
     useEffect(() => {
         setTermInputs(makeTermInputElements(formOutput, numTerms))
@@ -54,7 +53,6 @@ const NewList = memo((props) => {
             ...formOutput,
             created: new Date(),
             terms: formOutput.terms.filter(i => i !== null),
-            numTerms: formOutput.terms.filter(i => i !== null).length,
         }));
 
     }
@@ -65,8 +63,8 @@ const NewList = memo((props) => {
                 New List
             </div>
 
-            {!postResponse 
-            ? 
+            {!postResponse
+                ?
                 <form className="NewList__form">
                     <input className="NewList__form--name" onBlur={handleBlur} type="text" name="name" placeholder="List name" />
                     <input className="NewList__form--language" onBlur={handleBlur} type="text" name="from" placeholder="Original language" />
@@ -94,11 +92,11 @@ const NewList = memo((props) => {
                     <input className="Form__button" onClick={handleSubmit} type="button" value="Create list" />
                 </form>
 
-            :
+                :
                 <>
                     {JSON.stringify(postResponse)}
                 </>
-            
+
             }
 
 
