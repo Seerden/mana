@@ -61,7 +61,7 @@ const Review = memo((props) => {
                         start: reviewSettings.sessionStart,
                         end: reviewSettings.sessionEnd, // might not exist, make sure this updates when review completes
                     },
-                    terms: termsToReview.map(term => term._id),
+                    terms: [{listId: params.id, termIds: termsToReview.map(term => term._id)}],  // @todo: again, make this work with set reviews
                     settings: {
                         cycles: reviewSettings.n,
                         direction: reviewSettings.direction
@@ -75,7 +75,6 @@ const Review = memo((props) => {
 
     useEffect(() => {  // set reviewStage to PostReview once all post-session API requests are handled
         if (resB && resC && sessionPostResponse) {
-            console.log('hi from responses');
             setReviewStage('after');
         }
     }, [resB, resC, sessionPostResponse])
