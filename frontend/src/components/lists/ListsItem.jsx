@@ -46,7 +46,7 @@ const ListsItem = memo(({ list }) => {
             }
 
             <div>
-                {['forwards', 'backwards'].map(direction => <StateRectangle size={15} direction={direction} state={list.state[direction]} />)}
+                {['forwards', 'backwards'].map(direction => <StateRectangle key={`${list._id}-rect-${direction}`} size={15} direction={direction} state={list.state[direction]} />)}
             </div>
         </div>
     )
@@ -55,34 +55,38 @@ const ListsItem = memo(({ list }) => {
 export default ListsItem
 
 function getfillColor(state) {
-    switch(state) {
+    switch (state) {
         case 'untouched':
             return 'red'
         case 'seeding':
-            return 'yellow'
+            return 'orange'
         case 'seeded':
             return 'seagreen'
         default:
-            return 'black'
+            return 'white'
     }
 }
 
-function StateRectangle({size, direction, state}) {
+function StateRectangle({ size, direction, state }) {
     let fillColor = getfillColor(state);
 
     return (
-        <svg 
-            width={size} 
-            height={size}
-            style={{marginLeft: direction === 'backwards' ? '0.4rem' : '0'}}
+        <span
+            className="ListsItem__rect"
+            style={{ marginLeft: direction === 'backwards' ? '0.4rem' : '0' }}
         >
-            <rect 
-                width={size} 
-                height={size} 
-                fill={fillColor}
+            <svg
+                width={size}
+                height={size}
             >
-                <title> {direction} seeding state</title>
-            </rect>
-        </svg>
+                <rect
+                    width={size}
+                    height={size}
+                    fill={fillColor}
+                >
+                    <title> {direction} seeding state</title>
+                </rect>
+            </svg>
+        </span>
     )
 }

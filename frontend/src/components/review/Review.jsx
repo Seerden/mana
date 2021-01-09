@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useState, useMemo, useReducer } from "react";
 import { useRecoilState, useSetRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { Link } from 'react-router-dom';
+import qs from 'query-string';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
 import { useReview } from 'hooks/useReview';
@@ -15,7 +16,10 @@ import ReviewInfo from './ReviewInfo';
 import './style/Review.scss';
 
 const Review = memo((props) => {
-    const { params } = useRouteProps();
+    const { params, location } = useRouteProps();
+
+    useEffect(() => {console.log(params, location);}, [])
+
     const setReviewStage = useSetRecoilState(reviewStageState);
     const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
     const passfail = useRecoilValue(passfailState);
@@ -52,6 +56,7 @@ const Review = memo((props) => {
             setPostSessionRequest(() => postSession(params.username, {
                 newReviewSession: {
                     owner: params.username,
+                    listIds: location.pathname.includes('list') ? [params.id] : [],  // @todo: make this work with set reviews
                     date: {
                         start: reviewSettings.sessionStart,
                         end: reviewSettings.sessionEnd, // might not exist, make sure this updates when review completes
