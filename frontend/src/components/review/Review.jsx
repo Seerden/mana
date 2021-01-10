@@ -10,6 +10,7 @@ import { postSession } from 'helpers/apiHandlers/sessionHandlers';
 import { saturate } from 'helpers/srs/saturation';
 import { timePerCardState, passfailState, reviewSettingsState, termsToReviewState, newHistoryEntriesState, reviewStageState } from 'recoil/atoms/reviewAtoms';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
+import { convertDateListToDeltaTime } from 'helpers/reviewHelpers';
 
 import ReviewCard from './ReviewCard';
 import ReviewInfo from './ReviewInfo';
@@ -17,8 +18,6 @@ import './style/Review.scss';
 
 const Review = memo((props) => {
     const { params, location } = useRouteProps();
-
-    useEffect(() => {console.log(params, location);}, [])
 
     const setReviewStage = useSetRecoilState(reviewStageState);
     const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
@@ -59,14 +58,14 @@ const Review = memo((props) => {
                     listIds: location.pathname.includes('list') ? [params.id] : [],  // @todo: make this work with set reviews
                     date: {
                         start: reviewSettings.sessionStart,
-                        end: reviewSettings.sessionEnd, // might not exist, make sure this updates when review completes
+                        end: reviewSettings.sessionEnd
                     },
                     terms: [{listId: params.id, termIds: termsToReview.map(term => term._id)}],  // @todo: again, make this work with set reviews
                     settings: {
                         cycles: reviewSettings.n,
                         direction: reviewSettings.direction
                     },
-                    timePerCard: timePerCard,
+                    timePerCard: convertDateListToDeltaTime(timePerCard, reviewSettings.sessionStart),  // @todo: convert dates to deltatime 
                     passfail: passfail
                 }
             }))

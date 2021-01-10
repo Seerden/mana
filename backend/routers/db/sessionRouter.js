@@ -35,7 +35,7 @@ function createMockSession(username) {
                 owner: username,
                 parentLists: [doc._id],
                 start: new Date('January 5, 2021 12:45:93'),
-                end: Date.now('January 5, 20201 13:23:12'),
+                end: Date.now('January 5, 2021 13:23:12'),
                 terms: [
                     {
                         listId: doc._id,

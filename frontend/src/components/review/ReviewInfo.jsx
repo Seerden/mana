@@ -2,9 +2,8 @@ import React, { memo } from "react";
 import Timer from './Timer';
 import './style/ReviewInfo.scss';
 import { useRecoilState, useRecoilValue } from "recoil";
-import { timerState, reviewSettingsState } from "recoil/atoms/reviewAtoms";
+import { reviewSettingsState } from "recoil/atoms/reviewAtoms";
 import { numTermsToReviewState } from "recoil/selectors/reviewSelectors";
-import { useReviewSession } from 'hooks/useReviewTimer'
 
 const ReviewInfo = memo(({ progress }) => {
     const [reviewSettings] = useRecoilState(reviewSettingsState);
@@ -12,7 +11,6 @@ const ReviewInfo = memo(({ progress }) => {
     const start = reviewSettings.start;
     const n = reviewSettings.n;
     const numTerms = numTermsToReview;
-    const timer = useRecoilValue(timerState);
 
     return (
         <details className="Review__info">
@@ -38,9 +36,6 @@ const ReviewInfo = memo(({ progress }) => {
                 </div>
                 <div>
                     Pass each term <strong>{n} time{n !== 1 ? 's' : ''}</strong> to complete the session.
-                </div>
-                <div>
-                    Time since last card: {timer}
                 </div>
             </div>
 

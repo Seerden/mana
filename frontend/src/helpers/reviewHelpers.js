@@ -31,3 +31,18 @@ export function makeReviewList(terms, n) {
 
     return shuffled
 }
+
+export function convertDateListToDeltaTime(list, start) {
+    let dts = [];
+
+    for (let i = 0; i < list.length; i++) {
+        if (i === 0) {
+            dts.push(list[i] - start);
+            
+        } else {
+            dts.push(list[i] - list[i-1])
+        } 
+    }
+
+    return dts;
+}

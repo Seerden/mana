@@ -1,17 +1,15 @@
-import React, { useMemo, useState, useEffect, useReducer } from 'react';
+import React, { useMemo, useState, useEffect, useReducer, useCallback } from 'react';
 import { useRecoilValue, useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import { makeReviewList } from 'helpers/reviewHelpers';
 import { 
     timePerCardState, 
-    futureTermsState, 
     passfailState, 
     reviewSettingsState, 
     termsToReviewState, 
     newHistoryEntriesState 
 } from 'recoil/atoms/reviewAtoms';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
-import { useReviewTimer } from 'hooks/useReviewTimer';
 import ReviewCard from 'components/review/ReviewCard';
 import { useRouteProps } from './routerHooks';
 
@@ -26,8 +24,6 @@ export function useReview() {
     const [newHistoryEntries, setNewHistoryEntries] = useRecoilState(newHistoryEntriesState);
     const resetNewHistoryEntries = useResetRecoilState(newHistoryEntriesState);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, initializeFutureTerms());
-    const setFutureTerms = useSetRecoilState(futureTermsState);
-    const [timer, resetTimer] = useReviewTimer({tick: 50});
     const [timePerCard, setTimePerCard] = useRecoilState(timePerCardState);
 
     /**
@@ -81,7 +77,7 @@ export function useReview() {
     function handlePassFailClick(e, passfail) {
         updateTermHistory(futureTerms[0].term, passfail);
         setPassfail(cur => [...cur, passfail]);
-        setTimePerCard(cur => [...cur, timer])
+        setTimePerCard(cur => [...cur, new Date()])
         reduceFutureTerms({ type: passfail });
         setBackWasShown(false);
     }
@@ -131,7 +127,6 @@ export function useReview() {
                 return t
             })
         })
-
     }
 
     useEffect(() => {  // whenever backWasShown changes, remake LeftArrow/RightArrow keydown handler
@@ -146,8 +141,6 @@ export function useReview() {
         if (futureTerms?.length === 0) {
             setReviewSettings(current => ({ ...current, sessionEnd: new Date() }));
         }
-
-        setFutureTerms(futureTerms)  // sets the atom
     }, [futureTerms])
     
     return [
