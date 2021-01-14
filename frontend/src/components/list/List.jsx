@@ -178,7 +178,7 @@ const List = memo((props) => {
 
                             <section className="List__meta">
                                 {/* ---- SATURATION TABLE ---- */}
-                                {terms?.[0].saturation.forwards &&
+                                {terms &&
                                     <section className="List__section">
                                         <header className="List__section--header">
                                             <span className="List__section--heading">Progress</span>
