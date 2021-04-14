@@ -4,7 +4,6 @@ import { useRouteProps } from 'hooks/routerHooks';
 import './style/Lists.scss';
 import useLists from './useLists';
 
-
 const Lists = memo((props) => {
     const { params } = useRouteProps();
     const userString = useMemo(() => `/u/${params.username}`, [params.username])
@@ -13,12 +12,9 @@ const Lists = memo((props) => {
         filteredListsElement,
         handleFilterChange,
         handleSelectChange,
-        setRequest,
         filter,
         sortBy
     } = useLists();
-
-    
 
     return (
         <>
@@ -91,19 +87,22 @@ const Lists = memo((props) => {
                             {filteredListsElement}
                         </div>
                     </section>
-
                 </div>
-
             }
 
             {lists?.length === 0 &&
                 <div className="PageWrapper">
                     <div className="PageHeader">Lists by <Link className="Link" to={`/u/${params.username}`}>/u/{params.username}</Link></div>
+
                     <div className="Lists__new">
                         It appears you don't have any lists.
                     </div>
-                    <button className="Button"><Link to={`/u/${params.username}/lists/new`}>Make a new list</Link></button>
 
+                    <button className="Button">
+                        <Link to={`/u/${params.username}/lists/new`}>
+                            Create a new list
+                        </Link>
+                    </button>
                 </div>
             }
 

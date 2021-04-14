@@ -19,3 +19,7 @@ export type UseListsReturn = {
     filter: string,
     sortBy: string
 };
+
+export interface ListsItemProps {
+    list: any, // @todo: refine type using as yet nonexistent global list type
+}

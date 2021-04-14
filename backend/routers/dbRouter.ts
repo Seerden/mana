@@ -8,7 +8,7 @@ import connectMongo from 'connect-mongo';
 import bcrypt from 'bcryptjs';
 
 import { ListInterface } from '../db/schemas/listSchema.js';
-import { TermInterface} from '../db/schemas/termSchema.js';
+import { TermElementInterface} from '../db/schemas/termSchema.js';
 import { List, Term, ReviewSession } from '../db/db.js'
 
 const MongoStore = connectMongo(session);
@@ -137,7 +137,7 @@ userRouter.get('/list', (req, res) => {
 userRouter.post('/list', async (req, res) => {
     const newList = new List(req.body.newList)
     let terms: [] = req.body.newList.terms.map(term => ({ ...term, owner: req.body.newList.owner }))
-    const newTerms: TermInterface[] = await Term.create(terms);
+    const newTerms: TermElementInterface[] = await Term.create(terms);
     newList.terms = newTerms.map(term => new mongoose.Schema.Types.ObjectId(term._id))
     newList.save((err, doc) => res.status(200).json(doc));
 })

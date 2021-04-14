@@ -1,7 +1,7 @@
 import mongoose, { Document, ObjectId } from 'mongoose';
 import { List } from './listSchema';
 
-export interface TermInterface extends Document {
+export interface TermElementInterface extends Document {
     owner: string,
     languages: {from: string, to: string},
     to: string,
@@ -9,7 +9,6 @@ export interface TermInterface extends Document {
     history: {date:Date, content: any[], direction: string}[],
     saturation: {forwards: string | null, backwards: string | null},
     listMembership: any[]
-
 }
 
 export const termSchema = new mongoose.Schema({
@@ -28,4 +27,4 @@ export const termSchema = new mongoose.Schema({
     listMembership: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }],
 })
 
-export const Term = mongoose.model<TermInterface>('Term', termSchema);
+export const Term = mongoose.model<TermElementInterface>('Term', termSchema);

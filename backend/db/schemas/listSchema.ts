@@ -1,5 +1,5 @@
 import mongoose, { Document, ObjectId } from 'mongoose';
-import { TermInterface } from './termSchema';
+import { TermElementInterface } from './termSchema';
 import { reviewSessionSchema } from './reviewSessionSchema.js';
 
 export interface ListInterface extends Document {
@@ -13,7 +13,6 @@ export interface ListInterface extends Document {
     lastReviewed: Date,
     setMembership: ObjectId[],
     state: {forwards: string, backwards: string}
-
 }
 
 export const listSchema = new mongoose.Schema({
