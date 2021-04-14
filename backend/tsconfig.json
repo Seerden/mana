@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "target": "ES2020",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "dist",
+        "lib": ["ES2020"],
+        "skipLibCheck": true,
+        "typeRoots": [
+            "./custom_typings",
+            "./node_modules/@types"
+        ]
+    },
+    "exclude": ["node_modules"],
+    
+}

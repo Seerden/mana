@@ -1,4 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, ObjectId } from 'mongoose';
+
+export interface ReviewSessionInterface extends Document {
+    owner: string,
+    listIds: ObjectId[],
+    date: {start: Date, end: Date},
+    terms: {listId: ObjectId, termIds: ObjectId}[],
+    settings: any,
+    timePerCard: number[],
+    passfail: string[]
+}
 
 export const reviewSessionSchema = new mongoose.Schema({
     owner: String,
@@ -14,3 +24,5 @@ export const reviewSessionSchema = new mongoose.Schema({
     timePerCard: [{ type: Number }],  // [ms]
     passfail: [{ type: String }]  // 'pass'/'fail'
 })
+
+export const ReviewSession = mongoose.model<ReviewSessionInterface>('ReviewSession', reviewSessionSchema);

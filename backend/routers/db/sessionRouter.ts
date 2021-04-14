@@ -1,9 +1,8 @@
 import { dbConn } from '../../db/db.js';
-import mongoose from 'mongoose';
 import express from 'express';
 
-const ReviewSession = dbConn.model('ReviewSession');
-const List = dbConn.model('List');
+import { ReviewSession } from '../../db/schemas/reviewSessionSchema.js';
+import { List } from '../../db/schemas/listSchema.js';
 
 export const sessionRouter = express.Router({mergeParams: true});
 
@@ -14,7 +13,7 @@ sessionRouter.get('/', (req, res) => {  // GET all sessions for a given user
 })
 
 sessionRouter.get('/list', (req, res) => {  // GET all sessions involving any terms from a given list
-    Session.find({lists: {$in: req.query.listId}})
+    ReviewSession.find(() => ({listIds: {$in: req.query.listId}}))
 })
 
 sessionRouter.post('/', (req, res) => {  // POST a session to the database
@@ -35,7 +34,7 @@ function createMockSession(username) {
                 owner: username,
                 parentLists: [doc._id],
                 start: new Date('January 5, 2021 12:45:93'),
-                end: Date.now('January 5, 2021 13:23:12'),
+                end: Date.now(),
                 terms: [
                     {
                         listId: doc._id,
@@ -55,20 +54,6 @@ function createMockSession(username) {
                     console.log(savedDoc);
                 }
             })
-        }
-    })
-}
-
-function logAllSessionDocuments() {
-    ReviewSession.find({}, (err, docs) => {
-        console.log(docs);
-    })
-}
-
-function deleteAllSessionDocuments() {
-    ReviewSession.deleteMany({}, (err, deleted) => {
-        if (deleted) {
-            console.log(deleted.deletedCount);
         }
     })
 }
