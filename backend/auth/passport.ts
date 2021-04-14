@@ -1,11 +1,9 @@
 import bcrypt from 'bcryptjs';
-const { hash, compare } = bcrypt;
+const { compare } = bcrypt;
 import passport from 'passport';
 import passportLocal from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
-import { dbConn } from '../db/db.js'
-
-const User = dbConn.model('User');
+import { dbConn, User } from '../db/db.js'
 
 passport.serializeUser(function (user, done) {
     done(null, user.id);

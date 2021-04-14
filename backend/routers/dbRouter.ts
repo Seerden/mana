@@ -7,14 +7,17 @@ import passport from '../auth/passport.js';
 import connectMongo from 'connect-mongo';
 import bcrypt from 'bcryptjs';
 
-import { List } from '../db/schemas/listSchema.js';
-import { Term, TermInterface} from '../db/schemas/termSchema.js';
+import { ListInterface } from '../db/schemas/listSchema.js';
+import { TermInterface} from '../db/schemas/termSchema.js';
+import { List, Term, ReviewSession } from '../db/db.js'
 
 const MongoStore = connectMongo(session);
 const { hash } = bcrypt;
 
 const User = dbConn.model('User');
 const Set = dbConn.model('Set');
+
+
 
 import { sessionRouter } from './db/sessionRouter.js';
 
@@ -240,8 +243,14 @@ userRouter.put('/terms', (req, res) => {
 
 // ----- routes related to multiple lists -----
 userRouter.get('/lists', (req, res) => {
+    console.log('params:', req.params);
     List.find({owner: req.params.username}, (err, docs) => {
-        res.json(docs)
+        if (err) {
+            console.log(err);
+            res.status(403).send('Error fetching lists')
+        } else {
+            res.json(docs)
+        }
     })
 })
 

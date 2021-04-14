@@ -8,6 +8,7 @@
 /backend/node_modules
 /backend/dev
 /backend/routers/.rest
+/backend/dist
 
 *.env
 *.rest
