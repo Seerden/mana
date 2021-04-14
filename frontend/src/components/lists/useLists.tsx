@@ -1,48 +1,31 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import ListsItem from './ListsItem';
 import { handleError, handleResponse } from 'helpers/apiHandlers/apiHandlers';
 import { useRequest } from "hooks/useRequest";
-
-interface UseListsProps {
-    handleSelectChange: React.ChangeEventHandler<HTMLSelectElement>,
-    handleFilterChange: React.ChangeEventHandler<HTMLInputElement>,
-}
-
-type UseListsReturn = {
-    lists: any,    
-    filteredListsElement: Array<typeof ListsItem>,
-    handleFilterChange: UseListsProps['handleFilterChange'],
-    handleSelectChange: UseListsProps['handleSelectChange'],
-    setRequest: Function | null | undefined,
-    filter: string,
-    sortBy: string
-};
+import { useRouteProps } from 'hooks/routerHooks'
+import { getLists } from "helpers/apiHandlers/listHandlers";
+import { UseListsReturn, ListsElement } from './lists.types';
 
 const useLists = (): UseListsReturn => {
-    const [filter, setFilter] = useState<string>(''),
-    [sortBy, setSortBy] = useState<string>('name'),  // @todo: refine type
-    { response: lists, setRequest } = useRequest({ handleError, handleResponse }),
-    listsElement = useMemo(() => { if (lists) return makeListsElement(lists) }, [lists]);        
+    const [filter, setFilter] = useState<string>('');
+    const [sortBy, setSortBy] = useState<string>('name');  // @todo: refine type
+    const { response: lists, setRequest } = useRequest({ handleError, handleResponse });
+    const { params } = useRouteProps();
 
-    const handleFilterChange = useCallback((e) => {
+    useEffect(() => {  // request Lists on mount
+        typeof setRequest === 'function' && setRequest(() => getLists(params.username))
+    }, [])
+
+    const handleFilterChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
         let val = e.currentTarget.value;
         setFilter(val.length > 0 ? val : '');
     }, [setFilter])
 
-    const handleSelectChange = useCallback((e) => {
+    const handleSelectChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {
         setSortBy(e.currentTarget.value);
     }, [setSortBy])
 
-
-    interface ListsElement {
-        name: string,
-        state: {forwards: string | null, backwards: string | null},
-        lastReviewed: Date | null,        
-        created: Date,
-        element: typeof ListsItem
-    }
-
-    function makeListsElement(lists): ListsElement[] {
+    const makeListsElement = useCallback((lists): ListsElement[] => {
         return lists.map(list => {
             const { name, state, lastReviewed, created, _id } = list;
             return {
@@ -53,7 +36,9 @@ const useLists = (): UseListsReturn => {
                 element: <ListsItem key={_id} list={list} />
             }
         })
-    }
+    }, [lists])
+
+    const listsElement = useMemo(() => { if (lists) return makeListsElement(lists) }, [lists]);
 
     const makeFilteredListsElement = useCallback(() => {
         if (listsElement) {
@@ -67,7 +52,7 @@ const useLists = (): UseListsReturn => {
 
     const filteredListsElement = useMemo(() => makeFilteredListsElement(), [listsElement, filter, sortBy])
 
-    return {lists, filteredListsElement, handleFilterChange, handleSelectChange, setRequest, filter, sortBy};
+    return { lists, filteredListsElement, handleFilterChange, handleSelectChange, setRequest, filter, sortBy };
 }
 
 export default useLists

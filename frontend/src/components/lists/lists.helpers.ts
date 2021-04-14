@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
+import { Color } from './lists.types';
 
-export function colorByLastReviewDate(timeSince: number | null) {
+export function colorByLastReviewDate(timeSince: number | null): Color {
     let day = 3600 * 24 * 1000;
     if (!timeSince) {
         return '#333';
