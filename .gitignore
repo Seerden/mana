@@ -14,7 +14,4 @@
 *.rest
 node_modules
 
-MAP.md
-TODO.md
-
 _*.md

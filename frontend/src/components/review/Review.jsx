@@ -1,38 +1,45 @@
 import React, { memo, useEffect, useState, useMemo, useReducer } from "react";
 import { useRecoilState, useSetRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { Link } from 'react-router-dom';
+import qs from 'query-string';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
 import { useReview } from 'hooks/useReview';
 import { putTerms } from 'helpers/apiHandlers/listHandlers';
+import { postSession } from 'helpers/apiHandlers/sessionHandlers';
 import { saturate } from 'helpers/srs/saturation';
-import { reviewSettingsState, termsToReviewState, newHistoryEntriesState, reviewStageState } from 'recoil/atoms/reviewAtoms';
+import { timePerCardState, passfailState, reviewSettingsState, termsToReviewState, newHistoryEntriesState, reviewStageState } from 'recoil/atoms/reviewAtoms';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
+import { convertDateListToDeltaTime } from 'helpers/reviewHelpers';
 
 import ReviewCard from './ReviewCard';
 import ReviewInfo from './ReviewInfo';
 import './style/Review.scss';
 
 const Review = memo((props) => {
-    const { params } = useRouteProps();
+    const { params, location } = useRouteProps();
+
     const setReviewStage = useSetRecoilState(reviewStageState);
     const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
+    const passfail = useRecoilValue(passfailState);
+    const timePerCard = useRecoilValue(timePerCardState);
     const termsToReview = useRecoilValue(termsToReviewState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const [
-        backWasShown, 
-        setBackWasShown, 
-        futureTerms, 
-        reduceFutureTerms, 
-        progress, 
-        handlePassFailClick, 
-        newHistoryEntries, 
+        backWasShown,
+        setBackWasShown,
+        futureTerms,
+        reduceFutureTerms,
+        progress,
+        handlePassFailClick,
+        newHistoryEntries,
         resetNewHistoryEntries
     ] = useReview();
 
-    const { response: resB, setRequest: setPutTermRequest } = useRequest({});
-    const { response: resC, setRequest: setPutTermSaturationRequest } = useRequest({});
+    const { response: resB, setRequest: setPutTermRequest } = useRequest({});  // update terms with their new history entries
+    const { response: resC, setRequest: setPutTermSaturationRequest } = useRequest({});  // update terms with their new saturation
+    const { response: sessionPostResponse, setRequest: setPostSessionRequest } = useRequest({});
 
     useEffect(() => {  // on unmount: reset termsToReview and newHistoryEntries
         return () => {
@@ -41,16 +48,35 @@ const Review = memo((props) => {
         }
     }, [])
 
-    useEffect(() => {  // send PUT requests (needs to not be in the useEffect above, since then history lags one update behind)
+    useEffect(() => {  // send PUT and POST requests (needs to not be in the useEffect above, since then history lags one update behind)
         if (reviewSettings.sessionEnd) {
             setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
             setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevels() }));
+            setPostSessionRequest(() => postSession(params.username, {
+                newReviewSession: {
+                    owner: params.username,
+                    listIds: location.pathname.includes('list') ? [params.id] : [],  // @todo: make this work with set reviews
+                    date: {
+                        start: reviewSettings.sessionStart,
+                        end: reviewSettings.sessionEnd
+                    },
+                    terms: [{listId: params.id, termIds: termsToReview.map(term => term._id)}],  // @todo: again, make this work with set reviews
+                    settings: {
+                        cycles: reviewSettings.n,
+                        direction: reviewSettings.direction
+                    },
+                    timePerCard: convertDateListToDeltaTime(timePerCard, reviewSettings.sessionStart),  // @todo: convert dates to deltatime 
+                    passfail: passfail
+                }
+            }))
         }
     }, [reviewSettings.sessionEnd])
 
-    useEffect(() => {  // move to PostReview component once all post-session API requests are handled
-        resB && resC && setReviewStage('after');
-    }, [resB, resC])
+    useEffect(() => {  // set reviewStage to PostReview once all post-session API requests are handled
+        if (resB && resC && sessionPostResponse) {
+            setReviewStage('after');
+        }
+    }, [resB, resC, sessionPostResponse])
 
     function makeNewSaturationLevels() {
         return termsToReview.map(term => {

@@ -6,7 +6,7 @@ import axios from 'axios';
  * @param {String} username 
  * @param {Object} query 
  */
-function getSession (username, query) {
+export function getSession (username, query) {
     return () => axios.get(`/db/u/${username}/session/`)
 }
 
@@ -15,6 +15,6 @@ function getSession (username, query) {
  * @param {String} username 
  * @param {Object} body 
  */
-function postSession (username, body) {
-    return () => axios.post(`/db/u/${username}/session`, { newReviewSession })
+export function postSession (username, body) {
+    return () => axios.post(`/db/u/${username}/session`, body)
 }

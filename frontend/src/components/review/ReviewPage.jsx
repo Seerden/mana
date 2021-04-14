@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo } from "react";
 import { useRecoilValue, useRecoilState, useResetRecoilState } from 'recoil';
 import { reviewStageState, reviewSettingsState, termsToReviewState } from 'recoil/atoms/reviewAtoms';
+import qs from 'query-string';
+import { useRouteProps } from "hooks/routerHooks";
 import Review from './Review';
 import PartialReview from './PartialReview';
 import CompleteReview from './CompleteReview';
 import PreReview from './PreReview';
 import PostReview from './PostReview';
-import { useRouteProps } from "hooks/routerHooks";
-import qs from 'query-string';
 
 const ReviewPage = (props) => {
     const { location } = useRouteProps();

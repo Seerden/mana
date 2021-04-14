@@ -123,7 +123,7 @@ const List = memo((props) => {
         setDeleteRequest(() => deleteList(params.username, { _id: params.id }))
     };
 
-    function updateTermsToReview({ type }) {
+    function updateTermsToReview({ type, direction }) {
         switch (type) {
             case 'all':
                 setTermsToReview(list.terms);
@@ -133,6 +133,9 @@ const List = memo((props) => {
                 break;
             case 'none':
                 resetTermsToReview();
+                break;
+            case 'overdue':
+                setTermsToReview(suggestedTermsForReview[direction])
                 break;
             default:
                 break;
@@ -175,7 +178,7 @@ const List = memo((props) => {
 
                             <section className="List__meta">
                                 {/* ---- SATURATION TABLE ---- */}
-                                {terms?.[0].saturation.forwards &&
+                                {terms &&
                                     <section className="List__section">
                                         <header className="List__section--header">
                                             <span className="List__section--heading">Progress</span>
@@ -187,10 +190,18 @@ const List = memo((props) => {
                                             <div>
                                                 <h4 className="List__section--header" style={{backgroundColor: 'orangered', marginTop: '0.5rem'}}>Due for review:</h4>
                                                 <div>
-                                                    <BiArrowToRight /> {suggestedTermsForReview.forwards.length} terms due.
+                                                    <BiArrowToRight /> {suggestedTermsForReview.forwards.length} terms due. 
+                                                    <button 
+                                                        className="List__review--button"
+                                                        onClick={() => updateTermsToReview({ type: 'overdue', direction: 'forwards'})}
+                                                    >Select for review.</button>
                                                 </div>
                                                 <div>
                                                     <BiArrowToLeft /> {suggestedTermsForReview.backwards.length} terms due.
+                                                    <button 
+                                                        className="List__review--button"
+                                                        onClick={() => updateTermsToReview({ type: 'overdue', direction: 'backwards'})}
+                                                    >Select for review.</button>
                                                 </div>
                                             </div>
                                             :
