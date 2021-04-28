@@ -7,17 +7,14 @@ import passport from '../auth/passport.js';
 import connectMongo from 'connect-mongo';
 import bcrypt from 'bcryptjs';
 
-import { ListInterface } from '../db/schemas/listSchema.js';
 import { TermElementInterface} from '../db/schemas/termSchema.js';
-import { List, Term, ReviewSession } from '../db/db.js'
+import { List, Term } from '../db/db.js'
 
 const MongoStore = connectMongo(session);
 const { hash } = bcrypt;
 
 const User = dbConn.model('User');
 const Set = dbConn.model('Set');
-
-
 
 import { sessionRouter } from './db/sessionRouter.js';
 

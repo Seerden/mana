@@ -21,14 +21,18 @@ const SaturationIcon = memo(({ direction, classes, saturation, style }: Saturati
     }
 
     function makeTooltip(direction, saturation) {
-        if (!(typeof saturation[direction] === 'number')) {
-            return 'Not enough reviews to judge memorization. Get on it!';
+        if (saturation) {
+            if (!(typeof saturation[direction] === 'number')) {
+                return 'Not enough reviews to judge memorization. Get on it!';
+            }
+        
+            if (saturation < 2) {
+                return `${direction}: Review soon!`;
+            }
+        
+            return `${direction}: No need to review yet`;
         }
-    
-        if (saturation < 2) {
-            return `${direction}: Review soon!`;
-        }
-    
+        
         return `${direction}: No need to review yet`;
     }
 

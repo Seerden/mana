@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
   mongoose.set('useCreateIndex', true)
 import { userSchema } from './schemas/userSchema.js';
 import { setSchema } from './schemas/setSchema.js';
-
 import { listSchema, ListInterface } from './schemas/listSchema.js';
 import { reviewSessionSchema, ReviewSessionInterface } from './schemas/reviewSessionSchema.js';
 import { termSchema, TermElementInterface } from './schemas/termSchema.js';
