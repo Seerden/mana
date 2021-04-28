@@ -61,9 +61,14 @@ const SaturationFilter = memo(({ filter, setFilter }: SaturationFilterProps) => 
                 value={direction}
                 onClick={() => handleDirectionIconClick(direction)}
             >
-                <span>{direction}</span>
-
-                { direction !== 'any' && <span>{direction === 'forwards' ? <BiArrowToRight/> : <BiArrowToLeft/>}</span> }
+                <span>
+                    {direction}
+                </span>
+                { direction !== 'any' && 
+                    <span>
+                        {direction === 'forwards' ? <BiArrowToRight/> : <BiArrowToLeft/>}
+                    </span> 
+                }
             </button>
         )
     })
@@ -84,6 +89,7 @@ const SaturationFilter = memo(({ filter, setFilter }: SaturationFilterProps) => 
                             }}
                         >
                             Filter by saturation level
+
                             <input type="button"
                                 value="Reset"
                                 className="SaturationFilter__reset"
@@ -91,11 +97,9 @@ const SaturationFilter = memo(({ filter, setFilter }: SaturationFilterProps) => 
                                     e.stopPropagation();
                                     setSaturationFilter({level: null, direction: 'any'});
                                 }}
-
                             />
                         </button>
                     </>
-
                 }
 
                 {filterDisplayState === 'level' &&
@@ -104,9 +108,7 @@ const SaturationFilter = memo(({ filter, setFilter }: SaturationFilterProps) => 
                             style={{ border: `2px solid ${saturationFilter ? colorBySaturation(saturationFilter.level) : '#333'}` }}
                         >
                             {icons}
-
                         </div>
-
                 }
 
                 {filterDisplayState === 'direction' && 
@@ -118,7 +120,6 @@ const SaturationFilter = memo(({ filter, setFilter }: SaturationFilterProps) => 
                             {directionButtons}
                         </div>                        
                     </div>
-                
                 }
             </div>
         </>

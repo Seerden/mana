@@ -3,8 +3,8 @@ import { colorBySaturation } from 'helpers/list.api';
 
 interface SaturationIconProps {
     direction?: "forwards" | "backwards",
-    classes: string,
-    saturation: {forwards: number, backwards: number} | number,
+    classes?: string,
+    saturation?: {forwards: number, backwards: number} | number,
     style?: React.CSSProperties
 }
 

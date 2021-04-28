@@ -32,7 +32,6 @@ const ReviewPage = (props) => {
     const WrapperToRender = useMemo(() => {
         switch (qs.parse(location.search).kind) {
             case 'full':
-                // return React.Fragment
                 return CompleteReview;
             case 'partial':
                 return PartialReview;
@@ -60,7 +59,5 @@ const ReviewPage = (props) => {
         </>
     )
 }
-
-
 
 export default ReviewPage
