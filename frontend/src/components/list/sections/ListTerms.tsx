@@ -11,14 +11,12 @@ const ListTerms = ({ filter, setFilter, termsToDisplay, list }) => {
 
                 <div className="List__terms--saturationfilter">
                     {filter.saturation.level
-                        ?
-                        <span className="List__terms--saturationfilter--display">
-                            Showing filtered list.
-                        </span>
-                        :
-                        <span className="List__terms--saturationfilter--display">
-                            Showing all terms.
-                        </span>
+                        ?   <span className="List__terms--saturationfilter--display">
+                                Showing filtered list.
+                            </span>
+                        :   <span className="List__terms--saturationfilter--display">
+                                Showing all terms.
+                            </span>
                     }
 
                     {list && list.sessions && list.sessions?.length > 0 &&

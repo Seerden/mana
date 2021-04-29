@@ -13,16 +13,16 @@ const ListProgressSection = ({ terms, suggestedTermsForReview, updateTermsToRevi
 
             {suggestedTermsForReview && (suggestedTermsForReview.forwards.length > 0 || suggestedTermsForReview.backwards.length > 0)
                 ?
-                <div>
+                <div className="List__section--progress">
                     <h4 className="List__section--header" style={{ backgroundColor: 'orangered', marginTop: '0.5rem' }}>Due for review:</h4>
-                    <div>
+                    <div className="List__section--progress--due">
                         <BiArrowToRight /> {suggestedTermsForReview.forwards.length} terms due.
                         <button
                             className="List__review--button"
                             onClick={() => updateTermsToReview({ type: 'overdue', direction: 'forwards' })}
                         >Select for review.</button>
                     </div>
-                    <div>
+                    <div className="List__section--progress--due">
                         <BiArrowToLeft /> {suggestedTermsForReview.backwards.length} terms due.
                         <button
                             className="List__review--button"

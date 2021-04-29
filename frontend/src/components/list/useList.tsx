@@ -9,6 +9,8 @@ import ListTerm from './ListTerm';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
 import { ListInterface, TermElementInterface, FilterInterface, TermPropsInterface } from './list.types';
+import { AxiosResponse } from "axios";
+import { SetterOrUpdater } from "recoil";
 
 function useList() {
     const [list, setList] = useState<ListInterface | null>(null);
@@ -74,8 +76,8 @@ function useList() {
 
     // FUNCTIONS
     function updateTerms() {
-        if (list && list.terms?.length > 0) {
-            const newTerms = list.terms.map((term, idx) => {
+        if (list && list.terms && list.terms?.length > 0) {
+            const newTerms = list.terms?.map((term, idx) => {
                 let termProps: TermPropsInterface = {
                     handleTermDelete,
                     key: `term-${term._id}`,
@@ -101,9 +103,9 @@ function useList() {
 
         if (list && list.terms?.length > 0) {
             let updatedList: ListInterface = { ...list, name: e.currentTarget.innerText }
-            if (updatedList.terms) {
+            if (updatedList.terms && updatedList.terms.length > 0) {
                 setList(updatedList);
-                setPutListTitleRequest(() => putList(params.username, { _id: params.id }, { ...updatedList, terms: updatedList.terms.map(t => t._id) }))
+                setPutListTitleRequest(() => putList(params.username, { _id: params.id }, { ...updatedList, terms: updatedList.terms?.map(t => t._id) }))
             }
         }
     }

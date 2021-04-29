@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useToggle } from "hooks/useToggle";
 import './style/ListDeleteButton.scss'
 
@@ -6,32 +6,32 @@ const ListDeleteButton = ({ handleDelete }) => {
     const [confirming, toggleConfirming] = useToggle(false);
 
     return (
-            <span className="ListDeleteButton">
-                <input
+        <span className="ListDeleteButton">
+            {!confirming
+                ? <input
                     onClick={() => toggleConfirming()}
                     type="button"
                     className="ListDeleteButton__button--initial"
                     value="Delete list"
                 />
+                : <>
+                <input
+                    onClick={handleDelete}
+                    type="button"
+                    className="ListDeleteButton__button--confirm ListDeleteButton__button--confirm--yes"
 
-                {confirming &&
-                    <>
-                        <input
-                            onClick={handleDelete}
-                            type="button"
-                            className="ListDeleteButton__button--confirm ListDeleteButton__button--confirm--yes"
-
-                            value="Yes"
-                        />
-                        <input
-                            onClick={toggleConfirming}
-                            type="button"
-                            className="ListDeleteButton__button--confirm ListDeleteButton__button--confirm--no"
-                            value="No"
-                        />
-                    </>
-                }
-            </span>
+                    value="Delete list"
+                />
+                <input
+                    onClick={toggleConfirming}
+                    type="button"
+                    className="ListDeleteButton__button--confirm ListDeleteButton__button--confirm--no"
+                    value="Keep list"
+                />
+            </>
+            
+            }
+        </span>
     )
 }
 

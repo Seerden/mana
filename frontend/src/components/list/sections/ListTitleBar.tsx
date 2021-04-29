@@ -1,7 +1,14 @@
 import React from "react";
+import { ListInterface } from "../list.types";
 import ListDeleteButton from '../ListDeleteButton';
 
-const ListTitleBar = ({ handleListTitleBlur, list, handleDelete }) => {
+interface ListTitleBarProps {
+    handleListTitleBlur(e: any): void,
+    list: ListInterface,
+    handleDelete(): void
+}
+
+const ListTitleBar = ({ handleListTitleBlur, list, handleDelete }: ListTitleBarProps) => {
 
     return (
         <h1 className="PageHeader">

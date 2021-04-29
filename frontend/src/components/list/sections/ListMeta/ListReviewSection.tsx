@@ -1,5 +1,5 @@
-import { useRouteProps } from "hooks/routerHooks";
 import React from "react";
+import { useRouteProps } from "hooks/routerHooks";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
 import { Link } from "react-router-dom";
 
@@ -11,12 +11,12 @@ const ListReviewSection = ({ numTermsToReview, setSelectingTerms, selectingTerms
                 <header className="List__section--header">Review</header>
 
                 <div className="List__section">
-                    <header className="List__section--header">All</header>
+                    <header className="List__section--header">Review All</header>
                     <Link className="List__review--button" to={`${location.pathname}/review?kind=full`}>Review all terms</Link>
                 </div>
 
                 <div className="List__section">
-                    <h4 className="List__section--header">Selective</h4>
+                    <h4 className="List__section--header">Review Selection</h4>
                     {numTermsToReview > 0 &&
                         <Link style={{ marginBottom: '0.4rem' }} className="List__review--button" to={`${location.pathname}/review?kind=partial`}>Review {numTermsToReview} selected terms</Link>
                     }
