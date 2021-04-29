@@ -1,6 +1,6 @@
 import ListsItem from './ListsItem';
 
-export type Color = 'seagreen' | 'teal' | 'yellowgreen' | 'orange' | 'orangered' | '#333';
+export type ColorType = 'seagreen' | 'teal' | 'yellowgreen' | 'orange' | 'orangered' | '#333';
 
 export interface ListsElement {
     name: string,

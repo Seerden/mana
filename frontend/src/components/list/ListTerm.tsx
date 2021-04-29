@@ -9,13 +9,13 @@ import TermModal from './TermModal';
 import SaturationIcon from 'components/SaturationFilter/SaturationIcon';
 import './style/ListTerm.scss'
 import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
-import { ListInterface, TermElementInterface, TermInterface, TermPropsInterface } from './list.types';
+import { TermPropsInterface } from './list.types';
 
 const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {
     const [term, setTerm] = useState<any>(() => (termFromProps)),  // @todo: fix any type to be combination of TermInterface and TermElementInterface, after figuring out why I'm using two Term(*?)Interface types
         [confirmingDelete, setConfirmingDelete] = useState(false),
-        { response: putTermResponse, setRequest: setPutTermRequest, error: putTermError } = useRequest({handleResponse, handleError}),
-        [open, setOpen] = useState(false);
+        { setRequest: setPutTermRequest } = useRequest({handleResponse, handleError}),
+        [open, setOpen] = useState<boolean>(false);
 
     // ----- REFACTOR
     const [listAtom, setListAtom] = useRecoilState(listState)
@@ -53,7 +53,7 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
      * Triggered on deletion confirmation.
      * @param {object} action    currently only expects {type: 'delete'}
      */
-    function handleConfirmClick(e, action) {
+    function handleConfirmClick(e: React.SyntheticEvent, action: {type: string}) {
             e.preventDefault();
             setConfirmingDelete(false);
             setOpen(false);
@@ -63,7 +63,6 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
         }
 
     /**
-    * @param   {string}    field   'from'/'to', related to term.to and term.from properties (term is passed from props)
     * @todo update actual list itself, also update listContextValue, and then push new list state to db
     */
     function handleTermEdit(e) {
@@ -100,10 +99,8 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
                                 onClick={handleSelect}
                             >
                                 {selected 
-                                ?
-                                <ImCheckboxChecked/>
-                                :
-                                <ImCheckboxUnchecked/>
+                                    ? <ImCheckboxChecked/>
+                                    : <ImCheckboxUnchecked/>
                                 }
                             </div>
                         : '' 
