@@ -1,4 +1,3 @@
-import { dbConn } from '../../db/db.js';
 import express from 'express';
 
 import { ReviewSession } from '../../db/db.js';
