@@ -20,13 +20,13 @@ const ListDeleteButton = ({ handleDelete }) => {
                     type="button"
                     className="ListDeleteButton__button--confirm ListDeleteButton__button--confirm--yes"
 
-                    value="Delete list"
+                    value="Delete"
                 />
                 <input
                     onClick={toggleConfirming}
                     type="button"
                     className="ListDeleteButton__button--confirm ListDeleteButton__button--confirm--no"
-                    value="Keep list"
+                    value="Keep"
                 />
             </>
             
