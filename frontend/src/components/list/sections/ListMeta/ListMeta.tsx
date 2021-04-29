@@ -1,11 +1,7 @@
 import React from "react";
-import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
-import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
-import { Link } from "react-router-dom";
-import ListSaturationState from '../ListSaturationState';
 import ListProgressSection from "./ListProgressSection";
 import ListReviewSection from "./ListReviewSection";
-
+import useList from '../../useList';
 
 const ListMeta = ({ terms, suggestedTermsForReview, updateTermsToReview, numTermsToReview, setSelectingTerms, selectingTerms }) => {
 

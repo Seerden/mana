@@ -1,6 +1,6 @@
 import React from "react";
 import { BiArrowToRight, BiArrowToLeft } from "react-icons/bi";
-import ListSaturationState from "../ListSaturationState";
+import ListSaturationState from "../../ListSaturationState";
 
 const ListProgressSection = ({ terms, suggestedTermsForReview, updateTermsToReview }) => {
 
