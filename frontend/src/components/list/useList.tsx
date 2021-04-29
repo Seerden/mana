@@ -82,7 +82,7 @@ function useList() {
                     idx: idx,
                     term
                 };
-                // @ts-ignore
+
                 return (
                     {
                         saturation: term.saturation,
@@ -108,7 +108,7 @@ function useList() {
         }
     }
 
-    function handleTermDelete(idx) {
+    function handleTermDelete(idx: number) {
         if (list) {
             const updatedList = { ...list, terms: [...list.terms] };  // need to spread the .terms property since otherwise it's not a (deep?/shallow?) copy
             const termId = updatedList.terms[idx]._id;
@@ -169,5 +169,3 @@ function useList() {
 }
 
 export default useList
-
-// @todo take most of the functionality from ./List.tsx and extract it here, to a hook
