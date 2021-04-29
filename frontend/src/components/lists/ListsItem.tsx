@@ -6,9 +6,13 @@ import { timeSince } from '../../helpers/time';
 import { BiArrowToRight } from "react-icons/bi";
 import { colorByLastReviewDate, getTimeSinceLastReview } from './lists.helpers'
 import { ListsItemProps } from './lists.types';
+import { useEffect } from "react";
 
 const ListsItem = memo(({ list }: ListsItemProps) => {
     const { params } = useRouteProps();
+    useEffect(() => {
+        console.log(list.sessions[list.sessions.length-1]);
+    }, [])
 
     return (
         <div style={{ borderColor: colorByLastReviewDate(getTimeSinceLastReview(list)) }} className="ListsItem">
