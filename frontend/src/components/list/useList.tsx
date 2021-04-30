@@ -10,10 +10,18 @@ import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
 import { FilterInterface, TermPropsInterface } from './list.types';
 
+interface TruncatedTerm {
+    element: JSX.Element,
+    saturation: {
+        forwards: number | null,
+        backwards: number | null
+    }
+}
+
 function useList() {
     const [list, setList] = useState<List | null>(null);
     const [filter, setFilter] = useState<FilterInterface>({ saturation: { level: null, direction: 'any' } });
-    const [terms, setTerms] = useState<Partial<Term>[] | null>(null);
+    const [truncatedTerms, setTruncatedTerms] = useState<TruncatedTerm[] | null>(null);
     const { params } = useRouteProps();
     const { response: getResponse, setRequest: setGetRequest } = useRequest({});
     const { setRequest: setPutRequest } = useRequest({});
@@ -52,9 +60,9 @@ function useList() {
     };
 
     const termsToDisplay = useMemo(() => {
-        return filterTermsBySaturation(terms)
+        return filterTermsBySaturation(truncatedTerms)
             ?.map(term => term.element)
-    }, [terms, filter, numTermsToReview]);
+    }, [truncatedTerms, filter, numTermsToReview]);
 
     // EFFECTS
     useEffect(() => {  // retrieve list on component load
@@ -75,7 +83,7 @@ function useList() {
     // FUNCTIONS
     function updateTerms() {
         if (list && list.terms && list.terms?.length > 0) {
-            const newTerms = list.terms?.map((term, idx) => {
+            const newTruncatedTerms = list.terms?.map((term, idx) => {
                 let termProps: TermPropsInterface = {
                     handleTermDelete,
                     key: `term-${term._id}`,
@@ -92,7 +100,7 @@ function useList() {
     
             })
 
-            setTerms(newTerms);
+            setTruncatedTerms(newTruncatedTerms);
         }
     };
 
@@ -152,7 +160,7 @@ function useList() {
 
     return [
         list, 
-        terms, 
+        truncatedTerms, 
         termsToDisplay, 
         suggestedTermsForReview, 
         selectingTerms, 

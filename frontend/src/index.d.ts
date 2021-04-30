@@ -1,9 +1,8 @@
-interface ObjectId {
+interface Document {
     _id: string
 }
 
-interface List {  // note: the string[] are ObjectId[] in reality, but we don't have access to mongoose types here
-    _id: string
+interface List extends Document {  // note: the string[] are ObjectId[] in reality, but we don't have access to mongoose types here
     owner: string,
     name: string,
     from: string,
@@ -19,8 +18,7 @@ interface List {  // note: the string[] are ObjectId[] in reality, but we don't 
     }
 }
 
-interface Term {
-    _id: string,
+interface Term extends Document{
     owner: String,
     languages: { 
         from: String, 
