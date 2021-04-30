@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import useTimer from './useTimer';
+import useTimer from '../../hooks/useTimer';
 import './style/ReviewInfo.scss';
 import { useRecoilState, useRecoilValue } from "recoil";
 import { reviewSettingsState } from "recoil/atoms/reviewAtoms";

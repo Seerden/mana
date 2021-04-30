@@ -10,7 +10,7 @@ type TimerProps = {
 /**
  * JSX component that renders time (in seconds) since mount.
  */
-function useTimer ({ start }) {
+function useTimer ({ start }: TimerProps) {
     const [elapsed, setElapsed] = useState(0);
 
     useEffect(() => {
