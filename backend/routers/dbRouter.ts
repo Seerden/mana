@@ -125,7 +125,7 @@ userRouter.get('/list', (req, res) => {
     const { filter, ...query } = req.query;  // expect query like '?filter=-content&username=foo'
     List
         .findOne({ ...query })
-        .populate('terms')
+        .populate('terms sessions')
         .exec((err, doc) => {
             doc && res.json(doc)
         })
@@ -240,15 +240,19 @@ userRouter.put('/terms', (req, res) => {
 
 // ----- routes related to multiple lists -----
 userRouter.get('/lists', (req, res) => {
-    console.log('params:', req.params);
-    List.find({owner: req.params.username}, (err, docs) => {
-        if (err) {
-            console.log(err);
-            res.status(403).send('Error fetching lists')
-        } else {
-            res.json(docs)
-        }
-    })
+    const { username } = req.params;
+
+    List
+        .find({ owner: username })
+        .populate('sessions')
+        .exec((err, docs) => {
+            if (err) {
+                console.log(err);
+                res.status(403).send('Error fetching lists')
+            } else {
+                res.json(docs)
+            }
+        })
 })
 
 // ----- routes related to sets -----

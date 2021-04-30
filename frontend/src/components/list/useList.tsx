@@ -67,6 +67,7 @@ function useList() {
 
     useEffect(() => {  // set list and list context when list is returned from API
         if (getResponse) {
+            console.log(getResponse);
             setList(getResponse);
             setListAtom(getResponse);
         }
