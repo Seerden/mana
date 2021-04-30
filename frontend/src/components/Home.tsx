@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Link } from 'react-router-dom';
-import './style/Home.scss';
+import './_style/Home.scss';
 
 const Home = memo((props) => {
 

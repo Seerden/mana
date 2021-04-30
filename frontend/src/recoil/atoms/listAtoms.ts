@@ -1,5 +1,4 @@
 import { atom } from 'recoil';
-import { ListInterface } from 'components/list/list.types';
 
 export const selectingTermsToReviewState = atom({
     key: 'selectingTermsToReviewState',
@@ -8,5 +7,5 @@ export const selectingTermsToReviewState = atom({
 
 export const listState = atom({
     key: 'listState',
-    default: {} as ListInterface
+    default: {} as Partial<List>
 })

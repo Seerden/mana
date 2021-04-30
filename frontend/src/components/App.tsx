@@ -2,7 +2,7 @@ import React from 'react';
 import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import './style/App.scss';
+import './_style/App.scss';
 
 import PrivateRoute from '../wrappers/PrivateRoute';
 import Header from './layout/Header';

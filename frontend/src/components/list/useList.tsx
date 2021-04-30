@@ -8,14 +8,12 @@ import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 import ListTerm from './ListTerm';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
-import { ListInterface, TermElementInterface, FilterInterface, TermPropsInterface } from './list.types';
-import { AxiosResponse } from "axios";
-import { SetterOrUpdater } from "recoil";
+import { FilterInterface, TermPropsInterface } from './list.types';
 
 function useList() {
-    const [list, setList] = useState<ListInterface | null>(null);
+    const [list, setList] = useState<List | null>(null);
     const [filter, setFilter] = useState<FilterInterface>({ saturation: { level: null, direction: 'any' } });
-    const [terms, setTerms] = useState<TermElementInterface[] | null>(null);
+    const [terms, setTerms] = useState<Partial<Term>[] | null>(null);
     const { params } = useRouteProps();
     const { response: getResponse, setRequest: setGetRequest } = useRequest({});
     const { setRequest: setPutRequest } = useRequest({});
@@ -102,7 +100,7 @@ function useList() {
         e.persist();
 
         if (list && list.terms?.length > 0) {
-            let updatedList: ListInterface = { ...list, name: e.currentTarget.innerText }
+            let updatedList: List = { ...list, name: e.currentTarget.innerText }
             if (updatedList.terms && updatedList.terms.length > 0) {
                 setList(updatedList);
                 setPutListTitleRequest(() => putList(params.username, { _id: params.id }, { ...updatedList, terms: updatedList.terms?.map(t => t._id) }))
@@ -112,7 +110,7 @@ function useList() {
 
     function handleTermDelete(idx: number) {
         if (list) {
-            const updatedList = { ...list, terms: [...list.terms] };  // need to spread the .terms property since otherwise it's not a (deep?/shallow?) copy
+            const updatedList: List = { ...list, terms: [...list.terms] };  // need to spread the .terms property since otherwise it's not a (deep?/shallow?) copy
             const termId = updatedList.terms[idx]._id;
             updatedList.terms.splice(idx, 1);
             setList(updatedList);
