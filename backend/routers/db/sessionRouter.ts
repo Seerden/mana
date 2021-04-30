@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { ReviewSession } from '../../db/db.js';
-import { List } from '../../db/schemas/listSchema.js';
+import { List } from '../../db/db.js';
 
 export const sessionRouter = express.Router({mergeParams: true});
 
@@ -15,17 +15,32 @@ sessionRouter.get('/list', (req, res) => {  // GET all sessions involving any te
     ReviewSession.find(() => ({listIds: {$in: req.query.listId}}))
 })
 
-sessionRouter.post('/', (req, res) => {  // POST a session to the database
-    // console.log(req.body);
+sessionRouter.post('/', async (req, res) => {  // POST a session to the database
+    const { newReviewSession } = req.body;
 
-    let newReviewSession = new ReviewSession(req.body.newReviewSession);
-    newReviewSession.save((err, savedDoc) => {
-        if (err) {
-            console.log(err);
-            res.status(500).send('Failed to send session to database.');
+    let newSession = new ReviewSession(newReviewSession);
+
+    try {
+        const savedSession = await newSession.save();
+        console.log('Successfully saved ReviewSession document to database', {newSession});
+
+        if (savedSession.listIds.length === 1) {
+            const listId = savedSession.listIds[0];
+            console.log({listId});
+            
+            try {
+                const listWithNewSession = await List.findOneAndUpdate({_id: listId}, {$push: {sessions: savedSession._id}});
+                console.log("Successfully pushed saved ReviewSession to parent list's sessions", listWithNewSession.sessions);
+            } catch (e) {
+                console.log('Error pushing newly saved ReviewSession instance to parent list');
+            }
         }
-        if (savedDoc) res.status(201).send('Successfully posted review session to database')
-    })
+        
+        res.status(201).send('Successfully posted review session to database')
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Failed to save new ReviewSession instance to database.')
+    }
 })
 
 export default sessionRouter;
