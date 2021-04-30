@@ -1,5 +1,4 @@
-import mongoose, { Document, ObjectId } from 'mongoose';
-import { List } from './listSchema';
+import mongoose, { Document } from 'mongoose';
 
 export interface TermElementInterface extends Document {
     owner: string,

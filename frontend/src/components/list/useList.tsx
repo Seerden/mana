@@ -13,7 +13,7 @@ import { FilterInterface, TermPropsInterface, TruncatedTerm } from './list.types
 function useList() {
     const [list, setList] = useState<List | null>(null);
     const [filter, setFilter] = useState<FilterInterface>({ saturation: { level: null, direction: 'any' } });
-    const [truncatedTerms, setTruncatedTerms] = useState<Array<TruncatedTerm> | Array<any>>([]);
+    const [truncatedTerms, setTruncatedTerms] = useState<Array<TruncatedTerm>>([]);
     const { params } = useRouteProps();
     const { response: getResponse, setRequest: setGetRequest } = useRequest({});
     const { setRequest: setPutRequest } = useRequest({});
@@ -69,9 +69,14 @@ function useList() {
         if (getResponse) {
             setList(getResponse);
             setListAtom(getResponse);
-            extractTermsFromListAsTruncatedTerms(getResponse);
         }
     }, [getResponse])
+
+    useEffect(() => {
+        if (list) {
+            extractTermsFromListAsTruncatedTerms(list);
+        }
+    }, [list])
 
     // FUNCTIONS
     const extractTermsFromListAsTruncatedTerms = useCallback((list: List) => {

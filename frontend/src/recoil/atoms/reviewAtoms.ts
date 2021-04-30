@@ -1,5 +1,4 @@
-import { atom, atomFamily, AtomOptions, selector } from 'recoil';
-import { TermElementInterface } from 'components/list/list.types';
+import { atom, selector } from 'recoil';
 
 type ReviewSettings = {
     direction: 'forwards' | 'backwards',
@@ -12,7 +11,7 @@ type ReviewSettings = {
 
 type PassFail = Array<any> | Array<'pass' | 'fail'>;
 
-type TimePerCard = Array<any> | Date[];
+type TimePerCard = Array<any> | Array<Date>;
 
 type ReviewStage = 'before' | 'started' | 'after' | 'completed'
 
@@ -35,7 +34,7 @@ export const reviewStageState = atom<ReviewStage>({
 })
 
 
-export const termsToReviewState = atom<Array<Term> | Array<any>>({
+export const termsToReviewState = atom<Array<Term>>({
     key: 'termsToReviewState',
     default: [],
 })
@@ -72,5 +71,5 @@ export const passfailState = atom<PassFail>({
 
 export const timePerCardState = atom<TimePerCard>({
     key: 'timePerCardState',
-    default: []
+    default: new Array<TimePerCard>()
 })
