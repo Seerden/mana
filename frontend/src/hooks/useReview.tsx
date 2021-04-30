@@ -7,14 +7,22 @@ import {
     passfailState, 
     reviewSettingsState, 
     termsToReviewState, 
-    newHistoryEntriesState 
+    newHistoryEntriesState, 
+    reviewStageState
 } from 'recoil/atoms/reviewAtoms';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
 import ReviewCard from 'components/review/ReviewCard';
+import { useRequest } from './useRequest';
+import { useRouteProps } from './routerHooks';
+import useReviewSession from './useReviewSession';
+import { makeNewSaturationLevels } from 'helpers/srs/saturation';
+import { putTerms } from 'helpers/apiHandlers/listHandlers';
+import { postSession } from 'helpers/apiHandlers/sessionHandlers';
 
 type PassFail = 'pass' | 'fail';
 
 export function useReview() {
+    const { params } = useRouteProps();
     const [backWasShown, setBackWasShown] = useState(false);
     const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
     const setPassfail = useSetRecoilState(passfailState);
@@ -23,9 +31,33 @@ export function useReview() {
     const [newHistoryEntries, setNewHistoryEntries] = useRecoilState(newHistoryEntriesState);
     const resetNewHistoryEntries = useResetRecoilState(newHistoryEntriesState);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, initializeFutureTerms());
+    const setReviewStage = useSetRecoilState(reviewStageState);
     const setTimePerCard = useSetRecoilState(timePerCardState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
+    const { response: putTermResponse, setRequest: setPutTermRequest } = useRequest({});  // update terms with their new history entries
+    const { response: putTermSaturationResponse, setRequest: setPutTermSaturationRequest } = useRequest({});  // update terms with their new saturation
+    const { response: sessionPostResponse, setRequest: setPostSessionRequest } = useRequest({});
+    const newReviewSession = useReviewSession();
 
+    const makeNewSaturationLevelsCallback = useCallback(() => {
+        return makeNewSaturationLevels(termsToReview, newHistoryEntries, reviewSettings)
+    }, [termsToReview, newHistoryEntries, reviewSettings]);
+
+    useEffect(() => {  // send PUT and POST requests (needs to not be in the useEffect above, since then history lags one update behind)
+        if (reviewSettings.sessionEnd && newHistoryEntries.length > 0) {
+            setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
+            setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevelsCallback() }));
+            setPostSessionRequest(() => postSession(params.username, { newReviewSession }))
+        } else {
+            throw Error('No term histories present on review completion.')
+        }
+    }, [reviewSettings.sessionEnd]);
+
+    useEffect(() => {  // set reviewStage to PostReview once all post-session API requests are handled
+        if (putTermResponse && putTermSaturationResponse && sessionPostResponse) {
+            setReviewStage('after');
+        }
+    }, [putTermResponse, putTermSaturationResponse, sessionPostResponse])
 
     /**
     * case pass/fail:  Handle what happens to current term after pass/fail is chosen.
@@ -141,7 +173,10 @@ export function useReview() {
 
     useEffect(() => {  // end review session once futureTerms.length reaches 0
         if (futureTerms?.length === 0) {
-            setReviewSettings(current => ({ ...current, sessionEnd: new Date() }));
+            setReviewSettings(current => ({ 
+                ...current, 
+                sessionEnd: new Date() 
+            }));
         }
     }, [futureTerms])
     
