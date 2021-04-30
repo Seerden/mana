@@ -16,7 +16,7 @@ sessionRouter.get('/list', (req, res) => {  // GET all sessions involving any te
 })
 
 sessionRouter.post('/', (req, res) => {  // POST a session to the database
-    console.log(req.body);
+    // console.log(req.body);
 
     let newReviewSession = new ReviewSession(req.body.newReviewSession);
     newReviewSession.save((err, savedDoc) => {

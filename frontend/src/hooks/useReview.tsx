@@ -11,28 +11,26 @@ import {
 } from 'recoil/atoms/reviewAtoms';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
 import ReviewCard from 'components/review/ReviewCard';
-import { useRouteProps } from './routerHooks';
+
+type PassFail = 'pass' | 'fail';
 
 export function useReview() {
-    const { params } = useRouteProps();
     const [backWasShown, setBackWasShown] = useState(false);
     const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
-    const [passfail, setPassfail] = useRecoilState(passfailState);
+    const setPassfail = useSetRecoilState(passfailState);
     const termsToReview = useRecoilValue(termsToReviewState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
-    const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const [newHistoryEntries, setNewHistoryEntries] = useRecoilState(newHistoryEntriesState);
     const resetNewHistoryEntries = useResetRecoilState(newHistoryEntriesState);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, initializeFutureTerms());
-    const [timePerCard, setTimePerCard] = useRecoilState(timePerCardState);
+    const setTimePerCard = useSetRecoilState(timePerCardState);
+    const resetTermsToReview = useResetRecoilState(termsToReviewState);
+
 
     /**
-    * case init:       Initialize futureTerms with termsToReview
     * case pass/fail:  Handle what happens to current term after pass/fail is chosen.
-    * @param {Array} terms     array of terms
-    * @param {Object} action   properties: type (init, pass, fail). if type 'init', send terms as action.payload
     */
-    function termReducer(terms, { type }) {
+    function termReducer(terms, { type }: { type: PassFail}) {
         switch (type) {
             case 'pass':
                 return terms.slice(1,);
@@ -48,7 +46,7 @@ export function useReview() {
     }
 
     function initializeFutureTerms() {
-        let termList = makeReviewList(termsToReview, +reviewSettings.n)
+        let termList = makeReviewList(termsToReview, reviewSettings.n)
         return termList.map(term => (
             {
                 term: term,
@@ -66,15 +64,15 @@ export function useReview() {
             let sessionLength = numTermsToReview * reviewSettings.n;
             let termsCompleted = sessionLength - futureTerms.length;
             return Math.floor(100 * termsCompleted / sessionLength);
+        } else {
+            return 0
         }
     }, [futureTerms]);
 
     /**
      * Handle clicking the pass or fail button
-     * @param {*} e javascript event
-     * @param {string} passfail 'pass'/'fail'
      */
-    function handlePassFailClick(e, passfail) {
+    function handlePassFailClick(e, passfail: PassFail) {
         updateTermHistory(futureTerms[0].term, passfail);
         setPassfail(cur => [...cur, passfail]);
         setTimePerCard(cur => [...cur, new Date()])
@@ -84,10 +82,9 @@ export function useReview() {
 
     /**
      * ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons
-     * @param {*} e event object
      */
-    function handleLeftRightArrowKeyDown(e) {
-        let passfail;
+    function handleLeftRightArrowKeyDown(e: KeyboardEvent) {
+        let passfail: PassFail;
         switch (e.code) {
             case 'ArrowLeft':
                 passfail = 'fail';
@@ -106,10 +103,8 @@ export function useReview() {
 
     /**
      * Push 'pass'/'fail' to term's newHistoryEntry
-     * @param {object} term     should always be futureTerms[0]
-     * @param {string} passfail 'pass'/'fail'
      */
-    function updateTermHistory(term, passfail) {
+    function updateTermHistory(term, passfail: PassFail) {
         setNewHistoryEntries(currentState => {
             return currentState.map(t => {
                 if (t.termId === term._id) {
@@ -129,6 +124,13 @@ export function useReview() {
         })
     }
 
+    useEffect(() => {
+        return () => {
+            resetTermsToReview();
+            resetNewHistoryEntries();
+        }
+    }, [])
+
     useEffect(() => {  // whenever backWasShown changes, remake LeftArrow/RightArrow keydown handler
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
 
@@ -143,7 +145,7 @@ export function useReview() {
         }
     }, [futureTerms])
     
-    return [
+    return {
         backWasShown,
         setBackWasShown,
         futureTerms,
@@ -152,6 +154,6 @@ export function useReview() {
         handlePassFailClick,
         newHistoryEntries,
         resetNewHistoryEntries,
-    ]
+    } as const;
 
 }

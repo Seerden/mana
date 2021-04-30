@@ -10,9 +10,9 @@ type ReviewSettings = {
     ended: boolean
 };
 
-type PassFail = [] | Array<'pass' | 'fail'>;
+type PassFail = Array<any> | Array<'pass' | 'fail'>;
 
-type TimePerCard = [] | Date[]
+type TimePerCard = Array<any> | Date[];
 
 
 export const reviewSettingsState = atom<ReviewSettings>({
