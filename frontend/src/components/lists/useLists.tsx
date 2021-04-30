@@ -9,7 +9,7 @@ import { UseListsReturn, ListsElement } from './lists.types';
 const useLists = (): UseListsReturn => {
     const [filter, setFilter] = useState<string>('');
     const [sortBy, setSortBy] = useState<string>('name');  // @todo: refine type
-    const { response: lists, setRequest } = useRequest({ handleError, handleResponse });
+    const { response: lists, setRequest }: {response: List[], setRequest: React.Dispatch<any>} = useRequest({ handleError, handleResponse });
     const { params } = useRouteProps();
 
     useEffect(() => {  // request Lists on mount
@@ -25,7 +25,7 @@ const useLists = (): UseListsReturn => {
         setSortBy(e.currentTarget.value);
     }, [setSortBy])
 
-    const makeListsElement = useCallback((lists): ListsElement[] => {
+    const makeListsElement = useCallback((lists: Array<List>) => {
         return lists.map(list => {
             const { name, state, lastReviewed, created, _id } = list;
             return {

@@ -14,7 +14,7 @@ import { TermPropsInterface } from './list.types';
 const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {
     const [term, setTerm] = useState<any>(() => (termFromProps)),  // @todo: fix any type to be combination of TermInterface and TermElementInterface, after figuring out why I'm using two Term(*?)Interface types
         [confirmingDelete, setConfirmingDelete] = useState(false),
-        { setRequest: setPutTermRequest } = useRequest({handleResponse, handleError}),
+        { setRequest: setPutTermRequest } = useRequest({ handleResponse, handleError }),
         [open, setOpen] = useState<boolean>(false);
 
     // ----- REFACTOR
@@ -36,7 +36,7 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
 
     function handleSelect(e) {
         e.stopPropagation();
-        
+
         if (indexOfTermInTermsToReview > -1) {
             let currentTermsToReview = [...termsToReview];
             currentTermsToReview.splice(indexOfTermInTermsToReview, 1);
@@ -49,18 +49,16 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
     }
 
     /**
-     * Remove term from the list.
-     * Triggered on deletion confirmation.
-     * @param {object} action    currently only expects {type: 'delete'}
+     * Remove the term from the list. Triggered on deletion confirmation.
      */
-    function handleConfirmClick(e: React.SyntheticEvent, action: {type: string}) {
-            e.preventDefault();
-            setConfirmingDelete(false);
-            setOpen(false);
-            if (action.type === 'delete') {
-                handleTermDelete(idx);
-            }
+    function handleConfirmClick(e: React.SyntheticEvent, action: { type: 'delete' }) {
+        e.preventDefault();
+        setConfirmingDelete(false);
+        setOpen(false);
+        if (action.type === 'delete') {
+            handleTermDelete(idx);
         }
+    }
 
     /**
     * @todo update actual list itself, also update listContextValue, and then push new list state to db
@@ -72,46 +70,44 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
             setTerm(newTerm);
             setPutTermRequest(() => putTerm(listAtom.owner, { _id: term._id }, newTerm))
 
-            let newListContent: any[] = [...listAtom.terms];
+            let newListContent: any[] = [...listAtom.terms!];
             newListContent[idx] = { ...newTerm };
             let newList = { ...listAtom, terms: [...newListContent] };
             setListAtom(newList);
-            
-            // setPutRequest(() => putList(listAtom.owner, { _id: listAtom._id, owner: listAtom.owner }, newList));
         }
     }
 
     return (
         <div className="ListTerm">
             <li className="Term" title="Click to expand" onClick={() => setOpen(true)}>
-                    <span className="Term__index">{idx+1}</span>
-                    <span className="Term__from">{term.from}</span>
-                    <span className="Term__to">{term.to}</span>
-                    <SaturationIcon classes={"Term__saturation"} direction="forwards" saturation={term.saturation?.forwards}/>
-                    <SaturationIcon classes={"Term__saturation"} direction="backwards" saturation={term.saturation?.backwards}/>
-                    {selectingTerms 
-                        ? 
-                            <div 
-                                className="Term__select"
-                                style={{
-                                    color: selected ? 'seagreen' : '#555',
-                                }}
-                                onClick={handleSelect}
-                            >
-                                {selected 
-                                    ? <ImCheckboxChecked/>
-                                    : <ImCheckboxUnchecked/>
-                                }
-                            </div>
-                        : '' 
-                    }
+                <span className="Term__index">{idx + 1}</span>
+                <span className="Term__from">{term.from}</span>
+                <span className="Term__to">{term.to}</span>
+                <SaturationIcon classes={"Term__saturation"} direction="forwards" saturation={term.saturation?.forwards} />
+                <SaturationIcon classes={"Term__saturation"} direction="backwards" saturation={term.saturation?.backwards} />
+                {selectingTerms
+                    ?
+                    <div
+                        className="Term__select"
+                        style={{
+                            color: selected ? 'seagreen' : '#555',
+                        }}
+                        onClick={handleSelect}
+                    >
+                        {selected
+                            ? <ImCheckboxChecked />
+                            : <ImCheckboxUnchecked />
+                        }
+                    </div>
+                    : ''
+                }
             </li>
-            { open && 
-                <TermModal 
+            {open &&
+                <TermModal
                     handleConfirmClick={handleConfirmClick}
-                    setOpen={setOpen} 
-                    term={term} 
-                    handleTermEdit={handleTermEdit} 
+                    setOpen={setOpen}
+                    term={term}
+                    handleTermEdit={handleTermEdit}
                     confirmingDelete={confirmingDelete}
                     setConfirmingDelete={setConfirmingDelete}
                 />

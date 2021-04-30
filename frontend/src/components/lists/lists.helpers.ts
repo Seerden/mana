@@ -17,8 +17,8 @@ export function colorByLastReviewDate(timeSince: number | null): ColorType {
     return 'orangered';
 }
 
-export function getTimeSinceLastReview(list) {
-    if (!list?.lastReviewed) { return null; }
+export function getTimeSinceLastReview(list: List) {
+    if (!list.lastReviewed) { return null; }
 
-    return dayjs(new Date()).valueOf() - dayjs(list?.lastReviewed).valueOf();
+    return dayjs(new Date()).valueOf() - dayjs(list.lastReviewed).valueOf();
 }

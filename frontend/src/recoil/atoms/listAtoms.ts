@@ -5,7 +5,7 @@ export const selectingTermsToReviewState = atom<boolean>({
     default: false
 })
 
-export const listState = atom({
+export const listState = atom<List>({
     key: 'listState',
-    default: {} as Partial<List>
+    default: {} as List
 })

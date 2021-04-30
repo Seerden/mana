@@ -2,7 +2,6 @@ import React, { memo } from "react";
 import { Link } from 'react-router-dom';
 import { useRouteProps } from "../../hooks/routerHooks";
 import './style/ListsItem.scss';
-import { timeSince } from '../../helpers/time';
 import { BiArrowToRight } from "react-icons/bi";
 import { colorByLastReviewDate, getTimeSinceLastReview } from './lists.helpers'
 
@@ -10,11 +9,12 @@ const ListsItem = memo(({ list }: { list: List}) => {
     const { params } = useRouteProps();
     const numTerms = list.terms.length;
     const { from, to } = list;
-    const latestSessionEndDate = list.sessions[list.sessions.length - 1].date.end;
-    const timeSinceLastSession = timeSince(latestSessionEndDate);
+    const timeSinceLastSession = getTimeSinceLastReview(list);
+    const borderColor = colorByLastReviewDate(timeSinceLastSession);
+    const listHasSessions = list.sessions.length > 0;
 
     return (
-        <div style={{ borderColor: colorByLastReviewDate(getTimeSinceLastReview(list)) }} className="ListsItem">
+        <div style={{ borderColor }} className="ListsItem">
             <div className="ListsItem__name">
                 <Link className="Link" to={`/u/${params.username}/list/${list._id}`}>{list.name}</Link>
             </div>
@@ -23,7 +23,7 @@ const ListsItem = memo(({ list }: { list: List}) => {
 
             <div className="ListsItem__languages">{from} <BiArrowToRight /> {to} </div>
 
-            { list.sessions.length > 0 &&
+            { listHasSessions &&
                 <div className="ListsItem__since">
                     <em>last reviewed {timeSinceLastSession}</em>
                 </div>
