@@ -1,7 +1,21 @@
 import { atom, atomFamily, AtomOptions, selector } from 'recoil';
 import { TermElementInterface } from 'components/list/list.types';
 
-export const reviewSettingsState = atom({
+type ReviewSettings = {
+    direction: 'forwards' | 'backwards',
+    n: number,
+    sessionStart: Date | null,
+    sessionEnd: Date | null,
+    started: boolean,
+    ended: boolean
+};
+
+type PassFail = [] | Array<'pass' | 'fail'>;
+
+type TimePerCard = [] | Date[]
+
+
+export const reviewSettingsState = atom<ReviewSettings>({
     key: 'reviewSettingsState',
     default: {
         direction: 'forwards',
@@ -49,12 +63,12 @@ export const newHistoryEntriesState = atom({
     })
 })
 
-export const passfailState = atom({
+export const passfailState = atom<PassFail>({
     key: 'passfailState',
     default: []
 })
 
-export const timePerCardState = atom({
+export const timePerCardState = atom<TimePerCard>({
     key: 'timePerCardState',
     default: []
 })
