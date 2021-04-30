@@ -9,7 +9,6 @@ import { timeSince } from "helpers/time";
 const ListsItem = memo(({ list }: { list: List}) => {
     const { params } = useRouteProps();
     const numTerms = list.terms.length;
-    const { from, to } = list;
     const listHasSessions = list.sessions.length > 0;
     const lastReviewDate = listHasSessions ? list.sessions[list.sessions.length-1].date.end : null;
     const timeAgo = listHasSessions && timeSince(lastReviewDate);
@@ -23,7 +22,7 @@ const ListsItem = memo(({ list }: { list: List}) => {
 
             <div className="ListsItem__numTerms">{numTerms} terms</div>
 
-            <div className="ListsItem__languages">{from} <BiArrowToRight /> {to} </div>
+            <div className="ListsItem__languages">{list.from} <BiArrowToRight /> {list.to} </div>
 
             { listHasSessions &&
                 <div className="ListsItem__since">

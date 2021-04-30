@@ -1,5 +1,5 @@
 import React from "react";
-import { colorMap, colorBySaturation } from "helpers/list.api";
+import { colorMap } from "helpers/list.api";
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import { countDict } from "helpers/count";
 import './style/ListSaturationState.scss';
@@ -20,10 +20,9 @@ const ListSaturationState = ({ terms }) => {
     })
 
     let termCountPerLevel = getTermCountPerLevel(terms);
-    let progress = getProgress(termCountPerLevel);
     let overviewElements = makeSaturationOverviewElements(termCountPerLevel)
 
-    function getTermCountPerLevel(terms) {
+    function getTermCountPerLevel(terms: Term[]) {
         const occurrences: OccurrenceInterface | {} = {};
 
         ['forwards', 'backwards'].map(direction => {

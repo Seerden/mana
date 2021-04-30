@@ -23,14 +23,13 @@ function useList() {
     const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const setListAtom = useSetRecoilState(listState);
-    const setTermsToReview = useSetRecoilState(termsToReviewState);
+    const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const suggestedTermsForReview = useMemo(() => {
         if (list) {
             return suggestTermsForReview(list.terms)
         }
     }, [list]);
-
 
     function filterTermsBySaturation(terms: TruncatedTerm[]) {
         if (terms.length > 0) {
@@ -133,7 +132,7 @@ function useList() {
         setDeleteRequest(() => deleteList(params.username, { _id: params.id }))
     };
 
-    function updateTermsToReview({ type, direction }: { type: string, direction?: 'forwards' | 'backwards' }) {
+    const updateTermsToReview = useCallback(({ type, direction }: { type: 'all' | 'visible' | 'none' | 'overdue', direction: Direction}) => {
         if (list) {
             switch (type) {
                 case 'all':
@@ -146,7 +145,7 @@ function useList() {
                     resetTermsToReview();
                     break;
                 case 'overdue':
-                    if (suggestedTermsForReview && typeof direction === 'number') {
+                    if (suggestedTermsForReview) {
                         setTermsToReview(suggestedTermsForReview[direction])
                     }
                     break;
@@ -154,7 +153,7 @@ function useList() {
                     break;
             }
         }
-    }
+    }, [list, setTermsToReview, suggestedTermsForReview])
 
     return {
         list,

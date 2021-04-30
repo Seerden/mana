@@ -33,3 +33,5 @@ interface Term extends Document{
     },
     listMembership: ObjectId[],
 }
+
+type Direction = 'forwards' | 'backwards';

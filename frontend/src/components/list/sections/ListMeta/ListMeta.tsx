@@ -1,7 +1,6 @@
 import React from "react";
 import ListProgressSection from "./ListProgressSection";
 import ListReviewSection from "./ListReviewSection";
-import useList from '../../useList';
 
 const ListMeta = ({ terms, suggestedTermsForReview, updateTermsToReview, numTermsToReview, setSelectingTerms, selectingTerms }) => {
 
