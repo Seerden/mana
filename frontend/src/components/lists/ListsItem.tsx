@@ -8,6 +8,10 @@ import { colorByLastReviewDate, getTimeSinceLastReview } from './lists.helpers'
 
 const ListsItem = memo(({ list }: { list: List}) => {
     const { params } = useRouteProps();
+    const numTerms = list.terms.length;
+    const { from, to } = list;
+    const latestSessionEndDate = list.sessions[list.sessions.length - 1].date.end;
+    const timeSinceLastSession = timeSince(latestSessionEndDate);
 
     return (
         <div style={{ borderColor: colorByLastReviewDate(getTimeSinceLastReview(list)) }} className="ListsItem">
@@ -15,13 +19,13 @@ const ListsItem = memo(({ list }: { list: List}) => {
                 <Link className="Link" to={`/u/${params.username}/list/${list._id}`}>{list.name}</Link>
             </div>
 
-            <div className="ListsItem__numTerms">{list.terms.length} terms</div>
+            <div className="ListsItem__numTerms">{numTerms} terms</div>
 
-            <div className="ListsItem__languages">{list.from} <BiArrowToRight /> {list.to} </div>
+            <div className="ListsItem__languages">{from} <BiArrowToRight /> {to} </div>
 
             { list.sessions.length > 0 &&
                 <div className="ListsItem__since">
-                    <em>last reviewed {timeSince(list.sessions[list.sessions.length - 1].date.end)}</em>
+                    <em>last reviewed {timeSinceLastSession}</em>
                 </div>
             }
 
