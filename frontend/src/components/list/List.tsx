@@ -7,9 +7,9 @@ import ListTerms from './sections/ListTerms';
 import ListTitleBar from './sections/ListTitleBar';
 
 const List = memo((props) => {
-    const [
+    const {
         list,
-        terms,
+        truncatedTerms: terms,
         termsToDisplay,
         suggestedTermsForReview,
         selectingTerms,
@@ -21,7 +21,7 @@ const List = memo((props) => {
         updateTermsToReview,
         setSelectingTerms,
         setFilter
-    ] = useList();
+    } = useList();
 
     return (
         <>

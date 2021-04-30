@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-export const selectingTermsToReviewState = atom({
+export const selectingTermsToReviewState = atom<boolean>({
     key: 'selectingTermsToReviewState',
     default: false
 })

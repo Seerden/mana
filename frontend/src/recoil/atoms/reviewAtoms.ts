@@ -35,9 +35,9 @@ export const reviewStageState = atom<ReviewStage>({
 })
 
 
-export const termsToReviewState = atom<TermElementInterface[] | any[]>({
+export const termsToReviewState = atom<Array<Term> | Array<any>>({
     key: 'termsToReviewState',
-    default: [] as TermElementInterface[],
+    default: [],
 })
 
 export const newHistoryEntriesState = atom({

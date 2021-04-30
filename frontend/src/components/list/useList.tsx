@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useSetRecoilState, useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { getList, putList, deleteList, deleteTerm } from 'helpers/apiHandlers/listHandlers';
 import { useRouteProps } from 'hooks/routerHooks';
@@ -8,20 +8,12 @@ import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 import ListTerm from './ListTerm';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
-import { FilterInterface, TermPropsInterface } from './list.types';
-
-interface TruncatedTerm {
-    element: JSX.Element,
-    saturation: {
-        forwards: number | null,
-        backwards: number | null
-    }
-}
+import { FilterInterface, TermPropsInterface, TruncatedTerm } from './list.types';
 
 function useList() {
     const [list, setList] = useState<List | null>(null);
     const [filter, setFilter] = useState<FilterInterface>({ saturation: { level: null, direction: 'any' } });
-    const [truncatedTerms, setTruncatedTerms] = useState<TruncatedTerm[] | null>(null);
+    const [truncatedTerms, setTruncatedTerms] = useState<Array<TruncatedTerm> | Array<any>>([]);
     const { params } = useRouteProps();
     const { response: getResponse, setRequest: setGetRequest } = useRequest({});
     const { setRequest: setPutRequest } = useRequest({});
@@ -40,23 +32,27 @@ function useList() {
     }, [list]);
 
 
-    function filterTermsBySaturation(terms) {
-        return terms
-            ?.filter(term => {
-                if (filter.saturation?.level) {
-                    if (!term.saturation) { return true }
+    function filterTermsBySaturation(terms: TruncatedTerm[]) {
+        if (terms.length > 0) {
+            return terms
+                ?.filter(term => {
+                    if (filter.saturation?.level) {
+                        if (!term.saturation) { return true }
 
-                    if (filter.saturation.direction !== 'any') {
-                        return term.saturation?.[filter.saturation.direction] === Number(filter?.saturation.level)
+                        if (filter.saturation.direction !== 'any') {
+                            return term.saturation?.[filter.saturation.direction] === Number(filter?.saturation.level)
+                        }
+                        return (
+                            term.saturation?.forwards === Number(filter?.saturation.level) ||
+                            term.saturation?.backwards === Number(filter?.saturation.level)
+                        )
+                    } else {
+                        return true
                     }
-                    return (
-                        term.saturation?.forwards === Number(filter?.saturation.level) ||
-                        term.saturation?.backwards === Number(filter?.saturation.level)
-                    )
-                } else {
-                    return true
-                }
-            })
+                })
+        } else {
+            return []
+        }
     };
 
     const termsToDisplay = useMemo(() => {
@@ -73,17 +69,14 @@ function useList() {
         if (getResponse) {
             setList(getResponse);
             setListAtom(getResponse);
+            extractTermsFromListAsTruncatedTerms(getResponse);
         }
     }, [getResponse])
 
-    useEffect(() => {
-        if (list && list.terms) { updateTerms() };      // updateTerms needs to be called only AFTER list has been put into state, since this depends on list
-    }, [list])
-
     // FUNCTIONS
-    function updateTerms() {
+    const extractTermsFromListAsTruncatedTerms = useCallback((list: List) => {
         if (list && list.terms && list.terms?.length > 0) {
-            const newTruncatedTerms = list.terms?.map((term, idx) => {
+            const newTruncatedTerms = list.terms.map((term, idx) => {
                 let termProps: TermPropsInterface = {
                     handleTermDelete,
                     key: `term-${term._id}`,
@@ -91,18 +84,17 @@ function useList() {
                     term
                 };
 
-                return (
-                    {
-                        saturation: term.saturation,
-                        element: <ListTerm {...termProps} />
-                    }
-                )
-    
+                return ({
+                    term: term,
+                    saturation: term.saturation,
+                    element: <ListTerm {...termProps} />
+                })
+
             })
 
             setTruncatedTerms(newTruncatedTerms);
         }
-    };
+    }, [setTruncatedTerms, list])
 
     function handleListTitleBlur(e) {
         e.persist();
@@ -139,10 +131,10 @@ function useList() {
         if (list) {
             switch (type) {
                 case 'all':
-                        setTermsToReview(list.terms);
+                    setTermsToReview(list.terms);
                     break;
                 case 'visible':  // add all visible terms to termsToReview, as long as they're not already in there
-                    setTermsToReview(cur => Array.from(new Set([...cur, ...filterTermsBySaturation(list.terms)])));
+                    setTermsToReview(cur => Array.from(new Set([...cur, ...filterTermsBySaturation(truncatedTerms).map(t => t.term)])));
                     break;
                 case 'none':
                     resetTermsToReview();
@@ -158,13 +150,13 @@ function useList() {
         }
     }
 
-    return [
-        list, 
-        truncatedTerms, 
-        termsToDisplay, 
-        suggestedTermsForReview, 
-        selectingTerms, 
-        numTermsToReview, 
+    return {
+        list,
+        truncatedTerms,
+        termsToDisplay,
+        suggestedTermsForReview,
+        selectingTerms,
+        numTermsToReview,
         filter,
         deleteResponse,
         handleListTitleBlur,
@@ -172,7 +164,7 @@ function useList() {
         updateTermsToReview,
         setSelectingTerms,
         setFilter
-    ] as const;
+    } as const;
 
 }
 

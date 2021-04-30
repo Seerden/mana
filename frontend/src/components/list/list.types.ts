@@ -16,3 +16,12 @@ export interface TermPropsInterface {
     key: Key,
     handleTermDelete: (idx: number) => void
 }
+
+export interface TruncatedTerm {
+    term: Term,
+    element: JSX.Element,
+    saturation: {
+        forwards: number | null,
+        backwards: number | null,
+    }
+}
