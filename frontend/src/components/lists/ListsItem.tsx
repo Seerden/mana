@@ -3,15 +3,17 @@ import { Link } from 'react-router-dom';
 import { useRouteProps } from "../../hooks/routerHooks";
 import './style/ListsItem.scss';
 import { BiArrowToRight } from "react-icons/bi";
-import { colorByLastReviewDate, getTimeSinceLastReview } from './lists.helpers'
+import { colorByLastReviewDate } from './lists.helpers'
+import { timeSince } from "helpers/time";
 
 const ListsItem = memo(({ list }: { list: List}) => {
     const { params } = useRouteProps();
     const numTerms = list.terms.length;
     const { from, to } = list;
-    const timeSinceLastSession = getTimeSinceLastReview(list);
-    const borderColor = colorByLastReviewDate(timeSinceLastSession);
     const listHasSessions = list.sessions.length > 0;
+    const lastReviewDate = listHasSessions ? list.sessions[list.sessions.length-1].date.end : null;
+    const timeAgo = listHasSessions && timeSince(lastReviewDate);
+    const borderColor = colorByLastReviewDate(lastReviewDate);
 
     return (
         <div style={{ borderColor }} className="ListsItem">
@@ -25,7 +27,7 @@ const ListsItem = memo(({ list }: { list: List}) => {
 
             { listHasSessions &&
                 <div className="ListsItem__since">
-                    <em>last reviewed {timeSinceLastSession}</em>
+                    <em>last reviewed {timeAgo}</em>
                 </div>
             }
 
