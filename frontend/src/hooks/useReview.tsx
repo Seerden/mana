@@ -44,12 +44,14 @@ export function useReview() {
     }, [termsToReview, newHistoryEntries, reviewSettings]);
 
     useEffect(() => {  // send PUT and POST requests (needs to not be in the useEffect above, since then history lags one update behind)
-        if (reviewSettings.sessionEnd && newHistoryEntries.length > 0) {
-            setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
-            setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevelsCallback() }));
-            setPostSessionRequest(() => postSession(params.username, { newReviewSession }))
-        } else {
-            throw Error('No term histories present on review completion.')
+        if (reviewSettings.sessionEnd) {
+            if (newHistoryEntries.length > 0) {
+                setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
+                setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevelsCallback() }));
+                setPostSessionRequest(() => postSession(params.username, { newReviewSession }))
+            } else {
+                throw Error('No new term histories present on review completion.')
+            }
         }
     }, [reviewSettings.sessionEnd]);
 

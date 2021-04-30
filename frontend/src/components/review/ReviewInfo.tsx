@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import Timer from './Timer';
+import useTimer from './useTimer';
 import './style/ReviewInfo.scss';
 import { useRecoilState, useRecoilValue } from "recoil";
 import { reviewSettingsState } from "recoil/atoms/reviewAtoms";
@@ -11,6 +11,7 @@ const ReviewInfo = memo(({ progress }: { progress: Number}) => {
     const start = reviewSettings.sessionStart;
     const n = reviewSettings.n;
     const numTerms = numTermsToReview;
+    const {timeSinceStart, title} = useTimer({start});
 
     return (
         <details className="Review__info">
@@ -25,7 +26,7 @@ const ReviewInfo = memo(({ progress }: { progress: Number}) => {
                 <div className="Review__info--completion">
                     Session completion: {progress}%.
                     <div>
-                        You started this session <Timer start={start} />.
+                        You started this session <span title={title}>{timeSinceStart}</span>.
                     </div>
                 </div>
             </div>
