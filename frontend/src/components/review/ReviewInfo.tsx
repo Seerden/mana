@@ -5,7 +5,12 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { reviewSettingsState } from "recoil/atoms/reviewAtoms";
 import { numTermsToReviewState } from "recoil/selectors/reviewSelectors";
 
-const ReviewInfo = memo(({ progress }: { progress: Number}) => {
+type ReviewInfoProps = {
+    progress: number,
+    completedCount: number
+}
+
+const ReviewInfo = memo(({ progress, completedCount }: ReviewInfoProps) => {
     const [reviewSettings] = useRecoilState(reviewSettingsState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const start = reviewSettings.sessionStart;
@@ -24,7 +29,7 @@ const ReviewInfo = memo(({ progress }: { progress: Number}) => {
 
             <div className="Review__info--dynamic">
                 <div className="Review__info--completion">
-                    Session completion: {progress}%.
+                    Session completion: {progress}% ({completedCount}/{n*numTermsToReview}).
                     <div>
                         You started this session <span title={title}>{timeSinceStart}</span>.
                     </div>

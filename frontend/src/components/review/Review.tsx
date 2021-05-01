@@ -11,6 +11,7 @@ const Review = memo((props) => {
         backWasShown,
         futureTerms,
         progress,
+        completedCount,
         handlePassFailClick,
     } = useReview();
 
@@ -65,7 +66,7 @@ const Review = memo((props) => {
                         />
                     </div>
 
-                    <ReviewInfo progress={progress} />
+                    <ReviewInfo {...{completedCount, progress}} />
                 </>
             }
         </div>

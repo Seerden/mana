@@ -103,6 +103,10 @@ export function useReview() {
         }
     }, [futureTerms]);
 
+    const completedCount = useMemo(() => {
+        return numTermsToReview * reviewSettings.n - futureTerms.length;
+    }, [futureTerms, numTermsToReview, reviewSettings.n])
+
     /**
      * Handle clicking the pass or fail button
      */
@@ -188,6 +192,7 @@ export function useReview() {
         futureTerms,
         reduceFutureTerms,
         progress,
+        completedCount,
         handlePassFailClick,
         newHistoryEntries,
         resetNewHistoryEntries,

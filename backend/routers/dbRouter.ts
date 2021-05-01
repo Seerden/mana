@@ -127,7 +127,9 @@ userRouter.get('/list', (req, res) => {
         .findOne({ ...query })
         .populate('terms sessions')
         .exec((err, doc) => {
-            doc && res.json(doc)
+            if (doc) {
+                res.json(doc)
+            }
         })
 })
 
