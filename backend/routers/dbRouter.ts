@@ -126,6 +126,7 @@ userRouter.get('/list', (req, res) => {
     List
         .findOne({ ...query })
         .populate('terms sessions')
+        .lean()
         .exec((err, doc) => {
             if (doc) {
                 res.json(doc)
@@ -247,6 +248,7 @@ userRouter.get('/lists', (req, res) => {
     List
         .find({ owner: username })
         .populate('sessions')
+        .lean()
         .exec((err, docs) => {
             if (err) {
                 console.log(err);
