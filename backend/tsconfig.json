@@ -9,11 +9,12 @@
         "outDir": "dist",
         "lib": ["ES2020"],
         "skipLibCheck": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
         "typeRoots": [
             "./custom_typings",
             "./node_modules/@types"
         ]
     },
-    "exclude": ["node_modules"],
-    
+    "exclude": ["node_modules"]    
 }
