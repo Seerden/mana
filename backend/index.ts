@@ -48,7 +48,7 @@ async function startServer() {
         },
         // store: @todo add mongo connect
         resave: true,
-        saveUninitialized: true,
+        saveUninitialized: false,
         rolling: true,
     }))
     app.use(passport.initialize());
@@ -67,7 +67,7 @@ async function startServer() {
 
     const server = new ApolloServer({ 
         schema,
-        context: ctx => ctx,
+        context: ({ req, res }) => ({ req, res }),
      })
     server.applyMiddleware({ app });
 
