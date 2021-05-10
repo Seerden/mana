@@ -12,8 +12,8 @@ export const dbConn = mongoose.createConnection(uri, {useNewUrlParser: true, use
     dbConn.on('connected', () => console.log('connected to db'));
     dbConn.on('error', error => console.log('error connecting to db'));
 
-export const User = dbConn.model('User', userSchema);
-export const Set = dbConn.model('Set', setSchema);
-export const Term = dbConn.model<TermElementInterface>('Term', termSchema);
-export const List = dbConn.model<ListInterface>('List', listSchema);
-export const ReviewSession = dbConn.model<ReviewSessionInterface>('ReviewSession', reviewSessionSchema)
+// export const MUser = dbConn.model('User', userSchema);
+// export const MSet = dbConn.model('Set', setSchema);
+// export const MTerm = dbConn.model<TermElementInterface>('Term', termSchema);
+// export const MList = dbConn.model<ListInterface>('List', listSchema);
+// export const MReviewSession = dbConn.model<ReviewSessionInterface>('ReviewSession', reviewSessionSchema)

@@ -3,7 +3,7 @@ import { prop as Property, getModelForClass } from '@typegoose/typegoose';
 import mongoose from 'mongoose';
 import { dbConn } from "../../db/db";
 
-const ObjectId = mongoose.Schema.Types.ObjectId;
+const ObjectId = mongoose.Types.ObjectId;
 
 @ObjectType()
 export class CUser {

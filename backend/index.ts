@@ -2,7 +2,6 @@ import 'dotenv/config';
 import dayjs from 'dayjs';
 
 import express, { Request, Response } from 'express';
-import { dbRouter } from './routers/dbRouter'
 import { devRouter } from './routers/devRouter'
 
 import { ApolloServer } from 'apollo-server-express';
@@ -15,8 +14,7 @@ import { dbConn } from './db/db';
 import { buildSchema } from 'type-graphql';
 import { UsersResolver } from './graphql/resolvers/users';
 import { HelloResolver } from './graphql/resolvers/hello';
-
-
+import { ListResolver } from './graphql/resolvers/ListResolver';
 
 /**
  * Express middleware to log every API call that is accessed
@@ -53,7 +51,7 @@ async function startServer() {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    app.use('/db', dbRouter)
+    // app.use('/db', dbRouter)
     app.use('/dev', devRouter)
 
     app.get('/', (req, res) => {
@@ -61,7 +59,7 @@ async function startServer() {
     })
 
     const schema = await buildSchema({
-        resolvers: [UsersResolver, HelloResolver]
+        resolvers: [UsersResolver, HelloResolver, ListResolver]
     })
 
     const server = new ApolloServer({ 
