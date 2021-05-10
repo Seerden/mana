@@ -12,6 +12,8 @@
     "@graphql-tools/schema": "^7.1.5",
     "@typegoose/typegoose": "^8.0.0-beta.5",
     "@types/mongoose": "^5.10.5",
+    "@types/passport": "^1.0.6",
+    "@types/passport-local": "^1.0.33",
     "apollo-server-express": "^2.24.0",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",

@@ -4,9 +4,10 @@ import passport from 'passport';
 import passportLocal from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
 import { dbConn, User } from '../db/db.js'
+import { CUser } from '../graphql/types/User.js';
 
-passport.serializeUser(function (user, done) {
-    done(null, user.id);
+passport.serializeUser(function (user: CUser , done) {
+    done(null, user._id);
 });
 
 passport.deserializeUser(function (id, done) {

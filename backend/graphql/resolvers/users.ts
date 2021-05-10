@@ -1,5 +1,7 @@
-import { Resolver, Query, Mutation, Arg, ObjectType, Field } from "type-graphql";
+import { Resolver, Query, Mutation, Arg, ObjectType, Field, Ctx } from "type-graphql";
 import { CUser, UserModel } from "../types/User.js";
+import passport from '../../auth/passport.js';
+import { ExpressContext } from "apollo-server-express";
 
 @ObjectType()
 class MaybeUser {
@@ -8,7 +10,15 @@ class MaybeUser {
 
     @Field(() => CUser, { nullable: true })
     user?: CUser
+}
 
+@ObjectType()
+class LoginResponse {
+    @Field(() => String, { nullable: true })
+    error?: String;
+
+    @Field(() => CUser, { nullable: true })
+    user?: Partial<CUser>
 }
 
 @Resolver()
@@ -34,6 +44,22 @@ export class UsersResolver {
         }
 
         return { error: 'Username already exists ' }
+    }
+
+    @Mutation(() => MaybeUser)
+    async login(
+        @Arg("username") username: string,
+        @Arg("password") password: string,
+        @Ctx() ctx: ExpressContext
+    ): Promise<LoginResponse>{
+        console.log(Object.keys(ctx));
+        
+        await passport.authenticate("local");
+        if (ctx.req.isAuthenticated()) {
+            return { user: ctx.req.user }
+        } else {
+            return { error: "Authentication failed"}
+        }
 
     }
 }
