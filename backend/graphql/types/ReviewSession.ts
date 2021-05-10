@@ -72,6 +72,4 @@ export class ReviewSession {
 
 }
 
-
-
 export const ReviewSessionModel = getModelForClass(ReviewSession, { existingConnection: dbConn })

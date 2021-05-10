@@ -67,12 +67,12 @@ const App = () => {
                                     <Route path="*" element={<div>404</div>} />
 
                                 </Routes>
-                            </div>
+                            </div >
                             <Footer />
-                        </Router>
-                    </LoginProvider>
-                </div>
-            </RecoilRoot>
+                        </Router >
+                    </LoginProvider >
+                </div >
+            </RecoilRoot >
         </>
     )
 }

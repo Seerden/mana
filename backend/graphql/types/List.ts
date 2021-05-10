@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { prop, prop as Property, getModelForClass, Ref, index, mongoose, modelOptions, Severity } from '@typegoose/typegoose';
+import { prop as Property, getModelForClass, Ref, index, mongoose, modelOptions, Severity } from '@typegoose/typegoose';
 import { ReviewSession } from "./ReviewSession";
 import { Term } from './Term';
 import { dbConn } from "../../db/db";
@@ -64,6 +64,5 @@ export class List {
     @Field()
     state: ListState
 }
-
 
 export const ListModel = getModelForClass(List, { existingConnection: dbConn });

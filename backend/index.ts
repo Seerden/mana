@@ -9,12 +9,14 @@ import session from 'express-session';
 import passport from './auth/passport';
 import connectMongo from 'connect-mongo';
 const MongoStore = connectMongo(session);
+import {v4 as uuid } from 'uuid'
 
 import { dbConn } from './db/db';
 import { buildSchema } from 'type-graphql';
-import { UsersResolver } from './graphql/resolvers/users';
 import { HelloResolver } from './graphql/resolvers/hello';
 import { ListResolver } from './graphql/resolvers/ListResolver';
+import { dbRouter } from './routers/dbRouter';
+import { UsersResolver } from './graphql/resolvers/users';
 
 /**
  * Express middleware to log every API call that is accessed
@@ -35,6 +37,7 @@ async function startServer() {
     app.use(express.urlencoded({ limit: '5mb', parameterLimit: 10000, extended: true }));
     app.use(express.json());
     app.use(session({
+        genid: () => uuid(),
         secret: process.env.SESSION_SECRET,
         store: new MongoStore({
             mongooseConnection: dbConn
@@ -51,7 +54,7 @@ async function startServer() {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    // app.use('/db', dbRouter)
+    app.use('/db', dbRouter)
     app.use('/dev', devRouter)
 
     app.get('/', (req, res) => {
@@ -59,14 +62,12 @@ async function startServer() {
     })
 
     const schema = await buildSchema({
-        resolvers: [UsersResolver, HelloResolver, ListResolver]
+        resolvers: [UsersResolver, HelloResolver, ListResolver],
     })
 
     const server = new ApolloServer({ 
         schema,
         context: ctx => ctx,
-        playground: true,
-        introspection: true
      })
     server.applyMiddleware({ app });
 

@@ -1,17 +1,19 @@
-import {compare} from 'bcryptjs';
-// const { compare } = bcrypt;
+import bcrypt from 'bcryptjs';
+const { compare } = bcrypt;
 import passport from 'passport';
 import passportLocal from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
-// import { UserModel } from '../db/db'
-import { CUser, UserModel } from '../graphql/types/User';
+import { UserModel as User } from '../graphql/types/User';
 
-passport.serializeUser(function (user: CUser , done) {
-    done(null, user._id);
+passport.serializeUser(function (user, done) {
+    console.log(user);
+    // @ts-ignore
+    done(null, user.id);
 });
 
 passport.deserializeUser(function (id, done) {
-    UserModel.findById(id, function (err, user) {
+    console.log(id);
+    User.findById(id, null, null, function (err, user) {
         done(err, user);
     });
 });
@@ -20,7 +22,7 @@ passport.use(new LocalStrategy({
         usernameField: 'username',
         passwordField: 'password'
     }, (username, password, done) => {
-        UserModel.findOne({ username }, (err, foundUser) => {
+        User.findOne({ username }, (err, foundUser) => {
             if (err) {
                 return done(null, false, { message: err })
             } else {

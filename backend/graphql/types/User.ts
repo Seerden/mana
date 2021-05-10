@@ -1,27 +1,30 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import { prop as Property, getModelForClass } from '@typegoose/typegoose';
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 import { dbConn } from "../../db/db";
 
 const ObjectId = mongoose.Types.ObjectId;
 
 @ObjectType()
-export class CUser {
-    @Field(() => String)
-    _id: typeof ObjectId;
+export class User {
+    @Field(() => ID)
+    _id: ObjectId;
 
-    @Field(() => String)
     @Property( {unique: true, required: true })
+    @Field(() => String)
     username: string;
 
-    @Field(() => [String])
+    @Property()
+    @Field(() => [String], {nullable: true })
     lists?: typeof ObjectId[];  // mongoose ObjectId[]
 
+    @Property()
     @Field(() => String)
     currentSession?: typeof ObjectId;  // mongoose ObjectId
 
     @Property({required: true})
+    @Field()
     password: string;
 }
 
-export const UserModel = getModelForClass(CUser, { existingConnection: dbConn })
+export const UserModel = getModelForClass(User, { existingConnection: dbConn });

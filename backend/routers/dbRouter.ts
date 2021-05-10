@@ -1,99 +1,100 @@
-// import express from 'express';
-// import 'dotenv/config';
-// import session from 'express-session';
-// import mongoose from 'mongoose';
-// import passport from '../auth/passport';
-// import connectMongo from 'connect-mongo';
-// import bcrypt from 'bcryptjs';
+import express from 'express';
+import 'dotenv/config';
+import session from 'express-session';
+import mongoose from 'mongoose';
+import passport from '../auth/passport';
+import connectMongo from 'connect-mongo';
+import bcrypt from 'bcryptjs';
 
-// import { TermElementInterface} from '../db/schemas/termSchema';
-// import { List, Term, dbConn } from '../db/db'
+import { TermElementInterface} from '../db/schemas/termSchema';
+import { dbConn } from '../db/db'
 
-// const MongoStore = connectMongo(session);
-// const { hash } = bcrypt;
+const MongoStore = connectMongo(session);
+const { hash } = bcrypt;
 
 // const User = dbConn.model('User');
-// const Set = dbConn.model('Set');
+import { UserModel as User } from '../graphql/types/User'
+const Set = dbConn.model('Set');
 
-// import { sessionRouter } from './db/sessionRouter';
+import { sessionRouter } from './db/sessionRouter';
 
-// /**
-//  * Express router for /db routes, used as API endpoints for frontend interaction with the database.
-//  */
-// export const dbRouter = express.Router();
-// dbRouter.use(express.urlencoded({ limit: '5mb', parameterLimit: 10000, extended: true }));
-// dbRouter.use(express.json());
-// dbRouter.use(session({
-//     secret: process.env.SESSION_SECRET,
-//     store: new MongoStore({
-//         mongooseConnection: dbConn
-//     }),
-//     cookie: {
-//         maxAge: 1000 * 3600 * 24,  // TTL in milliseconds
-//         // secure: true // only set once I have https setup look at docs for handy if statement to set this only for production
-//     },
-//     // store: @todo add mongo connect
-//     resave: true,
-//     saveUninitialized: true,
-//     rolling: true,
-// }))
-// dbRouter.use(passport.initialize());
-// dbRouter.use(passport.session());
+/**
+ * Express router for /db routes, used as API endpoints for frontend interaction with the database.
+ */
+export const dbRouter = express.Router();
+dbRouter.use(express.urlencoded({ limit: '5mb', parameterLimit: 10000, extended: true }));
+dbRouter.use(express.json());
+dbRouter.use(session({
+    secret: process.env.SESSION_SECRET,
+    store: new MongoStore({
+        mongooseConnection: dbConn
+    }),
+    cookie: {
+        maxAge: 1000 * 3600 * 24,  // TTL in milliseconds
+        // secure: true // only set once I have https setup look at docs for handy if statement to set this only for production
+    },
+    // store: @todo add mongo connect
+    resave: true,
+    saveUninitialized: true,
+    rolling: true,
+}))
+dbRouter.use(passport.initialize());
+dbRouter.use(passport.session());
 
-// /**
-//  * Route middleware to check if passport has authenticated the request. 
-//  * @note Restricting route access to only specified user still needs to be done per-route, though, since the username can be sent from frontend in various ways
-//  * @return send 404 response it not validated, else call next() 
-//  */
-// function isLoggedIn(req, res, next) {
-//     if (!req.isAuthenticated()) {
-//         res.status(401).send('Request made by unauthorized user')
-//         return;
-//     }
-//     next()
-// }
+/**
+ * Route middleware to check if passport has authenticated the request. 
+ * @note Restricting route access to only specified user still needs to be done per-route, though, since the username can be sent from frontend in various ways
+ * @return send 404 response it not validated, else call next() 
+ */
+function isLoggedIn(req, res, next) {
+    if (!req.isAuthenticated()) {
+        res.status(401).send('Request made by unauthorized user')
+        return;
+    }
+    next()
+}
 
-// function userOwnsRoute(req, res, next) {
-//     if (req.params.username === req.user.username) {
-//         next()
-//     } else {
-//         res.status(403).json('User does not own this route.')
-//     }
-// }
+function userOwnsRoute(req, res, next) {
+    if (req.params.username === req.user.username) {
+        next()
+    } else {
+        res.status(403).json('User does not own this route.')
+    }
+}
 
-// // currently, registration and login go through this same route (registration is done in the passport local strategy, see my passport.js file)
-// /* note, however, that this just sends a 401 response without further customization if the authentication fails. using a callback (like option 1) gives us more options */
-// dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
-//     console.log(`Authenticated user ${req.user.username}`);
-//     res.json({ username: req.user.username })
-// })
+// currently, registration and login go through this same route (registration is done in the passport local strategy, see my passport.js file)
+/* note, however, that this just sends a 401 response without further customization if the authentication fails. using a callback (like option 1) gives us more options */
+dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
+    console.log(`Authenticated user ${req.user.username}`);
+    res.json({ username: req.user.username })
+})
 
-// dbRouter.post('/u/register', (req, res) => {
-//     const { username, password } = req.body.newUser;
+dbRouter.post('/u/register', (req, res) => {
+    const { username, password } = req.body.newUser;
 
-//     User.findOne({ username }, async (err, foundUser) => {
-//         console.log('inside user.findone');
+    User.findOne({ username }, async (err, foundUser) => {
+        console.log('inside user.findone');
 
-//         if (!err) {
-//             if (!foundUser) {
-//                 let hashedPassword = await hash(password, 10);
-//                 let newUser = new User({ username, password: hashedPassword })
-//                 newUser.save((err, savedUser) => {
-//                     if (!err) {
-//                         console.log('saved new user');
-//                         res.status(201).send('New user created')
-//                     } else {
-//                         res.status(400).send(err)
-//                     }
-//                 })
-//             } else {
-//                 res.status(409).send('user exists already')
-//             }
-//         } else {
-//             res.status(400).send(err)
-//         }
-//     })
-// })
+        if (!err) {
+            if (!foundUser) {
+                let hashedPassword = await hash(password, 10);
+                let newUser = new User({ username, password: hashedPassword })
+                newUser.save((err, savedUser) => {
+                    if (!err) {
+                        console.log('saved new user');
+                        res.status(201).send('New user created')
+                    } else {
+                        res.status(400).send(err)
+                    }
+                })
+            } else {
+                res.status(409).send('user exists already')
+            }
+        } else {
+            res.status(400).send(err)
+        }
+    })
+})
 
 // /**
 //  * Subrouter for owner-protected routes (e.g. /u/admin/lists) 
