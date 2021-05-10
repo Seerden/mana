@@ -1,5 +1,5 @@
 import mongoose, { Document, ObjectId } from 'mongoose';
-import { reviewSessionSchema, ReviewSessionInterface } from './reviewSessionSchema.js';
+import { reviewSessionSchema, ReviewSessionInterface } from './reviewSessionSchema';
 
 export interface ListInterface extends Document {
     owner: string,

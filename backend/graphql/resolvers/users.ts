@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Arg, ObjectType, Field, Ctx } from "type-graphql";
-import { CUser, UserModel } from "../types/User.js";
-import passport from '../../auth/passport.js';
+import { CUser, UserModel } from "../types/User";
+import passport from '../../auth/passport';
 import { ExpressContext } from "apollo-server-express";
 
 @ObjectType()

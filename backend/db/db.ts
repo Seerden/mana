@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
   mongoose.set('useFindAndModify', false);
   mongoose.set('useCreateIndex', true)
-import { userSchema } from './schemas/userSchema.js';
-import { setSchema } from './schemas/setSchema.js';
-import { listSchema, ListInterface } from './schemas/listSchema.js';
-import { reviewSessionSchema, ReviewSessionInterface } from './schemas/reviewSessionSchema.js';
-import { termSchema, TermElementInterface } from './schemas/termSchema.js';
+import { userSchema } from './schemas/userSchema';
+import { setSchema } from './schemas/setSchema';
+import { listSchema, ListInterface } from './schemas/listSchema';
+import { reviewSessionSchema, ReviewSessionInterface } from './schemas/reviewSessionSchema';
+import { termSchema, TermElementInterface } from './schemas/termSchema';
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@mana-cluster0.8vpgs.gcp.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 export const dbConn = mongoose.createConnection(uri, {useNewUrlParser: true, useUnifiedTopology: true});

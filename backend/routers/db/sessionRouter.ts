@@ -1,7 +1,6 @@
 import express from 'express';
 
-import { ReviewSession } from '../../db/db.js';
-import { List } from '../../db/db.js';
+import { ReviewSession, List } from '../../db/db';
 
 export const sessionRouter = express.Router({ mergeParams: true });
 

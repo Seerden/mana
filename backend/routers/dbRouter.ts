@@ -1,14 +1,13 @@
-import { dbConn } from '../db/db.js'
 import express from 'express';
-import 'dotenv/config.js';
+import 'dotenv/config';
 import session from 'express-session';
 import mongoose from 'mongoose';
-import passport from '../auth/passport.js';
+import passport from '../auth/passport';
 import connectMongo from 'connect-mongo';
 import bcrypt from 'bcryptjs';
 
-import { TermElementInterface} from '../db/schemas/termSchema.js';
-import { List, Term } from '../db/db.js'
+import { TermElementInterface} from '../db/schemas/termSchema';
+import { List, Term, dbConn } from '../db/db'
 
 const MongoStore = connectMongo(session);
 const { hash } = bcrypt;
@@ -16,7 +15,7 @@ const { hash } = bcrypt;
 const User = dbConn.model('User');
 const Set = dbConn.model('Set');
 
-import { sessionRouter } from './db/sessionRouter.js';
+import { sessionRouter } from './db/sessionRouter';
 
 /**
  * Express router for /db routes, used as API endpoints for frontend interaction with the database.

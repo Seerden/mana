@@ -1,20 +1,20 @@
-import 'dotenv/config.js';
+import 'dotenv/config';
 import dayjs from 'dayjs';
 
 import express, { Request, Response } from 'express';
-import { dbRouter } from './routers/dbRouter.js'
-import { devRouter } from './routers/devRouter.js'
+import { dbRouter } from './routers/dbRouter'
+import { devRouter } from './routers/devRouter'
 
 import { ApolloServer } from 'apollo-server-express';
 import session from 'express-session';
-import passport from './auth/passport.js';
+import passport from './auth/passport';
 import connectMongo from 'connect-mongo';
 const MongoStore = connectMongo(session);
 
-import { dbConn } from './db/db.js';
+import { dbConn } from './db/db';
 import { buildSchema } from 'type-graphql';
-import { UsersResolver } from './graphql/resolvers/users.js';
-import { HelloResolver } from './graphql/resolvers/hello.js';
+import { UsersResolver } from './graphql/resolvers/users';
+import { HelloResolver } from './graphql/resolvers/hello';
 
 
 

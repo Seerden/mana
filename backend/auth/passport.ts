@@ -1,10 +1,10 @@
-import bcrypt from 'bcryptjs';
-const { compare } = bcrypt;
+import {compare} from 'bcryptjs';
+// const { compare } = bcrypt;
 import passport from 'passport';
 import passportLocal from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
-import { dbConn, User } from '../db/db.js'
-import { CUser } from '../graphql/types/User.js';
+import { User } from '../db/db'
+import { CUser } from '../graphql/types/User';
 
 passport.serializeUser(function (user: CUser , done) {
     done(null, user._id);

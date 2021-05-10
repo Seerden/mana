@@ -1,7 +1,7 @@
 import { Field, ObjectType } from "type-graphql";
 import { prop as Property, getModelForClass } from '@typegoose/typegoose';
 import mongoose from 'mongoose';
-import { dbConn } from "../../db/db.js";
+import { dbConn } from "../../db/db";
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 

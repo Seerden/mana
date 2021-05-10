@@ -1,6 +1,6 @@
 // import db connection and models
 import express from 'express';
-import 'dotenv/config.js';
+import 'dotenv/config';
 
 export const devRouter = express.Router();
 devRouter.use(express.urlencoded({ extended: true }));
