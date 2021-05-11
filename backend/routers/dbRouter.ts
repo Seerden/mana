@@ -65,8 +65,8 @@ function userOwnsRoute(req, res, next) {
 // currently, registration and login go through this same route (registration is done in the passport local strategy, see my passport.js file)
 /* note, however, that this just sends a 401 response without further customization if the authentication fails. using a callback (like option 1) gives us more options */
 dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
-    console.log(`Authenticated user ${req.user.username}`);
-    res.json({ username: req.user.username })
+    console.log(`Authenticated user ${req.user}`);
+    res.json({ username: req.user })
 })
 
 dbRouter.post('/u/register', (req, res) => {

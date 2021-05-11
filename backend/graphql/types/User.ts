@@ -1,10 +1,11 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { prop as Property, getModelForClass } from '@typegoose/typegoose';
+import { prop as Property, getModelForClass, Severity, modelOptions } from '@typegoose/typegoose';
 import mongoose, { ObjectId } from 'mongoose';
 import { dbConn } from "../../db/db";
 
 const ObjectId = mongoose.Types.ObjectId;
 
+@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
 export class User {
     @Field(() => ID)

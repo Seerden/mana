@@ -1,5 +1,4 @@
-import bcrypt from 'bcryptjs';
-const { compare } = bcrypt;
+import { compare } from 'bcryptjs';
 import passport from 'passport';
 import passportLocal from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;

@@ -37,6 +37,7 @@ async function startServer() {
     app.use(express.urlencoded({ limit: '5mb', parameterLimit: 10000, extended: true }));
     app.use(express.json());
     app.use(session({
+        "name": "mana-session",
         genid: () => uuid(),
         secret: process.env.SESSION_SECRET,
         store: new MongoStore({
