@@ -22,7 +22,7 @@ class LoginResponse {
 }
 
 @Resolver()
-export class UsersResolver {
+export class UserResolver {
     @Query(() => [User], { name: "users" })
     async users() {
         return await UserModel.find()

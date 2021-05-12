@@ -1,5 +1,6 @@
 import { getModelForClass, modelOptions, prop, Ref, Severity } from "@typegoose/typegoose";
-import { Field, ObjectType } from "type-graphql";
+import { ObjectId } from "mongodb";
+import { createUnionType, Field, ID, ObjectType } from "type-graphql";
 import { dbConn } from "../../db/db";
 import { List } from './List';
 
@@ -43,6 +44,10 @@ class TermSaturation {
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
 export class Term {
+    @prop()
+    @Field(() => String)
+    _id: ObjectId
+
     @prop({ required: true })
     @Field()
     owner: String;

@@ -8,15 +8,16 @@ import { ApolloServer } from 'apollo-server-express';
 import session from 'express-session';
 import passport from './auth/passport';
 import connectMongo from 'connect-mongo';
-const MongoStore = connectMongo(session);
 import {v4 as uuid } from 'uuid'
 
 import { dbConn } from './db/db';
-import { buildSchema } from 'type-graphql';
-import { HelloResolver } from './graphql/resolvers/hello';
-import { ListResolver } from './graphql/resolvers/ListResolver';
 import { dbRouter } from './routers/dbRouter';
-import { UsersResolver } from './graphql/resolvers/users';
+
+import { buildSchema } from 'type-graphql';
+import { ListResolver } from './graphql/resolvers/ListResolver';
+import { UserResolver } from './graphql/resolvers/UserResolver';
+
+const MongoStore = connectMongo(session);
 
 /**
  * Express middleware to log every API call that is accessed
@@ -51,28 +52,26 @@ async function startServer() {
         resave: true,
         saveUninitialized: false,
         rolling: true,
-    }))
+    }));
     app.use(passport.initialize());
     app.use(passport.session());
 
-    app.use('/db', dbRouter)
-    app.use('/dev', devRouter)
-
-    app.get('/', (req, res) => {
-        res.send('Index route')
-    })
+    app.use('/db', dbRouter);
+    app.use('/dev', devRouter);
 
     const schema = await buildSchema({
-        resolvers: [UsersResolver, HelloResolver, ListResolver],
-    })
+        resolvers: [UserResolver, ListResolver],
+    });
 
     const server = new ApolloServer({ 
         schema,
         context: ({ req, res }) => ({ req, res }),
-     })
+     });
+
     server.applyMiddleware({ app });
 
-    const port = process.env.PORT || 5000
+    const port = process.env.PORT || 5000;
+
     app.listen(port, () => {
         console.log(`Server started on port ${port} at ${new Date()}`);
         console.log('Models:', dbConn.modelNames());

@@ -1,24 +1,73 @@
-import { Resolver, Query, Mutation, Arg, ObjectType, Field, Ctx } from "type-graphql";
+import { Ref } from "@typegoose/typegoose";
+import { ObjectId } from "mongodb";
+import { Resolver, Query, Mutation, Arg, ObjectType, Field, Ctx, FieldResolver, Root, createUnionType, Int } from "type-graphql";
 import { List, ListModel } from "../types/List";
+import { Term, TermModel } from "../types/Term";
 
-@Resolver()
+const MaybeTerms = createUnionType({
+    name: "MaybeTerms",
+    types: () => [Term, String],
+})
+
+@ObjectType()
+class TermId {
+    @Field(() => String)
+    _id: ObjectId
+}
+
+export const TermsUnion = createUnionType({
+    name: "TermsUnion",
+    types: () => { return [Term, TermId] as const },
+    resolveType: value => {
+        if ("to" in value ) {
+            return Term
+        }
+
+        return TermId
+    }
+})
+
+@Resolver(of => List)
 export class ListResolver {
-    @Query(type => [List])
+    @Query(type => [List], { name: "listsByUser", description: "Find lists by user" })
     async listsByUser(
-        @Arg("owner") owner: String
+        @Arg("owner") owner: String,
+        @Arg("populate", type => [String], { nullable: true }) populate: [String]
     ) {
         return await ListModel
             .find({ owner })
-            .populate('terms')
+            // .populate(populate)
             .lean()
             .exec()
     }
 
-    @Query(type => List)
-    async listById(
-        @Arg("id") id: String
+    /**
+     * Query any number of lists by _id
+     */
+    @Query(type => [List], { name: "listsById" })
+    async listsById(
+        @Arg("ids", type => [String]) ids: [String],
+        @Arg("populate", type => [String]) populate: [String]
     ) {
-        // return await ListModel.findById(id)
+        if (populate) {
+            return await ListModel.find({ _id: { $in: ids } }).populate(populate).exec()
+        }
+
+        return await ListModel.find({ _id: { $in: ids } });
+    }
+
+    @FieldResolver({description: "Resolves ListModel.terms"})
+    async terms(
+        @Root() list: List,
+        @Arg("populate", type => Boolean, { nullable: true }) populate: Boolean
+    ) {
+        
+        if (populate) {
+            return await TermModel.find({ _id: { $in: list.terms } })    ;
+        }
+
+        return list.terms.map(_id => ({ _id }));
+        
     }
 
 }
