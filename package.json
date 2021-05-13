@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sd": "concurrently \"npm:start-front --prefix ./frontend\" \"npm:start-dev --prefix ./backend\""
+    "sd": "concurrently \"npm:start-front --prefix ./frontend\" \"npm:start-dev --prefix ./backend\"",
+    "generate": "graphql-codegen",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "repository": {
     "type": "git",
@@ -18,10 +20,22 @@
   },
   "homepage": "https://github.com/seerden/mana#readme",
   "devDependencies": {
+    "@graphql-codegen/cli": "1.21.4",
+    "@graphql-codegen/introspection": "1.18.2",
+    "@graphql-codegen/typescript": "1.22.0",
+    "@graphql-codegen/typescript-operations": "1.17.16",
+    "@graphql-codegen/typescript-react-apollo": "2.2.4",
+    "@graphql-codegen/typescript-resolvers": "1.19.1",
     "concurrently": "^5.3.0",
     "ts-node-dev": "^1.1.6"
   },
   "dependencies": {
+    "@graphql-codegen/typescript-resolvers": "^1.19.1",
+    "@graphql-codegen/typescript-type-graphql": "^1.18.4",
+    "@graphql-codegen/typescript-urql": "^2.0.6",
+    "graphql": "^15.5.0",
+    "react-scripts": "4.0.3",
+    "sass": "^1.32.13",
     "typescript": "^4.2.4"
   }
 }

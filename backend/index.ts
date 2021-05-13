@@ -34,7 +34,7 @@ function log(req: Request, res: Response, next: Function) {
 async function startServer() {
     const app = express();
 
-    app.use(log)
+    app.use(log);
 
     app.use(express.urlencoded({ limit: '5mb', parameterLimit: 10000, extended: true }));
     app.use(express.json());
@@ -62,6 +62,7 @@ async function startServer() {
 
     const schema = await buildSchema({
         resolvers: [UserResolver, ListResolver, TermResolver],
+        emitSchemaFile: true
     });
 
     const server = new ApolloServer({ 
@@ -76,7 +77,7 @@ async function startServer() {
     app.listen(port, () => {
         console.log(`Server started on port ${port} at ${new Date()}`);
         console.log('Models:', dbConn.modelNames());
-    })
+    });
 }
 
 startServer();
