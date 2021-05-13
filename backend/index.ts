@@ -16,6 +16,7 @@ import { dbRouter } from './routers/dbRouter';
 import { buildSchema } from 'type-graphql';
 import { ListResolver } from './graphql/resolvers/ListResolver';
 import { UserResolver } from './graphql/resolvers/UserResolver';
+import { TermResolver } from './graphql/resolvers/TermResolver';
 
 const MongoStore = connectMongo(session);
 
@@ -60,7 +61,7 @@ async function startServer() {
     app.use('/dev', devRouter);
 
     const schema = await buildSchema({
-        resolvers: [UserResolver, ListResolver],
+        resolvers: [UserResolver, ListResolver, TermResolver],
     });
 
     const server = new ApolloServer({ 

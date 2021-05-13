@@ -1,42 +1,38 @@
 import { getModelForClass, modelOptions, prop, Ref, Severity } from "@typegoose/typegoose";
 import { ObjectId } from "mongodb";
-import { createUnionType, Field, ID, ObjectType } from "type-graphql";
+import { createUnionType, Field, ID, InputType, ObjectType } from "type-graphql";
 import { dbConn } from "../../db/db";
 import { List } from './List';
 
 @ObjectType()
-class TermHistory {
-    @prop()
+@InputType("TermHistoryInput")
+export class TermHistory {
     @Field(() => Date)
     date: Date;
 
-    @prop()
     @Field(() => [String])
     content: Array<'pass' | 'fail'>;
 
-    @prop()
     @Field(() => String)
     direction: 'forwards' | 'backwards';
 }
 
 @ObjectType()
+@InputType("TermLanguagesInput")
 class TermLanguages {
-    @prop()
     @Field()
     from: String
 
-    @prop()
     @Field()
     to: String
 }
 
 @ObjectType() 
-class TermSaturation {
-    @prop()
+@InputType("TermSaturationInput")
+export class TermSaturation {
     @Field({ nullable: true })
     forwards?: number
 
-    @prop()
     @Field({ nullable: true })
     backwards?: number
 }

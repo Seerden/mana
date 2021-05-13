@@ -41,10 +41,7 @@ export class ListResolver {
             .exec()
     }
 
-    /**
-     * Query any number of lists by _id
-     */
-    @Query(type => [List], { name: "listsById" })
+    @Query(type => [List], { name: "listsById", description: "Query lists by id" })
     async listsById(
         @Arg("ids", type => [String]) ids: [String],
         @Arg("populate", type => [String]) populate: [String]
@@ -56,7 +53,7 @@ export class ListResolver {
         return await ListModel.find({ _id: { $in: ids } });
     }
 
-    @FieldResolver({description: "Resolves ListModel.terms"})
+    @FieldResolver(() => TermsUnion, {description: "Resolves ListModel.terms"})
     async terms(
         @Root() list: List,
         @Arg("populate", type => Boolean, { nullable: true }) populate: Boolean
