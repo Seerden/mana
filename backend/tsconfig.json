@@ -8,6 +8,7 @@
         "sourceMap": true,
         "outDir": "dist",
         "lib": ["ES2020"],
+        "incremental": true,
         "skipLibCheck": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,

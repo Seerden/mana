@@ -19,7 +19,7 @@ export class TermHistory {
 
 @ObjectType()
 @InputType("TermLanguagesInput")
-class TermLanguages {
+export class TermLanguages {
     @Field()
     from: String
 
@@ -60,15 +60,15 @@ export class Term {
     @Field()
     from: String;
 
-    @prop()
+    @prop({ default: [] })
     @Field(() => [TermHistory], { nullable: true })
     history: TermHistory[];
 
-    @prop({ required: true })
+    @prop({ required: true, default: { forwards: null, backwards: null } })
     @Field(() => TermSaturation)
     saturation: TermSaturation
 
-    @prop()
+    @prop({ required: true })
     @Field(() => [List])
     listMembership: Ref<List>[];
 }
