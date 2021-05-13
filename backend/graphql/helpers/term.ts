@@ -1,4 +1,5 @@
-import { NewTermFromClient, TermEditObject, TermUpdateObject } from "../resolvers/TermResolver";
+import { NewTermFromClient } from "../resolvers/TermResolver";
+import { TermEditObject, TermUpdateObject } from "../types/input_types/term";
 import { Term, TermModel } from "../types/Term";
 
 export async function bulkEditTerms(updateObj: Array<TermEditObject>) {

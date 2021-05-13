@@ -1,34 +1,12 @@
-import { Arg, createUnionType, Field, InputType, Int, Mutation, ObjectType, Resolver } from "type-graphql";
+import { Arg, Field, InputType, Int, Mutation, ObjectType, Resolver } from "type-graphql";
 import { addTermsToList } from "../helpers/list";
 import { bulkEditTerms, bulkUpdateTerms, createTermDocuments } from "../helpers/term";
-import { Term, TermHistory, TermLanguages, TermModel, TermSaturation } from "../types/Term";
+import { TermEditObject, TermUpdateObject } from "../types/input_types/term";
+import { TermLanguages, TermSaturation } from "../types/Term";
 
-// We currently don't query terms by themselves, only as part of their parent list's queries,
-//  but this might change in the future
-
-@InputType()
-export class TermUpdateObject {
-    @Field()
-    _id: string;
-
-    @Field(type => TermHistory, { nullable: true })
-    history: TermHistory;
-
-    @Field(type => TermSaturation, { nullable: true })
-    saturation: TermSaturation
-}
-
-@InputType()
-export class TermEditObject {
-    @Field()
-    _id: string;
-
-    @Field({ nullable: true })
-    to: string
-
-    @Field({ nullable: true })
-    from: string
-}
+// We currently don't query terms by themselves, 
+//  only as part of their parent list's queries,
+//   but this might change in the future
 
 @InputType({ description: "\
     New term created client-side, excludes history and saturation fields \
