@@ -61,20 +61,16 @@ export class UserResolver {
         @Arg("password", type => String) password: string,
         @Ctx() { req, res }: ExpressContext
     ): Promise<MaybeUser> {
-        console.log('login req made');
-        console.log(username, password);
-
         const foundUser = await UserModel.findOne({ username });
 
         if (foundUser) {
             const passwordMatches = await compare(password, foundUser.password);
             
             if (passwordMatches) {
-                req.session.userId = foundUser._id
-                console.log(`Login successful for user ${username}`);
+                req.session.userId = foundUser._id;
                 return { user: foundUser }
             } else {
-                // () => res.clearCookie("mana-session")
+                res.clearCookie("mana-session");
                 req.session.destroy(null);
                 return { error: 'Invalid credentials'}
             }

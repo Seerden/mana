@@ -6,7 +6,7 @@ import { handleFormBlur } from 'hooks/state';
 import LoginForm from './LoginForm';
 import { useMutation, useQuery } from "react-query";
 import request, { gql } from "graphql-request";
-import { MaybeUser } from 'codegen/codegen-output'
+import { MaybeUser } from 'graphql/codegen-output'
 
 const Login = () => {
     const { login } = useContext(LoginContext);

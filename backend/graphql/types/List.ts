@@ -3,6 +3,7 @@ import { prop as Property, getModelForClass, Ref, index, mongoose, modelOptions,
 import { ReviewSession } from "./ReviewSession";
 import { dbConn } from "../../db/db";
 import { TermsUnion } from "../resolvers/ListResolver";
+import { ObjectId } from "mongodb";
 
 @ObjectType()
 class ListState {
@@ -21,8 +22,7 @@ class ListState {
 export class List {
     @Property()
     @Field(() => ID)
-    _id: String
-
+    _id: ObjectId
 
     @Property()
     @Field(() => String)
@@ -41,7 +41,7 @@ export class List {
     to: String[];
 
     @Property({ ref: "Term" })
-    @Field(() => [TermsUnion], { nullable: true })
+    @Field(() => [TermsUnion])
     // terms?: Array<Ref<Term>>
     terms?: Array<typeof TermsUnion>
 

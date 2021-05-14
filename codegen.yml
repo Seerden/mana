@@ -3,7 +3,7 @@ schema: "http://localhost:5000/graphql"
 # documents: ./backend/*.gql
 documents: null
 generates:
-  ./frontend/src/codegen/codegen-output.ts:
+  ./frontend/src/graphql/codegen-output.ts:
     plugins:
       - "typescript"
       - "typescript-resolvers"

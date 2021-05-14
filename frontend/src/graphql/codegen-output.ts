@@ -120,7 +120,7 @@ export type QueryListsByUserArgs = {
 
 
 export type QueryListsByIdArgs = {
-  populate: Array<Scalars['String']>;
+  populate?: Maybe<Array<Scalars['String']>>;
   ids: Array<Scalars['String']>;
 };
 
@@ -412,7 +412,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   listsByUser?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByUserArgs, 'owner'>>;
-  listsById?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByIdArgs, 'populate' | 'ids'>>;
+  listsById?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByIdArgs, 'ids'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   me?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType>;
 };

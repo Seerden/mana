@@ -23,7 +23,7 @@ type List {
   sessions: [ReviewSession!]
   setMembership: [String!]!
   state: ListState!
-  terms(populate: Boolean): [TermsUnion!]
+  terms(populate: Boolean): [TermsUnion!]!
   to: [String!]!
 }
 
@@ -60,7 +60,7 @@ input NewTermFromClient {
 
 type Query {
   """Query lists by id"""
-  listsById(ids: [String!]!, populate: [String!]!): [List!]!
+  listsById(ids: [String!]!, populate: [String!]): [List!]!
 
   """Find lists by user"""
   listsByUser(owner: String!, populate: [String!]): [List!]!
@@ -95,7 +95,7 @@ type Term {
   _id: String!
   from: String!
   history: [TermHistory!]
-  languages: TermLanguages!
+  languages: TermLanguages
   listMembership: [List!]!
   owner: String!
   saturation: TermSaturation!
@@ -125,13 +125,13 @@ type TermId {
 }
 
 type TermLanguages {
-  from: String!
-  to: String!
+  from: String
+  to: String
 }
 
 input TermLanguagesInput {
-  from: String!
-  to: String!
+  from: String
+  to: String
 }
 
 type TermSaturation {

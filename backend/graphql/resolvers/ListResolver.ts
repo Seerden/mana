@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType } from "type-graphql";
 import { List, ListModel } from "../types/List";
 import { Term, TermModel } from "../types/Term";
+import mongoose from 'mongoose';
 
 const MaybeTerms = createUnionType({
     name: "MaybeTerms",
@@ -42,14 +43,16 @@ export class ListResolver {
 
     @Query(type => [List], { name: "listsById", description: "Query lists by id" })
     async listsById(
-        @Arg("ids", type => [String]) ids: [String],
-        @Arg("populate", type => [String]) populate: [String]
+        @Arg("ids", type => [String]) ids: [string],
+        @Arg("populate", type => [String], { nullable: true }) populate: [String]
     ) {
+        let _ids = ids.map(id => new mongoose.Types.ObjectId(id));
+
         if (populate) {
-            return await ListModel.find({ _id: { $in: ids } }).populate(populate).exec()
+            return await ListModel.find({ _id: { $in: _ids } }).populate(populate).lean().exec()
         }
 
-        return await ListModel.find({ _id: { $in: ids } });
+        return await ListModel.find({ _id: { $in: _ids } }).lean().exec();
     }
 
     @FieldResolver(() => TermsUnion, {description: "Resolves ListModel.terms"})
@@ -59,9 +62,10 @@ export class ListResolver {
     ) {
         
         if (populate) {
-            return await TermModel.find({ _id: { $in: list.terms } })    ;
+            return await TermModel.find({ _id: { $in: list.terms } }).lean().exec()    ;
         }
 
+        console.log(list);
         return list.terms.map(_id => ({ _id }));
         
     }

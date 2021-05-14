@@ -9,6 +9,8 @@ import ListTerm from './ListTerm';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
 import { FilterInterface, TermPropsInterface, TruncatedTerm } from './list.types';
+import { useQueryListsById } from "graphql/queries/list.query";
+import { List } from "graphql/codegen-output";
 
 function useList() {
     const [list, setList] = useState<List | null>(null);
@@ -30,6 +32,8 @@ function useList() {
             return suggestTermsForReview(list.terms)
         }
     }, [list]);
+
+    const { data: lists, isLoading, isFetching } = useQueryListsById([params.id]);
 
     function filterTermsBySaturation(terms: TruncatedTerm[]) {
         if (terms.length > 0) {
@@ -65,12 +69,12 @@ function useList() {
     }, [])
 
     useEffect(() => {  // set list and list context when list is returned from API
-        if (getResponse) {
-            console.log(getResponse);
-            setList(getResponse);
-            setListAtom(getResponse);
+        if (lists) {
+            // console.log(getResponse);
+            setList(lists[0]);
+            setListAtom(lists[0]);
         }
-    }, [getResponse])
+    }, [lists])
 
     useEffect(() => {
         if (list) {
@@ -82,7 +86,7 @@ function useList() {
     const extractTermsFromListAsTruncatedTerms = useCallback((list: List) => {
         if (list && list.terms && list.terms?.length > 0) {
             const newTruncatedTerms = list.terms.map((term, idx) => {
-                let termProps: TermPropsInterface = {
+                let termProps = {
                     handleTermDelete,
                     key: `term-${term._id}`,
                     idx: idx,
@@ -91,12 +95,15 @@ function useList() {
 
                 return ({
                     term: term,
+                    // @ts-ignore
                     saturation: term.saturation,
+                    // @ts-ignore 
                     element: <ListTerm {...termProps} />
                 })
 
             })
 
+            // @ts-ignore 
             setTruncatedTerms(newTruncatedTerms);
         }
     }, [setTruncatedTerms, list])
@@ -104,7 +111,7 @@ function useList() {
     function handleListTitleBlur(e) {
         e.persist();
 
-        if (list && list.terms?.length > 0) {
+        if (list && list!.terms!.length > 0) {
             let updatedList: List = { ...list, name: e.currentTarget.innerText }
             if (updatedList.terms && updatedList.terms.length > 0) {
                 setList(updatedList);
@@ -114,14 +121,17 @@ function useList() {
     }
 
     function handleTermDelete(idx: number) {
-        if (list) {
+        if (list && list.terms && list.terms.length > 0) {
             const updatedList: List = { ...list, terms: [...list.terms] };  // need to spread the .terms property since otherwise it's not a (deep?/shallow?) copy
-            const termId = updatedList.terms[idx]._id;
-            updatedList.terms.splice(idx, 1);
-            setList(updatedList);
-            setListAtom(updatedList)
-            setPutRequest(() => putList(params.username, { _id: updatedList._id, owner: updatedList.owner }, updatedList));
-            setTermDeleteRequest(() => deleteTerm(params.username, termId))
+            
+            if (updatedList && updatedList.terms) {
+                const termId = updatedList.terms[idx]._id;
+                updatedList.terms.splice(idx, 1);
+                setList(updatedList);
+                setListAtom(updatedList)
+                setPutRequest(() => putList(params.username, { _id: updatedList._id, owner: updatedList.owner }, updatedList));
+                setTermDeleteRequest(() => deleteTerm(params.username, termId))
+            }
         }
     };
 
@@ -133,9 +143,10 @@ function useList() {
     };
 
     const updateTermsToReview = useCallback(({ type, direction }: { type: 'all' | 'visible' | 'none' | 'overdue', direction: Direction}) => {
-        if (list) {
+        if (list && list.terms) {
             switch (type) {
                 case 'all':
+                    // @ts-ignore 
                     setTermsToReview(list.terms);
                     break;
                 case 'visible':  // add all visible terms to termsToReview, as long as they're not already in there

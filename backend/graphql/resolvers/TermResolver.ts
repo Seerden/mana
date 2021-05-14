@@ -19,7 +19,7 @@ export class NewTermFromClient {
     @Field()
     from: string;
 
-    @Field()
+    @Field(() => TermLanguages)
     languages: TermLanguages;
 
     @Field()

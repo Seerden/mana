@@ -1,4 +1,5 @@
 import { ListModel } from "../graphql/types/List";
+import mongoose from 'mongoose';
 
 export async function removeExistingListSessions() {
     const bulkOps = [];
@@ -45,5 +46,5 @@ export async function findOneListById(id) {
 }
 
 export async function inspectDatabase() {
-    // await findListsWithSessions()
+    // console.log(await ListModel.find({ _id: "5ff7704e7ad55b187c93641f"}))
 }

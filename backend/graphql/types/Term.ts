@@ -20,11 +20,11 @@ export class TermHistory {
 @ObjectType()
 @InputType("TermLanguagesInput")
 export class TermLanguages {
-    @Field()
-    from: String
+    @Field({ nullable: true })
+    from: string
 
-    @Field()
-    to: String
+    @Field({ nullable: true })
+    to: string
 }
 
 @ObjectType() 
@@ -48,8 +48,8 @@ export class Term {
     @Field()
     owner: String;
 
-    @prop({ required: true })
-    @Field(() => TermLanguages)
+    @prop()
+    @Field(() => TermLanguages, { nullable: true })
     languages: TermLanguages
 
     @prop({ required: true })

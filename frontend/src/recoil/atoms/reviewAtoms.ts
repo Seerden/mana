@@ -1,3 +1,4 @@
+import { Term } from 'graphql/codegen-output';
 import { atom, selector } from 'recoil';
 
 type ReviewSettings = {
@@ -52,7 +53,7 @@ export const newHistoryEntriesState = atom({
                         termId: t._id,
                         newHistoryEntry: {
                             date: reviewSettings.sessionStart,
-                            content: new Array(),
+                            content: [],
                             direction: reviewSettings.direction
                         }
                     })
