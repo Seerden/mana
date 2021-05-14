@@ -98,3 +98,32 @@ export function useMutateDeleteList (id: string) {
 
     return { mutate, data, ...rest }
 };
+
+const testObj = {
+    one: [1,2,3],
+    two: {
+        three: '3',
+        four: '4'
+    }
+}
+
+const testQuery = gql`
+    query testQuery($testObj: TestInput!){
+        test(testObj: $testObj) {
+            message
+        }
+    }
+`
+
+export function useTestQuery() {
+    const { data, ...rest } = useQuery("testQuery", async () => {
+        const response = await request(process.env.REACT_APP_GRAPHQL_URI!, testQuery, { testObj });
+        return response
+    });
+
+    useEffect(() => {
+        console.log(testQuery);
+    }, [])
+
+    return data
+}

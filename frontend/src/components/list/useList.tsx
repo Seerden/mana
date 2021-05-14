@@ -9,7 +9,7 @@ import ListTerm from './ListTerm';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
 import { FilterInterface, TermPropsInterface, TruncatedTerm } from './list.types';
-import { useMutateDeleteList, useQueryListsById } from "graphql/queries/list.query";
+import { useMutateDeleteList, useQueryListsById, useTestQuery } from "graphql/queries/list.query";
 import { List } from "graphql/codegen-output";
 
 function useList() {
@@ -35,6 +35,11 @@ function useList() {
 
     const { data: lists, isLoading, isFetching } = useQueryListsById([params.id]);
     const { mutate: mutateDeleteList, data: listDeleteResponse} = useMutateDeleteList(params.id);
+    const msg = useTestQuery();
+
+    useEffect(() => {
+        console.log(msg);
+    }, [msg])
 
     function filterTermsBySaturation(terms: TruncatedTerm[]) {
         if (terms.length > 0) {

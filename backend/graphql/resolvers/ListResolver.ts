@@ -1,9 +1,39 @@
 import { ObjectId } from "mongodb";
-import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType, Mutation } from "type-graphql";
+import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType, Mutation, Int, InputType } from "type-graphql";
 import { List, ListModel } from "../types/List";
 import { Term, TermModel } from "../types/Term";
 import mongoose from 'mongoose';
 import { Maybe } from "graphql/jsutils/Maybe";
+
+// --- TEST
+
+@ObjectType()
+@InputType("TwoInput")
+class Two {
+    @Field()
+    three: string;
+
+    @Field()
+    four: string;
+}
+
+@InputType("TestInput")
+@ObjectType()
+class Test {
+    @Field(() => [Int])
+    one: number[];
+
+    @Field(() => Two)
+    two: Two;
+}
+
+@ObjectType()
+class Message {
+    @Field()
+    message: string
+}
+
+// ---
 
 const MaybeTerms = createUnionType({
     name: "MaybeTerms",
@@ -86,9 +116,21 @@ export class ListResolver {
         } 
 
         return { error: true }
+    };
+
+    @Query(() => Message)
+    async test(
+        @Arg("testObj") testObj: Test
+    ) {
+        console.log(testObj);
+
+        return { message: 'Hi there!'}
+
     }
 
 }
+
+
 
 @ObjectType()
 class SuccessOrError {
