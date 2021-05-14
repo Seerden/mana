@@ -8,7 +8,7 @@ import { ApolloServer } from 'apollo-server-express';
 import session from 'express-session';
 import passport from './auth/passport';
 import connectMongo from 'connect-mongo';
-import {v4 as uuid } from 'uuid'
+import { v4 as uuid } from 'uuid'
 
 import { dbConn } from './db/db';
 import { dbRouter } from './routers/dbRouter';
@@ -17,6 +17,7 @@ import { buildSchema } from 'type-graphql';
 import { ListResolver } from './graphql/resolvers/ListResolver';
 import { UserResolver } from './graphql/resolvers/UserResolver';
 import { TermResolver } from './graphql/resolvers/TermResolver';
+import { ListModel } from './graphql/types/List';
 
 const MongoStore = connectMongo(session);
 
@@ -65,10 +66,10 @@ async function startServer() {
         emitSchemaFile: true
     });
 
-    const server = new ApolloServer({ 
+    const server = new ApolloServer({
         schema,
         context: ({ req, res }) => ({ req, res }),
-     });
+    });
 
     server.applyMiddleware({ app });
 
@@ -81,3 +82,40 @@ async function startServer() {
 }
 
 startServer();
+
+async function removeExistingListSessions() {
+    const bulkOps = [];
+
+    const lists = await ListModel.find({});
+
+    for (const list of lists) {
+        if (list.sessions && list.sessions.length > 0) {
+            const operation = {
+                updateOne: {
+                    filter: { _id: list._id },
+                    update: {
+                        $set: {
+                            sessions: []
+                        }
+                    }
+                }
+            };
+
+            bulkOps.push(operation);
+        }
+    };
+
+    if (bulkOps.length > 0 ) {
+        const bulkWriteResult = await ListModel.bulkWrite(bulkOps);
+
+        return bulkWriteResult.result;
+    }
+}
+
+async function findListsWithSessions() {
+    const lists = await ListModel.find({});
+
+    const withSessions = lists.map(list => Object.keys(list).includes('sessions'));
+
+    console.log(withSessions);
+}

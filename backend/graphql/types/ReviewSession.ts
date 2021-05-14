@@ -1,6 +1,5 @@
 import { getModelForClass, modelOptions, prop, Ref, Severity } from "@typegoose/typegoose";
-import { ObjectId } from "mongoose";
-import { Field, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import { dbConn } from "../../db/db";
 import { List } from './List';
 import { Term } from './Term';
@@ -47,6 +46,10 @@ class ReviewSessionTerms {
 @ObjectType()
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class ReviewSession {
+    @prop()
+    @Field(() => ID)
+    _id: String
+    
     @prop({ required: true })
     @Field(() => String)
     owner: String;

@@ -19,60 +19,75 @@ import Register from './register/Register';
 import Login from './login/Login';
 
 import { LoginProvider } from '../context/LoginContext';
+// import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const App = () => {
+    // const client = new ApolloClient({
+    //     cache: new InMemoryCache({
+    //         addTypename: true,  // keeps __typename in all responses, but if I disable this, I'll lose _id fields everywhere, and they're required for most of my handlers
+    //     }),
+    //     uri: "http://localhost:5000/graphql"
+    // })
+
+    const client = new QueryClient();
+
     return (
         <>
-            <RecoilRoot>
-                <div className="App__wrapper">
-                    <LoginProvider>
-                        <Router>
-                            <Header />
-                            <div className="App">
-                                <Routes>
-                                    {/* home route */}
-                                    <Route path="/" element={<Home />} />
+            {/* <ApolloProvider client={client}> */}
+            <QueryClientProvider client={client}>
+                <RecoilRoot>
+                    <div className="App__wrapper">
+                        <LoginProvider>
+                            <Router>
+                                <Header />
+                                <div className="App">
+                                    <Routes>
+                                        {/* home route */}
+                                        <Route path="/" element={<Home />} />
 
-                                    <Route path="/register" element={<Register />} />
-                                    <Route path="/login" element={<Login />} />
+                                        <Route path="/register" element={<Register />} />
+                                        <Route path="/login" element={<Login />} />
 
 
-                                    {/* user routes */}
-                                    <Route path="/u/:username">
-                                        <PrivateRoute path="/" component={User} />
+                                        {/* user routes */}
+                                        <Route path="/u/:username">
+                                            <PrivateRoute path="/" component={User} />
 
-                                        {/* Routes related to multiple lists */}
-                                        <Route path="/lists">
-                                            <PrivateRoute path="/" component={Lists} />
-                                            <PrivateRoute path="/new" component={NewList} />
-                                        </Route>
-
-                                        {/* Routes related to individual list */}
-                                        <Route path="/list">
-                                            <Route path="/:id">
-                                                <PrivateRoute path="/review" component={ReviewPage} />
-                                                <PrivateRoute path="/" component={List} />
+                                            {/* Routes related to multiple lists */}
+                                            <Route path="/lists">
+                                                <PrivateRoute path="/" component={Lists} />
+                                                <PrivateRoute path="/new" component={NewList} />
                                             </Route>
+
+                                            {/* Routes related to individual list */}
+                                            <Route path="/list">
+                                                <Route path="/:id">
+                                                    <PrivateRoute path="/review" component={ReviewPage} />
+                                                    <PrivateRoute path="/" component={List} />
+                                                </Route>
+                                            </Route>
+
+                                            {/* Routes related to sets */}
+                                            <Route path="/sets">
+                                                <PrivateRoute path="/" component={Sets} />
+                                                <PrivateRoute path="/new" component={NewSet} />
+                                            </Route>
+
                                         </Route>
 
-                                        {/* Routes related to sets */}
-                                        <Route path="/sets">
-                                            <PrivateRoute path="/" component={Sets} />
-                                            <PrivateRoute path="/new" component={NewSet} />
-                                        </Route>
+                                        {/* catchall 404 route */}
+                                        <Route path="*" element={<div>404</div>} />
 
-                                    </Route>
-
-                                    {/* catchall 404 route */}
-                                    <Route path="*" element={<div>404</div>} />
-
-                                </Routes>
-                            </div >
-                            <Footer />
-                        </Router >
-                    </LoginProvider >
-                </div >
-            </RecoilRoot >
+                                    </Routes>
+                                </div >
+                                <Footer />
+                            </Router >
+                        </LoginProvider >
+                    </div >
+                </RecoilRoot >
+            </QueryClientProvider>
+            {/* </ApolloProvider> */}
         </>
     )
 }

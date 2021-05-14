@@ -20,7 +20,7 @@ type List {
   lastReviewed: DateTime!
   name: String!
   owner: String!
-  sessions: [ReviewSession!]!
+  sessions: [ReviewSession!]
   setMembership: [String!]!
   state: ListState!
   terms(populate: Boolean): [TermsUnion!]
@@ -67,6 +67,7 @@ type Query {
 }
 
 type ReviewSession {
+  _id: ID!
   date: [DateTime!]!
   listIds: [List!]
   owner: String!

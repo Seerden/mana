@@ -11,11 +11,11 @@ export interface ListsElement {
 }
 
 export type UseListsReturn = {
-    lists: List[],    
+    lists: Array<List> | undefined, 
     filteredListsElement: any,
     handleFilterChange: React.ChangeEventHandler<HTMLInputElement>,
     handleSelectChange: React.ChangeEventHandler<HTMLSelectElement>,
-    setRequest: Function | null | undefined,
+    // setRequest: Function | null | undefined,
     filter: string,
     sortBy: string
 };

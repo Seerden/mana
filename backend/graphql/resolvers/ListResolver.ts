@@ -1,6 +1,5 @@
-import { Ref } from "@typegoose/typegoose";
 import { ObjectId } from "mongodb";
-import { Resolver, Query, Mutation, Arg, ObjectType, Field, Ctx, FieldResolver, Root, createUnionType, Int } from "type-graphql";
+import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType } from "type-graphql";
 import { List, ListModel } from "../types/List";
 import { Term, TermModel } from "../types/Term";
 

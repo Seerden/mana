@@ -18,7 +18,7 @@ const Lists = memo((props) => {
 
     return (
         <>
-            {lists?.length > 0 &&
+            {lists && lists?.length > 0 &&
                 <div className="PageWrapper Lists">
                     <div className="PageHeader">
                         Lists by <Link className="Link" to={userString}>{userString}</Link>

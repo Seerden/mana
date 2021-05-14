@@ -3,7 +3,7 @@ import { prop as Property, getModelForClass, Ref, index, mongoose, modelOptions,
 import { ReviewSession } from "./ReviewSession";
 import { dbConn } from "../../db/db";
 import { ObjectId } from "mongodb";
-import { TermsUnion } from "../resolvers/ListResolver";
+import { SessionsUnion, TermsUnion } from "../resolvers/ListResolver";
 import { Term } from "./Term";
 
 @ObjectType()
@@ -50,7 +50,7 @@ export class List {
     terms?: Array<typeof TermsUnion>
 
     @Property({ ref: "ReviewSession"})
-    @Field(() => [ReviewSession])
+    @Field(() => [ReviewSession], { nullable: true })
     sessions: Array<Ref<ReviewSession>>
 
     @Property()
