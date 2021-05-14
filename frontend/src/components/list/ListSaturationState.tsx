@@ -3,6 +3,7 @@ import { colorMap } from "helpers/list.api";
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import { countDict } from "helpers/count";
 import './style/ListSaturationState.scss';
+import { Term } from "graphql/codegen-output";
 
 type OccurrenceInterface = {
     [K in 'forwards' | 'backwards']: {[key: string]: number}
@@ -33,20 +34,6 @@ const ListSaturationState = ({ terms }) => {
 
         return occurrences;
 
-    }
-
-    function getProgress(occurrences) {
-        let progress = {};
-
-        ['forwards', 'backwards'].forEach(direction => {
-            progress[direction] = Math.floor(100 * Object.entries(occurrences[direction]).reduce((acc, [key, val]) => {
-                if (+key > 2) {
-                    return acc + Number(val);
-                } return +acc;
-            }, 0) / (terms.length));
-        });
-
-        return progress;
     }
 
     function makeSaturationOverviewElements(termCounts) {

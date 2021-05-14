@@ -9,7 +9,7 @@ import ListTerm from './ListTerm';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
 import { FilterInterface, TermPropsInterface, TruncatedTerm } from './list.types';
-import { useQueryListsById } from "graphql/queries/list.query";
+import { useMutateDeleteList, useQueryListsById } from "graphql/queries/list.query";
 import { List } from "graphql/codegen-output";
 
 function useList() {
@@ -34,6 +34,7 @@ function useList() {
     }, [list]);
 
     const { data: lists, isLoading, isFetching } = useQueryListsById([params.id]);
+    const { mutate: mutateDeleteList, data: listDeleteResponse} = useMutateDeleteList(params.id);
 
     function filterTermsBySaturation(terms: TruncatedTerm[]) {
         if (terms.length > 0) {
@@ -139,7 +140,8 @@ function useList() {
      * Trigger the API to DELETE the entire list
      */
     function handleDelete() {
-        setDeleteRequest(() => deleteList(params.username, { _id: params.id }))
+        mutateDeleteList();
+        // setDeleteRequest(() => deleteList(params.username, { _id: params.id }))
     };
 
     const updateTermsToReview = useCallback(({ type, direction }: { type: 'all' | 'visible' | 'none' | 'overdue', direction: Direction}) => {

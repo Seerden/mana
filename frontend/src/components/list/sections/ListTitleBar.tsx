@@ -1,10 +1,10 @@
+import { List } from "graphql/codegen-output";
 import React from "react";
-import { ListInterface } from "../list.types";
 import ListDeleteButton from '../ListDeleteButton';
 
 interface ListTitleBarProps {
     handleListTitleBlur(e: any): void,
-    list: ListInterface,
+    list: List,
     handleDelete(): void
 }
 

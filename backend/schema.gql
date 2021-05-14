@@ -40,6 +40,7 @@ type MaybeUser {
 type Mutation {
   createTerms(terms: [NewTermFromClient!]!): ErrorOrSuccess!
   createUser(password: String!, username: String!): MaybeUser!
+  deleteList(listId: String!): SuccessOrError!
   editTerms(updateObj: [TermEditObject!]!): Int!
 
   """Login mutation"""
@@ -89,6 +90,11 @@ type ReviewSettings {
   sessionEnd: DateTime!
   sessionStart: DateTime!
   started: Boolean!
+}
+
+type SuccessOrError {
+  error: Boolean
+  success: Boolean
 }
 
 type Term {

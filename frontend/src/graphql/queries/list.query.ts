@@ -1,6 +1,7 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { gql, request} from 'graphql-request';
-import { List as TList } from "graphql/codegen-output";
+import { List } from "graphql/codegen-output";
+import { useEffect } from "react";
 
 const listByIdQuery = (ids: [String]) => gql`
 ${CoreListFields}
@@ -60,9 +61,17 @@ const CoreListFields = gql`
 `
 
 export function useQueryListsById(ids: [String]) {
-    console.log(listByIdQuery(ids));
+    useEffect(() => {
+        console.log(listByIdQuery(ids));
+    }, [])
 
-    const { data, refetch, isLoading, isFetching, ...rest } = useQuery<[TList]>("listsById", async () => {
+    const { 
+        data, 
+        refetch, 
+        isLoading, 
+        isFetching, 
+        ...rest 
+    } = useQuery<[List]>("listsById", async () => {
         const { listsById } = await request(process.env.REACT_APP_GRAPHQL_URI!, listByIdQuery(ids));
         return listsById
     }, {
@@ -70,4 +79,22 @@ export function useQueryListsById(ids: [String]) {
     });
 
     return { data, isLoading, isFetching, ...rest} as const;
+};
+
+const deleteListMutation = (id: string) => gql`
+mutation {
+    deleteList(id: "${id}") {
+        error
+        success
+    }
+}
+`;
+
+export function useMutateDeleteList (id: string) {
+    const { mutate, data, ...rest } = useMutation("deleteList", async () => {
+        const response = await request(process.env.REACT_APP_GRAPHQL_URI!, deleteListMutation(id));
+        return response;
+    }, { retry: false });
+
+    return { mutate, data, ...rest }
 };

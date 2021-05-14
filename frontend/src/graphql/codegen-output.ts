@@ -30,7 +30,7 @@ export type List = {
   name: Scalars['String'];
   from: Scalars['String'];
   to: Array<Scalars['String']>;
-  terms?: Maybe<Array<TermsUnion>>;
+  terms: Array<TermsUnion>;
   sessions?: Maybe<Array<ReviewSession>>;
   created: Scalars['DateTime'];
   lastReviewed: Scalars['DateTime'];
@@ -154,7 +154,7 @@ export type Term = {
   __typename?: 'Term';
   _id: Scalars['String'];
   owner: Scalars['String'];
-  languages: TermLanguages;
+  languages?: Maybe<TermLanguages>;
   to: Scalars['String'];
   from: Scalars['String'];
   history?: Maybe<Array<TermHistory>>;
@@ -188,13 +188,13 @@ export type TermId = {
 
 export type TermLanguages = {
   __typename?: 'TermLanguages';
-  from: Scalars['String'];
-  to: Scalars['String'];
+  from?: Maybe<Scalars['String']>;
+  to?: Maybe<Scalars['String']>;
 };
 
 export type TermLanguagesInput = {
-  from: Scalars['String'];
-  to: Scalars['String'];
+  from?: Maybe<Scalars['String']>;
+  to?: Maybe<Scalars['String']>;
 };
 
 export type TermSaturation = {
@@ -306,7 +306,7 @@ export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   ErrorOrSuccess: ResolverTypeWrapper<ErrorOrSuccess>;
   String: ResolverTypeWrapper<Scalars['String']>;
-  List: ResolverTypeWrapper<Omit<List, 'terms'> & { terms?: Maybe<Array<ResolversTypes['TermsUnion']>> }>;
+  List: ResolverTypeWrapper<Omit<List, 'terms'> & { terms: Array<ResolversTypes['TermsUnion']> }>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ListState: ResolverTypeWrapper<ListState>;
@@ -338,7 +338,7 @@ export type ResolversParentTypes = {
   DateTime: Scalars['DateTime'];
   ErrorOrSuccess: ErrorOrSuccess;
   String: Scalars['String'];
-  List: Omit<List, 'terms'> & { terms?: Maybe<Array<ResolversParentTypes['TermsUnion']>> };
+  List: Omit<List, 'terms'> & { terms: Array<ResolversParentTypes['TermsUnion']> };
   ID: Scalars['ID'];
   Boolean: Scalars['Boolean'];
   ListState: ListState;
@@ -381,7 +381,7 @@ export type ListResolvers<ContextType = any, ParentType extends ResolversParentT
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   to?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  terms?: Resolver<Maybe<Array<ResolversTypes['TermsUnion']>>, ParentType, ContextType, RequireFields<ListTermsArgs, never>>;
+  terms?: Resolver<Array<ResolversTypes['TermsUnion']>, ParentType, ContextType, RequireFields<ListTermsArgs, never>>;
   sessions?: Resolver<Maybe<Array<ResolversTypes['ReviewSession']>>, ParentType, ContextType>;
   created?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   lastReviewed?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -446,7 +446,7 @@ export type ReviewSettingsResolvers<ContextType = any, ParentType extends Resolv
 export type TermResolvers<ContextType = any, ParentType extends ResolversParentTypes['Term'] = ResolversParentTypes['Term']> = {
   _id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   owner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  languages?: Resolver<ResolversTypes['TermLanguages'], ParentType, ContextType>;
+  languages?: Resolver<Maybe<ResolversTypes['TermLanguages']>, ParentType, ContextType>;
   to?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   history?: Resolver<Maybe<Array<ResolversTypes['TermHistory']>>, ParentType, ContextType>;
@@ -468,8 +468,8 @@ export type TermIdResolvers<ContextType = any, ParentType extends ResolversParen
 };
 
 export type TermLanguagesResolvers<ContextType = any, ParentType extends ResolversParentTypes['TermLanguages'] = ResolversParentTypes['TermLanguages']> = {
-  from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  to?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  from?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  to?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

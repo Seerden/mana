@@ -1,8 +1,9 @@
 import { ObjectId } from "mongodb";
-import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType } from "type-graphql";
+import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType, Mutation } from "type-graphql";
 import { List, ListModel } from "../types/List";
 import { Term, TermModel } from "../types/Term";
 import mongoose from 'mongoose';
+import { Maybe } from "graphql/jsutils/Maybe";
 
 const MaybeTerms = createUnionType({
     name: "MaybeTerms",
@@ -70,4 +71,45 @@ export class ListResolver {
         
     }
 
+    @Mutation(() => SuccessOrError)
+    // add auth middleware
+    async deleteList(
+        @Arg("listId") listId: string
+    ): Promise<SuccessOrError> {
+        const deletedList = await ListModel.findByIdAndDelete(new mongoose.Types.ObjectId(listId), null, null);
+        if (deletedList) {
+            const deletedTerms = await maybeDeleteTerms(deletedList.terms.map(term => term._id));
+
+            if (deletedTerms?.deletedCount) {
+                return { success: true }
+            }
+        } 
+
+        return { error: true }
+    }
+
+}
+
+@ObjectType()
+class SuccessOrError {
+    @Field({ nullable: true })
+    success?: boolean
+
+    @Field({ nullable: true })
+    error?: boolean
+}
+
+async function maybeDeleteTerms(ids: ObjectId[] | []) {
+    // remove terms if they're only part of the parent list, which was just deleted
+    if (ids.length > 0) {
+        const terms = await TermModel.find({ _id: { $in: ids }}).lean().exec();
+    
+        const termIdsToRemove = terms
+            .filter(term => term.listMembership.length === 1)
+            .map(term => term._id);
+    
+        if (termIdsToRemove.length > 0) {
+            return await TermModel.deleteMany({ _id: { $in: termIdsToRemove }});
+        } 
+    }
 }
