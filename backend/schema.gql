@@ -41,6 +41,8 @@ type Mutation {
   createTerms(terms: [NewTermFromClient!]!): ErrorOrSuccess!
   createUser(password: String!, username: String!): MaybeUser!
   editTerms(updateObj: [TermEditObject!]!): Int!
+
+  """Login mutation"""
   login(password: String!, username: String!): MaybeUser!
   updateTerms(updateObj: [TermUpdateObject!]!): Int!
 }

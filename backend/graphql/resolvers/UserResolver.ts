@@ -55,7 +55,7 @@ export class UserResolver {
         return { error: 'Username already exists ' }
     }
 
-    @Mutation(() => MaybeUser)
+    @Mutation(() => MaybeUser, { description: "Login mutation"} )
     async login(
         @Arg("username", type => String) username: string,
         @Arg("password", type => String) password: string,
