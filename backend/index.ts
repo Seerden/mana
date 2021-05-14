@@ -1,7 +1,6 @@
 import 'dotenv/config';
-import dayjs from 'dayjs';
 
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { devRouter } from './routers/devRouter'
 
 import { ApolloServer } from 'apollo-server-express';
@@ -16,20 +15,12 @@ import { buildSchema } from 'type-graphql';
 import { ListResolver } from './graphql/resolvers/ListResolver';
 import { UserResolver } from './graphql/resolvers/UserResolver';
 import { TermResolver } from './graphql/resolvers/TermResolver';
-import { ListModel } from './graphql/types/List';
+import { inspectDatabase } from './lib/inspectDb';
+import { log } from './lib/expressMiddleware';
 
 const MongoStore = connectMongo(session);
 
-/**
- * Express middleware to log every API call that is accessed
- */
-function log(req: Request, res: Response, next: Function) {
-    if (!req.originalUrl.includes('graphql')) {
-        console.log(`${dayjs(new Date()).format('MMM DD @ HH:mm')} - ${req.method} ${req.originalUrl}`);
-    }
 
-    next();
-}
 
 async function startServer() {
     const app = express();
@@ -49,7 +40,6 @@ async function startServer() {
             maxAge: 1000 * 3600 * 24,  // TTL in milliseconds
             // secure: true // only set once I have https setup look at docs for handy if statement to set this only for production
         },
-        // store: @todo add mongo connect
         resave: true,
         saveUninitialized: false,
         rolling: true,
@@ -81,48 +71,3 @@ async function startServer() {
 }
 
 startServer();
-
-async function removeExistingListSessions() {
-    const bulkOps = [];
-
-    const lists = await ListModel.find({});
-
-    for (const list of lists) {
-        if (list.sessions && list.sessions.length > 0) {
-            const operation = {
-                updateOne: {
-                    filter: { _id: list._id },
-                    update: {
-                        $set: {
-                            sessions: []
-                        }
-                    }
-                }
-            };
-
-            bulkOps.push(operation);
-        }
-    };
-
-    if (bulkOps.length > 0 ) {
-        const bulkWriteResult = await ListModel.bulkWrite(bulkOps);
-
-        return bulkWriteResult.result;
-    }
-}
-
-async function findListsWithSessions() {
-    const lists = await ListModel.find({});
-
-    const withSessions = lists.map(list => Object.keys(list).includes('sessions'));
-
-    console.log(withSessions);
-}
-
-async function findOneList() {
-    return await ListModel.findOne({});
-}
-
-async function inspectDatabase() {
-    console.log(await findOneList())
-}
