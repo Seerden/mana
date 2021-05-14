@@ -1,35 +1,34 @@
 import { ListModel } from "../graphql/types/List";
 
-async function removeExistingListSessions() {
+export async function removeExistingListSessions() {
     const bulkOps = [];
 
     const lists = await ListModel.find({});
 
     for (const list of lists) {
-        if (list.sessions && list.sessions.length > 0) {
             const operation = {
                 updateOne: {
-                    filter: { _id: list._id },
+                    filter: { name: list.name },
                     update: {
                         $set: {
-                            sessions: []
+                            sessions: new Array()
                         }
                     }
                 }
             };
 
             bulkOps.push(operation);
-        }
     };
 
     if (bulkOps.length > 0 ) {
+        console.log(bulkOps[0]);
         const bulkWriteResult = await ListModel.bulkWrite(bulkOps);
 
         return bulkWriteResult.result;
     }
 }
 
-async function findListsWithSessions() {
+export async function findListsWithSessions() {
     const lists = await ListModel.find({});
 
     const withSessions = lists.map(list => Object.keys(list).includes('sessions'));
@@ -37,10 +36,14 @@ async function findListsWithSessions() {
     console.log(withSessions);
 }
 
-async function findOneList() {
+export async function findOneList() {
     return await ListModel.findOne({});
 }
 
+export async function findOneListById(id) {
+    return await ListModel.findById(id);
+}
+
 export async function inspectDatabase() {
-    console.log(await findOneList())
+    await findListsWithSessions()
 }
