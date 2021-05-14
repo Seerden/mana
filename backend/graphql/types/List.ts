@@ -1,10 +1,8 @@
-import { createUnionType, Field, ID, Int, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import { prop as Property, getModelForClass, Ref, index, mongoose, modelOptions, Severity } from '@typegoose/typegoose';
 import { ReviewSession } from "./ReviewSession";
 import { dbConn } from "../../db/db";
-import { ObjectId } from "mongodb";
-import { SessionsUnion, TermsUnion } from "../resolvers/ListResolver";
-import { Term } from "./Term";
+import { TermsUnion } from "../resolvers/ListResolver";
 
 @ObjectType()
 class ListState {
@@ -16,8 +14,6 @@ class ListState {
     @Field()
     backwards?: string;
 }
-
-
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()

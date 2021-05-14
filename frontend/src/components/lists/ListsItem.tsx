@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from "react";
+import React, { memo } from "react";
 import { Link } from 'react-router-dom';
 import { useRouteProps } from "../../hooks/routerHooks";
 import './style/ListsItem.scss';
@@ -7,13 +7,6 @@ import { colorByLastReviewDate } from './lists.helpers'
 import { timeSince } from "helpers/time";
 
 const ListsItem = memo(({ list }: { list: List}) => {
-    useEffect(() => {
-        console.log(list);
-    }, [])
-
-    if (!list.terms) {
-        return <></>
-    }
     const { params } = useRouteProps();
     const numTerms = list.terms.length;
     const listHasSessions = list.sessions.length > 0;

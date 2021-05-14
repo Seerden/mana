@@ -45,5 +45,5 @@ export async function findOneListById(id) {
 }
 
 export async function inspectDatabase() {
-    await findListsWithSessions()
+    // await findListsWithSessions()
 }

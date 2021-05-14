@@ -20,22 +20,25 @@ const useLists = (): UseListsReturn => {
 
     const uri = "http://localhost:5000/graphql";
 
-
     const { isFetching, data: lists } = useQuery("listsByUser", async () => {
         const { listsByUser } = await request(uri, gql`
             query {
-                listsByUser(owner: "seerden") {
+                listsByUser(owner: "${params.username}") {
+                    _id
+                    owner
+                    name
+                    from
+                    to
+                    sessions {
                         _id
-                        owner
-                        name
-                        terms(populate:false) {
-                            ...on TermId {
-                                _id
-                            }
+                    }
+                    terms(populate: false) {
+                        ...on TermId {
+                            _id
                         }
                     }
                 }
-
+            }
         `);
 
         return listsByUser;
