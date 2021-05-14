@@ -2,7 +2,6 @@ import express from 'express';
 import 'dotenv/config';
 import session from 'express-session';
 import mongoose from 'mongoose';
-import passport from '../auth/passport';
 import connectMongo from 'connect-mongo';
 import bcrypt from 'bcryptjs';
 
@@ -38,8 +37,6 @@ dbRouter.use(session({
     saveUninitialized: true,
     rolling: true,
 }))
-dbRouter.use(passport.initialize());
-dbRouter.use(passport.session());
 
 /**
  * Route middleware to check if passport has authenticated the request. 
@@ -64,37 +61,37 @@ function userOwnsRoute(req, res, next) {
 
 // currently, registration and login go through this same route (registration is done in the passport local strategy, see my passport.js file)
 /* note, however, that this just sends a 401 response without further customization if the authentication fails. using a callback (like option 1) gives us more options */
-dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
-    console.log(`Authenticated user ${req.user}`);
-    res.json({ username: req.user })
-})
+// dbRouter.post('/user/', passport.authenticate('local'), (req, res) => {
+//     console.log(`Authenticated user ${req.user}`);
+//     res.json({ username: req.user })
+// })
 
-dbRouter.post('/u/register', (req, res) => {
-    const { username, password } = req.body.newUser;
+// dbRouter.post('/u/register', (req, res) => {
+//     const { username, password } = req.body.newUser;
 
-    User.findOne({ username }, async (err, foundUser) => {
-        console.log('inside user.findone');
+//     User.findOne({ username }, async (err, foundUser) => {
+//         console.log('inside user.findone');
 
-        if (!err) {
-            if (!foundUser) {
-                let hashedPassword = await hash(password, 10);
-                let newUser = new User({ username, password: hashedPassword })
-                newUser.save((err, savedUser) => {
-                    if (!err) {
-                        console.log('saved new user');
-                        res.status(201).send('New user created')
-                    } else {
-                        res.status(400).send(err)
-                    }
-                })
-            } else {
-                res.status(409).send('user exists already')
-            }
-        } else {
-            res.status(400).send(err)
-        }
-    })
-})
+//         if (!err) {
+//             if (!foundUser) {
+//                 let hashedPassword = await hash(password, 10);
+//                 let newUser = new User({ username, password: hashedPassword })
+//                 newUser.save((err, savedUser) => {
+//                     if (!err) {
+//                         console.log('saved new user');
+//                         res.status(201).send('New user created')
+//                     } else {
+//                         res.status(400).send(err)
+//                     }
+//                 })
+//             } else {
+//                 res.status(409).send('user exists already')
+//             }
+//         } else {
+//             res.status(400).send(err)
+//         }
+//     })
+// })
 
 // /**
 //  * Subrouter for owner-protected routes (e.g. /u/admin/lists) 

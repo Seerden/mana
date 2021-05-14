@@ -6,7 +6,6 @@ import { devRouter } from './routers/devRouter'
 
 import { ApolloServer } from 'apollo-server-express';
 import session from 'express-session';
-import passport from './auth/passport';
 import connectMongo from 'connect-mongo';
 import { v4 as uuid } from 'uuid'
 
@@ -55,8 +54,6 @@ async function startServer() {
         saveUninitialized: false,
         rolling: true,
     }));
-    app.use(passport.initialize());
-    app.use(passport.session());
 
     app.use('/db', dbRouter);
     app.use('/dev', devRouter);
@@ -79,6 +76,8 @@ async function startServer() {
         console.log(`Server started on port ${port} at ${new Date()}`);
         console.log('Models:', dbConn.modelNames());
     });
+
+    await inspectDatabase();
 }
 
 startServer();
@@ -118,4 +117,12 @@ async function findListsWithSessions() {
     const withSessions = lists.map(list => Object.keys(list).includes('sessions'));
 
     console.log(withSessions);
+}
+
+async function findOneList() {
+    return await ListModel.findOne({});
+}
+
+async function inspectDatabase() {
+    console.log(await findOneList())
 }
