@@ -61,6 +61,9 @@ export class UserResolver {
         @Arg("password", type => String) password: string,
         @Ctx() { req, res }: ExpressContext
     ): Promise<MaybeUser> {
+        console.log('login req made');
+        console.log(username, password);
+
         const foundUser = await UserModel.findOne({ username });
 
         if (foundUser) {
@@ -68,6 +71,7 @@ export class UserResolver {
             
             if (passwordMatches) {
                 req.session.userId = foundUser._id
+                console.log(`Login successful for user ${username}`);
                 return { user: foundUser }
             } else {
                 // () => res.clearCookie("mana-session")

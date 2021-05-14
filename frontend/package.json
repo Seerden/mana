@@ -19,6 +19,7 @@
         "d3-array": "^2.12.1",
         "dayjs": "^1.10.4",
         "express": "^4.17.1",
+        "graphql": "^15.5.0",
         "graphql-request": "^3.4.0",
         "history": "^5.0.0",
         "react": "^16.13.1",

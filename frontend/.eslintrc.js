@@ -1,5 +1,5 @@
-export default {
-    "extends": ["react-app", "plugin:@typescript-eslint/recommended"],
+module.exports = {
+    "extends": ["react-app"],
     "rules": {
     },
     "overrides": [
