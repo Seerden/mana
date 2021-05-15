@@ -5,12 +5,11 @@
     background-color: #333;
     border: none;
     outline: none;
-    transition: all 50ms ease;
+    transition: all 150ms ease;
     border-radius: 5px;
 
     &:hover {
         box-shadow: 0 0 0.5rem black;
-        
     }
 
     &__label {
@@ -23,12 +22,13 @@
 
     &__button {
         &--initial, &--confirm {
+            transition: all 100ms ease;
+
             padding: 0.5rem 1rem;
             background-color: #333;
             color: azure;
             border: none;
             outline: none;
-
         }
 
         &--initial {

@@ -1,24 +1,23 @@
 import dayjs from 'dayjs';
-import { Color } from './lists.types';
+import { ColorType } from './lists.types';
 
-export function colorByLastReviewDate(timeSince: number | null): Color {
+export function colorByLastReviewDate(reviewDate: Date | null): ColorType {
     let day = 3600 * 24 * 1000;
-    if (!timeSince) {
+
+    if (reviewDate) {
+        const now = new Date();
+        const timeSince = dayjs(now).valueOf() - dayjs(reviewDate).valueOf();
+
+        if (timeSince < day) {
+            return 'seagreen';
+        } else if (timeSince < 2 * day) {
+            return 'teal';
+        } else if (timeSince < 3 * day) {
+            return 'yellowgreen';
+        } else if (timeSince < 7 * day) {
+            return 'orange';
+        } else return 'orangered';
+    } else {
         return '#333';
-    } if (timeSince < day) {
-        return 'seagreen';
-    } if (timeSince < 2 * day) {
-        return 'teal';
-    } if (timeSince < 3 * day) {
-        return 'yellowgreen';
-    } if (timeSince < 7 * day) {
-        return 'orange';
     }
-    return 'orangered';
-}
-
-export function timeSinceLastReview(list) {
-    if (!list.lastReviewed) { return null; }
-
-    return dayjs(new Date()).valueOf() - dayjs(list.lastReviewed).valueOf();
 }

@@ -1,0 +1,1 @@
+type Direction = 'forwards' | 'backwards';

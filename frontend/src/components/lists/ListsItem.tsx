@@ -1,34 +1,37 @@
 import React, { memo } from "react";
 import { Link } from 'react-router-dom';
 import { useRouteProps } from "../../hooks/routerHooks";
-import './style/ListsItem.scss'
-import { timeSince } from '../../helpers/time';
-import dayjs from 'dayjs';
-import { BiArrowToRight, BiArrowToLeft } from "react-icons/bi";
-import { colorByLastReviewDate, timeSinceLastReview } from './lists.helpers'
+import './style/ListsItem.scss';
+import { BiArrowToRight } from "react-icons/bi";
+import { colorByLastReviewDate } from './lists.helpers'
+import { timeSince } from "helpers/time";
+import { List } from "graphql/codegen-output";
 
-
-interface ListsItemProps {
-    list: any, // @todo: refine type using as yet nonexistent global list type
-}
-
-const ListsItem = memo(({ list }: ListsItemProps) => {
+const ListsItem = memo(({ list }: { list: List}) => {
     const { params } = useRouteProps();
+    const numTerms = list.terms.length;
+    const listHasSessions = list.sessions && list.sessions.length > 0;
+    //@ts-ignore
+    const lastReviewDate = list.sessions && listHasSessions ? list.sessions[list.sessions.length-1].date.end : null;
+    const timeAgo = listHasSessions && timeSince(lastReviewDate);
+    const borderColor = colorByLastReviewDate(lastReviewDate);
 
     return (
-        <div style={{ borderColor: colorByLastReviewDate(timeSinceLastReview(list)) }} className="ListsItem">
+        <div style={{ borderColor }} className="ListsItem">
             <div className="ListsItem__name">
                 <Link className="Link" to={`/u/${params.username}/list/${list._id}`}>{list.name}</Link>
             </div>
-            <div className="ListsItem__numTerms">{list.terms.length} terms</div>
+
+            <div className="ListsItem__numTerms">{numTerms} terms</div>
+
             <div className="ListsItem__languages">{list.from} <BiArrowToRight /> {list.to} </div>
 
-            { list.sessions.length > 0 &&
+            { listHasSessions &&
                 <div className="ListsItem__since">
-                    <em>last reviewed {timeSince(list.sessions[list.sessions.length - 1].end)}</em>
+                    <em>last reviewed {timeAgo}</em>
                 </div>
             }
-            
+
         </div>
     )
 })

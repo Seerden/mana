@@ -23,9 +23,9 @@ export const useLogState = (name, state, setState) => {
 export const handleFormBlur = (e, state, setState) => {
     let t = e.currentTarget;
     
-    if ( !(!state[t.name] && !t.value) && (!state[t.name] || (state[t.name] && state[t.name] !== t.value))) {  // check if value exists and differs from current value
-        setState({...state, [t.name]: t.value})
-    }
+    // if ( !(!state[t.name] && !t.value) && (!state[t.name] || (state[t.name] && state[t.name] !== t.value))) {  // check if value exists and differs from current value
+    setState({...state, [t.name]: t.value})
+    // }
 }
 
 /* to check whether key exists in state:

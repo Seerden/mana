@@ -1,6 +1,5 @@
 import mongoose, { Document, ObjectId } from 'mongoose';
-import { TermInterface } from './termSchema';
-import { reviewSessionSchema } from './reviewSessionSchema.js';
+import { reviewSessionSchema, ReviewSessionInterface } from './reviewSessionSchema.js';
 
 export interface ListInterface extends Document {
     owner: string,
@@ -8,12 +7,11 @@ export interface ListInterface extends Document {
     from: string,
     to: string[],
     terms: ObjectId[],
-    sessions: ObjectId[],
+    sessions: ObjectId[] | Partial<ReviewSessionInterface>[],
     created: Date,
     lastReviewed: Date,
     setMembership: ObjectId[],
     state: {forwards: string, backwards: string}
-
 }
 
 export const listSchema = new mongoose.Schema({
@@ -32,7 +30,10 @@ export const listSchema = new mongoose.Schema({
             ref: 'Term',
         }
     ],
-    sessions: [reviewSessionSchema],
+    sessions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ReviewSession'
+    }],
     created: Date,
     lastReviewed: Date,  // refers to last ?kind=full review
     setMembership: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Set' }],
@@ -40,6 +41,4 @@ export const listSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed, 
         default: {forwards: 'untouched', backwards: 'untouched'}  // untouched -> seeding -> seeded at 0, 1 and 3 reviews for that direction
     },
-}, { collation: { locale: 'en', strength: 2 } }) 
-
-export const List = mongoose.model<ListInterface>('List', listSchema);
+}, { collation: { locale: 'en', strength: 2 } });

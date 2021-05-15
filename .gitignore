@@ -13,5 +13,7 @@
 *.env
 *.rest
 node_modules
+**/package-lock.json
 
 _*.md
+

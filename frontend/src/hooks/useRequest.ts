@@ -4,6 +4,11 @@ import { useContext, useCallback, useState, useEffect, useRef } from 'react';
 import { useRouteProps } from './routerHooks';
 import { handleError as defaultHandleError, handleResponse as defaultHandleResponse } from 'helpers/apiHandlers/apiHandlers';
 
+interface UseRequestProps {
+    handleResponse?: Function,
+    handleError?: Function
+}
+
 /**
  * Request hook that handles a request and logs a user out if the API returns 401 Unauthorized.
  * @param {Function} request axios request initialized wrapper inside an anonymous function, e.g. () => axios.get('/home')
@@ -13,7 +18,7 @@ import { handleError as defaultHandleError, handleResponse as defaultHandleRespo
  * @param {Function} setRequest request is expected to wrapper in a function, so usage should be like setRequest(() => axios.get('/'))
  * 
  */
-export const useRequest = ({ handleResponse, handleError }) => {
+export const useRequest = ({ handleResponse, handleError }: UseRequestProps) => {
     const
         { currentUser, logout } = useContext(LoginContext),
         mounted = useRef(false),

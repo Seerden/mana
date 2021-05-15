@@ -104,6 +104,7 @@ const SettingsButton = memo(({ handleSettingsChange, direction, n, value, curren
             style={{
                 color: selected ? 'white' : 'black',
                 backgroundColor: selected ? 'blueviolet' : 'white',
+                padding: '0.1rem 0.5rem'
             }}
             onClick={handleSettingsChange}
             className={n ? `PreReview__settings--n` : 'PreReview__settings--direction'}

@@ -24,5 +24,3 @@ export const reviewSessionSchema = new mongoose.Schema({
     timePerCard: [{ type: Number }],  // [ms]
     passfail: [{ type: String }]  // 'pass'/'fail'
 })
-
-export const ReviewSession = mongoose.model<ReviewSessionInterface>('ReviewSession', reviewSessionSchema);
