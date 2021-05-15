@@ -138,12 +138,18 @@ export type QueryListsByIdArgs = {
   ids: Array<Scalars['String']>;
 };
 
+export type ReviewDate = {
+  __typename?: 'ReviewDate';
+  start: Scalars['DateTime'];
+  end: Scalars['DateTime'];
+};
+
 export type ReviewSession = {
   __typename?: 'ReviewSession';
   _id: Scalars['ID'];
   owner: Scalars['String'];
   listIds?: Maybe<Array<List>>;
-  date: Array<Scalars['DateTime']>;
+  date: ReviewDate;
   terms: ReviewSessionTerms;
   settings: ReviewSettings;
 };
@@ -335,6 +341,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']>;
   NewTermFromClient: NewTermFromClient;
   Query: ResolverTypeWrapper<{}>;
+  ReviewDate: ResolverTypeWrapper<ReviewDate>;
   ReviewSession: ResolverTypeWrapper<ReviewSession>;
   ReviewSessionTerms: ResolverTypeWrapper<ReviewSessionTerms>;
   ReviewSettings: ResolverTypeWrapper<ReviewSettings>;
@@ -368,6 +375,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int'];
   NewTermFromClient: NewTermFromClient;
   Query: {};
+  ReviewDate: ReviewDate;
   ReviewSession: ReviewSession;
   ReviewSessionTerms: ReviewSessionTerms;
   ReviewSettings: ReviewSettings;
@@ -441,11 +449,17 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   me?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType>;
 };
 
+export type ReviewDateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewDate'] = ResolversParentTypes['ReviewDate']> = {
+  start?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  end?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ReviewSessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSession'] = ResolversParentTypes['ReviewSession']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   owner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   listIds?: Resolver<Maybe<Array<ResolversTypes['List']>>, ParentType, ContextType>;
-  date?: Resolver<Array<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['ReviewDate'], ParentType, ContextType>;
   terms?: Resolver<ResolversTypes['ReviewSessionTerms'], ParentType, ContextType>;
   settings?: Resolver<ResolversTypes['ReviewSettings'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -530,6 +544,7 @@ export type Resolvers<ContextType = any> = {
   MaybeUser?: MaybeUserResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  ReviewDate?: ReviewDateResolvers<ContextType>;
   ReviewSession?: ReviewSessionResolvers<ContextType>;
   ReviewSessionTerms?: ReviewSessionTermsResolvers<ContextType>;
   ReviewSettings?: ReviewSettingsResolvers<ContextType>;

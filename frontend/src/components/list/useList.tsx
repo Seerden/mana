@@ -67,16 +67,9 @@ function useList() {
 
     // EFFECTS
     useEffect(() => {  // set list and list context when list is returned from API
-<<<<<<< HEAD
         if (lists) {
             setList(lists[0]);
             setListAtom(lists[0]);
-=======
-        if (getResponse) {
-            console.log(getResponse);
-            setList(getResponse);
-            setListAtom(getResponse);
->>>>>>> 7226575e18d149e9ce9d85c7fe72ea2d0ee6ca99
         }
     }, [lists])
 

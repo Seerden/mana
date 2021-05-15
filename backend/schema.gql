@@ -70,9 +70,14 @@ type Query {
   users: [User!]!
 }
 
+type ReviewDate {
+  end: DateTime!
+  start: DateTime!
+}
+
 type ReviewSession {
   _id: ID!
-  date: [DateTime!]!
+  date: ReviewDate!
   listIds: [List!]
   owner: String!
   settings: ReviewSettings!
