@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useSetRecoilState, useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
-import { getList, putList, deleteList, deleteTerm } from 'helpers/apiHandlers/listHandlers';
+import { getList, putList, deleteTerm } from 'helpers/apiHandlers/listHandlers';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useRequest } from 'hooks/useRequest';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
@@ -8,16 +8,16 @@ import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 import ListTerm from './ListTerm';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
-import { FilterInterface, TermPropsInterface, TruncatedTerm } from './list.types';
-import { useMutateDeleteList, useQueryListsById, useTestQuery } from "graphql/queries/list.query";
+import { FilterInterface, TruncatedTerm } from './list.types';
+import { useMutateDeleteList, useQueryListsById } from "graphql/queries/list.query";
 import { List } from "graphql/codegen-output";
+import { DeleteTermsVariables, useMutateDeleteTerms } from "graphql/queries/term.query";
 
 function useList() {
     const [list, setList] = useState<List | null>(null);
     const [filter, setFilter] = useState<FilterInterface>({ saturation: { level: null, direction: 'any' } });
     const [truncatedTerms, setTruncatedTerms] = useState<Array<TruncatedTerm>>([]);
     const { params } = useRouteProps();
-    const { response: getResponse, setRequest: setGetRequest } = useRequest({});
     const { setRequest: setPutRequest } = useRequest({});
     const { setRequest: setPutListTitleRequest } = useRequest({});
     const { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({});
@@ -25,7 +25,7 @@ function useList() {
     const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const setListAtom = useSetRecoilState(listState);
-    const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
+    const setTermsToReview = useSetRecoilState(termsToReviewState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const suggestedTermsForReview = useMemo(() => {
         if (list) {
@@ -35,11 +35,7 @@ function useList() {
 
     const { data: lists, isLoading, isFetching } = useQueryListsById([params.id]);
     const { mutate: mutateDeleteList, data: listDeleteResponse} = useMutateDeleteList(params.id);
-    const msg = useTestQuery();
-
-    useEffect(() => {
-        console.log(msg);
-    }, [msg])
+    const { mutate: mutateDeleteTerms, data } = useMutateDeleteTerms();
 
     function filterTermsBySaturation(terms: TruncatedTerm[]) {
         if (terms.length > 0) {
@@ -70,13 +66,8 @@ function useList() {
     }, [truncatedTerms, filter, numTermsToReview]);
 
     // EFFECTS
-    useEffect(() => {  // retrieve list on component load
-        setGetRequest(() => getList(params.username, { _id: params.id }))
-    }, [])
-
     useEffect(() => {  // set list and list context when list is returned from API
         if (lists) {
-            // console.log(getResponse);
             setList(lists[0]);
             setListAtom(lists[0]);
         }
@@ -124,7 +115,7 @@ function useList() {
                 setPutListTitleRequest(() => putList(params.username, { _id: params.id }, { ...updatedList, terms: updatedList.terms?.map(t => t._id) }))
             }
         }
-    }
+    };
 
     function handleTermDelete(idx: number) {
         if (list && list.terms && list.terms.length > 0) {
@@ -135,8 +126,16 @@ function useList() {
                 updatedList.terms.splice(idx, 1);
                 setList(updatedList);
                 setListAtom(updatedList)
-                setPutRequest(() => putList(params.username, { _id: updatedList._id, owner: updatedList.owner }, updatedList));
-                setTermDeleteRequest(() => deleteTerm(params.username, termId))
+
+                const variables: DeleteTermsVariables = {
+                    listId: params.id,
+                    ids: [termId],
+                    remainingTermIds: updatedList.terms.map(term => term._id)
+                };
+
+                mutateDeleteTerms(variables);
+                // setPutRequest(() => putList(params.username, { _id: updatedList._id, owner: updatedList.owner }, updatedList));
+                // setTermDeleteRequest(() => deleteTerm(params.username, termId))
             }
         }
     };
@@ -146,7 +145,6 @@ function useList() {
      */
     function handleDelete() {
         mutateDeleteList();
-        // setDeleteRequest(() => deleteList(params.username, { _id: params.id }))
     };
 
     const updateTermsToReview = useCallback(({ type, direction }: { type: 'all' | 'visible' | 'none' | 'overdue', direction: Direction}) => {

@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { NewTermFromClient } from "../resolvers/TermResolver";
 import { TermEditObject, TermUpdateObject } from "../types/input_types/term";
 import { Term, TermModel } from "../types/Term";
@@ -96,5 +97,20 @@ export async function createTermDocuments(terms: Array<NewTermFromClient>) {
         });
 
         return { deletedCount: deletedTerms.deletedCount }
+    }
+}
+
+export async function maybeDeleteTerms(ids: ObjectId[] | []) {
+    // remove terms if they're only part of the parent list, which was just deleted
+    if (ids.length > 0) {
+        const terms = await TermModel.find({ _id: { $in: ids }}).lean().exec();
+    
+        const termIdsToRemove = terms
+            .filter(term => term.listMembership.length === 1)
+            .map(term => term._id);
+    
+        if (termIdsToRemove.length > 0) {
+            return await TermModel.deleteMany({ _id: { $in: termIdsToRemove }});
+        } 
     }
 }

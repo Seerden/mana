@@ -37,14 +37,11 @@ type MaybeUser {
   user: User
 }
 
-type Message {
-  message: String!
-}
-
 type Mutation {
   createTerms(terms: [NewTermFromClient!]!): ErrorOrSuccess!
   createUser(password: String!, username: String!): MaybeUser!
   deleteList(listId: String!): SuccessOrError!
+  deleteTermsFromList(ids: [String!]!, listId: String!, remainingTermIds: [String!]): ErrorOrSuccess!
   editTerms(updateObj: [TermEditObject!]!): Int!
 
   """Login mutation"""
@@ -70,7 +67,6 @@ type Query {
   """Find lists by user"""
   listsByUser(owner: String!, populate: [String!]): [List!]!
   me: MaybeUser!
-  test(testObj: TestInput!): Message!
   users: [User!]!
 }
 
@@ -162,16 +158,6 @@ input TermUpdateObject {
 }
 
 union TermsUnion = Term | TermId
-
-input TestInput {
-  one: [Int!]!
-  two: TwoInput!
-}
-
-input TwoInput {
-  four: String!
-  three: String!
-}
 
 type User {
   _id: ID!

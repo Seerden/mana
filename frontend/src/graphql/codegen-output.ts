@@ -57,12 +57,19 @@ export type MaybeUser = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  deleteList: SuccessOrError;
   createUser: MaybeUser;
   /** Login mutation */
   login: MaybeUser;
   updateTerms: Scalars['Int'];
   editTerms: Scalars['Int'];
   createTerms: ErrorOrSuccess;
+  deleteTermsFromList: ErrorOrSuccess;
+};
+
+
+export type MutationDeleteListArgs = {
+  listId: Scalars['String'];
 };
 
 
@@ -90,6 +97,13 @@ export type MutationEditTermsArgs = {
 
 export type MutationCreateTermsArgs = {
   terms: Array<NewTermFromClient>;
+};
+
+
+export type MutationDeleteTermsFromListArgs = {
+  ids: Array<Scalars['String']>;
+  remainingTermIds: Array<Scalars['String']>;
+  listId: Scalars['String'];
 };
 
 /**     New term created client-side, excludes history and saturation fields     since those don't exist yet for the term */
@@ -148,6 +162,12 @@ export type ReviewSettings = {
   sessionEnd: Scalars['DateTime'];
   started: Scalars['Boolean'];
   ended: Scalars['Boolean'];
+};
+
+export type SuccessOrError = {
+  __typename?: 'SuccessOrError';
+  success?: Maybe<Scalars['Boolean']>;
+  error?: Maybe<Scalars['Boolean']>;
 };
 
 export type Term = {
@@ -319,6 +339,7 @@ export type ResolversTypes = {
   ReviewSessionTerms: ResolverTypeWrapper<ReviewSessionTerms>;
   ReviewSettings: ResolverTypeWrapper<ReviewSettings>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
+  SuccessOrError: ResolverTypeWrapper<SuccessOrError>;
   Term: ResolverTypeWrapper<Term>;
   TermEditObject: TermEditObject;
   TermHistory: ResolverTypeWrapper<TermHistory>;
@@ -351,6 +372,7 @@ export type ResolversParentTypes = {
   ReviewSessionTerms: ReviewSessionTerms;
   ReviewSettings: ReviewSettings;
   Float: Scalars['Float'];
+  SuccessOrError: SuccessOrError;
   Term: Term;
   TermEditObject: TermEditObject;
   TermHistory: TermHistory;
@@ -403,11 +425,13 @@ export type MaybeUserResolvers<ContextType = any, ParentType extends ResolversPa
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  deleteList?: Resolver<ResolversTypes['SuccessOrError'], ParentType, ContextType, RequireFields<MutationDeleteListArgs, 'listId'>>;
   createUser?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
   login?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
   updateTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationUpdateTermsArgs, 'updateObj'>>;
   editTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationEditTermsArgs, 'updateObj'>>;
   createTerms?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationCreateTermsArgs, 'terms'>>;
+  deleteTermsFromList?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationDeleteTermsFromListArgs, 'ids' | 'remainingTermIds' | 'listId'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -440,6 +464,12 @@ export type ReviewSettingsResolvers<ContextType = any, ParentType extends Resolv
   sessionEnd?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   started?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   ended?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SuccessOrErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['SuccessOrError'] = ResolversParentTypes['SuccessOrError']> = {
+  success?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  error?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -503,6 +533,7 @@ export type Resolvers<ContextType = any> = {
   ReviewSession?: ReviewSessionResolvers<ContextType>;
   ReviewSessionTerms?: ReviewSessionTermsResolvers<ContextType>;
   ReviewSettings?: ReviewSettingsResolvers<ContextType>;
+  SuccessOrError?: SuccessOrErrorResolvers<ContextType>;
   Term?: TermResolvers<ContextType>;
   TermHistory?: TermHistoryResolvers<ContextType>;
   TermId?: TermIdResolvers<ContextType>;

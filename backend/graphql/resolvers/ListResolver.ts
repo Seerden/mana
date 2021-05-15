@@ -3,42 +3,8 @@ import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUni
 import { List, ListModel } from "../types/List";
 import { Term, TermModel } from "../types/Term";
 import mongoose from 'mongoose';
-import { Maybe } from "graphql/jsutils/Maybe";
-
-// --- TEST
-
-@ObjectType()
-@InputType("TwoInput")
-class Two {
-    @Field()
-    three: string;
-
-    @Field()
-    four: string;
-}
-
-@InputType("TestInput")
-@ObjectType()
-class Test {
-    @Field(() => [Int])
-    one: number[];
-
-    @Field(() => Two)
-    two: Two;
-}
-
-@ObjectType()
-class Message {
-    @Field()
-    message: string
-}
-
-// ---
-
-const MaybeTerms = createUnionType({
-    name: "MaybeTerms",
-    types: () => [Term, String],
-})
+import { maybeDeleteTerms } from "../helpers/term";
+import { Ref } from '@typegoose/typegoose';
 
 @ObjectType()
 class TermId {
@@ -48,7 +14,7 @@ class TermId {
 
 export const TermsUnion = createUnionType({
     name: "TermsUnion",
-    types: () => { return [Term, TermId] as const },
+    types: () => [Term, TermId],
     resolveType: value => {
         if ("to" in value ) {
             return Term
@@ -96,7 +62,6 @@ export class ListResolver {
             return await TermModel.find({ _id: { $in: list.terms } }).lean().exec()    ;
         }
 
-        console.log(list);
         return list.terms.map(_id => ({ _id }));
         
     }
@@ -108,7 +73,7 @@ export class ListResolver {
     ): Promise<SuccessOrError> {
         const deletedList = await ListModel.findByIdAndDelete(new mongoose.Types.ObjectId(listId), null, null);
         if (deletedList) {
-            const deletedTerms = await maybeDeleteTerms(deletedList.terms.map(term => term._id));
+            const deletedTerms = await maybeDeleteTerms(deletedList.terms.map(term => new mongoose.Types.ObjectId(term._id)));
 
             if (deletedTerms?.deletedCount) {
                 return { success: true }
@@ -117,20 +82,7 @@ export class ListResolver {
 
         return { error: true }
     };
-
-    @Query(() => Message)
-    async test(
-        @Arg("testObj") testObj: Test
-    ) {
-        console.log(testObj);
-
-        return { message: 'Hi there!'}
-
-    }
-
 }
-
-
 
 @ObjectType()
 class SuccessOrError {
@@ -139,19 +91,4 @@ class SuccessOrError {
 
     @Field({ nullable: true })
     error?: boolean
-}
-
-async function maybeDeleteTerms(ids: ObjectId[] | []) {
-    // remove terms if they're only part of the parent list, which was just deleted
-    if (ids.length > 0) {
-        const terms = await TermModel.find({ _id: { $in: ids }}).lean().exec();
-    
-        const termIdsToRemove = terms
-            .filter(term => term.listMembership.length === 1)
-            .map(term => term._id);
-    
-        if (termIdsToRemove.length > 0) {
-            return await TermModel.deleteMany({ _id: { $in: termIdsToRemove }});
-        } 
-    }
-}
+};
