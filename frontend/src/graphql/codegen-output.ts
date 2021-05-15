@@ -102,7 +102,7 @@ export type MutationCreateTermsArgs = {
 
 export type MutationDeleteTermsFromListArgs = {
   ids: Array<Scalars['String']>;
-  remainingTermIds: Array<Scalars['String']>;
+  remainingTermIds?: Maybe<Array<Scalars['String']>>;
   listId: Scalars['String'];
 };
 
@@ -431,7 +431,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationUpdateTermsArgs, 'updateObj'>>;
   editTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationEditTermsArgs, 'updateObj'>>;
   createTerms?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationCreateTermsArgs, 'terms'>>;
-  deleteTermsFromList?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationDeleteTermsFromListArgs, 'ids' | 'remainingTermIds' | 'listId'>>;
+  deleteTermsFromList?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationDeleteTermsFromListArgs, 'ids' | 'listId'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {

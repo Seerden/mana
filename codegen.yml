@@ -1,6 +1,6 @@
 overwrite: true
 schema: "http://localhost:5000/graphql"
-# documents: ./backend/*.gql
+# documents: ./frontend/src/**/*.graphql
 documents: null
 generates:
   ./frontend/src/graphql/codegen-output.ts:
@@ -8,6 +8,7 @@ generates:
       - "typescript"
       - "typescript-resolvers"
       - "typescript-operations"
+      # - "typescript-react-query"
       # - "typescript-urql"
     # config:
     #   withHooks: true

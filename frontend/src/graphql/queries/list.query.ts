@@ -7,7 +7,7 @@ const listByIdQuery = (ids: [String]) => gql`
 ${CoreListFields}
 ${CoreTermFields}
 ${CoreTermIdFields}
-query {
+query ($ids: [String!]!) {
     listsById(ids: ${JSON.stringify(ids)}) {
         ...CoreListFields
         terms(populate:true) {
