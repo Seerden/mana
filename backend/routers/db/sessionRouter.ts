@@ -1,6 +1,11 @@
 import express from 'express';
 
+<<<<<<< HEAD
 import { ReviewSession, List } from '../../db/db';
+=======
+import { ReviewSession } from '../../db/db.js';
+import { List } from '../../db/db.js';
+>>>>>>> 7226575e18d149e9ce9d85c7fe72ea2d0ee6ca99
 
 export const sessionRouter = express.Router({ mergeParams: true });
 
@@ -14,6 +19,7 @@ sessionRouter.get('/list', (req, res) => {  // GET all sessions involving any te
     ReviewSession.find(() => ({ listIds: { $in: req.query.listId } }))
 })
 
+<<<<<<< HEAD
 sessionRouter.post('/', async (req, res) => {
     // create a new ReviewSession document, save it, 
     // if only one list was reviewed, append the session the its parent List's .sessions array
@@ -29,10 +35,32 @@ sessionRouter.post('/', async (req, res) => {
 
             try {
                 await List.findOneAndUpdate({ _id: listId }, { $push: { sessions: savedSession._id } });
+=======
+sessionRouter.post('/', async (req, res) => {  // POST a session to the database
+    const { newReviewSession } = req.body;
+
+    let newSession = new ReviewSession(newReviewSession);
+
+    try {
+        const savedSession = await newSession.save();
+        console.log('Successfully saved ReviewSession document to database', {newSession});
+
+        if (savedSession.listIds.length === 1) {
+            const listId = savedSession.listIds[0];
+            console.log({listId});
+            
+            try {
+                const listWithNewSession = await List.findOneAndUpdate({_id: listId}, {$push: {sessions: savedSession._id}});
+                console.log("Successfully pushed saved ReviewSession to parent list's sessions", listWithNewSession.sessions);
+>>>>>>> 7226575e18d149e9ce9d85c7fe72ea2d0ee6ca99
             } catch (e) {
                 console.log('Error pushing newly saved ReviewSession instance to parent list');
             }
         }
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 7226575e18d149e9ce9d85c7fe72ea2d0ee6ca99
         res.status(201).send('Successfully posted review session to database')
     } catch (error) {
         console.log(error);

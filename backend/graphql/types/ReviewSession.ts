@@ -42,6 +42,15 @@ class ReviewSessionTerms {
     termIds: Ref<Term>[]
 }
 
+@ObjectType()
+class ReviewDate {
+    @Field()
+    start: Date;
+
+    @Field()
+    end: Date
+}
+
 
 @ObjectType()
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
@@ -59,11 +68,8 @@ export class ReviewSession {
     listIds: Ref<List>[]
 
     @prop({ required: true})
-    @Field(() => [Date])
-    date: {
-        start: Date,
-        end: Date
-    }
+    @Field(() => ReviewDate)
+    date: ReviewDate
 
     @prop()
     @Field(() => ReviewSessionTerms)

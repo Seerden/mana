@@ -5,12 +5,14 @@ import './style/ListsItem.scss';
 import { BiArrowToRight } from "react-icons/bi";
 import { colorByLastReviewDate } from './lists.helpers'
 import { timeSince } from "helpers/time";
+import { List } from "graphql/codegen-output";
 
 const ListsItem = memo(({ list }: { list: List}) => {
     const { params } = useRouteProps();
     const numTerms = list.terms.length;
-    const listHasSessions = list.sessions.length > 0;
-    const lastReviewDate = listHasSessions ? list.sessions[list.sessions.length-1].date.end : null;
+    const listHasSessions = list.sessions && list.sessions.length > 0;
+    //@ts-ignore
+    const lastReviewDate = list.sessions && listHasSessions ? list.sessions[list.sessions.length-1].date.end : null;
     const timeAgo = listHasSessions && timeSince(lastReviewDate);
     const borderColor = colorByLastReviewDate(lastReviewDate);
 
