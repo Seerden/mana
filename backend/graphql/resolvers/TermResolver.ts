@@ -81,7 +81,6 @@ export class TermResolver {
         @Arg("remainingTermIds", type => [String], { nullable: true }) remainingTermIds: [string],  // @todo: create union here, because this may be an empty array if we're removing the only term in the list
         @Arg("ids", type => [String]) ids: [string]
     ) {
-        console.log({ listId, remainingTermIds, ids });
         // remove term from list.terms array
         const updatedList = await updateListTerms(listId, remainingTermIds);
 

@@ -61,10 +61,6 @@ const CoreListFields = gql`
 `
 
 export function useQueryListsById(ids: [String]) {
-    useEffect(() => {
-        console.log(listByIdQuery(ids));
-    }, [])
-
     const { 
         data, 
         refetch, 

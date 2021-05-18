@@ -8,28 +8,30 @@ const ListDeleteButton = ({ handleDelete }) => {
     return (
         <span className="ListDeleteButton">
             {!confirming
-                ? <input
+                ?
+                <input
                     onClick={() => toggleConfirming()}
                     type="button"
                     className="ListDeleteButton__button--initial"
                     value="Delete list"
                 />
-                : <>
-                <input
-                    onClick={handleDelete}
-                    type="button"
-                    className="ListDeleteButton__button--confirm ListDeleteButton__button--confirm--yes"
+                : 
+                <>
+                    <input
+                        onClick={handleDelete}
+                        type="button"
+                        className="ListDeleteButton__button--confirm ListDeleteButton__button--confirm--yes"
 
-                    value="Delete"
-                />
-                <input
-                    onClick={toggleConfirming}
-                    type="button"
-                    className="ListDeleteButton__button--confirm ListDeleteButton__button--confirm--no"
-                    value="Keep"
-                />
-            </>
-            
+                        value="Delete"
+                    />
+                    <input
+                        onClick={toggleConfirming}
+                        type="button"
+                        className="ListDeleteButton__button--confirm ListDeleteButton__button--confirm--no"
+                        value="Keep"
+                    />
+                </>
+
             }
         </span>
     )

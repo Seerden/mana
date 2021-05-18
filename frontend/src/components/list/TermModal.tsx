@@ -50,6 +50,8 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                             className={`TermModal__input`}
                             onBlur={handleTermEdit} 
                             type="text" 
+                            //@ts-ignore
+                            side="from"
                             defaultValue={term.from}
                         />
                         <span className="TermModal__side--saturation">
@@ -63,6 +65,8 @@ const TermModal = ({ handleConfirmClick, setOpen, term, handleTermEdit, confirmi
                         <input
                             name="back"
                             tabIndex={2}
+                            //@ts-ignore
+                            side="to"
                             disabled={confirmingDelete}
                             title="Click to edit"
                             style={inputStyle}

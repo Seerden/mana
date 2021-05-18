@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
 import { gql, request} from 'graphql-request';
-import { ErrorOrSuccess } from "graphql/codegen-output";
+import { ErrorOrSuccess, TermEditObject } from "graphql/codegen-output";
 
 const deleteTermsMutation = gql`
 mutation ($listId: String!, $remainingTermIds: [String!], $ids: [String!]!) {
@@ -11,10 +11,25 @@ mutation ($listId: String!, $remainingTermIds: [String!], $ids: [String!]!) {
 }
 `
 
+const editTermMutation = gql`
+mutation ($updateObj: [TermEditObject!]!) {
+    editTerms(updateObj: $updateObj) 
+}
+`
+
 export type DeleteTermsVariables = {
     listId: string,
     remainingTermIds: string[],
     ids: string[]
+}
+
+export function useMutateEditTerm() {
+    const { mutate, data, ...rest } = useMutation<Number, any, TermEditObject>("editTerm", async (variables) => {
+        const response = await request(process.env.REACT_APP_GRAPHQL_URI!, editTermMutation, {updateObj: variables});
+        return response;
+    }, { retry: false });
+
+    return { mutate, data, ...rest }
 }
 
 /**

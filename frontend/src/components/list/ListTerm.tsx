@@ -1,20 +1,17 @@
 import React, { memo, useState, useMemo, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
-import { useRequest } from 'hooks/useRequest';
-import { putTerm } from 'helpers/apiHandlers/listHandlers'
 import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import TermModal from './TermModal';
 import SaturationIcon from 'components/SaturationFilter/SaturationIcon';
-import './style/ListTerm.scss'
-import { handleError, handleResponse } from "helpers/apiHandlers/apiHandlers";
 import { TermPropsInterface } from './list.types';
+import { useMutateEditTerm } from "graphql/queries/term.query";
+import './style/ListTerm.scss'
 
 const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {
     const [term, setTerm] = useState<any>(() => (termFromProps)),  // @todo: fix any type to be combination of TermInterface and TermElementInterface, after figuring out why I'm using two Term(*?)Interface types
         [confirmingDelete, setConfirmingDelete] = useState(false),
-        { setRequest: setPutTermRequest } = useRequest({ handleResponse, handleError }),
         [open, setOpen] = useState<boolean>(false);
 
     // ----- REFACTOR
@@ -23,6 +20,10 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
     const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
     let indexOfTermInTermsToReview = termsToReview.findIndex(t => t._id === term._id);
     const [selected, setSelected] = useState(indexOfTermInTermsToReview > -1);
+
+    // this should probably be passed as prop, otherwise we're initializing the hook from every single term which isn't necessary, 
+    // since we call the mutation with the term's ID, which we can set as argument in mutate()
+    const { mutate: mutateEditTerm } = useMutateEditTerm();
 
     useEffect(() => {  // might be superfluous
         indexOfTermInTermsToReview = termsToReview.findIndex(t => t._id === term._id)
@@ -61,17 +62,25 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
     }
 
     /**
-    * @todo update actual list itself, also update listContextValue, and then push new list state to db
+    * Fire a mutation to edit the term's 'from'/'to' value in the database, and update this value in listAtom
     */
-    function handleTermEdit(e) {
-        let side = e.currentTarget.getAttribute('side');
+    function handleTermEdit(e: React.FocusEvent<HTMLInputElement & { side: 'from' | 'to' }>) {
+        let side = e.currentTarget.getAttribute('side')!;
         if (e.target.value && term[side] !== e.target.value) {
             let newTerm = { ...term, [side]: e.target.value };
             setTerm(newTerm);
-            setPutTermRequest(() => putTerm(listAtom.owner, { _id: term._id }, newTerm))
+            
+            const mutationVariables = {
+                _id: term._id,
+                [side]: e.target.value
+            };
 
+            // fire mutation to edit term in database
+            mutateEditTerm(mutationVariables);
+
+            // assume the mutation will be successful, and just edit the term in the list in-place
             let newListContent: any[] = [...listAtom.terms!];
-            newListContent[idx] = { ...newTerm };
+            newListContent[idx] = {...newListContent[idx], [side]: e.target.value} ;
             let newList = { ...listAtom, terms: [...newListContent] };
             setListAtom(newList);
         }
@@ -99,7 +108,8 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
                             : <ImCheckboxUnchecked />
                         }
                     </div>
-                    : ''
+                    : 
+                    ''
                 }
             </li>
             {open &&

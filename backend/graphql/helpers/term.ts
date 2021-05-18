@@ -32,7 +32,6 @@ export async function bulkEditTerms(updateObj: Array<TermEditObject>) {
     if (bulkOperations.length > 0) {
         const response = await TermModel.bulkWrite(bulkOperations);
 
-        console.log(response.result);
         return response.modifiedCount;
     }
 
@@ -69,7 +68,6 @@ export async function bulkUpdateTerms(updateObj: Array<TermUpdateObject>) {
     if (bulkOperations.length > 0) {
         const response = await TermModel.bulkWrite(bulkOperations);
 
-        console.log(response.result);
         return response.modifiedCount;
     }
 

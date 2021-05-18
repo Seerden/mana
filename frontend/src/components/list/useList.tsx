@@ -134,8 +134,6 @@ function useList() {
                 };
 
                 mutateDeleteTerms(variables);
-                // setPutRequest(() => putList(params.username, { _id: updatedList._id, owner: updatedList.owner }, updatedList));
-                // setTermDeleteRequest(() => deleteTerm(params.username, termId))
             }
         }
     };
