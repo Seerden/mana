@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "sd": "concurrently \"npm:codegen\" \"npm:start-front --prefix ./frontend\" \"npm:start-dev --prefix ./backend\"",
-    "codegen": "wait-on tcp:5000 && graphql-codegen --config codegen.yml --watch"
+    "codegen": "wait-on tcp:5000 && graphql-codegen --config codegen.yml --watch \"./backend/schema.gql\""
   },
   "repository": {
     "type": "git",

@@ -123,6 +123,7 @@ export type Query = {
   /** Query lists by id */
   listsById: Array<List>;
   users: Array<User>;
+  /** Returns currently logged in user.  */
   me: MaybeUser;
 };
 

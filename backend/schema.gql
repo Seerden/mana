@@ -66,6 +66,8 @@ type Query {
 
   """Find lists by user"""
   listsByUser(owner: String!, populate: [String!]): [List!]!
+
+  """Returns currently logged in user. """
   me: MaybeUser!
   users: [User!]!
 }

@@ -28,7 +28,7 @@ export class UserResolver {
         return await UserModel.find()
     }
 
-    @Query(() => MaybeUser)
+    @Query(() => MaybeUser, { description: "Returns currently logged in user. "})
     async me(
         @Ctx() { req }: ExpressContext
     ) {

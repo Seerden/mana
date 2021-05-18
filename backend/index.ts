@@ -19,8 +19,9 @@ import { inspectDatabase } from './lib/inspectDb';
 import { log } from './lib/expressMiddleware';
 
 const MongoStore = connectMongo(session);
+import mongoose from 'mongoose';
 
-
+// mongoose.set('debug', true);
 
 async function startServer() {
     const app = express();
