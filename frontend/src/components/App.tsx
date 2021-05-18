@@ -18,27 +18,16 @@ import Home from './Home';
 import Register from './register/Register';
 import Login from './login/Login';
 
-import { LoginProvider } from '../context/LoginContext';
-// import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const App = () => {
-    // const client = new ApolloClient({
-    //     cache: new InMemoryCache({
-    //         addTypename: true,  // keeps __typename in all responses, but if I disable this, I'll lose _id fields everywhere, and they're required for most of my handlers
-    //     }),
-    //     uri: "http://localhost:5000/graphql"
-    // })
-
     const client = new QueryClient();
 
     return (
         <>
-            {/* <ApolloProvider client={client}> */}
             <QueryClientProvider client={client}>
                 <RecoilRoot>
                     <div className="App__wrapper">
-                        <LoginProvider>
                             <Router>
                                 <Header />
                                 <div className="App">
@@ -83,11 +72,9 @@ const App = () => {
                                 </div >
                                 <Footer />
                             </Router >
-                        </LoginProvider >
                     </div >
                 </RecoilRoot >
             </QueryClientProvider>
-            {/* </ApolloProvider> */}
         </>
     )
 }

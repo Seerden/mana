@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from 'axios';
-import { LoginContext } from 'context/LoginContext';
 import { useRouteProps } from 'hooks/routerHooks';
 import { handleFormBlur } from 'hooks/state';
 import LoginForm from './LoginForm';
 import { useMutation, useQuery } from "react-query";
 import request, { gql } from "graphql-request";
 import { MaybeUser } from 'graphql/codegen-output'
+import { useLogin } from "hooks/useLogin";
 
 const Login = () => {
-    const { login } = useContext(LoginContext);
+    const { login } = useLogin();;
     const { navigate } = useRouteProps();
     const [user, setUser] = useState<{ username: string, password: string } | null>(null);
     const [showPass, setShowPass] = useState(false);

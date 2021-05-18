@@ -1,8 +1,8 @@
-import axios, { AxiosResponse } from 'axios';
-import { LoginContext } from '../context/LoginContext';
+import axios from 'axios';
 import { useContext, useCallback, useState, useEffect, useRef } from 'react';
 import { useRouteProps } from './routerHooks';
 import { handleError as defaultHandleError, handleResponse as defaultHandleResponse } from 'helpers/apiHandlers/apiHandlers';
+import { useLogin } from './useLogin';
 
 interface UseRequestProps {
     handleResponse?: Function,
@@ -20,7 +20,7 @@ interface UseRequestProps {
  */
 export const useRequest = ({ handleResponse, handleError }: UseRequestProps) => {
     const
-        { currentUser, logout } = useContext(LoginContext),
+        { currentUser, logout } = useLogin(),
         mounted = useRef(false),
         { params } = useRouteProps(),
         [request, setRequest] = useState<Function | null>(null),
