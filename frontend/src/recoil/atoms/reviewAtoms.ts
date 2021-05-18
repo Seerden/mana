@@ -10,7 +10,7 @@ type ReviewSettings = {
     ended: boolean
 };
 
-type PassFail = Array<any> | Array<'pass' | 'fail'>;
+type PassFail = Array<'pass' | 'fail'>;
 
 type TimePerCard = Array<any> | Array<Date>;
 
@@ -53,7 +53,7 @@ export const newHistoryEntriesState = atom({
                         termId: t._id,
                         newHistoryEntry: {
                             date: reviewSettings.sessionStart,
-                            content: [],
+                            content: [] as PassFail,
                             direction: reviewSettings.direction
                         }
                     })
@@ -67,7 +67,7 @@ export const newHistoryEntriesState = atom({
 
 export const passfailState = atom<PassFail>({
     key: 'passfailState',
-    default: []
+    default: [] as PassFail
 })
 
 export const timePerCardState = atom<TimePerCard>({
