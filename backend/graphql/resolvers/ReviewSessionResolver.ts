@@ -1,4 +1,6 @@
-import { Resolver, Arg, Mutation, Query, ObjectType, InputType, Field } from "type-graphql";
+import { Resolver, Arg, Mutation, ObjectType, Field } from "type-graphql";
+import { bulkUpdateTerms } from "../helpers/term";
+import { TermUpdateObject } from "../types/input_types/term";
 import { ReviewSession, ReviewSessionBase, ReviewSessionModel } from "../types/ReviewSession";
 
 @ObjectType() 
@@ -14,14 +16,17 @@ class MaybeReviewSession {
 export class ReviewSessionResolver {
     @Mutation(() => MaybeReviewSession)
     async createReviewSession(
-        @Arg("newReviewSession") newReviewSession: ReviewSessionBase
+        @Arg("newReviewSession") newReviewSession: ReviewSessionBase,
+        @Arg("termUpdateArray", type => [TermUpdateObject]) termUpdateArray: [TermUpdateObject]
     ): Promise<MaybeReviewSession> {
         const newReviewSessionDocument = new ReviewSessionModel(newReviewSession);
-
         const savedReviewSession = await newReviewSessionDocument.save();
+
         if (savedReviewSession) {
+            await bulkUpdateTerms(termUpdateArray);
             return { savedReviewSession }
         }
-        return { error: 'Failed to save review session to database'}
+
+        return { error: 'Failed to save review session to database' }
     }
 }

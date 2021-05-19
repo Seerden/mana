@@ -10,21 +10,21 @@ export async function bulkEditTerms(updateObj: Array<TermEditObject>) {
     const bulkOperations = [];
 
     for (const term of updateObj) {
-        const updateSet = {};
+        const fieldsToSet = {};
 
         if ('to' in term) {
-            updateSet['to'] = term.to;
+            fieldsToSet['to'] = term.to;
         }
 
         if ('from' in term) {
-            updateSet['from'] = term.from;
+            fieldsToSet['from'] = term.from;
         }
 
-        if (Object.keys(updateSet).length > 0) {
+        if (Object.keys(fieldsToSet).length > 0) {
             const operation = {
                 updateOne: {
                     filter: { _id: term._id },
-                    update: { $set: updateSet }
+                    update: { $set: fieldsToSet }
                 }
             };
 

@@ -136,6 +136,7 @@ export type MutationDeleteTermsFromListArgs = {
 
 
 export type MutationCreateReviewSessionArgs = {
+  termUpdateArray: Array<TermUpdateObject>;
   newReviewSession: ReviewSessionBaseInput;
 };
 
@@ -556,7 +557,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationEditTermsArgs, 'updateObj'>>;
   createTerms?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationCreateTermsArgs, 'terms'>>;
   deleteTermsFromList?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationDeleteTermsFromListArgs, 'ids' | 'listId'>>;
-  createReviewSession?: Resolver<ResolversTypes['MaybeReviewSession'], ParentType, ContextType, RequireFields<MutationCreateReviewSessionArgs, 'newReviewSession'>>;
+  createReviewSession?: Resolver<ResolversTypes['MaybeReviewSession'], ParentType, ContextType, RequireFields<MutationCreateReviewSessionArgs, 'termUpdateArray' | 'newReviewSession'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {

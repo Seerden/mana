@@ -57,7 +57,7 @@ type MaybeUser {
 
 type Mutation {
   createList(newList: NewListFromClientInput!): MaybeList!
-  createReviewSession(newReviewSession: ReviewSessionBaseInput!): MaybeReviewSession!
+  createReviewSession(newReviewSession: ReviewSessionBaseInput!, termUpdateArray: [TermUpdateObject!]!): MaybeReviewSession!
   createTerms(terms: [NewTermFromClient!]!): ErrorOrSuccess!
   createUser(password: String!, username: String!): MaybeUser!
   deleteList(listId: String!): SuccessOrError!
