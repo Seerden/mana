@@ -1,8 +1,9 @@
 import { getModelForClass, modelOptions, prop, Ref, Severity } from "@typegoose/typegoose";
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, Int, ObjectType } from "type-graphql";
 import { dbConn } from "../../db/db";
 import { List } from './List';
 import { Term } from './Term';
+import { ObjectId } from 'mongodb';
 
 @ObjectType()
 class ReviewSettings {
@@ -44,20 +45,20 @@ class ReviewSessionTerms {
 
 @ObjectType()
 class ReviewDate {
+    @prop()
     @Field()
     start: Date;
 
+    @prop()
     @Field()
     end: Date
 }
 
-
 @ObjectType()
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class ReviewSession {
-    @prop()
     @Field(() => ID)
-    _id: String
+    _id: ObjectId
     
     @prop({ required: true })
     @Field(() => String)
@@ -79,6 +80,13 @@ export class ReviewSession {
     @Field(() => ReviewSettings)
     settings: ReviewSettings
 
+    @prop()
+    @Field(() => [String])
+    passfail: string[]
+
+    @prop()
+    @Field(() => [Int])
+    timePerCard: number[]
 }
 
 export const ReviewSessionModel = getModelForClass(ReviewSession, { existingConnection: dbConn })

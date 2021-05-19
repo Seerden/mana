@@ -178,6 +178,8 @@ export type ReviewSession = {
   date: ReviewDate;
   terms: ReviewSessionTerms;
   settings: ReviewSettings;
+  passfail: Array<Scalars['String']>;
+  timePerCard: Array<Scalars['Int']>;
 };
 
 export type ReviewSessionTerms = {
@@ -501,6 +503,8 @@ export type ReviewSessionResolvers<ContextType = any, ParentType extends Resolve
   date?: Resolver<ResolversTypes['ReviewDate'], ParentType, ContextType>;
   terms?: Resolver<ResolversTypes['ReviewSessionTerms'], ParentType, ContextType>;
   settings?: Resolver<ResolversTypes['ReviewSettings'], ParentType, ContextType>;
+  passfail?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  timePerCard?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

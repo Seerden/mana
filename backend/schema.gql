@@ -102,8 +102,10 @@ type ReviewSession {
   date: ReviewDate!
   listIds: [List!]
   owner: String!
+  passfail: [String!]!
   settings: ReviewSettings!
   terms: ReviewSessionTerms!
+  timePerCard: [Int!]!
 }
 
 type ReviewSessionTerms {
