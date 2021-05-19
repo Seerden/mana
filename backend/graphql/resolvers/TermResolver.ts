@@ -59,7 +59,7 @@ export class TermResolver {
     async createTerms(
         @Arg("terms", type => [NewTermFromClient]) terms: [NewTermFromClient]
     ) {
-        const maybeCreateTerms = await createTermDocuments(terms);
+        const maybeCreateTerms = await createTermDocuments(terms, null);
 
         if (maybeCreateTerms.terms) {
             const listBulkWriteResult = await addTermsToList(maybeCreateTerms.terms);

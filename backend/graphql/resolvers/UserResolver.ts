@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Arg, ObjectType, Field, Ctx } from "type-graphql";
 import { User, UserModel } from "../types/User";
 import { ExpressContext } from "apollo-server-express";
-import { compare } from "bcryptjs";
+import { compare, hash } from "bcryptjs";
 
 @ObjectType()
 class MaybeUser {
@@ -42,10 +42,13 @@ export class UserResolver {
         @Arg("username") username: string,
         @Arg("password") password: string
     ): Promise<MaybeUser> {
+        const hashedPassword = await hash(password, 10);
+
         const newUser = new UserModel({
             username,
-            password
+            password: hashedPassword
         });
+        console.log('Register user mutation requested');
 
         const existingUser = await UserModel.findOne({ username });
         if (!existingUser) {
