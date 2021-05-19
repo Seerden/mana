@@ -1,6 +1,6 @@
 import { Field, ObjectType } from "type-graphql";
 import { prop as Property, getModelForClass, Severity, modelOptions } from '@typegoose/typegoose';
-import { ObjectId } from 'mongodb';
+import { ObjectId } from 'mongoose';
 
 import { dbConn } from "../../db/db";
 
@@ -20,7 +20,7 @@ export class User {
 
     @Property()
     @Field(() => String)
-    currentSession?: typeof ObjectId;  // mongoose ObjectId
+    currentSession?: ObjectId;  // mongoose ObjectId
 
     @Property({required: true})
     @Field()

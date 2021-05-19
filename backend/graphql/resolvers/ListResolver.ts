@@ -1,14 +1,14 @@
-import { ObjectId } from "mongodb";
-import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType, Mutation, Int, InputType } from "type-graphql";
-import { List, ListModel } from "../types/List";
+import mongoose, { ObjectId } from 'mongoose';
+import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType, Mutation, ID } from "type-graphql";
+import { List, ListModel, MaybeList } from "../types/List";
 import { Term, TermModel } from "../types/Term";
-import mongoose from 'mongoose';
 import { maybeDeleteTerms } from "../helpers/term";
-import { Ref } from '@typegoose/typegoose';
+import { NewListFromClient } from "../types/input_types/list";
+import { createListDocument } from "../helpers/list";
 
 @ObjectType()
 class TermId {
-    @Field(() => String)
+    @Field(() => ID)
     _id: ObjectId
 }
 
@@ -59,7 +59,9 @@ export class ListResolver {
     ) {
         
         if (populate) {
-            return await TermModel.find({ _id: { $in: list.terms } }).lean().exec()    ;
+
+            // @ts-ignore 
+            return await TermModel.find({ _id: { $in: list.terms }}).lean().exec();
         }
 
         return list.terms.map(_id => ({ _id }));
@@ -73,7 +75,7 @@ export class ListResolver {
     ): Promise<SuccessOrError> {
         const deletedList = await ListModel.findByIdAndDelete(new mongoose.Types.ObjectId(listId), null, null);
         if (deletedList) {
-            const deletedTerms = await maybeDeleteTerms(deletedList.terms.map(term => new mongoose.Types.ObjectId(term._id)));
+            const deletedTerms = await maybeDeleteTerms(deletedList.terms.map(term => (term._id)));
 
             if (deletedTerms?.deletedCount) {
                 return { success: true }
@@ -82,6 +84,18 @@ export class ListResolver {
 
         return { error: true }
     };
+
+    @Mutation(() => MaybeList)
+    async createList(
+        @Arg("newList") newList: NewListFromClient
+    ) {
+        const savedList = await createListDocument(newList);
+        if (savedList) {
+            return { list: savedList }
+        } else {
+            return { error: "Failed to save list to database" }
+        }
+    }
 }
 
 @ObjectType()

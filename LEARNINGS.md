@@ -1,3 +1,6 @@
+- # Using Typegoose with Type-GraphQL
+    - define the _id field only as (readonly) `Field()` in the class creation, not as prop(), because if we use prop() then Typegoose expects us to provide our own _id definition, and will not generate one automatically
+    - make sure all nested properties are also tagged as prop() in the class where we define them, not just in the class where we define the typegoose model/type-graphql class)
 - # Using variables from outside gql tags
 
 - ## Server:

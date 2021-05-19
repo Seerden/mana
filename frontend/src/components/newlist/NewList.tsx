@@ -1,28 +1,27 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useCallback } from 'react';
 import { useRouteProps } from 'hooks/routerHooks';
 import NewListTerm from './NewListTerm';
-import { Term } from 'graphql/codegen-output';
+import { NewListTermInput } from 'graphql/codegen-output';
 import './style/NewList.scss';
+import { useMutateCreateList } from 'graphql/queries/list.query';
 
 export type FormOutput = {
-    name: string,
-    from: string,
-    to: string,
-    terms: Partial<Term>[],
-    created?: Date;
+    owner?: string
+    name?: string,
+    from?: string,
+    to?: string,
+    terms?: NewListTermInput[],
 }
 
 const NewList = memo((props) => {
     const { params } = useRouteProps();
     const [numTerms, setNumTerms] = useState<number>(10)
     const [formOutput, setFormOutput] = useState<FormOutput>(() => ({
-        name: "",
-        from: "",
-        to: "",
+        owner: params.username,
         terms: new Array(numTerms),
-        created: undefined,
     }))
     const [termInputs, setTermInputs] = useState<JSX.Element[]>([] as JSX.Element[]);
+    const { mutate: mutateCreateList } = useMutateCreateList();
 
     useEffect(() => {
         setTermInputs(makeTermInputElements(formOutput, numTerms))
@@ -54,18 +53,31 @@ const NewList = memo((props) => {
         }
     }
 
-    function handleSubmit(e) {
+    const handleSubmit = useCallback((e: React.MouseEvent<HTMLInputElement>) => {
         e.preventDefault();
 
+        if (["name", "from", "to", "owner"].every(entry => {
+            return formOutput.hasOwnProperty(entry) && typeof formOutput[entry] == 'string'
+        })) {
+            const terms = formOutput.terms?.filter(term => term !== null);
+
+            if (terms && terms.length > 0) {
+                // TS isn't sure that name, from, to, etc. all exist because I'm using object.getOwnProperty
+                // @ts-ignore 
+                mutateCreateList({
+                    ...formOutput,
+                    terms
+                })
+            }
+
+        }
         // @todo: handle newList POST with GraphQL mutation
         // setPostRequest(() => postList(params.username, {
         //     owner: params.username,
         //     ...formOutput,
-        //     created: new Date(),
-        //     terms: formOutput.terms.filter(i => i !== null),
+        //     terms: formOutput.terms.filter(term => term !== null),
         // }));
-
-    }
+    }, [formOutput, setFormOutput])
 
     return (
         <div className="NewList">

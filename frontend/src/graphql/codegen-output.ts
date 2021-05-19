@@ -49,6 +49,12 @@ export type ListState = {
   backwards: Scalars['String'];
 };
 
+export type MaybeList = {
+  __typename?: 'MaybeList';
+  list?: Maybe<List>;
+  error?: Maybe<Scalars['String']>;
+};
+
 export type MaybeUser = {
   __typename?: 'MaybeUser';
   error?: Maybe<Scalars['String']>;
@@ -58,6 +64,7 @@ export type MaybeUser = {
 export type Mutation = {
   __typename?: 'Mutation';
   deleteList: SuccessOrError;
+  createList: MaybeList;
   createUser: MaybeUser;
   /** Login mutation */
   login: MaybeUser;
@@ -70,6 +77,11 @@ export type Mutation = {
 
 export type MutationDeleteListArgs = {
   listId: Scalars['String'];
+};
+
+
+export type MutationCreateListArgs = {
+  newList: NewListFromClientInput;
 };
 
 
@@ -106,7 +118,20 @@ export type MutationDeleteTermsFromListArgs = {
   listId: Scalars['String'];
 };
 
-/**     New term created client-side, excludes history and saturation fields     since those don't exist yet for the term */
+export type NewListFromClientInput = {
+  owner: Scalars['String'];
+  name: Scalars['String'];
+  from: Scalars['String'];
+  to: Scalars['String'];
+  terms: Array<NewListTermInput>;
+};
+
+export type NewListTermInput = {
+  from: Scalars['String'];
+  to: Scalars['String'];
+};
+
+/** New term created client-side, excludes history and saturation fields, since those don't exist yet for the term */
 export type NewTermFromClient = {
   to: Scalars['String'];
   from: Scalars['String'];
@@ -179,14 +204,14 @@ export type SuccessOrError = {
 
 export type Term = {
   __typename?: 'Term';
-  _id: Scalars['String'];
+  _id: Scalars['ID'];
   owner: Scalars['String'];
   languages?: Maybe<TermLanguages>;
   to: Scalars['String'];
   from: Scalars['String'];
   history?: Maybe<Array<TermHistory>>;
   saturation: TermSaturation;
-  listMembership: Array<List>;
+  listMembership?: Maybe<Array<List>>;
 };
 
 export type TermEditObject = {
@@ -210,7 +235,7 @@ export type TermHistoryInput = {
 
 export type TermId = {
   __typename?: 'TermId';
-  _id: Scalars['String'];
+  _id: Scalars['ID'];
 };
 
 export type TermLanguages = {
@@ -337,9 +362,12 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ListState: ResolverTypeWrapper<ListState>;
+  MaybeList: ResolverTypeWrapper<MaybeList>;
   MaybeUser: ResolverTypeWrapper<MaybeUser>;
   Mutation: ResolverTypeWrapper<{}>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  NewListFromClientInput: NewListFromClientInput;
+  NewListTermInput: NewListTermInput;
   NewTermFromClient: NewTermFromClient;
   Query: ResolverTypeWrapper<{}>;
   ReviewDate: ResolverTypeWrapper<ReviewDate>;
@@ -371,9 +399,12 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   Boolean: Scalars['Boolean'];
   ListState: ListState;
+  MaybeList: MaybeList;
   MaybeUser: MaybeUser;
   Mutation: {};
   Int: Scalars['Int'];
+  NewListFromClientInput: NewListFromClientInput;
+  NewListTermInput: NewListTermInput;
   NewTermFromClient: NewTermFromClient;
   Query: {};
   ReviewDate: ReviewDate;
@@ -427,6 +458,12 @@ export type ListStateResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type MaybeListResolvers<ContextType = any, ParentType extends ResolversParentTypes['MaybeList'] = ResolversParentTypes['MaybeList']> = {
+  list?: Resolver<Maybe<ResolversTypes['List']>, ParentType, ContextType>;
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MaybeUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['MaybeUser'] = ResolversParentTypes['MaybeUser']> = {
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
@@ -435,6 +472,7 @@ export type MaybeUserResolvers<ContextType = any, ParentType extends ResolversPa
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   deleteList?: Resolver<ResolversTypes['SuccessOrError'], ParentType, ContextType, RequireFields<MutationDeleteListArgs, 'listId'>>;
+  createList?: Resolver<ResolversTypes['MaybeList'], ParentType, ContextType, RequireFields<MutationCreateListArgs, 'newList'>>;
   createUser?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
   login?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
   updateTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationUpdateTermsArgs, 'updateObj'>>;
@@ -489,14 +527,14 @@ export type SuccessOrErrorResolvers<ContextType = any, ParentType extends Resolv
 };
 
 export type TermResolvers<ContextType = any, ParentType extends ResolversParentTypes['Term'] = ResolversParentTypes['Term']> = {
-  _id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   owner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   languages?: Resolver<Maybe<ResolversTypes['TermLanguages']>, ParentType, ContextType>;
   to?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   history?: Resolver<Maybe<Array<ResolversTypes['TermHistory']>>, ParentType, ContextType>;
   saturation?: Resolver<ResolversTypes['TermSaturation'], ParentType, ContextType>;
-  listMembership?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType>;
+  listMembership?: Resolver<Maybe<Array<ResolversTypes['List']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -508,7 +546,7 @@ export type TermHistoryResolvers<ContextType = any, ParentType extends Resolvers
 };
 
 export type TermIdResolvers<ContextType = any, ParentType extends ResolversParentTypes['TermId'] = ResolversParentTypes['TermId']> = {
-  _id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -542,6 +580,7 @@ export type Resolvers<ContextType = any> = {
   ErrorOrSuccess?: ErrorOrSuccessResolvers<ContextType>;
   List?: ListResolvers<ContextType>;
   ListState?: ListStateResolvers<ContextType>;
+  MaybeList?: MaybeListResolvers<ContextType>;
   MaybeUser?: MaybeUserResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

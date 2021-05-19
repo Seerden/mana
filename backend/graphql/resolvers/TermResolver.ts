@@ -9,10 +9,7 @@ import mongoose from 'mongoose';
 //  only as part of their parent list's queries,
 //   but this might change in the future
 
-@InputType({ description: "\
-    New term created client-side, excludes history and saturation fields \
-    since those don't exist yet for the term" 
-})
+@InputType({ description: "New term created client-side, excludes history and saturation fields, since those don't exist yet for the term" })
 export class NewTermFromClient {
     @Field()
     to: string;

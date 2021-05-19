@@ -5,24 +5,25 @@ import { dbConn } from "../../db/db";
 import { TermsUnion } from "../resolvers/ListResolver";
 import { ObjectId } from "mongodb";
 
+type ListStateUnion = 'untouched' | 'seeding' | 'seeded';
+
 @ObjectType()
 class ListState {
     @Property()
-    @Field()
-    forwards?: string;
+    @Field(() => String)
+    forwards?: ListStateUnion;
 
-    @Property()
+    @Property(() => String)
     @Field()
-    backwards?: string;
+    backwards?: ListStateUnion;
 }
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
 @index({ collation: { locale: 'en', strength: 2}})
 export class List {
-    @Property()
     @Field(() => ID)
-    _id: ObjectId
+    readonly _id: ObjectId
 
     @Property()
     @Field(() => String)
@@ -66,6 +67,13 @@ export class List {
     state: ListState
 }
 
+@ObjectType()
+export class MaybeList {
+    @Field(() => List, { nullable: true })
+    list?: List
 
+    @Field({ nullable: true })
+    error?: string
+}
 
 export const ListModel = getModelForClass(List, { existingConnection: dbConn });

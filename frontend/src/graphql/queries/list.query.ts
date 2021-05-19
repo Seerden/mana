@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "react-query";
 import { gql, request} from 'graphql-request';
-import { List } from "graphql/codegen-output";
+import { List, MaybeList, NewListFromClientInput } from "graphql/codegen-output";
 import { useEffect } from "react";
 
 const listByIdQuery = (ids: [String]) => gql`
@@ -94,3 +94,25 @@ export function useMutateDeleteList (id: string) {
 
     return { mutate, data, ...rest }
 };
+
+const createListMutation = gql`
+${CoreListFields}
+mutation ($newList: NewListFromClientInput!) {
+    createList(newList: $newList) {
+        list {
+            ...CoreListFields
+        }
+        error
+    }
+}
+`;
+
+export function useMutateCreateList() {
+    const { mutate, data, ...rest } = useMutation<MaybeList, any, NewListFromClientInput>("createList", async (newList) => {
+        const response = await request(process.env.REACT_APP_GRAPHQL_URI!, createListMutation, {
+            newList
+        });
+        return response;
+    }, { retry: false })
+    return { mutate, data, ...rest }
+}

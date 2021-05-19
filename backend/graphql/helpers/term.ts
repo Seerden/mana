@@ -1,7 +1,10 @@
-import { ObjectId } from "mongodb";
+import mongoose from "mongoose";
 import { NewTermFromClient } from "../resolvers/TermResolver";
 import { TermEditObject, TermUpdateObject } from "../types/input_types/term";
 import { Term, TermModel } from "../types/Term";
+import { NewListTerm } from '../types/input_types/list';
+import { ObjectId } from 'mongodb';
+import { asObjectId } from "./as";
 
 export async function bulkEditTerms(updateObj: Array<TermEditObject>) {
     const bulkOperations = [];
@@ -74,12 +77,29 @@ export async function bulkUpdateTerms(updateObj: Array<TermUpdateObject>) {
     return 0
 }
 
-export async function createTermDocuments(terms: Array<NewTermFromClient>) {
+export async function createTermDocuments(terms: Array<NewTermFromClient | NewListTerm>, options: any) {
     // create a TermModel document for every term in terms
 
-    let savedTerms = await TermModel.insertMany(terms);
+    let termsToSave: Omit<Partial<Term>, "listMembership">[];
+
+    if (options) {
+        termsToSave = terms.map(term => ({
+            ...term,
+            owner: options.owner,
+            languages: {
+                from: options.from,
+                to: options.to
+            },
+        }))
+    } else {
+        termsToSave = [...terms];
+    }
+
+    termsToSave = termsToSave.map(term => ({ ...term, saturation: { forwards: -1, backwards: -1 } }));
+
+    let savedTerms = await TermModel.insertMany(termsToSave);
     savedTerms = Array.from(savedTerms);  // need to do this to work around mongoose types, 
-                                          //  which say savedTerms doesn't have .map property
+    //  which say savedTerms doesn't have .map property
 
     if (savedTerms.length === terms.length) {
         // insert every term's id into its parent's .terms array
@@ -98,17 +118,40 @@ export async function createTermDocuments(terms: Array<NewTermFromClient>) {
     }
 }
 
-export async function maybeDeleteTerms(ids: ObjectId[] | []) {
+export async function maybeDeleteTerms(ids: any[]) {
     // remove terms if they're only part of the parent list, which was just deleted
     if (ids.length > 0) {
-        const terms = await TermModel.find({ _id: { $in: ids }}).lean().exec();
-    
+        const termIds = ids.map(id => new mongoose.Types.ObjectId(id))
+        const terms = await TermModel.find({ _id: { $in: termIds } }).lean().exec();
+
         const termIdsToRemove = terms
             .filter(term => term.listMembership.length === 1)
             .map(term => term._id);
-    
+
         if (termIdsToRemove.length > 0) {
-            return await TermModel.deleteMany({ _id: { $in: termIdsToRemove }});
-        } 
+            return await TermModel.deleteMany({ _id: { $in: termIdsToRemove } });
+        }
     }
+}
+
+export async function appendListIdToTerms(listId: string | ObjectId, termIds: Array<string | ObjectId>) {
+    // const bulkOps = [];
+
+    const bulkOps = termIds.map(termId => ({
+        updateOne: {
+            filter: {
+                _id: asObjectId(termId)
+            },
+            update: {
+                $push: {
+                    listMembership: asObjectId(listId)
+                }
+            }
+
+        }
+    }))
+
+    const { result, modifiedCount } = await TermModel.bulkWrite(bulkOps);
+
+    return { result, modifiedCount }
 }

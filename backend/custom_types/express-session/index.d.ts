@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
+import mongoose, { ObjectId } from 'mongoose';
 
 declare namespace Express {
     interface Request {

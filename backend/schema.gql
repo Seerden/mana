@@ -32,12 +32,18 @@ type ListState {
   forwards: String!
 }
 
+type MaybeList {
+  error: String
+  list: List
+}
+
 type MaybeUser {
   error: String
   user: User
 }
 
 type Mutation {
+  createList(newList: NewListFromClientInput!): MaybeList!
   createTerms(terms: [NewTermFromClient!]!): ErrorOrSuccess!
   createUser(password: String!, username: String!): MaybeUser!
   deleteList(listId: String!): SuccessOrError!
@@ -49,7 +55,21 @@ type Mutation {
   updateTerms(updateObj: [TermUpdateObject!]!): Int!
 }
 
-"""    New term created client-side, excludes history and saturation fields     since those don't exist yet for the term
+input NewListFromClientInput {
+  from: String!
+  name: String!
+  owner: String!
+  terms: [NewListTermInput!]!
+  to: String!
+}
+
+input NewListTermInput {
+  from: String!
+  to: String!
+}
+
+"""
+New term created client-side, excludes history and saturation fields, since those don't exist yet for the term
 """
 input NewTermFromClient {
   from: String!
@@ -106,11 +126,11 @@ type SuccessOrError {
 }
 
 type Term {
-  _id: String!
+  _id: ID!
   from: String!
   history: [TermHistory!]
   languages: TermLanguages
-  listMembership: [List!]!
+  listMembership: [List!]
   owner: String!
   saturation: TermSaturation!
   to: String!
@@ -135,7 +155,7 @@ input TermHistoryInput {
 }
 
 type TermId {
-  _id: String!
+  _id: ID!
 }
 
 type TermLanguages {

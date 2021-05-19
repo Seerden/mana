@@ -20,6 +20,8 @@ import { log } from './lib/expressMiddleware';
 
 const MongoStore = connectMongo(session);
 import mongoose from 'mongoose';
+import { TermModel } from './graphql/types/Term';
+import { TypegooseMiddleware } from './graphql/middleware/typegoose';
 
 // mongoose.set('debug', true);
 
@@ -51,7 +53,8 @@ async function startServer() {
 
     const schema = await buildSchema({
         resolvers: [UserResolver, ListResolver, TermResolver],
-        emitSchemaFile: true
+        emitSchemaFile: true,
+        globalMiddlewares: [TypegooseMiddleware]
     });
 
     const server = new ApolloServer({
@@ -69,6 +72,8 @@ async function startServer() {
     });
 
     await inspectDatabase();
+
+    // await TermModel.deleteMany({ owner: "a" })
 }
 
 startServer();
