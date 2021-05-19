@@ -43,11 +43,11 @@ class ReviewSettings {
 @InputType("ReviewSessionTermsInput")
 class ReviewSessionTerms {
     @prop({ ref: 'List' })
-    @Field(() => Id)
+    @Field(() => String)
     listId: Id
     
     @prop({ ref: 'Term' })
-    @Field(() => [Id])
+    @Field(() => [String])
     termIds: Id[]
 }
 

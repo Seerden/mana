@@ -3,6 +3,7 @@ import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import { useRouteProps } from "hooks/routerHooks";
 import { termsToReviewState, reviewStageState, reviewSettingsState } from 'recoil/atoms/reviewAtoms';
 import { maybeUpdateListStateAfterReview } from 'helpers/list.api'
+import { useQueryListsById } from "graphql/queries/list.query";
 
 // @todo: replace all REST calls with GraphQl queries and mutations
 
@@ -15,24 +16,28 @@ const CompleteReview = ({ children }) => {
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const reviewStage = useRecoilValue(reviewStageState);
     const reviewSettings = useRecoilValue(reviewSettingsState);
+    const  { data: lists, refetch: refetchLists } = useQueryListsById([params.id])
 
     // on component mount, get list from database  @todo: implement full-set review functionality
     useEffect(() => {
         resetTermsToReview();
         if (location.pathname.includes('list')) {
-            // getListOrSetRequest(() => getList(params.username, { _id: params.id }));
-        } else if (location.pathname.includes('set')) {
-            // @todo: handle getting all terms in the set
-        }
+            refetchLists()
+        } 
     }, [])
 
+    useEffect(() => {
+        lists && console.log(lists)
+        console.log(termsToReview);
+    }, [lists])
+
     // once list is received from backend, set termsToReview to all terms from the list  
-    // @todo: implement set functionality
-    // useEffect(() => {
-    //     if (listOrSetResponse && !(termsToReview.length > 0)) {
-    //         setTermsToReview(listOrSetResponse.terms);
-    //     }
-    // }, [listOrSetResponse])
+    useEffect(() => {
+        if (lists) {
+            // @ts-ignore - the query returns TermsUnion, but the list should definitely be populated - @todo: look into this
+            setTermsToReview(lists[0].terms);
+        }
+    }, [lists])
 
     // on completion of full list review, push current session to list.sessions,
     // update list.lastReviewed, and maybe update list.state

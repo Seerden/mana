@@ -1,4 +1,4 @@
-import { Term } from 'graphql/codegen-output';
+import { Term, TermHistoryInput, TermUpdateObject } from 'graphql/codegen-output';
 import { atom, selector } from 'recoil';
 
 type ReviewSettings = {
@@ -10,7 +10,7 @@ type ReviewSettings = {
     ended: boolean
 };
 
-type PassFail = Array<'pass' | 'fail'>;
+type PassFailArray = Array<'pass' | 'fail'>;
 
 type TimePerCard = Array<any> | Array<Date>;
 
@@ -37,7 +37,31 @@ export const reviewStageState = atom<ReviewStage>({
 
 export const termsToReviewState = atom<Array<Term>>({
     key: 'termsToReviewState',
-    default: [],
+    default: [] as Term[],
+})
+
+const makeDefaultTermUpdateArray = (terms: Term[], settings: ReviewSettings): TermUpdateObject[] => {
+    return terms.map(term => ({
+        _id: term._id,
+        history: {
+            content: [] as PassFailArray,
+            direction: settings.direction,
+            date: null
+        } as TermHistoryInput,
+        saturation: term.saturation
+    }))
+}
+
+export const termUpdateArrayState = atom<TermUpdateObject[]>({
+    key: "termUpdateArrayState",
+    default: selector({
+        key: "termUpdateArrayState/default",
+        get: ({ get }) => {
+            const reviewSettings = get(reviewSettingsState);
+            const termsToReview = get(termsToReviewState);
+            return makeDefaultTermUpdateArray(termsToReview, reviewSettings)
+        }
+    }),
 })
 
 export const newHistoryEntriesState = atom({
@@ -53,7 +77,7 @@ export const newHistoryEntriesState = atom({
                         termId: t._id,
                         newHistoryEntry: {
                             date: reviewSettings.sessionStart,
-                            content: [] as PassFail,
+                            content: [] as PassFailArray,
                             direction: reviewSettings.direction
                         }
                     })
@@ -65,9 +89,9 @@ export const newHistoryEntriesState = atom({
     })
 })
 
-export const passfailState = atom<PassFail>({
+export const passfailState = atom<PassFailArray>({
     key: 'passfailState',
-    default: [] as PassFail
+    default: [] as PassFailArray
 })
 
 export const timePerCardState = atom<TimePerCard>({

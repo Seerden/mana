@@ -221,13 +221,13 @@ export type ReviewSessionBaseInput = {
 
 export type ReviewSessionTerms = {
   __typename?: 'ReviewSessionTerms';
-  listId: Id;
-  termIds: Array<Id>;
+  listId: Scalars['String'];
+  termIds: Array<Scalars['String']>;
 };
 
 export type ReviewSessionTermsInput = {
-  listId: IdInput;
-  termIds: Array<IdInput>;
+  listId: Scalars['String'];
+  termIds: Array<Scalars['String']>;
 };
 
 export type ReviewSettings = {
@@ -586,8 +586,8 @@ export type ReviewSessionResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type ReviewSessionTermsResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSessionTerms'] = ResolversParentTypes['ReviewSessionTerms']> = {
-  listId?: Resolver<ResolversTypes['Id'], ParentType, ContextType>;
-  termIds?: Resolver<Array<ResolversTypes['Id']>, ParentType, ContextType>;
+  listId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  termIds?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

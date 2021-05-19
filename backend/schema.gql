@@ -138,13 +138,13 @@ input ReviewSessionBaseInput {
 }
 
 type ReviewSessionTerms {
-  listId: Id!
-  termIds: [Id!]!
+  listId: String!
+  termIds: [String!]!
 }
 
 input ReviewSessionTermsInput {
-  listId: IdInput!
-  termIds: [IdInput!]!
+  listId: String!
+  termIds: [String!]!
 }
 
 type ReviewSettings {
