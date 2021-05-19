@@ -4,9 +4,11 @@ import { useMutation } from "react-query";
 
 const registerUserMutation = gql`
 mutation ($username: String!, $password: String!) {
-    error 
-    user {
-        username
+    createUser(username: $username, password: $password) {
+        error 
+        user {
+            username
+        }
     }
 }
 `

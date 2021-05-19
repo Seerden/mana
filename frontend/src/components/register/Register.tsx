@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { handleFormBlur } from '../../hooks/state';
 import './style/Register.scss';
 import { useMutateRegisterUser } from "graphql/queries/user.query";
@@ -7,11 +7,12 @@ const Register = (props) => {
     const [newUser, setNewUser] = useState<NewUser>({} as NewUser);
     const { data, mutate: mutateRegisterUser } = useMutateRegisterUser();
 
-    function handleSubmit(newUser: NewUser) {
+    const handleSubmit = useCallback((newUser: NewUser) => {
         if (newUser && newUser.username && newUser.password) {
             mutateRegisterUser(newUser)
         }
-    }
+
+    }, [newUser])
 
     return (
         <div className="PageWrapper">

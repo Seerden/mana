@@ -62,21 +62,13 @@ const NewList = memo((props) => {
             const terms = formOutput.terms?.filter(term => term !== null);
 
             if (terms && terms.length > 0) {
-                // TS isn't sure that name, from, to, etc. all exist because I'm using object.getOwnProperty
-                // @ts-ignore 
+                // @ts-ignore - because of how we check for the existence of keys above, TS doesn't know they exist
                 mutateCreateList({
                     ...formOutput,
                     terms
                 })
             }
-
         }
-        // @todo: handle newList POST with GraphQL mutation
-        // setPostRequest(() => postList(params.username, {
-        //     owner: params.username,
-        //     ...formOutput,
-        //     terms: formOutput.terms.filter(term => term !== null),
-        // }));
     }, [formOutput, setFormOutput])
 
     return (

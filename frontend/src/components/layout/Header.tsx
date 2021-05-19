@@ -52,13 +52,6 @@ const HeaderLoggedIn = () => {
                 My Lists
             </NavLink>
 
-            <NavLink
-                className={`NavLink ${isActive(`/u/${currentUser}/sets`, location) ? 'NavLink__active' : ''}`}
-                to={`/u/${currentUser}/sets`}
-            >
-                My Sets
-            </NavLink>
-
             <button
                 className="Header__logout"
                 onClick={() => logout()}
