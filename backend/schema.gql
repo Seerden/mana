@@ -13,6 +13,14 @@ type ErrorOrSuccess {
   success: String
 }
 
+type Id {
+  _id: String!
+}
+
+input IdInput {
+  _id: String!
+}
+
 type List {
   _id: ID!
   created: DateTime!
@@ -37,6 +45,11 @@ type MaybeList {
   list: List
 }
 
+type MaybeReviewSession {
+  error: String
+  savedReviewSession: ReviewSession
+}
+
 type MaybeUser {
   error: String
   user: User
@@ -44,6 +57,7 @@ type MaybeUser {
 
 type Mutation {
   createList(newList: NewListFromClientInput!): MaybeList!
+  createReviewSession(newReviewSession: ReviewSessionBaseInput!): MaybeReviewSession!
   createTerms(terms: [NewTermFromClient!]!): ErrorOrSuccess!
   createUser(password: String!, username: String!): MaybeUser!
   deleteList(listId: String!): SuccessOrError!
@@ -97,10 +111,15 @@ type ReviewDate {
   start: DateTime!
 }
 
+input ReviewDateInput {
+  end: DateTime!
+  start: DateTime!
+}
+
 type ReviewSession {
   _id: ID!
   date: ReviewDate!
-  listIds: [List!]
+  listIds: [Id!]
   owner: String!
   passfail: [String!]!
   settings: ReviewSettings!
@@ -108,12 +127,36 @@ type ReviewSession {
   timePerCard: [Int!]!
 }
 
+input ReviewSessionBaseInput {
+  date: ReviewDateInput!
+  listIds: [IdInput!]
+  owner: String!
+  passfail: [String!]!
+  settings: ReviewSettingsInput!
+  terms: ReviewSessionTermsInput!
+  timePerCard: [Int!]!
+}
+
 type ReviewSessionTerms {
-  listId: List!
-  termIds: Term!
+  listId: Id!
+  termIds: [Id!]!
+}
+
+input ReviewSessionTermsInput {
+  listId: IdInput!
+  termIds: [IdInput!]!
 }
 
 type ReviewSettings {
+  direction: String!
+  ended: Boolean!
+  n: Float!
+  sessionEnd: DateTime!
+  sessionStart: DateTime!
+  started: Boolean!
+}
+
+input ReviewSettingsInput {
   direction: String!
   ended: Boolean!
   n: Float!

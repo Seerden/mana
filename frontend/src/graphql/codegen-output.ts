@@ -23,6 +23,15 @@ export type ErrorOrSuccess = {
   success?: Maybe<Scalars['String']>;
 };
 
+export type Id = {
+  __typename?: 'Id';
+  _id: Scalars['String'];
+};
+
+export type IdInput = {
+  _id: Scalars['String'];
+};
+
 export type List = {
   __typename?: 'List';
   _id: Scalars['ID'];
@@ -55,6 +64,12 @@ export type MaybeList = {
   error?: Maybe<Scalars['String']>;
 };
 
+export type MaybeReviewSession = {
+  __typename?: 'MaybeReviewSession';
+  savedReviewSession?: Maybe<ReviewSession>;
+  error?: Maybe<Scalars['String']>;
+};
+
 export type MaybeUser = {
   __typename?: 'MaybeUser';
   error?: Maybe<Scalars['String']>;
@@ -72,6 +87,7 @@ export type Mutation = {
   editTerms: Scalars['Int'];
   createTerms: ErrorOrSuccess;
   deleteTermsFromList: ErrorOrSuccess;
+  createReviewSession: MaybeReviewSession;
 };
 
 
@@ -116,6 +132,11 @@ export type MutationDeleteTermsFromListArgs = {
   ids: Array<Scalars['String']>;
   remainingTermIds?: Maybe<Array<Scalars['String']>>;
   listId: Scalars['String'];
+};
+
+
+export type MutationCreateReviewSessionArgs = {
+  newReviewSession: ReviewSessionBaseInput;
 };
 
 export type NewListFromClientInput = {
@@ -170,26 +191,55 @@ export type ReviewDate = {
   end: Scalars['DateTime'];
 };
 
+export type ReviewDateInput = {
+  start: Scalars['DateTime'];
+  end: Scalars['DateTime'];
+};
+
 export type ReviewSession = {
   __typename?: 'ReviewSession';
-  _id: Scalars['ID'];
   owner: Scalars['String'];
-  listIds?: Maybe<Array<List>>;
+  listIds?: Maybe<Array<Id>>;
   date: ReviewDate;
   terms: ReviewSessionTerms;
   settings: ReviewSettings;
+  passfail: Array<Scalars['String']>;
+  timePerCard: Array<Scalars['Int']>;
+  _id: Scalars['ID'];
+};
+
+export type ReviewSessionBaseInput = {
+  owner: Scalars['String'];
+  listIds?: Maybe<Array<IdInput>>;
+  date: ReviewDateInput;
+  terms: ReviewSessionTermsInput;
+  settings: ReviewSettingsInput;
   passfail: Array<Scalars['String']>;
   timePerCard: Array<Scalars['Int']>;
 };
 
 export type ReviewSessionTerms = {
   __typename?: 'ReviewSessionTerms';
-  listId: List;
-  termIds: Term;
+  listId: Id;
+  termIds: Array<Id>;
+};
+
+export type ReviewSessionTermsInput = {
+  listId: IdInput;
+  termIds: Array<IdInput>;
 };
 
 export type ReviewSettings = {
   __typename?: 'ReviewSettings';
+  direction: Scalars['String'];
+  n: Scalars['Float'];
+  sessionStart: Scalars['DateTime'];
+  sessionEnd: Scalars['DateTime'];
+  started: Scalars['Boolean'];
+  ended: Scalars['Boolean'];
+};
+
+export type ReviewSettingsInput = {
   direction: Scalars['String'];
   n: Scalars['Float'];
   sessionStart: Scalars['DateTime'];
@@ -360,11 +410,14 @@ export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   ErrorOrSuccess: ResolverTypeWrapper<ErrorOrSuccess>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Id: ResolverTypeWrapper<Id>;
+  IdInput: IdInput;
   List: ResolverTypeWrapper<Omit<List, 'terms'> & { terms: Array<ResolversTypes['TermsUnion']> }>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ListState: ResolverTypeWrapper<ListState>;
   MaybeList: ResolverTypeWrapper<MaybeList>;
+  MaybeReviewSession: ResolverTypeWrapper<MaybeReviewSession>;
   MaybeUser: ResolverTypeWrapper<MaybeUser>;
   Mutation: ResolverTypeWrapper<{}>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -373,10 +426,14 @@ export type ResolversTypes = {
   NewTermFromClient: NewTermFromClient;
   Query: ResolverTypeWrapper<{}>;
   ReviewDate: ResolverTypeWrapper<ReviewDate>;
+  ReviewDateInput: ReviewDateInput;
   ReviewSession: ResolverTypeWrapper<ReviewSession>;
+  ReviewSessionBaseInput: ReviewSessionBaseInput;
   ReviewSessionTerms: ResolverTypeWrapper<ReviewSessionTerms>;
+  ReviewSessionTermsInput: ReviewSessionTermsInput;
   ReviewSettings: ResolverTypeWrapper<ReviewSettings>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
+  ReviewSettingsInput: ReviewSettingsInput;
   SuccessOrError: ResolverTypeWrapper<SuccessOrError>;
   Term: ResolverTypeWrapper<Term>;
   TermEditObject: TermEditObject;
@@ -397,11 +454,14 @@ export type ResolversParentTypes = {
   DateTime: Scalars['DateTime'];
   ErrorOrSuccess: ErrorOrSuccess;
   String: Scalars['String'];
+  Id: Id;
+  IdInput: IdInput;
   List: Omit<List, 'terms'> & { terms: Array<ResolversParentTypes['TermsUnion']> };
   ID: Scalars['ID'];
   Boolean: Scalars['Boolean'];
   ListState: ListState;
   MaybeList: MaybeList;
+  MaybeReviewSession: MaybeReviewSession;
   MaybeUser: MaybeUser;
   Mutation: {};
   Int: Scalars['Int'];
@@ -410,10 +470,14 @@ export type ResolversParentTypes = {
   NewTermFromClient: NewTermFromClient;
   Query: {};
   ReviewDate: ReviewDate;
+  ReviewDateInput: ReviewDateInput;
   ReviewSession: ReviewSession;
+  ReviewSessionBaseInput: ReviewSessionBaseInput;
   ReviewSessionTerms: ReviewSessionTerms;
+  ReviewSessionTermsInput: ReviewSessionTermsInput;
   ReviewSettings: ReviewSettings;
   Float: Scalars['Float'];
+  ReviewSettingsInput: ReviewSettingsInput;
   SuccessOrError: SuccessOrError;
   Term: Term;
   TermEditObject: TermEditObject;
@@ -436,6 +500,11 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 export type ErrorOrSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['ErrorOrSuccess'] = ResolversParentTypes['ErrorOrSuccess']> = {
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   success?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IdResolvers<ContextType = any, ParentType extends ResolversParentTypes['Id'] = ResolversParentTypes['Id']> = {
+  _id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -466,6 +535,12 @@ export type MaybeListResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type MaybeReviewSessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MaybeReviewSession'] = ResolversParentTypes['MaybeReviewSession']> = {
+  savedReviewSession?: Resolver<Maybe<ResolversTypes['ReviewSession']>, ParentType, ContextType>;
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MaybeUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['MaybeUser'] = ResolversParentTypes['MaybeUser']> = {
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
@@ -481,6 +556,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationEditTermsArgs, 'updateObj'>>;
   createTerms?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationCreateTermsArgs, 'terms'>>;
   deleteTermsFromList?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationDeleteTermsFromListArgs, 'ids' | 'listId'>>;
+  createReviewSession?: Resolver<ResolversTypes['MaybeReviewSession'], ParentType, ContextType, RequireFields<MutationCreateReviewSessionArgs, 'newReviewSession'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -497,20 +573,20 @@ export type ReviewDateResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type ReviewSessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSession'] = ResolversParentTypes['ReviewSession']> = {
-  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   owner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  listIds?: Resolver<Maybe<Array<ResolversTypes['List']>>, ParentType, ContextType>;
+  listIds?: Resolver<Maybe<Array<ResolversTypes['Id']>>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['ReviewDate'], ParentType, ContextType>;
   terms?: Resolver<ResolversTypes['ReviewSessionTerms'], ParentType, ContextType>;
   settings?: Resolver<ResolversTypes['ReviewSettings'], ParentType, ContextType>;
   passfail?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   timePerCard?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ReviewSessionTermsResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSessionTerms'] = ResolversParentTypes['ReviewSessionTerms']> = {
-  listId?: Resolver<ResolversTypes['List'], ParentType, ContextType>;
-  termIds?: Resolver<ResolversTypes['Term'], ParentType, ContextType>;
+  listId?: Resolver<ResolversTypes['Id'], ParentType, ContextType>;
+  termIds?: Resolver<Array<ResolversTypes['Id']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -582,9 +658,11 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type Resolvers<ContextType = any> = {
   DateTime?: GraphQLScalarType;
   ErrorOrSuccess?: ErrorOrSuccessResolvers<ContextType>;
+  Id?: IdResolvers<ContextType>;
   List?: ListResolvers<ContextType>;
   ListState?: ListStateResolvers<ContextType>;
   MaybeList?: MaybeListResolvers<ContextType>;
+  MaybeReviewSession?: MaybeReviewSessionResolvers<ContextType>;
   MaybeUser?: MaybeUserResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

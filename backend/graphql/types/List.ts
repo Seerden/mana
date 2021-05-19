@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { prop as Property, getModelForClass, Ref, index, mongoose, modelOptions, Severity } from '@typegoose/typegoose';
 import { ReviewSession } from "./ReviewSession";
 import { dbConn } from "../../db/db";
@@ -8,6 +8,7 @@ import { ObjectId } from "mongodb";
 type ListStateUnion = 'untouched' | 'seeding' | 'seeded';
 
 @ObjectType()
+@InputType("ListState")
 class ListState {
     @Property()
     @Field(() => String)

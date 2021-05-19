@@ -46,6 +46,7 @@ export class TermSaturation {
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
+@InputType("TermInput")
 export class Term {
     @Field(() => ID)
     readonly _id: mid

@@ -1,11 +1,18 @@
 import { getModelForClass, modelOptions, prop, Ref, Severity } from "@typegoose/typegoose";
-import { Field, ID, Int, ObjectType } from "type-graphql";
+import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
 import { dbConn } from "../../db/db";
-import { List } from './List';
-import { Term } from './Term';
-import { ObjectId } from 'mongodb';
+import { withId } from "../mixins/withId";
+import { ObjectId } from 'mongodb'
 
 @ObjectType()
+@InputType("IdInput")
+class Id {
+    @Field(() => String)
+    _id: ObjectId
+}
+
+@ObjectType()
+@InputType("ReviewSettingsInput")
 class ReviewSettings {
     @prop()
     @Field(() => String)
@@ -33,17 +40,19 @@ class ReviewSettings {
 }
 
 @ObjectType()
+@InputType("ReviewSessionTermsInput")
 class ReviewSessionTerms {
     @prop({ ref: 'List' })
-    @Field(() => List)
-    listId: Ref<List>
+    @Field(() => Id)
+    listId: Id
     
     @prop({ ref: 'Term' })
-    @Field(() => Term)
-    termIds: Ref<Term>[]
+    @Field(() => [Id])
+    termIds: Id[]
 }
 
 @ObjectType()
+@InputType("ReviewDateInput")
 class ReviewDate {
     @prop()
     @Field()
@@ -54,39 +63,43 @@ class ReviewDate {
     end: Date
 }
 
+// create base ReviewSessions class without _id field
 @ObjectType()
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
-export class ReviewSession {
-    @Field(() => ID)
-    _id: ObjectId
-    
+@InputType("ReviewSessionBaseInput")
+export class ReviewSessionBase {
     @prop({ required: true })
     @Field(() => String)
     owner: String;
 
     @prop()
-    @Field(() => [List], { nullable: true })
-    listIds: Ref<List>[]
+    @Field(() => [Id], { nullable: true })
+    listIds: Id[]
 
     @prop({ required: true})
     @Field(() => ReviewDate)
     date: ReviewDate
 
-    @prop()
+    @prop({ required: true })
     @Field(() => ReviewSessionTerms)
     terms: ReviewSessionTerms
 
-    @prop()
+    @prop({ required: true })
     @Field(() => ReviewSettings)
     settings: ReviewSettings
 
-    @prop()
+    @prop({ required: true })
     @Field(() => [String])
     passfail: string[]
 
-    @prop()
+    @prop({ required: true })
     @Field(() => [Int])
     timePerCard: number[]
 }
+
+// extend this with an _id field using our withId mixin
+@ObjectType()
+@modelOptions({ options: { allowMixed: Severity.ALLOW } })
+export class ReviewSession extends withId(ReviewSessionBase) {}
 
 export const ReviewSessionModel = getModelForClass(ReviewSession, { existingConnection: dbConn })

@@ -19,9 +19,8 @@ import { inspectDatabase } from './lib/inspectDb';
 import { log } from './lib/expressMiddleware';
 
 const MongoStore = connectMongo(session);
-import mongoose from 'mongoose';
-import { TermModel } from './graphql/types/Term';
 import { TypegooseMiddleware } from './graphql/middleware/typegoose';
+import { ReviewSessionResolver } from './graphql/resolvers/ReviewSessionResolver';
 
 // mongoose.set('debug', true);
 
@@ -52,7 +51,12 @@ async function startServer() {
     app.use('/dev', devRouter);
 
     const schema = await buildSchema({
-        resolvers: [UserResolver, ListResolver, TermResolver],
+        resolvers: [
+            UserResolver, 
+            ListResolver, 
+            TermResolver,
+            ReviewSessionResolver
+        ],
         emitSchemaFile: true,
         globalMiddlewares: [TypegooseMiddleware]
     });
