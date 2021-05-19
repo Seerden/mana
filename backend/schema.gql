@@ -167,7 +167,7 @@ input TermUpdateObject {
 union TermsUnion = Term | TermId
 
 type User {
-  _id: ID!
+  _id: String!
   currentSession: String!
   lists: [String!]
   password: String!

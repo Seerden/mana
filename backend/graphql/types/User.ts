@@ -1,23 +1,22 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 import { prop as Property, getModelForClass, Severity, modelOptions } from '@typegoose/typegoose';
-import mongoose, { ObjectId } from 'mongoose';
-import { dbConn } from "../../db/db";
+import { ObjectId } from 'mongodb';
 
-const ObjectId = mongoose.Types.ObjectId;
+import { dbConn } from "../../db/db";
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
 export class User {
-    @Field(() => ID)
+    @Field(() => String)
     _id: ObjectId;
 
     @Property( {unique: true, required: true })
     @Field(() => String)
     username: string;
 
-    @Property()
+    @Property({default: new Array()})
     @Field(() => [String], {nullable: true })
-    lists?: typeof ObjectId[];  // mongoose ObjectId[]
+    lists: ObjectId[];  // mongoose ObjectId[]
 
     @Property()
     @Field(() => String)

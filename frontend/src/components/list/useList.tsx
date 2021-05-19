@@ -1,8 +1,6 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useSetRecoilState, useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
-import { getList, putList, deleteTerm } from 'helpers/apiHandlers/listHandlers';
 import { useRouteProps } from 'hooks/routerHooks';
-import { useRequest } from 'hooks/useRequest';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
 import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
 import ListTerm from './ListTerm';
@@ -18,10 +16,6 @@ function useList() {
     const [filter, setFilter] = useState<FilterInterface>({ saturation: { level: null, direction: 'any' } });
     const [truncatedTerms, setTruncatedTerms] = useState<Array<TruncatedTerm>>([]);
     const { params } = useRouteProps();
-    const { setRequest: setPutRequest } = useRequest({});
-    const { setRequest: setPutListTitleRequest } = useRequest({});
-    const { response: deleteResponse, setRequest: setDeleteRequest } = useRequest({});
-    const { setRequest: setTermDeleteRequest } = useRequest({});
     const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const setListAtom = useSetRecoilState(listState);
@@ -112,7 +106,9 @@ function useList() {
             let updatedList: List = { ...list, name: e.currentTarget.innerText }
             if (updatedList.terms && updatedList.terms.length > 0) {
                 setList(updatedList);
-                setPutListTitleRequest(() => putList(params.username, { _id: params.id }, { ...updatedList, terms: updatedList.terms?.map(t => t._id) }))
+                
+                // @todo: replace list title update PUT request with GraphQL mutation
+                // setPutListTitleRequest(() => putList(params.username, { _id: params.id }, { ...updatedList, terms: updatedList.terms?.map(t => t._id) }))
             }
         }
     };
@@ -177,7 +173,6 @@ function useList() {
         selectingTerms,
         numTermsToReview,
         filter,
-        deleteResponse,
         handleListTitleBlur,
         handleDelete,
         updateTermsToReview,

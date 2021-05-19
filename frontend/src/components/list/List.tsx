@@ -15,7 +15,6 @@ const List = memo((props) => {
         selectingTerms,
         numTermsToReview,
         filter,
-        deleteResponse,
         handleListTitleBlur,
         handleDelete,
         updateTermsToReview,
@@ -27,7 +26,6 @@ const List = memo((props) => {
         <>
             <div className="PageWrapper">
                 <div className="List">
-                    {deleteResponse && JSON.stringify(deleteResponse)}
                     {list &&
                         <>
                             <ListTitleBar {...{ handleListTitleBlur, list, handleDelete }} />

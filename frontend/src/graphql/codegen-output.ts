@@ -245,7 +245,7 @@ export type TermsUnion = Term | TermId;
 
 export type User = {
   __typename?: 'User';
-  _id: Scalars['ID'];
+  _id: Scalars['String'];
   username: Scalars['String'];
   lists?: Maybe<Array<Scalars['String']>>;
   currentSession: Scalars['String'];
@@ -529,7 +529,7 @@ export type TermsUnionResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  _id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   lists?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
   currentSession?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

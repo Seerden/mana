@@ -12,8 +12,6 @@ import List from './list/List';
 import User from './user/User';
 import Lists from './lists/Lists';
 import NewList from './newlist/NewList';
-import Sets from './sets/Sets';
-import NewSet from './sets/NewSet';
 import Home from './Home';
 import Register from './register/Register';
 import Login from './login/Login';
@@ -55,12 +53,6 @@ const App = () => {
                                                     <PrivateRoute path="/review" component={ReviewPage} />
                                                     <PrivateRoute path="/" component={List} />
                                                 </Route>
-                                            </Route>
-
-                                            {/* Routes related to sets */}
-                                            <Route path="/sets">
-                                                <PrivateRoute path="/" component={Sets} />
-                                                <PrivateRoute path="/new" component={NewSet} />
                                             </Route>
 
                                         </Route>

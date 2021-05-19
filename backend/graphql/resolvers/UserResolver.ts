@@ -45,7 +45,7 @@ export class UserResolver {
         const newUser = new UserModel({
             username,
             password
-        })
+        });
 
         const existingUser = await UserModel.findOne({ username });
         if (!existingUser) {

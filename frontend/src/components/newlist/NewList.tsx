@@ -1,7 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
 import { useRouteProps } from 'hooks/routerHooks';
-import { postList, handlePostList } from 'helpers/apiHandlers/listHandlers';
-import { useRequest } from 'hooks/useRequest';
 import NewListTerm from './NewListTerm';
 import { Term } from 'graphql/codegen-output';
 import './style/NewList.scss';
@@ -25,8 +23,6 @@ const NewList = memo((props) => {
         created: undefined,
     }))
     const [termInputs, setTermInputs] = useState<JSX.Element[]>([] as JSX.Element[]);
-
-    const { response: postResponse, setRequest: setPostRequest } = useRequest({ ...handlePostList() });
 
     useEffect(() => {
         setTermInputs(makeTermInputElements(formOutput, numTerms))
@@ -61,12 +57,13 @@ const NewList = memo((props) => {
     function handleSubmit(e) {
         e.preventDefault();
 
-        setPostRequest(() => postList(params.username, {
-            owner: params.username,
-            ...formOutput,
-            created: new Date(),
-            terms: formOutput.terms.filter(i => i !== null),
-        }));
+        // @todo: handle newList POST with GraphQL mutation
+        // setPostRequest(() => postList(params.username, {
+        //     owner: params.username,
+        //     ...formOutput,
+        //     created: new Date(),
+        //     terms: formOutput.terms.filter(i => i !== null),
+        // }));
 
     }
 
@@ -76,8 +73,6 @@ const NewList = memo((props) => {
                 New List
             </div>
 
-            {!postResponse
-                ?
                 <form className="NewList__form">
                     <input className="NewList__form--name" onBlur={handleBlur} type="text" name="name" placeholder="List name" />
                     <input className="NewList__form--language" onBlur={handleBlur} type="text" name="from" placeholder="Original language" />
@@ -104,15 +99,6 @@ const NewList = memo((props) => {
 
                     <input className="Form__button" onClick={handleSubmit} type="button" value="Create list" />
                 </form>
-
-                :
-                <>
-                    {JSON.stringify(postResponse)}
-                </>
-
-            }
-
-
         </div>
     )
 })

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 declare namespace Express {
     interface Request {
@@ -10,6 +11,6 @@ declare namespace Express {
 
 declare module "express-session" {
     interface Session {
-        userId?: mongoose.Schema.Types.ObjectId
+        userId?: ObjectId
     }
 }

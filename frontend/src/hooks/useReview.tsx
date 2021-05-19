@@ -12,12 +12,9 @@ import {
 } from 'recoil/atoms/reviewAtoms';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
 import ReviewCard from 'components/review/ReviewCard';
-import { useRequest } from './useRequest';
 import { useRouteProps } from './routerHooks';
 import useReviewSession from './useReviewSession';
 import { makeNewSaturationLevels } from 'helpers/srs/saturation';
-import { putTerms } from 'helpers/apiHandlers/listHandlers';
-import { postSession } from 'helpers/apiHandlers/sessionHandlers';
 
 type PassFail = 'pass' | 'fail';
 
@@ -34,9 +31,9 @@ export function useReview() {
     const setReviewStage = useSetRecoilState(reviewStageState);
     const setTimePerCard = useSetRecoilState(timePerCardState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
-    const { response: putTermResponse, setRequest: setPutTermRequest } = useRequest({});  // update terms with their new history entries
-    const { response: putTermSaturationResponse, setRequest: setPutTermSaturationRequest } = useRequest({});  // update terms with their new saturation
-    const { response: sessionPostResponse, setRequest: setPostSessionRequest } = useRequest({});
+    // const { response: putTermResponse, setRequest: setPutTermRequest } = useRequest({});  // update terms with their new history entries
+    // const { response: putTermSaturationResponse, setRequest: setPutTermSaturationRequest } = useRequest({});  // update terms with their new saturation
+    // const { response: sessionPostResponse, setRequest: setPostSessionRequest } = useRequest({});
     const newReviewSession = useReviewSession();
 
     const makeNewSaturationLevelsCallback = useCallback(() => {
@@ -46,20 +43,20 @@ export function useReview() {
     useEffect(() => {  // send PUT and POST requests (needs to not be in the useEffect above, since then history lags one update behind)
         if (reviewSettings.sessionEnd) {
             if (newHistoryEntries.length > 0) {
-                setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
-                setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevelsCallback() }));
-                setPostSessionRequest(() => postSession(params.username, { newReviewSession }))
+                // setPutTermRequest(() => putTerms(params.username, { type: 'history' }, { termsToUpdate: newHistoryEntries }));
+                // setPutTermSaturationRequest(() => putTerms(params.username, { type: 'saturation' }, { termsToUpdate: makeNewSaturationLevelsCallback() }));
+                // setPostSessionRequest(() => postSession(params.username, { newReviewSession }))
             } else {
                 throw Error('No new term histories present on review completion.')
             }
         }
     }, [reviewSettings.sessionEnd]);
 
-    useEffect(() => {  // set reviewStage to PostReview once all post-session API requests are handled
-        if (putTermResponse && putTermSaturationResponse && sessionPostResponse) {
-            setReviewStage('after');
-        }
-    }, [putTermResponse, putTermSaturationResponse, sessionPostResponse])
+    // useEffect(() => {  // set reviewStage to PostReview once all post-session API requests are handled
+    //     if (putTermResponse && putTermSaturationResponse && sessionPostResponse) {
+    //         setReviewStage('after');
+    //     }
+    // }, [putTermResponse, putTermSaturationResponse, sessionPostResponse])
 
     /**
     * case pass/fail:  Handle what happens to current term after pass/fail is chosen.
