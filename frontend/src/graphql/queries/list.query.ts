@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "react-query";
 import { gql, request} from 'graphql-request';
-import { List, ListUpdateActionInput, ListUpdatePayloadInput, MaybeList, NewListFromClientInput } from "graphql/codegen-output";
+import { List, ListUpdateActionInput, ListUpdatePayloadInput, MaybeList, NewListFromClientInput, SuccessOrError } from "graphql/codegen-output";
 
 const CoreTermIdFields = gql`
 fragment CoreTermIdFields on TermId {
@@ -82,9 +82,9 @@ mutation {
 `;
 
 export function useMutateDeleteList (id: string) {
-    const { mutate, data, ...rest } = useMutation("deleteList", async () => {
+    const { mutate, data, ...rest } = useMutation<SuccessOrError, any, void>("deleteList", async () => {
         const response = await request(process.env.REACT_APP_GRAPHQL_URI!, deleteListMutation(id));
-        return response;
+        return response.deleteList;
     }, { retry: false });
 
     return { mutate, data, ...rest }

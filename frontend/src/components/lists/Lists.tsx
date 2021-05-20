@@ -98,11 +98,9 @@ const Lists = memo((props) => {
                         It appears you don't have any lists.
                     </div>
 
-                    <button className="Button">
-                        <Link to={`/u/${params.username}/lists/new`}>
-                            Create a new list
-                        </Link>
-                    </button>
+                    <Link className="Lists__new--button" to={`/u/${params.username}/lists/new`}>
+                        Create a new list
+                    </Link>
                 </div>
             }
 

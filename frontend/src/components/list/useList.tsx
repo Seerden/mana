@@ -15,7 +15,7 @@ function useList() {
     const [list, setList] = useState<List | null>(null);
     const [filter, setFilter] = useState<FilterInterface>({ saturation: { level: null, direction: 'any' } });
     const [truncatedTerms, setTruncatedTerms] = useState<Array<TruncatedTerm>>([]);
-    const { params } = useRouteProps();
+    const { params, navigate } = useRouteProps();
     const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const setListAtom = useSetRecoilState(listState);
@@ -65,6 +65,12 @@ function useList() {
             resetListAtom();
         }
     }, [])
+
+    useEffect(() => {
+        if (listDeleteResponse?.success) {
+            navigate(`/u/${params.username}/lists`, { replace: true })
+        }
+    }, [listDeleteResponse])
 
     useEffect(() => {  // set list and list context when list is returned from API
         if (lists) {

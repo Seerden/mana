@@ -6,6 +6,15 @@
         margin-top: 1rem;
     }
 
+    &__new {
+        &--button {
+            @extend %shared-button;
+            color: black;
+            width: max-content;
+
+        }
+    }
+
     &__lists {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
