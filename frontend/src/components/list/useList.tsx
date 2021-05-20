@@ -19,12 +19,13 @@ function useList() {
     const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const setListAtom = useSetRecoilState(listState);
+    const resetListAtom = useResetRecoilState(listState);
     const setTermsToReview = useSetRecoilState(termsToReviewState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const { data: listUpdateResponse, mutate: mutateUpdateList } = useMutateUpdateList();
     const suggestedTermsForReview = useMemo(() => list && suggestTermsForReview(list.terms), [list]);
 
-    const { data: lists, isLoading, isFetching } = useQueryListsById([params.id]);
+    const { data: lists, refetch: refetchLists, isLoading, isFetching } = useQueryListsById([params.id]);
     const { mutate: mutateDeleteList, data: listDeleteResponse } = useMutateDeleteList(params.id);
     const { mutate: mutateDeleteTerms, data } = useMutateDeleteTerms();
 
@@ -54,9 +55,17 @@ function useList() {
     const termsToDisplay = useMemo(() => {
         return filterTermsBySaturation(truncatedTerms)
             ?.map(term => term.element)
-    }, [truncatedTerms, filter, numTermsToReview]);
+    }, [truncatedTerms, filter, numTermsToReview, lists]);
 
-    // EFFECTS
+    useEffect(() => {
+        refetchLists()
+
+        return () => {
+            setList(null);
+            resetListAtom();
+        }
+    }, [])
+
     useEffect(() => {  // set list and list context when list is returned from API
         if (lists) {
             setList(lists[0]);
@@ -65,12 +74,9 @@ function useList() {
     }, [lists])
 
     useEffect(() => {
-        if (list) {
-            extractTermsFromListAsTruncatedTerms(list);
-        }
+        list && extractTermsFromListAsTruncatedTerms(list);
     }, [list])
 
-    // FUNCTIONS
     const extractTermsFromListAsTruncatedTerms = useCallback((list: List) => {
         if (list && list.terms && list.terms?.length > 0) {
             const newTruncatedTerms = list.terms.map((term, idx) => {
