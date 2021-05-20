@@ -9,7 +9,6 @@ interface ListTitleBarProps {
 }
 
 const ListTitleBar = ({ handleListTitleBlur, list, handleDelete }: ListTitleBarProps) => {
-
     return (
         <h1 className="PageHeader">
 

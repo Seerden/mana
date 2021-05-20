@@ -1,10 +1,12 @@
+import { Term } from "graphql/codegen-output";
+
 type Direction = 'forwards' | 'backwards';
 
 /**
  * Takes a list, returns all its sessions with the specified direction, and its length.
  * @param {Object} listObj 
  */
-export const extractSessionsByDirection = (list: List, direction: Direction) => {
+export const extractSessionsByDirection = (list, direction: Direction) => { // @todo: sessions currently don't exist as list.sessions entries. 
     const sessionsByDirection = list.sessions?.filter(sess => sess.direction === direction);
     return [sessionsByDirection.length, sessionsByDirection]
 }
@@ -14,7 +16,7 @@ export const extractSessionsByDirection = (list: List, direction: Direction) => 
  * @param {Object} term 
  */
 export const termSessionsByDirection = (term: Term, direction: Direction) => {
-    return term.history.filter(session => session.direction === direction)
+    return term.history!.filter(session => session.direction === direction)
 }
 
 export const colorMap = {
@@ -32,7 +34,7 @@ export const colorBySaturation = (saturation: 'forwards' | 'backwards') => {
 /**
  * Takes a list, returns new list.state based on review session that was just completed.
  */
-export function maybeUpdateListStateAfterReview(list: List, direction: Direction) {
+export function maybeUpdateListStateAfterReview(list, direction: Direction) {
     const [previousSessionLength] = extractSessionsByDirection(list, direction);
 
     switch (previousSessionLength) {

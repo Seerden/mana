@@ -1,10 +1,10 @@
 import mongoose, { ObjectId } from 'mongoose';
-import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType, Mutation, ID } from "type-graphql";
+import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType, Mutation, ID, InputType } from "type-graphql";
 import { List, ListModel, MaybeList } from "../types/List";
 import { Term, TermModel } from "../types/Term";
 import { maybeDeleteTerms } from "../helpers/term";
-import { NewListFromClient } from "../types/input_types/list";
-import { createListDocument, deleteListFromUser } from "../helpers/list";
+import { ListUpdateAction, ListUpdatePayload, NewListFromClient } from "../types/input_types/list";
+import { createListDocument, deleteListFromUser, updateListDocument } from "../helpers/list";
 
 @ObjectType()
 class TermId {
@@ -59,8 +59,7 @@ export class ListResolver {
     ) {
         
         if (populate) {
-
-            // @ts-ignore 
+            // @ts-ignore - typegoose quirkiness again. requires callabck even though those are optional. doesn't notice that list.terms are already _ids
             return await TermModel.find({ _id: { $in: list.terms }}).lean().exec();
         }
 
@@ -97,7 +96,20 @@ export class ListResolver {
             return { error: "Failed to save list to database" }
         }
     }
+
+    @Mutation(() => MaybeList)
+    async updateList(
+        @Arg("listId") listId: string,
+        @Arg("action") action: ListUpdateAction,
+        @Arg("payload") payload: ListUpdatePayload
+    ) {
+        const updatedList = await updateListDocument(listId, action, payload);
+
+        return updatedList ? { list: updatedList.value } : { error: 'Failed to update list name in database' }
+    }
 }
+
+
 
 @ObjectType()
 class SuccessOrError {

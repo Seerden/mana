@@ -7,7 +7,7 @@ import ListTerm from './ListTerm';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
 import { FilterInterface, TruncatedTerm } from './list.types';
-import { useMutateDeleteList, useQueryListsById } from "graphql/queries/list.query";
+import { useMutateDeleteList, useMutateUpdateList, useQueryListsById } from "graphql/queries/list.query";
 import { List } from "graphql/codegen-output";
 import { DeleteTermsVariables, useMutateDeleteTerms } from "graphql/queries/term.query";
 
@@ -21,11 +21,8 @@ function useList() {
     const setListAtom = useSetRecoilState(listState);
     const setTermsToReview = useSetRecoilState(termsToReviewState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
-    const suggestedTermsForReview = useMemo(() => {
-        if (list) {
-            return suggestTermsForReview(list.terms)
-        }
-    }, [list]);
+    const { data: listUpdateResponse, mutate: mutateUpdateList } = useMutateUpdateList();
+    const suggestedTermsForReview = useMemo(() => list && suggestTermsForReview(list.terms), [list]);
 
     const { data: lists, isLoading, isFetching } = useQueryListsById([params.id]);
     const { mutate: mutateDeleteList, data: listDeleteResponse} = useMutateDeleteList(params.id);
@@ -99,19 +96,26 @@ function useList() {
         }
     }, [setTruncatedTerms, list])
 
-    function handleListTitleBlur(e) {
+    const handleListTitleBlur = useCallback((e) => {
         e.persist();
 
-        if (list && list!.terms!.length > 0) {
+        console.log('Updating list');
+    
+        if (list && list.terms.length > 0) {
             let updatedList: List = { ...list, name: e.currentTarget.innerText }
             if (updatedList.terms && updatedList.terms.length > 0) {
                 setList(updatedList);
                 
-                // @todo: replace list title update PUT request with GraphQL mutation
-                // setPutListTitleRequest(() => putList(params.username, { _id: params.id }, { ...updatedList, terms: updatedList.terms?.map(t => t._id) }))
+                if (e.currentTarget.innerText && e.currentTarget.innerText !== list.name ) {
+                    mutateUpdateList({ 
+                        listId: params.id, 
+                        action: { type: 'name' }, 
+                        payload: { name: e.currentTarget.innerText }
+                     })
+                }
             }
         }
-    };
+    }, [list, setList])
 
     function handleTermDelete(idx: number) {
         if (list && list.terms && list.terms.length > 0) {

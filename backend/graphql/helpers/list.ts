@@ -1,10 +1,11 @@
 import { ListModel } from "../types/List";
 import { Term } from "../types/Term";
 import mongoose from 'mongoose';
-import { NewListFromClient } from "../types/input_types/list";
+import { ListUpdateAction, ListUpdatePayload, NewListFromClient } from "../types/input_types/list";
 import { appendListIdToTerms, createTermDocuments } from "./term";
 import { ObjectId } from 'mongodb';
 import { UserModel } from "../types/User";
+import { asObjectId } from "./as";
 
 export async function addTermsToList(terms: Array<Term>) {
     // extract id and parent list ids
@@ -107,4 +108,18 @@ export async function addListToUser(listId: ObjectId, owner: string) {
 export async function deleteListFromUser(listId: ObjectId, owner: string) {
     const updatedUser = await UserModel.findOneAndUpdate({ username: owner }, { $pull: { lists: listId }}, { rawResult: true, new: true });
     return updatedUser.value instanceof UserModel
+}
+
+export async function updateListDocument(listId: ObjectId | string, action: ListUpdateAction, payload: ListUpdatePayload) {
+    console.log('Updating list doc!');
+    switch (action.type) {
+        case "name":
+            const updatedList = await ListModel.findOneAndUpdate({ _id: asObjectId(listId) }, { $set: { name: payload.name } }, { rawResult: true, new: true } );
+            if (updatedList.value.name === payload.name) {
+                return updatedList
+            }
+            break;
+        default:
+            break;
+    }
 }

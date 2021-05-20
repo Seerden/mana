@@ -40,6 +40,14 @@ type ListState {
   forwards: String!
 }
 
+input ListUpdateActionInput {
+  type: String!
+}
+
+input ListUpdatePayloadInput {
+  name: String
+}
+
 type MaybeList {
   error: String
   list: List
@@ -69,6 +77,7 @@ type Mutation {
 
   """Login mutation"""
   login(password: String!, username: String!): MaybeUser!
+  updateList(action: ListUpdateActionInput!, listId: String!, payload: ListUpdatePayloadInput!): MaybeList!
   updateTerms(updateObj: [TermUpdateObject!]!): Int!
 }
 

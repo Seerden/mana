@@ -29,3 +29,17 @@ export class NewListFromClient {
     terms: NewListTerm[] // NewTerm? 
 
 }
+
+@ObjectType()
+@InputType("ListUpdateActionInput")
+export class ListUpdateAction {
+    @Field(() => String)
+    type: "name"
+}
+
+@ObjectType()
+@InputType("ListUpdatePayloadInput")
+export class ListUpdatePayload {
+    @Field(() => String, { nullable: true })
+    name?: string
+}

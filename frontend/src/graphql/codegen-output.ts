@@ -58,6 +58,14 @@ export type ListState = {
   backwards: Scalars['String'];
 };
 
+export type ListUpdateActionInput = {
+  type: Scalars['String'];
+};
+
+export type ListUpdatePayloadInput = {
+  name?: Maybe<Scalars['String']>;
+};
+
 export type MaybeList = {
   __typename?: 'MaybeList';
   list?: Maybe<List>;
@@ -81,6 +89,7 @@ export type Mutation = {
   deleteList: SuccessOrError;
   /** Add a list document to the database, append its ._id to its parent user's .lists array */
   createList: MaybeList;
+  updateList: MaybeList;
   createUser: MaybeUser;
   /** Login mutation */
   login: MaybeUser;
@@ -99,6 +108,13 @@ export type MutationDeleteListArgs = {
 
 export type MutationCreateListArgs = {
   newList: NewListFromClientInput;
+};
+
+
+export type MutationUpdateListArgs = {
+  payload: ListUpdatePayloadInput;
+  action: ListUpdateActionInput;
+  listId: Scalars['String'];
 };
 
 
@@ -418,6 +434,8 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ListState: ResolverTypeWrapper<ListState>;
+  ListUpdateActionInput: ListUpdateActionInput;
+  ListUpdatePayloadInput: ListUpdatePayloadInput;
   MaybeList: ResolverTypeWrapper<MaybeList>;
   MaybeReviewSession: ResolverTypeWrapper<MaybeReviewSession>;
   MaybeUser: ResolverTypeWrapper<MaybeUser>;
@@ -462,6 +480,8 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   Boolean: Scalars['Boolean'];
   ListState: ListState;
+  ListUpdateActionInput: ListUpdateActionInput;
+  ListUpdatePayloadInput: ListUpdatePayloadInput;
   MaybeList: MaybeList;
   MaybeReviewSession: MaybeReviewSession;
   MaybeUser: MaybeUser;
@@ -552,6 +572,7 @@ export type MaybeUserResolvers<ContextType = any, ParentType extends ResolversPa
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   deleteList?: Resolver<ResolversTypes['SuccessOrError'], ParentType, ContextType, RequireFields<MutationDeleteListArgs, 'listId'>>;
   createList?: Resolver<ResolversTypes['MaybeList'], ParentType, ContextType, RequireFields<MutationCreateListArgs, 'newList'>>;
+  updateList?: Resolver<ResolversTypes['MaybeList'], ParentType, ContextType, RequireFields<MutationUpdateListArgs, 'payload' | 'action' | 'listId'>>;
   createUser?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
   login?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
   updateTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationUpdateTermsArgs, 'updateObj'>>;

@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "react-query";
 import { gql, request} from 'graphql-request';
-import { List, MaybeList, NewListFromClientInput } from "graphql/codegen-output";
-import { useEffect } from "react";
+import { List, ListUpdateActionInput, ListUpdatePayloadInput, MaybeList, NewListFromClientInput } from "graphql/codegen-output";
 
 const CoreTermIdFields = gql`
 fragment CoreTermIdFields on TermId {
@@ -110,5 +109,35 @@ export function useMutateCreateList() {
         });
         return response;
     }, { retry: false })
+    return { mutate, data, ...rest }
+}   
+
+const updateListMutation = gql`
+mutation ($listId: String!, $action: ListUpdateActionInput!, $payload: ListUpdatePayloadInput!) {
+    updateList(listId: $listId, action: $action, payload: $payload) {
+        list {
+            name
+        }
+        error
+    }
+}
+`
+
+type UpdateListVariables = {
+    listId: string,
+    action: ListUpdateActionInput,
+    payload: ListUpdatePayloadInput
+}
+
+export function useMutateUpdateList() {
+    const { mutate, data, ...rest } = useMutation<MaybeList, any, UpdateListVariables>("updateList", async ({ listId, action, payload }) => {
+        const response = await request(process.env.REACT_APP_GRAPHQL_URI!, updateListMutation, {
+            listId, 
+            action,
+            payload
+        });
+
+        return response;
+    }, { retry: false });
     return { mutate, data, ...rest }
 }
