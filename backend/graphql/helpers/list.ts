@@ -3,6 +3,8 @@ import { Term } from "../types/Term";
 import mongoose from 'mongoose';
 import { NewListFromClient } from "../types/input_types/list";
 import { appendListIdToTerms, createTermDocuments } from "./term";
+import { ObjectId } from 'mongodb';
+import { UserModel } from "../types/User";
 
 export async function addTermsToList(terms: Array<Term>) {
     // extract id and parent list ids
@@ -82,13 +84,27 @@ export async function createListDocument(newList: NewListFromClient) {
 
             if (savedList) {
                 await appendListIdToTerms(savedList._id, termIds);
-                return savedList;
+                const addedToUserBoolean = await addListToUser(savedList._id, savedList.owner)
+
+                if (addedToUserBoolean) {
+                    return savedList;
+                } else {
+                    throw new Error('Failed to add list to User')
+                }
             }
-            
         } catch (error) {
             console.error(error)
         }
     }
+}
 
-    
+// these next two functions should be combined. specify an action argument that either takes 'add'/'delete' and $push/$pull based on that
+export async function addListToUser(listId: ObjectId, owner: string) {
+    const updatedUser = await UserModel.findOneAndUpdate({ username: owner }, { $push: { lists: listId }}, { rawResult: true, new: true });
+    return updatedUser.value instanceof UserModel
+}
+
+export async function deleteListFromUser(listId: ObjectId, owner: string) {
+    const updatedUser = await UserModel.findOneAndUpdate({ username: owner }, { $pull: { lists: listId }}, { rawResult: true, new: true });
+    return updatedUser.value instanceof UserModel
 }

@@ -4,7 +4,7 @@ import { List, ListModel, MaybeList } from "../types/List";
 import { Term, TermModel } from "../types/Term";
 import { maybeDeleteTerms } from "../helpers/term";
 import { NewListFromClient } from "../types/input_types/list";
-import { createListDocument } from "../helpers/list";
+import { createListDocument, deleteListFromUser } from "../helpers/list";
 
 @ObjectType()
 class TermId {
@@ -28,8 +28,8 @@ export const TermsUnion = createUnionType({
 export class ListResolver {
     @Query(type => [List], { name: "listsByUser", description: "Find lists by user" })
     async listsByUser(
-        @Arg("owner") owner: String,
-        @Arg("populate", type => [String], { nullable: true }) populate: [String]
+        @Arg("owner") owner: string,
+        @Arg("populate", type => [String], { nullable: true }) populate: [string]
     ) {
         return await ListModel
             .find({ owner })
@@ -41,7 +41,7 @@ export class ListResolver {
     @Query(type => [List], { name: "listsById", description: "Query lists by id" })
     async listsById(
         @Arg("ids", type => [String]) ids: [string],
-        @Arg("populate", type => [String], { nullable: true }) populate: [String]
+        @Arg("populate", type => [String], { nullable: true }) populate: [string]
     ) {
         let _ids = ids.map(id => new mongoose.Types.ObjectId(id));
 
@@ -55,7 +55,7 @@ export class ListResolver {
     @FieldResolver(() => TermsUnion, {description: "Resolves ListModel.terms"})
     async terms(
         @Root() list: List,
-        @Arg("populate", type => Boolean, { nullable: true }) populate: Boolean
+        @Arg("populate", type => Boolean, { nullable: true }) populate: boolean
     ) {
         
         if (populate) {
@@ -75,9 +75,10 @@ export class ListResolver {
     ): Promise<SuccessOrError> {
         const deletedList = await ListModel.findByIdAndDelete(new mongoose.Types.ObjectId(listId), null, null);
         if (deletedList) {
+            const listDeletedFromUserBoolean = await deleteListFromUser(deletedList._id, deletedList.owner);
             const deletedTerms = await maybeDeleteTerms(deletedList.terms.map(term => (term._id)));
 
-            if (deletedTerms?.deletedCount) {
+            if (listDeletedFromUserBoolean && deletedTerms?.deletedCount) {
                 return { success: true }
             }
         } 
@@ -85,7 +86,7 @@ export class ListResolver {
         return { error: true }
     };
 
-    @Mutation(() => MaybeList)
+    @Mutation(() => MaybeList, { description: "Add a list document to the database, append its ._id to its parent user's .lists array"})
     async createList(
         @Arg("newList") newList: NewListFromClient
     ) {

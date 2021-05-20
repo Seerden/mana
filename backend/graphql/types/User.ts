@@ -1,6 +1,6 @@
 import { Field, ObjectType } from "type-graphql";
 import { prop as Property, getModelForClass, Severity, modelOptions } from '@typegoose/typegoose';
-import { ObjectId } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 import { dbConn } from "../../db/db";
 

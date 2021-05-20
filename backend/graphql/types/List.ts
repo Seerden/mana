@@ -28,19 +28,19 @@ export class List {
 
     @Property()
     @Field(() => String)
-    owner: String;
+    owner: string;
 
     @Property()
     @Field(() => String)
-    name: String;
+    name: string;
 
     @Property()
     @Field(() => String)
-    from: String;
+    from: string;
 
     @Property()
     @Field(() => [String])
-    to: String[];
+    to: string[];
 
     @Property({ ref: "Term" })
     @Field(() => [TermsUnion])

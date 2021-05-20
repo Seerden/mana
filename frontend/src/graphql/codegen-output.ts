@@ -79,6 +79,7 @@ export type MaybeUser = {
 export type Mutation = {
   __typename?: 'Mutation';
   deleteList: SuccessOrError;
+  /** Add a list document to the database, append its ._id to its parent user's .lists array */
   createList: MaybeList;
   createUser: MaybeUser;
   /** Login mutation */

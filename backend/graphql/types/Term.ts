@@ -53,7 +53,7 @@ export class Term {
 
     @prop({ required: true })
     @Field()
-    owner: String;
+    owner: string;
 
     @prop({_id: false})
     @Field(() => TermLanguages, { nullable: true })
@@ -61,11 +61,11 @@ export class Term {
 
     @prop({ required: true })
     @Field()
-    to: String;
+    to: string;
 
     @prop({ required: true })
     @Field()
-    from: String;
+    from: string;
 
     @prop({ default: [], _id: false })
     @Field(() => [TermHistory], { nullable: true })
