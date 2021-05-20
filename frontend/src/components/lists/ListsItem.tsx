@@ -11,7 +11,7 @@ const ListsItem = memo(({ list }: { list: List}) => {
     const { params } = useRouteProps();
     const numTerms = list.terms.length;
     const listHasSessions = list.sessions && list.sessions.length > 0;
-    const lastReviewDate = list.sessions && listHasSessions ? list.sessions[list.sessions.length-1].date.end : null;
+    const lastReviewDate = list.sessions && listHasSessions ? list.sessions[list.sessions.length-1].date?.end : null;
     const timeAgo = listHasSessions && timeSince(lastReviewDate);
     const borderColor = colorByLastReviewDate(lastReviewDate);
 

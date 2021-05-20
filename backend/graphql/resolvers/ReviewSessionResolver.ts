@@ -1,4 +1,6 @@
 import { Resolver, Arg, Mutation, ObjectType, Field } from "type-graphql";
+import { asObjectId } from "../helpers/as";
+import { maybeAddSessionToList } from "../helpers/list";
 import { bulkUpdateTerms } from "../helpers/term";
 import { TermUpdateObject } from "../types/input_types/term";
 import { ReviewSession, ReviewSessionBase, ReviewSessionModel } from "../types/ReviewSession";
@@ -24,6 +26,7 @@ export class ReviewSessionResolver {
 
         if (savedReviewSession) {
             await bulkUpdateTerms(termUpdateArray);
+            await maybeAddSessionToList(savedReviewSession._id, savedReviewSession.listIds.map(entry => asObjectId(entry._id)))
             return { savedReviewSession }
         }
 

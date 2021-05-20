@@ -123,3 +123,12 @@ export async function updateListDocument(listId: ObjectId | string, action: List
             break;
     }
 }
+
+export async function maybeAddSessionToList(reviewSessionId: ObjectId, listIds: ObjectId[]) {
+    if (listIds.length == 1) {
+        const updatedList = await ListModel.findOneAndUpdate({ _id: listIds[0] }, 
+            { $push: { sessions: reviewSessionId }}, 
+            { rawResult: true, new: true });
+        return updatedList.ok
+    }
+}

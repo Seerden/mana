@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb'
 
 @ObjectType()
 @InputType("IdInput")
-class Id {
+export class Id {
     @Field(() => String)
     _id: ObjectId
 }
