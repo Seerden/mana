@@ -1,7 +1,6 @@
 import 'dotenv/config';
 
 import express from 'express';
-import { devRouter } from './routers/devRouter'
 
 import { ApolloServer } from 'apollo-server-express';
 import session from 'express-session';
@@ -9,7 +8,6 @@ import connectMongo from 'connect-mongo';
 import { v4 as uuid } from 'uuid'
 
 import { dbConn } from './db/db';
-import { dbRouter } from './routers/dbRouter';
 
 import { buildSchema } from 'type-graphql';
 import { ListResolver } from './graphql/resolvers/ListResolver';
@@ -46,9 +44,6 @@ async function startServer() {
         saveUninitialized: false,
         rolling: true,
     }));
-
-    app.use('/db', dbRouter);
-    app.use('/dev', devRouter);
 
     const schema = await buildSchema({
         resolvers: [
