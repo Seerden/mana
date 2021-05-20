@@ -25,7 +25,7 @@ function useList() {
     const suggestedTermsForReview = useMemo(() => list && suggestTermsForReview(list.terms), [list]);
 
     const { data: lists, isLoading, isFetching } = useQueryListsById([params.id]);
-    const { mutate: mutateDeleteList, data: listDeleteResponse} = useMutateDeleteList(params.id);
+    const { mutate: mutateDeleteList, data: listDeleteResponse } = useMutateDeleteList(params.id);
     const { mutate: mutateDeleteTerms, data } = useMutateDeleteTerms();
 
     function filterTermsBySaturation(terms: TruncatedTerm[]) {
@@ -99,19 +99,21 @@ function useList() {
     const handleListTitleBlur = useCallback((e) => {
         e.persist();
 
-        console.log('Updating list');
-    
         if (list && list.terms.length > 0) {
-            let updatedList: List = { ...list, name: e.currentTarget.innerText }
-            if (updatedList.terms && updatedList.terms.length > 0) {
-                setList(updatedList);
-                
-                if (e.currentTarget.innerText && e.currentTarget.innerText !== list.name ) {
-                    mutateUpdateList({ 
-                        listId: params.id, 
-                        action: { type: 'name' }, 
+            if(!e.currentTarget.innerText) {
+                e.currentTarget.innerText = list.name;
+            }
+
+            if (e.currentTarget.innerText && e.currentTarget.innerText !== list.name) {
+                let updatedList: List = { ...list, name: e.currentTarget.innerText }
+                if (updatedList.terms && updatedList.terms.length > 0) {
+                    setList(updatedList);
+
+                    mutateUpdateList({
+                        listId: params.id,
+                        action: { type: 'name' },
                         payload: { name: e.currentTarget.innerText }
-                     })
+                    })
                 }
             }
         }
@@ -120,7 +122,7 @@ function useList() {
     function handleTermDelete(idx: number) {
         if (list && list.terms && list.terms.length > 0) {
             const updatedList: List = { ...list, terms: [...list.terms] };  // need to spread the .terms property since otherwise it's not a (deep?/shallow?) copy
-            
+
             if (updatedList && updatedList.terms) {
                 const termId = updatedList.terms[idx]._id;
                 updatedList.terms.splice(idx, 1);
@@ -145,7 +147,7 @@ function useList() {
         mutateDeleteList();
     };
 
-    const updateTermsToReview = useCallback(({ type, direction }: { type: 'all' | 'visible' | 'none' | 'overdue', direction: Direction}) => {
+    const updateTermsToReview = useCallback(({ type, direction }: { type: 'all' | 'visible' | 'none' | 'overdue', direction: Direction }) => {
         if (list && list.terms) {
             switch (type) {
                 case 'all':

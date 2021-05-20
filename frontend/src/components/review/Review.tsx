@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useRouteProps } from 'hooks/routerHooks';
 import { useReview } from 'hooks/useReview';
@@ -28,7 +28,7 @@ const Review = memo((props) => {
                 </div>
             </div>
 
-            {futureTerms?.length > 0 &&
+            {futureTerms.length > 0 &&
                 <>
                     {futureTerms[0].card}
 

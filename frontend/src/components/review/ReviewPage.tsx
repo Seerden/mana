@@ -1,16 +1,11 @@
 import React, { useEffect, useMemo } from "react";
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { reviewStageState, reviewSettingsState } from 'recoil/atoms/reviewAtoms';
-import qs from 'query-string';
-import { useRouteProps } from "hooks/routerHooks";
 import Review from './Review';
-import PartialReview from './PartialReview';
-import CompleteReview from './CompleteReview';
 import PreReview from './PreReview';
 import PostReview from './PostReview';
 
 function ReviewPage () {
-    const { location } = useRouteProps();
     const [reviewStage, setReviewStage] = useRecoilState(reviewStageState);
     const resetReviewStage = useResetRecoilState(reviewStageState);
     const resetReviewSettings = useResetRecoilState(reviewSettingsState);
@@ -26,18 +21,7 @@ function ReviewPage () {
             default:
                 return;
         }
-    }, [reviewStage]);
-
-    const WrapperToRender = useMemo(() => {
-        switch (qs.parse(location.search).kind) {
-            case 'full':
-                return CompleteReview;
-            case 'partial':
-                return PartialReview;
-            default:
-                return React.Fragment;
-        }
-    }, [])
+    }, [reviewStage]) as React.ElementType;
 
     useEffect(() => {
         resetReviewStage();
@@ -49,14 +33,10 @@ function ReviewPage () {
     }, []);
 
     return (
-        <>
-            { WrapperToRender && ReviewStageToRender &&
-                <WrapperToRender>
-                    <ReviewStageToRender/>
-                </WrapperToRender>
-            }
-        </>
+        <ReviewStageToRender/>
     )
 }
 
 export default ReviewPage
+
+// @todo: implement conditional render based on termsToReview length

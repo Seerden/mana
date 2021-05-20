@@ -19,6 +19,7 @@ import { log } from './lib/expressMiddleware';
 const MongoStore = connectMongo(session);
 import { TypegooseMiddleware } from './graphql/middleware/typegoose';
 import { ReviewSessionResolver } from './graphql/resolvers/ReviewSessionResolver';
+import { ReviewSessionModel } from './graphql/types/ReviewSession';
 
 // mongoose.set('debug', true);
 
