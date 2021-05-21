@@ -4,6 +4,7 @@ import NewListTerm from './NewListTerm';
 import { NewListTermInput } from 'graphql/codegen-output';
 import './style/NewList.scss';
 import { useMutateCreateList } from 'graphql/queries/list.query';
+import { BiArrowToRight } from 'react-icons/bi';
 
 export type FormOutput = {
     owner?: string
@@ -32,9 +33,9 @@ const NewList = memo((props) => {
 
         for (let i = 0; i < numTerms; i++) {
             termElements.push(
-                <NewListTerm 
-                    key={`term-${i + 1}`} 
-                    index={i} 
+                <NewListTerm
+                    key={`term-${i + 1}`}
+                    index={i}
                     formOutput={formOutput}   // @todo: formOutput should be recoil atom. Passing the state through props like this for any number of terms might lead to stale closures
                     setFormOutput={setFormOutput} />
             )
@@ -77,32 +78,58 @@ const NewList = memo((props) => {
                 New List
             </div>
 
-                <form className="NewList__form">
-                    <input className="NewList__form--name" onBlur={handleBlur} type="text" name="name" placeholder="List name" />
-                    <input className="NewList__form--language" onBlur={handleBlur} type="text" name="from" placeholder="Original language" />
-                    <input className="NewList__form--language" onBlur={handleBlur} type="text" name="to" placeholder="Translated language" />
+            <form className="NewList__form">
 
+                <section className="NewList__form--header">
+                    <input
+                        className="NewList__form--name"
+                        onBlur={handleBlur}
+                        type="text"
+                        name="name"
+                        placeholder="List name"
+                    />
 
-                    <div className="NewList__terms">
-                        <input className="Form__button" onClick={handleAddRows} type="button" value="Add rows" />
-
-                        {termInputs.length > 0 &&
-                            <>
-                                <div className="NewList__terms--header">
-                                    {formOutput &&
-                                        <>
-                                            <span className="Terms__header--side">{formOutput.from}</span>
-                                            <span className="Terms__header--side">{formOutput.to}</span>
-                                        </>
-                                    }
-                                </div>
-                                {termInputs}
-                            </>
-                        }
+                    <div className="NewList__form--languages">
+                        <input
+                            className="NewList__form--languages-language"
+                            onBlur={handleBlur}
+                            type="text"
+                            name="from"
+                            placeholder="Original language"
+                        />
+                        <BiArrowToRight className="NewList__form--languages-icon" />
+                        <input
+                            className="NewList__form--languages-language"
+                            onBlur={handleBlur}
+                            type="text"
+                            name="to"
+                            placeholder="Translated language"
+                        />
                     </div>
+                </section>
 
-                    <input className="Form__button" onClick={handleSubmit} type="button" value="Create list" />
-                </form>
+
+
+                <input className="NewList__form--button" onClick={handleAddRows} type="button" value="Add rows" />
+                <section className="NewList__terms">
+
+                    {termInputs.length > 0 &&
+                        <>
+                            <div className="NewList__terms--header">
+                                {formOutput &&
+                                    <>
+                                        <span className="NewList__terms--header-side">{formOutput.from}</span>
+                                        <span className="NewList__terms--header-side">{formOutput.to}</span>
+                                    </>
+                                }
+                            </div>
+                            {termInputs}
+                        </>
+                    }
+                </section>
+
+                <input className="NewList__form--button" onClick={handleSubmit} type="button" value="Create list" />
+            </form>
         </div>
     )
 })
