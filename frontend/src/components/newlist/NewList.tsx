@@ -28,18 +28,18 @@ const NewList = memo((props) => {
     }))
     const [termInputs, setTermInputs] = useState<JSX.Element[]>([] as JSX.Element[]);
     const { mutate: mutateCreateList, isSuccess } = useMutateCreateList();
-    const [focusIndex, setFocusIndex] = useState<FocusIndex>();
+    const [focussedInput, setFocussedInput] = useState<FocusIndex>();
 
     useEffect(() => {
         setTermInputs(makeTermInputElements(formOutput, numTerms))
-    }, [formOutput, numTerms, focusIndex, setFocusIndex])
+    }, [formOutput, numTerms, focussedInput, setFocussedInput])
 
     useEffect(() => {
         isSuccess && navigate(`/u/${params.username}/lists`)
     }, [isSuccess])
 
     function tabListener(e: KeyboardEvent) {
-        if (!e.shiftKey && e.key === "Tab" && focusIndex?.index === termInputs.length-1 && focusIndex.side === 'to') {
+        if (!e.shiftKey && e.key === "Tab" && focussedInput?.index === termInputs.length-1 && focussedInput.side === 'to') {
             setNumTerms(cur => cur+10)
         }
     }
@@ -50,7 +50,7 @@ const NewList = memo((props) => {
         return () => {
             window.removeEventListener("keydown", tabListener)
         }
-    }, [numTerms, focusIndex])
+    }, [numTerms, focussedInput])
 
     const makeTermInputElements = useCallback((formOutput: FormOutput, numTerms: number) => {
         const termElements: JSX.Element[] = [];
@@ -60,14 +60,15 @@ const NewList = memo((props) => {
                 <NewListTerm
                     key={`term-${i + 1}`}
                     index={i}
-                    focusIndex={focusIndex}
-                    setFocusIndex={setFocusIndex}
+                    focussedInput={focussedInput}
+                    setFocussedInput={setFocussedInput}
                     formOutput={formOutput}   // @todo: formOutput should be recoil atom. Passing the state through props like this for any number of terms might lead to stale closures
-                    setFormOutput={setFormOutput} />
+                    setFormOutput={setFormOutput} 
+                />
             )
         }
         return termElements
-    }, [formOutput, focusIndex, setFocusIndex])
+    }, [formOutput, focussedInput, setFocussedInput])
 
     function handleAddRows(e) {
         setNumTerms(numTerms + 10);
