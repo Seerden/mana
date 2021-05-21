@@ -3,14 +3,7 @@ import { useRecoilValue, useRecoilState, useResetRecoilState, useSetRecoilState 
 import { v4 as uuidv4 } from 'uuid';
 import { makeReviewList } from 'helpers/reviewHelpers';
 import qs from 'query-string';
-import {
-    timePerCardState,
-    passfailState,
-    reviewSettingsState,
-    termsToReviewState,
-    termUpdateArrayState,
-    reviewStageState
-} from 'recoil/atoms/reviewAtoms';
+import { timePerCardState, passfailState, reviewSettingsState, termsToReviewState, termUpdateArrayState, reviewStageState } from 'recoil/atoms/reviewAtoms';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
 import ReviewCard from 'components/review/ReviewCard';
 import { useRouteProps } from './routerHooks';
@@ -50,13 +43,21 @@ export function useReview() {
     const [termUpdateArray, setTermUpdateArray] = useRecoilState(termUpdateArrayState);
     const { mutate: mutateCreateReviewSession, data: mutateResponse } = useCreateReviewSessionMutation();
     const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
-    const isFullListReview = useMemo(() => {
-        return qs.parse(location.search).kind === 'full' && location.pathname.includes('list')
-    }, [location])
+    const isFullListReview = qs.parse(location.search).kind === 'full' && location.pathname.includes('list')
 
     const newSaturationLevels = useMemo(() => {
         return makeNewSaturationLevels(termsToReview, termUpdateArray, reviewSettings)
     }, [termsToReview, termUpdateArray, reviewSettings])
+
+    useEffect(() => {
+        if (location.pathname.includes('list')) {
+            refetchLists();
+        }
+
+        return () => {
+            resetTermsToReview();
+        }
+    }, []);
 
     useEffect(() => {
         if (reviewSettings.sessionEnd) {
@@ -67,6 +68,37 @@ export function useReview() {
             }
         }
     }, [mutateResponse, reviewSettings.sessionEnd]);
+
+    useEffect(() => {
+        if (isFullListReview && lists) {
+            setTermsToReview(lists[0].terms as Term[]);
+        }
+    }, [lists]);
+
+    useEffect(() => {
+        if (termsToReview) {
+            reduceFutureTerms({ type: 'init' })
+        }
+    }, [termsToReview])
+
+    useEffect(() => {  // whenever backWasShown changes, remake LeftArrow/RightArrow keydown handler
+        window.addEventListener('keydown', handleLeftRightArrowKeyDown)
+
+        return () => {
+            window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
+        }
+    }, [backWasShown])
+
+    useEffect(() => {  // end review session once futureTerms.length reaches 0
+        if (termsToReview.length > 0 && futureTerms?.length === 0) {
+            updateTermUpdateArraySaturation();
+            updateTermUpdateArrayDate();
+            setReviewSettings(current => ({
+                ...current,
+                sessionEnd: new Date()
+            }));
+        }
+    }, [futureTerms]);
 
     /** case pass/fail:  Handle what happens to current term after pass/fail is chosen. */
     function termReducer(terms, { type }: { type: PassFail | 'init' }) {
@@ -164,37 +196,7 @@ export function useReview() {
         if (backWasShown) {
             handlePassFailClick(null, passfail);
         }
-    }
-
-    useEffect(() => {
-        if (location.pathname.includes('list')) {
-            refetchLists();
-        }
-
-        return () => {
-            resetTermsToReview();
-        }
-    }, []);
-
-    useEffect(() => {
-        if (isFullListReview && lists) {
-            setTermsToReview(lists[0].terms as Term[]);
-        }
-    }, [lists]);
-
-    useEffect(() => {
-        if (termsToReview) {
-            reduceFutureTerms({ type: 'init' })
-        }
-    }, [termsToReview])
-
-    useEffect(() => {  // whenever backWasShown changes, remake LeftArrow/RightArrow keydown handler
-        window.addEventListener('keydown', handleLeftRightArrowKeyDown)
-
-        return () => {
-            window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
-        }
-    }, [backWasShown])
+    };
 
     const updateTermUpdateArrayDate = useCallback(() => {
         setTermUpdateArray(cur => cur.map(entry => ({
@@ -207,17 +209,6 @@ export function useReview() {
             )))
     }, [termUpdateArray, setTermUpdateArray])
 
-    useEffect(() => {  // end review session once futureTerms.length reaches 0
-        if (termsToReview.length > 0 && futureTerms?.length === 0) {
-            updateTermUpdateArraySaturation();
-            updateTermUpdateArrayDate();
-            setReviewSettings(current => ({
-                ...current,
-                sessionEnd: new Date()
-            }));
-        }
-    }, [futureTerms]);
-
     return {
         backWasShown,
         setBackWasShown,
@@ -227,5 +218,4 @@ export function useReview() {
         completedCount,
         handlePassFailClick,
     };
-
 }
