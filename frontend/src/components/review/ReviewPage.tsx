@@ -19,7 +19,7 @@ function ReviewPage () {
             case 'after':
                 return PostReview
             default:
-                return;
+                return PreReview;
         }
     }, [reviewStage]) as React.ElementType;
 

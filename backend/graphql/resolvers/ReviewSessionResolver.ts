@@ -26,7 +26,7 @@ export class ReviewSessionResolver {
 
         if (savedReviewSession) {
             await bulkUpdateTerms(termUpdateArray);
-            await maybeAddSessionToList(savedReviewSession._id, savedReviewSession.listIds.map(entry => asObjectId(entry._id)))
+            await maybeAddSessionToList(savedReviewSession._id, savedReviewSession.settings.sessionEnd, savedReviewSession.listIds.map(entry => asObjectId(entry._id)))
             return { savedReviewSession }
         }
 

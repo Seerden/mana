@@ -54,9 +54,9 @@ export function useReview() {
         return qs.parse(location.search).kind === 'full' && location.pathname.includes('list')
     }, [location])
 
-    const makeNewSaturationLevelsCallback = useCallback(() => {
+    const newSaturationLevels = useMemo(() => {
         return makeNewSaturationLevels(termsToReview, termUpdateArray, reviewSettings)
-    }, [termsToReview, termUpdateArray, reviewSettings]);
+    }, [termsToReview, termUpdateArray, reviewSettings])
 
     useEffect(() => {  // send PUT and POST requests (needs to not be in the useEffect above, since then history lags one update behind)
         if (reviewSettings.sessionEnd) {
@@ -128,8 +128,6 @@ export function useReview() {
 
     const updateTermUpdateArraySaturation = useCallback(() => {  
         // @note: again, this could be a reducer. probably combined with the above updater
-        const newSaturationLevels = makeNewSaturationLevelsCallback();
-
         setTermUpdateArray(current => {
             return current.map((termToUpdate, index) => {
                 return {
@@ -220,7 +218,7 @@ export function useReview() {
                 sessionEnd: new Date()
             }));
         }
-    }, [futureTerms])
+    }, [futureTerms]);
 
     return {
         backWasShown,

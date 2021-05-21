@@ -68,7 +68,7 @@ export async function createListDocument(newList: NewListFromClient) {
     if (savedTerms.terms) {
         try {
             const termIds = savedTerms.terms.map(term => new mongoose.Types.ObjectId(term._id))
-    
+
             const newListForDatabase = {
                 ...newList,
                 terms: termIds,
@@ -79,7 +79,7 @@ export async function createListDocument(newList: NewListFromClient) {
                     backwards: 'untouched'
                 }
             };
-    
+
             const newListDocument = new ListModel(newListForDatabase);
             const savedList = await newListDocument.save();
 
@@ -101,12 +101,12 @@ export async function createListDocument(newList: NewListFromClient) {
 
 // these next two functions should be combined. specify an action argument that either takes 'add'/'delete' and $push/$pull based on that
 export async function addListToUser(listId: ObjectId, owner: string) {
-    const updatedUser = await UserModel.findOneAndUpdate({ username: owner }, { $push: { lists: listId }}, { rawResult: true, new: true });
+    const updatedUser = await UserModel.findOneAndUpdate({ username: owner }, { $push: { lists: listId } }, { rawResult: true, new: true });
     return updatedUser.value instanceof UserModel
 }
 
 export async function deleteListFromUser(listId: ObjectId, owner: string) {
-    const updatedUser = await UserModel.findOneAndUpdate({ username: owner }, { $pull: { lists: listId }}, { rawResult: true, new: true });
+    const updatedUser = await UserModel.findOneAndUpdate({ username: owner }, { $pull: { lists: listId } }, { rawResult: true, new: true });
     return updatedUser.value instanceof UserModel
 }
 
@@ -114,7 +114,7 @@ export async function updateListDocument(listId: ObjectId | string, action: List
     console.log('Updating list doc!');
     switch (action.type) {
         case "name":
-            const updatedList = await ListModel.findOneAndUpdate({ _id: asObjectId(listId) }, { $set: { name: payload.name } }, { rawResult: true, new: true } );
+            const updatedList = await ListModel.findOneAndUpdate({ _id: asObjectId(listId) }, { $set: { name: payload.name } }, { rawResult: true, new: true });
             if (updatedList.value.name === payload.name) {
                 return updatedList
             }
@@ -124,11 +124,23 @@ export async function updateListDocument(listId: ObjectId | string, action: List
     }
 }
 
-export async function maybeAddSessionToList(reviewSessionId: ObjectId, listIds: ObjectId[]) {
+export async function maybeAddSessionToList(reviewSessionId: ObjectId, reviewSessionDate: Date, listIds: ObjectId[]) {
     if (listIds.length == 1) {
-        const updatedList = await ListModel.findOneAndUpdate({ _id: listIds[0] }, 
-            { $push: { sessions: reviewSessionId }}, 
-            { rawResult: true, new: true });
+        const updatedList = await ListModel.findOneAndUpdate({ _id: listIds[0] },
+            {
+                $push: { sessions: reviewSessionId },
+                $set: { lastReviewed: reviewSessionDate }
+                // @todo: figure out how to efficiently maybeUpdateListState here. It requires knowledge of current list.state and list.sessions, 
+                // so we'd have to populate the list
+                // idea: instead of storing list.state as strings, just track session length,
+                // so we could do $inc: list.state[direction]: +1
+            },
+            { rawResult: true, new: true }
+        );
+
+        console.log(updatedList.value);
+
+
         return updatedList.ok
     }
 }

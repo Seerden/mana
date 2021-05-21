@@ -38,6 +38,9 @@ const NewList = memo((props) => {
         isSuccess && navigate(`/u/${params.username}/lists`)
     }, [isSuccess])
 
+    /** Add a keypress listener for tab-key presses. 
+     * Add 10 new rows if user presses tab on last input. 
+     * Autofocus the first newly added term. */
     const tabListener = (e: KeyboardEvent) => {
         if (!e.shiftKey && e.key === "Tab" && focussedInput?.index === termInputs.length-1 && focussedInput.side === 'to') {
             e.preventDefault();
