@@ -14,6 +14,11 @@ export type FormOutput = {
     terms?: NewListTermInput[],
 }
 
+export type FocusIndex = {
+    index: number,
+    side?: 'from' | 'to'
+}
+
 const NewList = memo((props) => {
     const { params, navigate } = useRouteProps();
     const [numTerms, setNumTerms] = useState<number>(10)
@@ -23,7 +28,7 @@ const NewList = memo((props) => {
     }))
     const [termInputs, setTermInputs] = useState<JSX.Element[]>([] as JSX.Element[]);
     const { mutate: mutateCreateList, isSuccess } = useMutateCreateList();
-    const [focusIndex, setFocusIndex] = useState<number>(-1);
+    const [focusIndex, setFocusIndex] = useState<FocusIndex>();
 
     useEffect(() => {
         setTermInputs(makeTermInputElements(formOutput, numTerms))
@@ -32,6 +37,20 @@ const NewList = memo((props) => {
     useEffect(() => {
         isSuccess && navigate(`/u/${params.username}/lists`)
     }, [isSuccess])
+
+    function tabListener(e: KeyboardEvent) {
+        if (!e.shiftKey && e.key === "Tab" && focusIndex?.index === termInputs.length-1 && focusIndex.side === 'to') {
+            setNumTerms(cur => cur+10)
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('keydown', tabListener)
+
+        return () => {
+            window.removeEventListener("keydown", tabListener)
+        }
+    }, [numTerms, focusIndex])
 
     const makeTermInputElements = useCallback((formOutput: FormOutput, numTerms: number) => {
         const termElements: JSX.Element[] = [];
