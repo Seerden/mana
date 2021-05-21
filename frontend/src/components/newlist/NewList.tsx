@@ -23,12 +23,13 @@ const NewList = memo((props) => {
     }))
     const [termInputs, setTermInputs] = useState<JSX.Element[]>([] as JSX.Element[]);
     const { mutate: mutateCreateList } = useMutateCreateList();
+    const [focusIndex, setFocusIndex] = useState<number>(-1);
 
     useEffect(() => {
         setTermInputs(makeTermInputElements(formOutput, numTerms))
-    }, [formOutput, numTerms])
+    }, [formOutput, numTerms, focusIndex, setFocusIndex])
 
-    function makeTermInputElements(formOutput: FormOutput, numTerms: number) {
+    const makeTermInputElements = useCallback((formOutput: FormOutput, numTerms: number) => {
         const termElements: JSX.Element[] = [];
 
         for (let i = 0; i < numTerms; i++) {
@@ -36,12 +37,14 @@ const NewList = memo((props) => {
                 <NewListTerm
                     key={`term-${i + 1}`}
                     index={i}
+                    focusIndex={focusIndex}
+                    setFocusIndex={setFocusIndex}
                     formOutput={formOutput}   // @todo: formOutput should be recoil atom. Passing the state through props like this for any number of terms might lead to stale closures
                     setFormOutput={setFormOutput} />
             )
         }
         return termElements
-    }
+    }, [formOutput, focusIndex, setFocusIndex])
 
     function handleAddRows(e) {
         setNumTerms(numTerms + 10);
@@ -110,7 +113,11 @@ const NewList = memo((props) => {
 
 
 
-                <input className="NewList__form--button" onClick={handleAddRows} type="button" value="Add rows" />
+                <section className="NewList__form--buttons">
+                    <input className="NewList__form--button" onClick={handleAddRows} type="button" value="Add rows" />
+                    <input className="NewList__form--button" onClick={handleSubmit} type="button" value="Create list" />
+                </section>
+
                 <section className="NewList__terms">
 
                     {termInputs.length > 0 &&
@@ -128,7 +135,6 @@ const NewList = memo((props) => {
                     }
                 </section>
 
-                <input className="NewList__form--button" onClick={handleSubmit} type="button" value="Create list" />
             </form>
         </div>
     )
