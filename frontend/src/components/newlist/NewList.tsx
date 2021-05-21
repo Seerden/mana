@@ -15,19 +15,23 @@ export type FormOutput = {
 }
 
 const NewList = memo((props) => {
-    const { params } = useRouteProps();
+    const { params, navigate } = useRouteProps();
     const [numTerms, setNumTerms] = useState<number>(10)
     const [formOutput, setFormOutput] = useState<FormOutput>(() => ({
         owner: params.username,
         terms: new Array(numTerms),
     }))
     const [termInputs, setTermInputs] = useState<JSX.Element[]>([] as JSX.Element[]);
-    const { mutate: mutateCreateList } = useMutateCreateList();
+    const { mutate: mutateCreateList, isSuccess } = useMutateCreateList();
     const [focusIndex, setFocusIndex] = useState<number>(-1);
 
     useEffect(() => {
         setTermInputs(makeTermInputElements(formOutput, numTerms))
     }, [formOutput, numTerms, focusIndex, setFocusIndex])
+
+    useEffect(() => {
+        isSuccess && navigate(`/u/${params.username}/lists`)
+    }, [isSuccess])
 
     const makeTermInputElements = useCallback((formOutput: FormOutput, numTerms: number) => {
         const termElements: JSX.Element[] = [];

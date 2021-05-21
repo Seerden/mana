@@ -24,11 +24,9 @@ const Lists = memo((props) => {
                         Lists by <Link className="Link" to={userString}>{userString}</Link>
                     </div>
 
-                    <button className="Button">
-                        <Link to={`${userString}/lists/new`}>
-                            Create a new list
-                        </Link>
-                    </button>
+                    <Link className="Lists__new--button" to={`${userString}/lists/new`}>
+                        Create a new list
+                    </Link>
 
                     <div className="Lists__header">
                         <div className="Lists__filter">
