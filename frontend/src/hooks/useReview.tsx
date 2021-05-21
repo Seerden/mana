@@ -58,17 +58,15 @@ export function useReview() {
         return makeNewSaturationLevels(termsToReview, termUpdateArray, reviewSettings)
     }, [termsToReview, termUpdateArray, reviewSettings])
 
-    useEffect(() => {  // send PUT and POST requests (needs to not be in the useEffect above, since then history lags one update behind)
+    useEffect(() => {
         if (reviewSettings.sessionEnd) {
-            mutateCreateReviewSession({ newReviewSession, termUpdateArray });
+            if (!mutateResponse) {
+                mutateCreateReviewSession({ newReviewSession, termUpdateArray })
+            } else {
+                setReviewStage('after');
+            }
         }
-    }, [reviewSettings.sessionEnd]);
-
-    useEffect(() => {  // set reviewStage to PostReview once all post-session API requests are handled
-        if (mutateResponse && reviewSettings.sessionEnd) {
-            setReviewStage('after');
-        }
-    }, [mutateResponse, reviewSettings.sessionEnd])
+    }, [mutateResponse, reviewSettings.sessionEnd]);
 
     /** case pass/fail:  Handle what happens to current term after pass/fail is chosen. */
     function termReducer(terms, { type }: { type: PassFail | 'init' }) {
