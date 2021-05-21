@@ -8,10 +8,11 @@ type NewListTermProps = {
     formOutput: FormOutput,
     setFormOutput: React.Dispatch<React.SetStateAction<FormOutput>>,
     focussedInput?: FocusIndex,
-    setFocussedInput: React.Dispatch<React.SetStateAction<FocusIndex | undefined>>
+    setFocussedInput: React.Dispatch<React.SetStateAction<FocusIndex | undefined>>,
+    autoFocus: boolean
 }
 
-const NewListTerm = memo(({ index, formOutput, setFormOutput, setFocussedInput, focussedInput }: NewListTermProps) => {
+const NewListTerm = memo(({ index, formOutput, setFormOutput, setFocussedInput, focussedInput, autoFocus }: NewListTermProps) => {
     function handleTermBlur(e: React.FocusEvent<HTMLInputElement>, idx: number) {
         setFocussedInput(cur => ({ ...cur, index: -1 }))
 
@@ -53,6 +54,7 @@ const NewListTerm = memo(({ index, formOutput, setFormOutput, setFocussedInput, 
                     onFocus={e => handleFocus(e)}
                     onBlur={(e) => handleTermBlur(e, index)} 
                     type="text" 
+                    autoFocus={autoFocus}
                     name="from" 
                 />
                 <input 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo, useCallback } from 'react';
+import React, { useState, useEffect, memo, useCallback, useRef } from 'react';
 import { useRouteProps } from 'hooks/routerHooks';
 import NewListTerm from './NewListTerm';
 import { NewListTermInput } from 'graphql/codegen-output';
@@ -38,11 +38,13 @@ const NewList = memo((props) => {
         isSuccess && navigate(`/u/${params.username}/lists`)
     }, [isSuccess])
 
-    function tabListener(e: KeyboardEvent) {
+    const tabListener = (e: KeyboardEvent) => {
         if (!e.shiftKey && e.key === "Tab" && focussedInput?.index === termInputs.length-1 && focussedInput.side === 'to') {
-            setNumTerms(cur => cur+10)
+            e.preventDefault();
+            setNumTerms(cur => cur+10);
+            setFocussedInput(cur => ({ index: cur!.index, side: 'from' }));
         }
-    }
+    };
 
     useEffect(() => {
         window.addEventListener('keydown', tabListener)
@@ -60,13 +62,15 @@ const NewList = memo((props) => {
                 <NewListTerm
                     key={`term-${i + 1}`}
                     index={i}
+                    autoFocus={i === focussedInput?.index!+1}
                     focussedInput={focussedInput}
                     setFocussedInput={setFocussedInput}
                     formOutput={formOutput}   // @todo: formOutput should be recoil atom. Passing the state through props like this for any number of terms might lead to stale closures
                     setFormOutput={setFormOutput} 
                 />
             )
-        }
+        };
+
         return termElements
     }, [formOutput, focussedInput, setFocussedInput])
 
