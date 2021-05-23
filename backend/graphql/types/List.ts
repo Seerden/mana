@@ -8,20 +8,21 @@ import { ObjectId } from "mongodb";
 type ListStateUnion = 'untouched' | 'seeding' | 'seeded';
 
 @ObjectType()
+@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @InputType("ListState")
-class ListState {
-    @Property()
-    @Field(() => String)
-    forwards?: ListStateUnion;
+class ListState { // @todo: rename to ListReviewDateArray
+    @Property({ default: new Array() })
+    @Field(() => [Date], { nullable: true })
+    forwards?: Date[];
 
-    @Property(() => String)
-    @Field()
-    backwards?: ListStateUnion;
+    @Property({ default: new Array() })
+    @Field(() => [Date], { nullable: true })
+    backwards?: Date[];
 }
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
-@index({ collation: { locale: 'en', strength: 2}})
+@index({ collation: { locale: 'en', strength: 2 } })
 export class List {
     @Field(() => ID)
     readonly _id: ObjectId
@@ -47,7 +48,7 @@ export class List {
     // terms?: Array<Ref<Term>>
     terms?: Array<typeof TermsUnion>
 
-    @Property({ ref: "ReviewSession"})
+    @Property({ ref: "ReviewSession" })
     @Field(() => [ReviewSession], { nullable: true })
     sessions: Array<Ref<ReviewSession>>
 
@@ -63,9 +64,9 @@ export class List {
     @Field(() => [String])
     setMembership: Array<mongoose.Types.ObjectId>; // @todo: implement Set type
 
-    @Property()
-    @Field()
-    state: ListState
+    @Property({ _id: false })
+    @Field(() => ListState)
+    reviewDates: ListState
 }
 
 @ObjectType()

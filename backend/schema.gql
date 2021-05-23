@@ -28,16 +28,16 @@ type List {
   lastReviewed: DateTime!
   name: String!
   owner: String!
+  reviewDates: ListState!
   sessions: [ReviewSession!]
   setMembership: [String!]!
-  state: ListState!
   terms(populate: Boolean): [TermsUnion!]!
   to: [String!]!
 }
 
 type ListState {
-  backwards: String!
-  forwards: String!
+  backwards: [DateTime!]
+  forwards: [DateTime!]
 }
 
 input ListUpdateActionInput {

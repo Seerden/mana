@@ -72,8 +72,6 @@ async function startServer() {
     });
 
     await inspectDatabase();
-
-    // await TermModel.deleteMany({ owner: "a" })
 }
 
 startServer();

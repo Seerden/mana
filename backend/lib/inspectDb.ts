@@ -1,5 +1,6 @@
 import { ListModel } from "../graphql/types/List";
 import mongoose from 'mongoose';
+import { ReviewSessionModel } from "../graphql/types/ReviewSession";
 
 export async function removeExistingListSessions() {
     const bulkOps = [];
@@ -7,21 +8,21 @@ export async function removeExistingListSessions() {
     const lists = await ListModel.find({});
 
     for (const list of lists) {
-            const operation = {
-                updateOne: {
-                    filter: { name: list.name },
-                    update: {
-                        $set: {
-                            sessions: new Array()
-                        }
+        const operation = {
+            updateOne: {
+                filter: { name: list.name },
+                update: {
+                    $set: {
+                        sessions: new Array()
                     }
                 }
-            };
+            }
+        };
 
-            bulkOps.push(operation);
+        bulkOps.push(operation);
     };
 
-    if (bulkOps.length > 0 ) {
+    if (bulkOps.length > 0) {
         console.log(bulkOps[0]);
         const bulkWriteResult = await ListModel.bulkWrite(bulkOps);
 
@@ -43,8 +44,29 @@ export async function findOneList() {
 
 export async function findOneListById(id) {
     return await ListModel.findById(id);
+};
+
+async function setEmptyListReviewDateArrays() {
+    const updatedLists = await ListModel.updateMany({}, {
+        $set: {
+            reviewDates: {
+                forwards: new Array<Date>(),
+                backwards: new Array<Date>()
+            }
+        }
+    }, { new: true, rawResult: true });
+
+    return [updatedLists.ok, updatedLists.nModified];
+}
+
+async function unsetAllListStates() {
+    return await ListModel.updateMany({}, {
+        $unset: {
+            state: 1
+        }
+    })
 }
 
 export async function inspectDatabase() {
-    // console.log(await ListModel.find({ _id: "5ff7704e7ad55b187c93641f"}))
+    // console.log(await setEmptyListReviewDateArrays())
 }

@@ -44,7 +44,7 @@ export type List = {
   created: Scalars['DateTime'];
   lastReviewed: Scalars['DateTime'];
   setMembership: Array<Scalars['String']>;
-  state: ListState;
+  reviewDates: ListState;
 };
 
 
@@ -54,8 +54,8 @@ export type ListTermsArgs = {
 
 export type ListState = {
   __typename?: 'ListState';
-  forwards: Scalars['String'];
-  backwards: Scalars['String'];
+  forwards?: Maybe<Array<Scalars['DateTime']>>;
+  backwards?: Maybe<Array<Scalars['DateTime']>>;
 };
 
 export type ListUpdateActionInput = {
@@ -541,13 +541,13 @@ export type ListResolvers<ContextType = any, ParentType extends ResolversParentT
   created?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   lastReviewed?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   setMembership?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  state?: Resolver<ResolversTypes['ListState'], ParentType, ContextType>;
+  reviewDates?: Resolver<ResolversTypes['ListState'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ListStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListState'] = ResolversParentTypes['ListState']> = {
-  forwards?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  backwards?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  forwards?: Resolver<Maybe<Array<ResolversTypes['DateTime']>>, ParentType, ContextType>;
+  backwards?: Resolver<Maybe<Array<ResolversTypes['DateTime']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
