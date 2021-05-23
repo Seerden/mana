@@ -8,8 +8,9 @@ import advancedFormat from 'dayjs/plugin/advancedFormat'
  * Return time to or from the given date
  * @returns {string} e.g. '2 days ago'
  */
-export function timeSince(date: Date): string | null {
+export function timeSince(date: Date | null): string | null {
     if (date) {
+        console.log(dayjs(date).fromNow());
         return dayjs(date).fromNow();
     }
 

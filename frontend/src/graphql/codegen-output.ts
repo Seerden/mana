@@ -54,8 +54,8 @@ export type ListTermsArgs = {
 
 export type ListState = {
   __typename?: 'ListState';
-  forwards?: Maybe<Array<Scalars['DateTime']>>;
-  backwards?: Maybe<Array<Scalars['DateTime']>>;
+  forwards: Array<Scalars['DateTime']>;
+  backwards: Array<Scalars['DateTime']>;
 };
 
 export type ListUpdateActionInput = {
@@ -546,8 +546,8 @@ export type ListResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type ListStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListState'] = ResolversParentTypes['ListState']> = {
-  forwards?: Resolver<Maybe<Array<ResolversTypes['DateTime']>>, ParentType, ContextType>;
-  backwards?: Resolver<Maybe<Array<ResolversTypes['DateTime']>>, ParentType, ContextType>;
+  forwards?: Resolver<Array<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  backwards?: Resolver<Array<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

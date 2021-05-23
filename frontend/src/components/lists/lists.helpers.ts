@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { List } from 'graphql/codegen-output';
 import { ColorType } from './lists.types';
 
 export function colorByLastReviewDate(reviewDate: Date | null): ColorType {
@@ -20,4 +21,24 @@ export function colorByLastReviewDate(reviewDate: Date | null): ColorType {
     } else {
         return '#333';
     }
+};
+
+/** Return the most recent date from list.reviewDates, by comparing the last entry from .forwards to .backwards */
+export function getLastReviewDate(list: List) {
+    const { forwards, backwards } = list.reviewDates;
+    const last = (arr: Date[] | []) => arr && arr[arr.length-1];
+    const [lastForwards, lastBackwards] = [last(forwards), last(backwards)];
+
+    if (!lastForwards) {
+        if (lastBackwards) {
+            return lastBackwards
+        };
+        return null;
+    }
+
+    if (!lastBackwards) {
+        return lastForwards
+    }
+
+    return lastForwards > lastBackwards ? lastForwards : lastBackwards;
 }

@@ -12,12 +12,12 @@ type ListStateUnion = 'untouched' | 'seeding' | 'seeded';
 @InputType("ListState")
 class ListState { // @todo: rename to ListReviewDateArray
     @Property({ default: new Array() })
-    @Field(() => [Date], { nullable: true })
-    forwards?: Date[];
+    @Field(() => [Date])
+    forwards: Date[];
 
     @Property({ default: new Array() })
-    @Field(() => [Date], { nullable: true })
-    backwards?: Date[];
+    @Field(() => [Date])
+    backwards: Date[];
 }
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })

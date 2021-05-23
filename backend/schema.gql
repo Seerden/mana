@@ -36,8 +36,8 @@ type List {
 }
 
 type ListState {
-  backwards: [DateTime!]
-  forwards: [DateTime!]
+  backwards: [DateTime!]!
+  forwards: [DateTime!]!
 }
 
 input ListUpdateActionInput {

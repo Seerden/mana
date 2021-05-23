@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import ListsItem from './ListsItem';
-import { handleError, handleResponse } from 'helpers/apiHandlers/apiHandlers';
-import { useRequest } from "hooks/useRequest";
 import { useRouteProps } from 'hooks/routerHooks'
-import { getLists } from "helpers/apiHandlers/listHandlers";
 import { UseListsReturn } from './lists.types';
 import { gql, request } from 'graphql-request';
 import { useQuery } from "react-query";
+import { List } from "graphql/codegen-output";
 
 const useLists = (): UseListsReturn => {
     const [filter, setFilter] = useState<string>('');
@@ -29,6 +27,10 @@ const useLists = (): UseListsReturn => {
                     name
                     from
                     to
+                    reviewDates {
+                        forwards,
+                        backwards
+                    }
                     sessions {
                         _id
                     }
@@ -56,10 +58,10 @@ const useLists = (): UseListsReturn => {
     const makeListsElement = useCallback((lists: Array<List> | undefined) => {
         if (lists && Array.isArray(lists)) {
             return lists.map(list => {
-                const { name, state, lastReviewed, created, _id } = list;
+                const { name, reviewDates, lastReviewed, created, _id } = list;
                 return {
                     name,
-                    state,
+                    reviewDates,
                     lastReviewed,
                     created,
                     element: <ListsItem key={_id} list={list} />

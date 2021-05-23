@@ -8,7 +8,7 @@ fragment CoreTermIdFields on TermId {
         _id
     }
 }
-`
+`;
 
 const CoreTermFields = gql`
 fragment CoreTermFields on Term {
@@ -31,7 +31,7 @@ fragment CoreTermFields on Term {
         }
     }
 }
-`
+`;
 
 const CoreListFields = gql`
     fragment CoreListFields on List {
@@ -40,8 +40,12 @@ const CoreListFields = gql`
         name
         to
         from
+        reviewDates {
+            forwards
+            backwards
+        }
     }
-`
+`;
 
 const listByIdQuery = gql`
 ${CoreListFields}
@@ -57,9 +61,7 @@ query ($ids: [String!]!) {
 
     }
 }
-`
-
-
+`;
 
 export function useQueryListsById(ids: [String]) {
     const { data, refetch, isLoading, isFetching, ...rest } = useQuery<[List]>("listsById", async () => {
