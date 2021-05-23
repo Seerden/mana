@@ -124,16 +124,17 @@ export async function updateListDocument(listId: ObjectId | string, action: List
     }
 }
 
-export async function maybeAddSessionToList(reviewSessionId: ObjectId, reviewSessionDate: Date, listIds: ObjectId[]) {
+export async function maybeAddSessionToList(reviewSessionId: ObjectId, reviewSessionDate: Date, reviewDirection: 'forwards' | 'backwards', listIds: ObjectId[]) {
     if (listIds.length == 1) {
+        const reviewSessionKey = `reviewDates.${reviewDirection}`;
+
         const updatedList = await ListModel.findOneAndUpdate({ _id: listIds[0] },
             {
-                $push: { sessions: reviewSessionId },
+                $push: { 
+                    sessions: reviewSessionId,
+                    [reviewSessionKey]: reviewSessionDate
+                },
                 $set: { lastReviewed: reviewSessionDate }
-                // @todo: figure out how to efficiently maybeUpdateListState here. It requires knowledge of current list.state and list.sessions, 
-                // so we'd have to populate the list
-                // idea: instead of storing list.state as strings, just track session length,
-                // so we could do $inc: list.state[direction]: +1
             },
             { rawResult: true, new: true }
         );

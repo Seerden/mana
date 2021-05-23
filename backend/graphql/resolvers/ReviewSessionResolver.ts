@@ -5,7 +5,7 @@ import { bulkUpdateTerms } from "../helpers/term";
 import { TermUpdateObject } from "../types/input_types/term";
 import { ReviewSession, ReviewSessionBase, ReviewSessionModel } from "../types/ReviewSession";
 
-@ObjectType() 
+@ObjectType()
 class MaybeReviewSession {
     @Field(() => ReviewSession, { nullable: true })
     savedReviewSession?: ReviewSession
@@ -26,7 +26,12 @@ export class ReviewSessionResolver {
 
         if (savedReviewSession) {
             await bulkUpdateTerms(termUpdateArray);
-            await maybeAddSessionToList(savedReviewSession._id, savedReviewSession.settings.sessionEnd, savedReviewSession.listIds.map(entry => asObjectId(entry._id)))
+            await maybeAddSessionToList(
+                savedReviewSession._id,
+                savedReviewSession.settings.sessionEnd,
+                savedReviewSession.settings.direction,
+                savedReviewSession.listIds.map(entry => asObjectId(entry._id))
+            );
             return { savedReviewSession }
         }
 
