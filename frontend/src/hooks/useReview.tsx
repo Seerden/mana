@@ -50,13 +50,9 @@ export function useReview() {
     }, [termsToReview, termUpdateArray, reviewSettings])
 
     useEffect(() => {
-        if (location.pathname.includes('list')) {
-            refetchLists();
-        }
+        location.pathname.includes('list') && refetchLists();
 
-        return () => {
-            resetTermsToReview();
-        }
+        return () => resetTermsToReview() ;
     }, []);
 
     useEffect(() => {
@@ -70,23 +66,17 @@ export function useReview() {
     }, [mutateResponse, reviewSettings.sessionEnd]);
 
     useEffect(() => {
-        if (isFullListReview && lists) {
-            setTermsToReview(lists[0].terms as Term[]);
-        }
+        lists && isFullListReview && setTermsToReview(lists[0].terms as Term[]);
     }, [lists]);
 
     useEffect(() => {
-        if (termsToReview) {
-            reduceFutureTerms({ type: 'init' })
-        }
+        termsToReview && reduceFutureTerms({ type: 'init' })
     }, [termsToReview])
 
     useEffect(() => {  // whenever backWasShown changes, remake LeftArrow/RightArrow keydown handler
         window.addEventListener('keydown', handleLeftRightArrowKeyDown)
 
-        return () => {
-            window.removeEventListener('keydown', handleLeftRightArrowKeyDown)
-        }
+        return () => { window.removeEventListener('keydown', handleLeftRightArrowKeyDown) }
     }, [backWasShown])
 
     useEffect(() => {  // end review session once futureTerms.length reaches 0
@@ -211,20 +201,21 @@ export function useReview() {
     /** ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons */
     function handleLeftRightArrowKeyDown(e: KeyboardEvent) {
         let passfail: PassFail;
-        switch (e.code) {
-            case 'ArrowLeft':
-                passfail = 'fail';
-                break;
-            case 'ArrowRight':
-                passfail = 'pass';
-                break;
-            default:
-                return;
-        }
 
-        if (backWasShown && passfail) {
-            handlePassFailClick(null, passfail);
-        }
+        if (['ArrowLeft', 'ArrowRight'].includes(e.code)) {
+            switch (e.code) {
+                case 'ArrowLeft':
+                    passfail = 'fail';
+                    break;
+                case 'ArrowRight':
+                    passfail = 'pass';
+                    break;
+                default:
+                    return;
+            }
+        } else return;
+
+        backWasShown && passfail && handlePassFailClick(null, passfail)
     };
 
     return {
