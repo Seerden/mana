@@ -107,7 +107,7 @@ export function useReview() {
     useEffect(() => {  // end review session once futureTerms.length reaches 0
         if (termsToReview.length > 0 && futureTerms?.length === 0) {
             reduceTermUpdateArray({ type: 'saturation', newSaturationLevels: makeNewSaturationLevelsCallback() })
-            updateTermUpdateArrayDate();
+            reduceTermUpdateArray({ type: 'date' });
             setReviewSettings(current => ({
                 ...current,
                 sessionEnd: new Date()
@@ -147,11 +147,15 @@ export function useReview() {
         newSaturationLevels: ReturnType<typeof makeNewSaturationLevels>
     };
 
+    type TermUpdateDate = {
+        type: 'date'
+    }
+
     /** 'reducer' to update value of termUpdateArray
      *  note that this doesn't actually function as a reducer, since termUpdateArray is recoil atom state, and not React useState
      *  @todo: look into the possibility of implementing this as a selector
      */
-    function reduceTermUpdateArray(action: TermUpdatePassfail | TermUpdateSaturation) { // @note: an actual reducer would have 'state' as first parameter here.
+    function reduceTermUpdateArray(action: TermUpdatePassfail | TermUpdateSaturation | TermUpdateDate) { // @note: an actual reducer would have 'state' as first parameter here.
         switch (action.type) {
             case 'passfail':
                 const { passfail, currentTerm } = action;
@@ -171,7 +175,6 @@ export function useReview() {
                     return term
                 }))
                 break;
-
             case 'saturation':
                 const { newSaturationLevels } = action;
                 setTermUpdateArray(state => state.map((termToUpdate, index) => {
@@ -182,6 +185,16 @@ export function useReview() {
                             : termToUpdate.saturation
                     }
                 }))
+                break;
+            case 'date':
+                setTermUpdateArray(cur => cur.map(entry => ({
+                    ...entry,
+                    history: {
+                        ...entry.history,
+                        date: new Date()
+                    }
+                } as TermUpdateObject
+                )))
                 break;
         }
     }
@@ -224,21 +237,10 @@ export function useReview() {
                 return;
         }
 
-        if (backWasShown) {
+        if (backWasShown && passfail) {
             handlePassFailClick(null, passfail);
         }
     };
-
-    const updateTermUpdateArrayDate = useCallback(() => {
-        setTermUpdateArray(cur => cur.map(entry => ({
-            ...entry,
-            history: {
-                ...entry.history,
-                date: new Date()
-            }
-        } as TermUpdateObject
-        )))
-    }, [termUpdateArray, setTermUpdateArray])
 
     return {
         backWasShown,
