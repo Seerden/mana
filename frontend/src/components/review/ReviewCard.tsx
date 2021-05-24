@@ -1,11 +1,11 @@
-import React, { memo, useState, useRef, useEffect } from "react";
+import React, { memo, useState, useRef, useEffect, useCallback } from "react";
 import './style/ReviewCard.scss';
 
 const ReviewCard = memo(({ setBackWasShown, direction, term }: { setBackWasShown: React.Dispatch<React.SetStateAction<boolean>>, direction: 'forwards' | 'backwards', term: any }) => {
     const [side, setSide] = useState(direction === 'forwards' ? 'from' : 'to');
     const [flipping, setFlipping] = useState(false);
     const [fade, setFade] = useState(false);
-    const toggleSide = () => setSide(side === 'from' ? 'to' : 'from');
+    const toggleSide = () => setSide(cur => cur === 'from' ? 'to' : 'from');
     let timeouts = useRef<any[]>([]);
 
     useEffect(() => {  // add, remove or recreate up/down key handler
@@ -37,13 +37,13 @@ const ReviewCard = memo(({ setBackWasShown, direction, term }: { setBackWasShown
         }
     }
 
-    function flip() {
+    const flip = useCallback(() => {
         let duration = 250; // match keyframes animation duration
+        setBackWasShown(true);
         setFlipping(true);
         timeouts.current.push(setTimeout(() => setFlipping(false), duration));
         timeouts.current.push(setTimeout(() => toggleSide(), duration / 2));
-        setBackWasShown(true);
-    };
+    }, [setFlipping, setBackWasShown, setSide]);
 
     return (
         <div

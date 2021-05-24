@@ -13,6 +13,7 @@ const Review = memo((props) => {
         progress,
         completedCount,
         handlePassFailClick,
+        makeReviewCard
     } = useReview();
 
     return (
@@ -30,7 +31,7 @@ const Review = memo((props) => {
 
             {futureTerms.length > 0 &&
                 <>
-                    {futureTerms[0].card}
+                    {makeReviewCard(futureTerms[0])}
 
                     {backWasShown
                         ?

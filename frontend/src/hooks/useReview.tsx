@@ -22,29 +22,18 @@ export function useReview() {
     const setPassfail = useSetRecoilState(passfailState);
 
     const initializeFutureTerms = useCallback(() => {
-        let termList = makeReviewList(termsToReview, reviewSettings.n)
-        return termList.map(term => (
-            {
-                term: term,
-                card: <ReviewCard
-                    setBackWasShown={setBackWasShown}
-                    key={uuidv4()}
-                    direction={reviewSettings.direction}
-                    term={term} />
-            }
-        ));
+        return makeReviewList(termsToReview, reviewSettings.n)
     }, [reviewSettings.n, termsToReview]);
 
-    function makeReviewCard(term: Term) {
+    const makeReviewCard = useCallback((term: Term) => {
         return (
             <ReviewCard
                 setBackWasShown={setBackWasShown}
-                key={`review-card-${new Date()}`}
                 direction={reviewSettings.direction}
                 term={term}
             />
         )
-    }
+    }, [reviewSettings.direction]);
 
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, () => initializeFutureTerms());
@@ -59,10 +48,6 @@ export function useReview() {
     const makeNewSaturationLevelsCallback = useCallback(() => {
         return makeNewSaturationLevels(termsToReview, termUpdateArray, reviewSettings)
     }, [termsToReview, termUpdateArray, reviewSettings])
-
-    useEffect(() => {
-        console.log(termUpdateArray);
-    }, [termUpdateArray])
 
     useEffect(() => {
         if (location.pathname.includes('list')) {
@@ -216,7 +201,7 @@ export function useReview() {
 
     /** Handle clicking the pass or fail button */
     const handlePassFailClick = useCallback((e, passfail: PassFail) => {
-        reduceTermUpdateArray({ type: 'passfail', currentTerm: futureTerms[0].term, passfail });
+        reduceTermUpdateArray({ type: 'passfail', currentTerm: futureTerms[0], passfail });
         setPassfail(cur => [...cur, passfail]);
         setTimePerCard(cur => [...cur, new Date()])
         reduceFutureTerms({ type: passfail });
@@ -250,5 +235,6 @@ export function useReview() {
         progress,
         completedCount,
         handlePassFailClick,
+        makeReviewCard
     };
 }

@@ -128,19 +128,24 @@ export async function maybeAddSessionToList(reviewSessionId: ObjectId, reviewSes
     if (listIds.length == 1) {
         const reviewSessionKey = `reviewDates.${reviewDirection}`;
 
-        const updatedList = await ListModel.findOneAndUpdate({ _id: listIds[0] },
+        const updatedList = await ListModel.findOneAndUpdate(
             {
-                $push: { 
+                _id: listIds[0]
+            },
+            {
+                $push: {
                     sessions: reviewSessionId,
                     [reviewSessionKey]: reviewSessionDate
                 },
-                $set: { lastReviewed: reviewSessionDate }
+                $set: {
+                    lastReviewed: reviewSessionDate
+                }
             },
-            { rawResult: true, new: true }
+            {
+                rawResult: true,
+                new: true
+            }
         );
-
-        console.log(updatedList.value);
-
 
         return updatedList.ok
     }
