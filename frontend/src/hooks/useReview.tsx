@@ -35,6 +35,17 @@ export function useReview() {
         ));
     }, [reviewSettings.n, termsToReview]);
 
+    function makeReviewCard(term: Term) {
+        return (
+            <ReviewCard 
+                setBackWasShown={setBackWasShown}
+                key={`review-card-${new Date()}`}
+                direction={reviewSettings.direction}
+                term={term}
+            />
+        )
+    }
+
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const [futureTerms, reduceFutureTerms] = useReducer(termReducer, () => initializeFutureTerms());
     const setTimePerCard = useSetRecoilState(timePerCardState);
@@ -105,7 +116,6 @@ export function useReview() {
         switch (type) {
             case 'init':
                 return initializeFutureTerms();
-
             case 'pass':
                 return terms.slice(1,);
             case 'fail':
@@ -122,20 +132,19 @@ export function useReview() {
         }
     }
 
-    const progress = useMemo(() => {
+    const { completedCount, progress } = useMemo(() => {
+        let completedCount: number = 0;
+        let progress: number = 0;
+
         if (futureTerms) {
             let sessionLength = numTermsToReview * reviewSettings.n;
             let termsCompleted = sessionLength - futureTerms.length;
-            return Math.floor(100 * termsCompleted / sessionLength);
-        } else {
-            return 0
-        }
-    }, [futureTerms]);
+            progress = Math.floor(100 * termsCompleted / sessionLength);
+            completedCount = sessionLength - futureTerms.length;
+        } 
 
-    const completedCount = useMemo(() => {
-        return numTermsToReview * reviewSettings.n - futureTerms.length;
-    }, [futureTerms, numTermsToReview, reviewSettings.n])
-
+        return { completedCount, progress }
+    }, [futureTerms, numTermsToReview, reviewSettings.n]);
 
     const updateTermUpdateArray = useCallback((termToUpdate: Term, passfail: PassFail) => { 
         // @note: this could be a reducer
@@ -177,7 +186,7 @@ export function useReview() {
         setTimePerCard(cur => [...cur, new Date()])
         reduceFutureTerms({ type: passfail });
         setBackWasShown(false);
-    }, [futureTerms])
+    }, [futureTerms, setPassfail, setTimePerCard, backWasShown])
 
     /** ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons */
     function handleLeftRightArrowKeyDown(e: KeyboardEvent) {
