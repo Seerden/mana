@@ -37,7 +37,7 @@ export function useReview() {
 
     function makeReviewCard(term: Term) {
         return (
-            <ReviewCard 
+            <ReviewCard
                 setBackWasShown={setBackWasShown}
                 key={`review-card-${new Date()}`}
                 direction={reviewSettings.direction}
@@ -56,9 +56,13 @@ export function useReview() {
     const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
     const isFullListReview = qs.parse(location.search).kind === 'full' && location.pathname.includes('list')
 
-    const newSaturationLevels = useMemo(() => {
+    const makeNewSaturationLevelsCallback = useCallback(() => {
         return makeNewSaturationLevels(termsToReview, termUpdateArray, reviewSettings)
     }, [termsToReview, termUpdateArray, reviewSettings])
+
+    useEffect(() => {
+        console.log(termUpdateArray);
+    }, [termUpdateArray])
 
     useEffect(() => {
         if (location.pathname.includes('list')) {
@@ -102,7 +106,7 @@ export function useReview() {
 
     useEffect(() => {  // end review session once futureTerms.length reaches 0
         if (termsToReview.length > 0 && futureTerms?.length === 0) {
-            updateTermUpdateArraySaturation();
+            reduceTermUpdateArray({ type: 'saturation', newSaturationLevels: makeNewSaturationLevelsCallback() })
             updateTermUpdateArrayDate();
             setReviewSettings(current => ({
                 ...current,
@@ -132,56 +136,74 @@ export function useReview() {
         }
     }
 
+    type TermUpdatePassfail = { // @todo: this should be a union of objects. one for saturation case, one for passfail case
+        type: 'passfail',
+        passfail: PassFail,
+        currentTerm: Term
+    };
+
+    type TermUpdateSaturation = {
+        type: 'saturation',
+        newSaturationLevels: ReturnType<typeof makeNewSaturationLevels>
+    };
+
+    /** 'reducer' to update value of termUpdateArray
+     *  note that this doesn't actually function as a reducer, since termUpdateArray is recoil atom state, and not React useState
+     *  @todo: look into the possibility of implementing this as a selector
+     */
+    function reduceTermUpdateArray(action: TermUpdatePassfail | TermUpdateSaturation) { // @note: an actual reducer would have 'state' as first parameter here.
+        switch (action.type) {
+            case 'passfail':
+                const { passfail, currentTerm } = action;
+                setTermUpdateArray(state => state.map((term) => {
+                    if (term._id === currentTerm._id) {
+                        return {
+                            ...term,
+                            history: {
+                                ...term.history,
+                                content: [
+                                    ...term.history!.content,
+                                    passfail
+                                ]
+                            }
+                        } as TermUpdateObject  // if we don't alias the return, it'll think the date doesn't exist
+                    }
+                    return term
+                }))
+                break;
+
+            case 'saturation':
+                const { newSaturationLevels } = action;
+                setTermUpdateArray(state => state.map((termToUpdate, index) => {
+                    return {
+                        ...termToUpdate,
+                        saturation: newSaturationLevels[index].termId === termToUpdate._id
+                            ? newSaturationLevels[index].saturation
+                            : termToUpdate.saturation
+                    }
+                }))
+                break;
+        }
+    }
+
     const { completedCount, progress } = useMemo(() => {
         let completedCount: number = 0;
         let progress: number = 0;
 
         if (futureTerms) {
-            let sessionLength = numTermsToReview * reviewSettings.n;
-            let termsCompleted = sessionLength - futureTerms.length;
+            const sessionLength = numTermsToReview * reviewSettings.n;
+            const termsCompleted = sessionLength - futureTerms.length;
+
             progress = Math.floor(100 * termsCompleted / sessionLength);
             completedCount = sessionLength - futureTerms.length;
-        } 
+        }
 
         return { completedCount, progress }
     }, [futureTerms, numTermsToReview, reviewSettings.n]);
 
-    const updateTermUpdateArray = useCallback((termToUpdate: Term, passfail: PassFail) => { 
-        // @note: this could be a reducer
-        setTermUpdateArray(cur => cur.map((term: TermUpdateObject) => {
-            if (term._id === termToUpdate._id) {
-                return {
-                    ...term,
-                    history: {
-                        ...term.history,
-                        content: [
-                            ...term.history!.content,
-                            passfail
-                        ]
-                    }
-                } as TermUpdateObject  // if we don't alias the return, it'll think the date doesn't exist
-            }
-            return term
-        }))
-    }, [termUpdateArray, setTermUpdateArray]);
-
-    const updateTermUpdateArraySaturation = useCallback(() => {  
-        // @note: again, this could be a reducer. probably combined with the above updater
-        setTermUpdateArray(current => {
-            return current.map((termToUpdate, index) => {
-                return {
-                    ...termToUpdate,
-                    saturation: newSaturationLevels[index].termId === termToUpdate._id 
-                        ? newSaturationLevels[index].saturation 
-                        : termToUpdate.saturation
-                }
-            })
-        })
-    }, [termUpdateArray, setTermUpdateArray])
-
     /** Handle clicking the pass or fail button */
     const handlePassFailClick = useCallback((e, passfail: PassFail) => {
-        updateTermUpdateArray(futureTerms[0].term, passfail);
+        reduceTermUpdateArray({ type: 'passfail', currentTerm: futureTerms[0].term, passfail });
         setPassfail(cur => [...cur, passfail]);
         setTimePerCard(cur => [...cur, new Date()])
         reduceFutureTerms({ type: passfail });
@@ -209,13 +231,13 @@ export function useReview() {
 
     const updateTermUpdateArrayDate = useCallback(() => {
         setTermUpdateArray(cur => cur.map(entry => ({
-                ...entry,
-                history: {
-                    ...entry.history,
-                    date: new Date()
-                }
-            } as TermUpdateObject
-            )))
+            ...entry,
+            history: {
+                ...entry.history,
+                date: new Date()
+            }
+        } as TermUpdateObject
+        )))
     }, [termUpdateArray, setTermUpdateArray])
 
     return {
