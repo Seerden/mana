@@ -4,8 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { BiArrowToLeft, BiArrowToRight } from 'react-icons/bi'
 import { timeSince } from '../../helpers/time';
 import './style/TermHistory.scss'
+import PassfailIcon from "components/_shared/PassfailIcon";
 
-const TermHistory = memo(({ history }: { history: any[]}) => {
+const TermHistory = memo(({ history }: { history: any[] }) => {
     const [expand, setExpand] = useState(false);
 
     const histEl = makeHistoryElement(history);
@@ -18,18 +19,18 @@ const TermHistory = memo(({ history }: { history: any[]}) => {
                     <div className="TermHistory__session--block">
                         <span className="TermHistory__direction">
                             {el.direction === 'forwards'
-                                ? 
-                                    <BiArrowToRight 
-                                        title="Reviewed front to back"
-                                        fill="deepskyblue"
-                                        size={18}
-                                    />
-                                : 
-                                    <BiArrowToLeft 
-                                        title="Reviewed back to front"
-                                        fill="limegreen" 
-                                        size={18}
-                                    />
+                                ?
+                                <BiArrowToRight
+                                    title="Reviewed front to back"
+                                    fill="deepskyblue"
+                                    size={18}
+                                />
+                                :
+                                <BiArrowToLeft
+                                    title="Reviewed back to front"
+                                    fill="limegreen"
+                                    size={18}
+                                />
                             }
                         </span>
 
@@ -45,20 +46,7 @@ const TermHistory = memo(({ history }: { history: any[]}) => {
                         <div
                             key={uuidv4()}
                             className="TermHistory__history">
-                            {el.content.map((i, index) =>
-                                <span
-                                    key={`passfail-${i}-${index}`}
-                                    style={{
-                                        width: "20px",
-                                        height: "20px",
-                                        display: "inline-block",
-                                        margin: "0.2rem",
-                                        borderRadius: "50%",
-                                        backgroundColor: i === 'pass' ? 'seagreen' : 'orangered'
-                                    }}
-                                />
-                            )
-                            }
+                            { el.content.map((passfail, index) => <PassfailIcon {...{passfail, index}} />) }
                         </div>
                     </div>
                 </div>

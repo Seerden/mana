@@ -1,4 +1,4 @@
-import { Resolver, Arg, Mutation, ObjectType, Field } from "type-graphql";
+import { Resolver, Arg, Mutation, ObjectType, Field, Query } from "type-graphql";
 import { asObjectId } from "../helpers/as";
 import { maybeAddSessionToList } from "../helpers/list";
 import { bulkUpdateTerms } from "../helpers/term";
@@ -36,5 +36,20 @@ export class ReviewSessionResolver {
         }
 
         return { error: 'Failed to save review session to database' }
+    }
+
+    @Query(() => [ReviewSession])
+    async reviewSessionsByUser(
+        @Arg('owner') owner: string
+    ) {
+        return await ReviewSessionModel
+            .find({ 
+                owner, 
+                'settings.sessionStart': {   // sessions remaining from old format don't have this property. @todo: convert legacy sessions to new format
+                    $exists: true 
+                } 
+            })
+            .lean()
+            .exec()
     }
 }

@@ -13,6 +13,11 @@
         "@testing-library/user-event": "^7.2.1",
         "@types/react": "^17.0.3",
         "@types/recoil": "0.0.1",
+        "@visx/axis": "^1.10.0",
+        "@visx/curve": "^1.7.0",
+        "@visx/group": "^1.7.0",
+        "@visx/marker": "^1.8.0",
+        "@visx/scale": "^1.7.0",
         "@visx/visx": "^1.7.4",
         "axios": "^0.21.1",
         "d3": "^6.6.2",
@@ -54,5 +59,8 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
+    },
+    "devDependencies": {
+        "@types/d3-array": "^2.12.1"
     }
 }

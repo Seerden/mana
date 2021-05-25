@@ -189,6 +189,7 @@ export type Query = {
   users: Array<User>;
   /** Returns currently logged in user.  */
   me: MaybeUser;
+  reviewSessionsByUser: Array<ReviewSession>;
 };
 
 
@@ -201,6 +202,11 @@ export type QueryListsByUserArgs = {
 export type QueryListsByIdArgs = {
   populate?: Maybe<Array<Scalars['String']>>;
   ids: Array<Scalars['String']>;
+};
+
+
+export type QueryReviewSessionsByUserArgs = {
+  owner: Scalars['String'];
 };
 
 export type ReviewDate = {
@@ -587,6 +593,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   listsById?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByIdArgs, 'ids'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   me?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType>;
+  reviewSessionsByUser?: Resolver<Array<ResolversTypes['ReviewSession']>, ParentType, ContextType, RequireFields<QueryReviewSessionsByUserArgs, 'owner'>>;
 };
 
 export type ReviewDateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewDate'] = ResolversParentTypes['ReviewDate']> = {

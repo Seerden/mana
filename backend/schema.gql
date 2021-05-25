@@ -115,6 +115,7 @@ type Query {
 
   """Returns currently logged in user. """
   me: MaybeUser!
+  reviewSessionsByUser(owner: String!): [ReviewSession!]!
   users: [User!]!
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRouteProps } from '../../hooks/routerHooks';
+import UserSessions from 'components/sessions/UserSessions';
 import './style/User.scss';
 
 const User = () => {
@@ -11,6 +12,10 @@ const User = () => {
             <div className="User">
                 <div className="PageHeader UserHeader">User page for /u/{username}</div>
             </div>
+
+            <section>
+                <UserSessions />
+            </section>
         </div>
     )
 }

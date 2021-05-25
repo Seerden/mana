@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect, useReducer, useCallback } from 'react';
 import { useRecoilValue, useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { v4 as uuidv4 } from 'uuid';
 import { makeReviewList } from 'helpers/reviewHelpers';
 import qs from 'query-string';
 import { timePerCardState, passfailState, reviewSettingsState, termsToReviewState, termUpdateArrayState, reviewStageState } from 'recoil/atoms/reviewAtoms';

@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Link } from 'react-router-dom';
-import { useRouteProps } from "../../hooks/routerHooks";
+import { useRouteProps } from "hooks/routerHooks";
 import './style/ListsItem.scss';
 import { BiArrowToRight } from "react-icons/bi";
 import { colorByLastReviewDate, getLastReviewDate } from './lists.helpers'
@@ -11,7 +11,6 @@ const ListsItem = memo(({ list }: { list: List}) => {
     const { params } = useRouteProps();
     const numTerms = list.terms.length;
     const lastReviewDate = getLastReviewDate(list);
-    console.log(lastReviewDate);
     const timeAgo = timeSince(lastReviewDate);
     const borderColor = colorByLastReviewDate(lastReviewDate);
 
