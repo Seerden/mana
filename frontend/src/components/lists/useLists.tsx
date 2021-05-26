@@ -9,12 +9,7 @@ import { List } from "graphql/codegen-output";
 const useLists = (): UseListsReturn => {
     const [filter, setFilter] = useState<string>('');
     const [sortBy, setSortBy] = useState<string>('name');  // @todo: refine type
-    // const { response: lists, setRequest }: { response: List[], setRequest: React.Dispatch<any> } = useRequest({ handleError, handleResponse });
     const { params } = useRouteProps();
-
-    // useEffect(() => {  // request Lists on mount
-    //     typeof setRequest === 'function' && setRequest(() => getLists(params.username))
-    // }, [])
 
     const uri = "http://localhost:5000/graphql";
 

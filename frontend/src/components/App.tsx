@@ -19,7 +19,14 @@ import Login from './login/Login';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const App = () => {
-    const client = new QueryClient({ defaultOptions: { queries: { cacheTime: 0, refetchOnWindowFocus: false } } });
+    const client = new QueryClient({ 
+        defaultOptions: { 
+            queries: { 
+                cacheTime: 0, 
+                refetchOnWindowFocus: false 
+            } 
+        } 
+    });
 
     return (
         <>

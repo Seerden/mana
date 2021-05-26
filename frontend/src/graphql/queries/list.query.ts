@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { gql, request} from 'graphql-request';
 import { List, ListUpdateActionInput, ListUpdatePayloadInput, MaybeList, NewListFromClientInput, SuccessOrError } from "graphql/codegen-output";
 
@@ -71,10 +71,20 @@ export function useQueryListsById(ids: [String]) {
         const { listsById } = await request(process.env.REACT_APP_GRAPHQL_URI!, listByIdQuery, { ids });
         return listsById
     }, {
-        retry: false
+        enabled: false,
+        retry: false,
+        // cacheTime: 30*1000  // 30 s
     });
 
-    return { data, refetch, isLoading, isFetching, ...rest};
+    const client = useQueryClient();
+
+    const maybeRefetch = () => {
+        if (!client.getQueryData("listsById")) {
+            refetch();
+        }
+    }
+
+    return { data, refetch: maybeRefetch, isLoading, isFetching, ...rest};
 };
 
 const deleteListMutation = (id: string) => gql`

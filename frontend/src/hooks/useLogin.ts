@@ -19,11 +19,5 @@ export function useLogin() {
         removeUserFromLocalStorage();
     }, [currentUser, setCurrentUser])
 
-    useEffect(() => {
-        if (currentUser) {
-            console.log(`Current user from useLogin: ${currentUser}`);
-        }
-    }, [currentUser])
-
     return { login, logout, currentUser, isLoggedIn }
 }

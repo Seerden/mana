@@ -7,7 +7,6 @@ import { useRouteProps } from '../hooks/routerHooks';
  * Wrapper to hide components from unauthorized users.
  * @note            actual authorization is handled in LoginContext, useRequest, and on the backend
  * @usage           used by PrivateRoute component
- * @param props:    props.component is a React/JSX component
  * @return          React component that displays login form or desired component based on auth state
  */
 const Private = ({ component: Component, ...rest }: { component: React.NamedExoticComponent<any> }) => {
