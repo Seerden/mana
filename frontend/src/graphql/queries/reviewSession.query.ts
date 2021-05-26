@@ -76,7 +76,7 @@ export function useQueryReviewSessionsByUser() {
         // @ts-ignore
         const response = await request(process.env.REACT_APP_GRAPHQL_URI!, reviewSessionsByUserQuery, { owner }) ;
         return response.reviewSessionsByUser;
-    }, { enabled: false, retry: false, refetchOnMount: false, refetchOnWindowFocus: false });
+    }, { enabled: true, retry: false, refetchOnMount: true, refetchOnWindowFocus: false });
 
     return [{ data, refetch, ...rest }, setOwner] as const;
 

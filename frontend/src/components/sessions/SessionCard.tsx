@@ -17,7 +17,7 @@ const SessionCard = memo(({ session }: SessionCardProps) => {
     // const icons = session.passfail.map(
     //     (passfail: string, index: number) => <PassfailIcon key={Math.random()} passfail={passfail} index={index} size={15} />
     // );
-    const durationString = humanizedDateDifference(session.date.end, session.date.start);
+    const durationString = humanizedDateDifference(session.date.end, session.date.start, 'minutes');
 
     return (
         <div className="UserSessions__session">
@@ -84,9 +84,9 @@ const SessionCard = memo(({ session }: SessionCardProps) => {
                 <TimePerCardChart
                     timePerCard={session.timePerCard}
                     passfail={session.passfail as PassFail[]}
-                    width={400}
-                    height={200}
-                    iconSize={2.5}
+                    width={350}
+                    height={175}
+                    iconSize={2}
                 />
             </div>
 

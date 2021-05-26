@@ -25,6 +25,8 @@ export function formatDate(date: Date, format: string): string {  // @todo: figu
     return dayjs(date).format(format);
 }
 
-export const dateDifference = (date1: Date, date2: Date) => dayjs(date1).diff(dayjs(date2), 'minutes');
+export type Timescale = 'minutes' | 'hours' | 'seconds';
 
-export const humanizedDateDifference = (date1: Date, date2: Date) => dayjs.duration(dateDifference(date1, date2), 'minutes').humanize()
+export const dateDifference = (date1: Date, date2: Date, timescale: Timescale) => dayjs(date1).diff(dayjs(date2), timescale);
+
+export const humanizedDateDifference = (date1: Date, date2: Date, timescale: Timescale) => dayjs.duration(dateDifference(date1, date2, timescale), timescale).humanize()
