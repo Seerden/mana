@@ -28,10 +28,10 @@ type List {
   lastReviewed: DateTime!
   name: String!
   owner: String!
-  reviewDates: ListState!
+  reviewDates: ListState
   sessions: [ReviewSession!]
   setMembership: [String!]!
-  terms(populate: Boolean): [TermsUnion!]!
+  terms(populate: Boolean): [Term!]!
   to: [String!]!
 }
 
@@ -212,10 +212,6 @@ input TermHistoryInput {
   direction: String!
 }
 
-type TermId {
-  _id: ID!
-}
-
 type TermLanguages {
   from: String
   to: String
@@ -242,12 +238,10 @@ input TermUpdateObject {
   saturation: TermSaturationInput
 }
 
-union TermsUnion = Term | TermId
-
 type User {
   _id: String!
   currentSession: String!
-  lists: [String!]
+  lists: [List!]
   password: String!
   username: String!
 }

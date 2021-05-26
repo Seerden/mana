@@ -1,28 +1,10 @@
-import mongoose, { ObjectId } from 'mongoose';
-import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, createUnionType, Mutation, ID, InputType } from "type-graphql";
+import mongoose from 'mongoose';
+import { Resolver, Query, Arg, ObjectType, Field, FieldResolver, Root, Mutation } from "type-graphql";
 import { List, ListModel, MaybeList } from "../types/List";
 import { Term, TermModel } from "../types/Term";
 import { maybeDeleteTerms } from "../helpers/term";
 import { ListUpdateAction, ListUpdatePayload, NewListFromClient } from "../types/input_types/list";
 import { createListDocument, deleteListFromUser, updateListDocument } from "../helpers/list";
-
-@ObjectType()
-class TermId {
-    @Field(() => ID)
-    _id: ObjectId
-}
-
-export const TermsUnion = createUnionType({
-    name: "TermsUnion",
-    types: () => [Term, TermId],
-    resolveType: value => {
-        if ("to" in value ) {
-            return Term
-        }
-
-        return TermId
-    }
-})
 
 @Resolver(of => List)
 export class ListResolver {
@@ -31,11 +13,13 @@ export class ListResolver {
         @Arg("owner") owner: string,
         @Arg("populate", type => [String], { nullable: true }) populate: [string]
     ) {
-        return await ListModel
+        const lists =  await ListModel
             .find({ owner })
             // .populate(populate)
             .lean()
-            .exec()
+            .exec();
+
+        return lists
     }
 
     @Query(type => [List], { name: "listsById", description: "Query lists by id" })
@@ -52,14 +36,13 @@ export class ListResolver {
         return await ListModel.find({ _id: { $in: _ids } }).lean().exec();
     }
 
-    @FieldResolver(() => TermsUnion, {description: "Resolves ListModel.terms"})
+    @FieldResolver(() => Term, {description: "Resolves ListModel.terms"})
     async terms(
         @Root() list: List,
         @Arg("populate", type => Boolean, { nullable: true }) populate: boolean
     ) {
         
         if (populate) {
-            // @ts-ignore - typegoose quirkiness again. requires callabck even though those are optional. doesn't notice that list.terms are already _ids
             return await TermModel.find({ _id: { $in: list.terms }}).lean().exec();
         }
 
@@ -68,14 +51,14 @@ export class ListResolver {
     }
 
     @Mutation(() => SuccessOrError)
-    // add auth middleware
+    // @todo: add auth middleware
     async deleteList(
         @Arg("listId") listId: string
     ): Promise<SuccessOrError> {
         const deletedList = await ListModel.findByIdAndDelete(new mongoose.Types.ObjectId(listId), null, null);
         if (deletedList) {
             const listDeletedFromUserBoolean = await deleteListFromUser(deletedList._id, deletedList.owner);
-            const deletedTerms = await maybeDeleteTerms(deletedList.terms.map(term => (term._id)));
+            const deletedTerms = await maybeDeleteTerms(deletedList.terms.map(term => (term instanceof Term ? term._id : term)));
 
             if (listDeletedFromUserBoolean && deletedTerms?.deletedCount) {
                 return { success: true }

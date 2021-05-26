@@ -45,15 +45,15 @@ export function useReview() {
     const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
     const isFullListReview = qs.parse(location.search).kind === 'full' && location.pathname.includes('list')
 
-    const makeNewSaturationLevelsCallback = useCallback(() => {
-        return makeNewSaturationLevels(termsToReview, termUpdateArray, reviewSettings)
-    }, [termsToReview, termUpdateArray, reviewSettings])
-
     useEffect(() => {
         location.pathname.includes('list') && refetchLists();
 
         return () => resetTermsToReview();
     }, []);
+
+    useEffect(() => {
+        console.log(termsToReview.map(term => term.history));
+    }, [termsToReview])
 
     useEffect(() => {
         if (reviewSettings.sessionEnd) {
@@ -80,9 +80,8 @@ export function useReview() {
     }, [backWasShown])
 
     useEffect(() => {  // end review session once futureTerms.length reaches 0
-        console.log({ futureTerms });
         if (termsToReview.length > 0 && futureTerms?.length === 0) {
-            reduceTermUpdateArray({ type: 'saturation', newSaturationLevels: makeNewSaturationLevelsCallback() })
+            reduceTermUpdateArray({ type: 'saturation', newSaturationLevels: makeNewSaturationLevels(termsToReview, termUpdateArray, reviewSettings) })
             reduceTermUpdateArray({ type: 'date' });
             setReviewSettings(current => ({
                 ...current,

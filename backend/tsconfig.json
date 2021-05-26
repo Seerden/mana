@@ -12,6 +12,7 @@
         "skipLibCheck": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "types": ["node"],
         "typeRoots": [
             "./custom_types",
             "./node_modules/@types"

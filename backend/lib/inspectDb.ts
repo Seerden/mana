@@ -1,7 +1,7 @@
 import { ListModel } from "../graphql/types/List";
 import mongoose from 'mongoose';
 import { ReviewSessionModel } from "../graphql/types/ReviewSession";
-import { Term } from "../graphql/types/Term";
+import { Term, TermModel } from "../graphql/types/Term";
 
 export async function removeExistingListSessions() {
     const bulkOps = [];
@@ -90,10 +90,40 @@ async function logTestListTermHistories() {
     }
 }
 
+async function copyListToDummyList() {
+    const list = await ListModel.findOne({ owner: 'test', name: 'KKLC 0271-0300'}).populate('terms').lean().exec();
+
+    const newList = {...list};
+    delete newList._id;
+    newList.owner = 'seerden';
+    //@ts-ignore
+    newList.terms = list.terms.map(term => term._id);
+    // newList.name = "Copy 271-300"
+    // console.log(newList);
+    const newListDoc = new ListModel(newList);
+    const savedList = await newListDoc.save();
+
+    console.log(savedList);
+    // delete list._id;
+    // list.name = "Copy of KKLC 0271-0300";
+
+    // console.log(list);
+    // const newList = new ListModel(list);
+
+    // console.log(newList._id);
+    // await newList.save();
+
+    
+}
+
 export async function inspectDatabase() {
-    // await copyListToTestAccount();
-    // await logTestListTermHistories();
+    return null;
+}
 
+async function removeAllDocumentsFromUser(username){
+    const dl = await ListModel.deleteMany({ owner: username });
+    const drs = await ReviewSessionModel.deleteMany({ owner: username });
+    const dt = await TermModel.deleteMany({ owner: username });
 
-
+    console.log(dl, drs, dt);
 }

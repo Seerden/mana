@@ -3,7 +3,7 @@ import { useRouteProps } from './routerHooks';
 import { reviewSettingsState, termsToReviewState, timePerCardState, passfailState } from 'recoil/atoms/reviewAtoms';
 import { useRecoilValue } from 'recoil';
 import { convertDateListToDeltaTime } from 'helpers/reviewHelpers';
-import { Id, IdInput, ReviewSessionBaseInput, ReviewSessionTermsInput } from 'graphql/codegen-output';
+import { Id, ReviewSessionBaseInput } from 'graphql/codegen-output';
 
 function useReviewSession() {
     const { params, location } = useRouteProps();
@@ -20,7 +20,6 @@ function useReviewSession() {
             start: sessionStart,
             end: sessionEnd
         },
-        // @ts-ignore - expects IdInput, but I'm giving it a string. same thing. @todo fix on backend
         terms: {listId: params.id, termIds: termsToReview.map(term => term._id)},  // @todo: again, make this work with set reviews
         settings: {
             n,

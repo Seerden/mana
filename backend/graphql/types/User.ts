@@ -3,6 +3,8 @@ import { prop as Property, getModelForClass, Severity, modelOptions } from '@typ
 import { ObjectId } from 'mongodb';
 
 import { dbConn } from "../../db/db";
+import { List } from "./List";
+import { Ref } from "../../custom_types";
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
@@ -15,8 +17,8 @@ export class User {
     username: string;
 
     @Property({default: new Array()})
-    @Field(() => [String], {nullable: true })
-    lists: ObjectId[];  // mongoose ObjectId[]
+    @Field(() => [List], {nullable: true })
+    lists: Ref<List>[];  // mongoose ObjectId[]
 
     @Property()
     @Field(() => String)

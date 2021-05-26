@@ -3,7 +3,6 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -39,12 +38,12 @@ export type List = {
   name: Scalars['String'];
   from: Scalars['String'];
   to: Array<Scalars['String']>;
-  terms: Array<TermsUnion>;
+  terms: Array<Term>;
   sessions?: Maybe<Array<ReviewSession>>;
   created: Scalars['DateTime'];
   lastReviewed: Scalars['DateTime'];
   setMembership: Array<Scalars['String']>;
-  reviewDates: ListState;
+  reviewDates?: Maybe<ListState>;
 };
 
 
@@ -309,11 +308,6 @@ export type TermHistoryInput = {
   direction: Scalars['String'];
 };
 
-export type TermId = {
-  __typename?: 'TermId';
-  _id: Scalars['ID'];
-};
-
 export type TermLanguages = {
   __typename?: 'TermLanguages';
   from?: Maybe<Scalars['String']>;
@@ -342,13 +336,11 @@ export type TermUpdateObject = {
   saturation?: Maybe<TermSaturationInput>;
 };
 
-export type TermsUnion = Term | TermId;
-
 export type User = {
   __typename?: 'User';
   _id: Scalars['String'];
   username: Scalars['String'];
-  lists?: Maybe<Array<Scalars['String']>>;
+  lists?: Maybe<Array<List>>;
   currentSession: Scalars['String'];
   password: Scalars['String'];
 };
@@ -436,7 +428,7 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>;
   Id: ResolverTypeWrapper<Id>;
   IdInput: IdInput;
-  List: ResolverTypeWrapper<Omit<List, 'terms'> & { terms: Array<ResolversTypes['TermsUnion']> }>;
+  List: ResolverTypeWrapper<List>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ListState: ResolverTypeWrapper<ListState>;
@@ -465,13 +457,11 @@ export type ResolversTypes = {
   TermEditObject: TermEditObject;
   TermHistory: ResolverTypeWrapper<TermHistory>;
   TermHistoryInput: TermHistoryInput;
-  TermId: ResolverTypeWrapper<TermId>;
   TermLanguages: ResolverTypeWrapper<TermLanguages>;
   TermLanguagesInput: TermLanguagesInput;
   TermSaturation: ResolverTypeWrapper<TermSaturation>;
   TermSaturationInput: TermSaturationInput;
   TermUpdateObject: TermUpdateObject;
-  TermsUnion: ResolversTypes['Term'] | ResolversTypes['TermId'];
   User: ResolverTypeWrapper<User>;
 };
 
@@ -482,7 +472,7 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
   Id: Id;
   IdInput: IdInput;
-  List: Omit<List, 'terms'> & { terms: Array<ResolversParentTypes['TermsUnion']> };
+  List: List;
   ID: Scalars['ID'];
   Boolean: Scalars['Boolean'];
   ListState: ListState;
@@ -511,13 +501,11 @@ export type ResolversParentTypes = {
   TermEditObject: TermEditObject;
   TermHistory: TermHistory;
   TermHistoryInput: TermHistoryInput;
-  TermId: TermId;
   TermLanguages: TermLanguages;
   TermLanguagesInput: TermLanguagesInput;
   TermSaturation: TermSaturation;
   TermSaturationInput: TermSaturationInput;
   TermUpdateObject: TermUpdateObject;
-  TermsUnion: ResolversParentTypes['Term'] | ResolversParentTypes['TermId'];
   User: User;
 };
 
@@ -542,12 +530,12 @@ export type ListResolvers<ContextType = any, ParentType extends ResolversParentT
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   to?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  terms?: Resolver<Array<ResolversTypes['TermsUnion']>, ParentType, ContextType, RequireFields<ListTermsArgs, never>>;
+  terms?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<ListTermsArgs, never>>;
   sessions?: Resolver<Maybe<Array<ResolversTypes['ReviewSession']>>, ParentType, ContextType>;
   created?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   lastReviewed?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   setMembership?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewDates?: Resolver<ResolversTypes['ListState'], ParentType, ContextType>;
+  reviewDates?: Resolver<Maybe<ResolversTypes['ListState']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -655,11 +643,6 @@ export type TermHistoryResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TermIdResolvers<ContextType = any, ParentType extends ResolversParentTypes['TermId'] = ResolversParentTypes['TermId']> = {
-  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type TermLanguagesResolvers<ContextType = any, ParentType extends ResolversParentTypes['TermLanguages'] = ResolversParentTypes['TermLanguages']> = {
   from?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   to?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -672,14 +655,10 @@ export type TermSaturationResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TermsUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TermsUnion'] = ResolversParentTypes['TermsUnion']> = {
-  __resolveType: TypeResolveFn<'Term' | 'TermId', ParentType, ContextType>;
-};
-
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   _id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  lists?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  lists?: Resolver<Maybe<Array<ResolversTypes['List']>>, ParentType, ContextType>;
   currentSession?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -703,10 +682,8 @@ export type Resolvers<ContextType = any> = {
   SuccessOrError?: SuccessOrErrorResolvers<ContextType>;
   Term?: TermResolvers<ContextType>;
   TermHistory?: TermHistoryResolvers<ContextType>;
-  TermId?: TermIdResolvers<ContextType>;
   TermLanguages?: TermLanguagesResolvers<ContextType>;
   TermSaturation?: TermSaturationResolvers<ContextType>;
-  TermsUnion?: TermsUnionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

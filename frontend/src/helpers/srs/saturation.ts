@@ -195,23 +195,25 @@ function getLastReviewDate(term) {
 export function makeNewSaturationLevels(termsToReview: Term[], termUpdateArray: TermUpdateObject[], reviewSettings: ReviewSettings) {
     return termsToReview.map(termInReview => {
 
-        console.log(termInReview.history);
-
-        let _term = {  // copy term, add this session's history to it
+        if(!termUpdateArray.find(termToUpdate => termInReview._id === termToUpdate._id)) {
+            console.log('Term not found in termToUpdateArray', { termInReview });
+        }
+        
+        const termCopy = {  // copy term, add this session's history to it
             ...termInReview,
             history: [
                 ...[Object.keys(termInReview).includes('history') ? termInReview.history : []],
-                termUpdateArray.find(termToUpdate => termInReview._id === termToUpdate._id)!.history
+                termUpdateArray.find(termToUpdate => termInReview._id === termToUpdate._id)?.history
             ]
         };
 
         const saturation = { 
-            ..._term.saturation, 
-            [reviewSettings.direction]: saturate(_term, reviewSettings.direction) 
+            ...termCopy.saturation, 
+            [reviewSettings.direction]: saturate(termCopy, reviewSettings.direction) 
         };
 
         return ({ 
-            termId: _term._id, 
+            termId: termCopy._id, 
             saturation 
         })
     });

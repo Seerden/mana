@@ -3,6 +3,8 @@ import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
 import { dbConn } from "../../db/db";
 import { withId } from "../mixins/withId";
 import { ObjectId } from 'mongodb'
+import { Term } from "./Term";
+import { List } from "./List";
 
 @ObjectType()
 @InputType("IdInput")
@@ -44,11 +46,11 @@ class ReviewSettings {
 class ReviewSessionTerms {
     @prop({ ref: 'List' })
     @Field(() => String)
-    listId: Id
+    listId: Ref<List>
     
     @prop({ ref: 'Term' })
     @Field(() => [String])
-    termIds: Id[]
+    termIds: Ref<Term>[]
 }
 
 @ObjectType()
@@ -72,7 +74,7 @@ export class ReviewSessionBase {
     @Field(() => String)
     owner: String;
 
-    @prop()
+    @prop({ ref: 'List' })
     @Field(() => [Id], { nullable: true })
     listIds: Id[]
 
@@ -100,6 +102,9 @@ export class ReviewSessionBase {
 // extend this with an _id field using our withId mixin
 @ObjectType()
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
-export class ReviewSession extends withId(ReviewSessionBase) {}
+export class ReviewSession extends withId(ReviewSessionBase) {
+
+}
+
 
 export const ReviewSessionModel = getModelForClass(ReviewSession, { existingConnection: dbConn })

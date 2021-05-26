@@ -1,6 +1,7 @@
-import { getModelForClass, modelOptions, prop, Ref, Severity } from "@typegoose/typegoose";
-import { ObjectId as mid } from 'mongodb';
+import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
+import { ObjectId } from 'mongodb';
 import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Ref } from "../../custom_types";
 import { dbConn } from "../../db/db";
 import { List } from './List';
 
@@ -49,7 +50,7 @@ export class TermSaturation {
 @InputType("TermInput")
 export class Term {
     @Field(() => ID)
-    readonly _id: mid
+    readonly _id: ObjectId
 
     @prop({ required: true })
     @Field()

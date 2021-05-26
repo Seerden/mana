@@ -2,14 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { gql, request} from 'graphql-request';
 import { List, ListUpdateActionInput, ListUpdatePayloadInput, MaybeList, NewListFromClientInput, SuccessOrError } from "graphql/codegen-output";
 
-const CoreTermIdFields = gql`
-fragment CoreTermIdFields on TermId {
-    ...on TermId {
-        _id
-    }
-}
-`;
-
 const CoreTermFields = gql`
 fragment CoreTermFields on Term {
     ...on Term {
@@ -53,13 +45,11 @@ const CoreListFields = gql`
 const listByIdQuery = gql`
 ${CoreListFields}
 ${CoreTermFields}
-${CoreTermIdFields}
 query ($ids: [String!]!) {
     listsById(ids: $ids) {
         ...CoreListFields
         terms(populate:true) {
             ...CoreTermFields
-            ...CoreTermIdFields
         }
 
     }

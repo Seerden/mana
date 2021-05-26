@@ -39,14 +39,13 @@ export async function addTermsToList(terms: Array<Term>) {
 };
 
 export async function updateListTerms(listId: string, remainingTermIds: [string]) {
-    const remainingTermObjectIds = remainingTermIds.map(termId => new mongoose.Types.ObjectId(termId));
-    const listObjectId = new mongoose.Types.ObjectId(listId)
+    const remainingTermObjectIds = remainingTermIds.map(termId => asObjectId(termId));
+    const listObjectId = asObjectId(listId)
 
     const updatedList = await ListModel.findByIdAndUpdate(listObjectId, {
         $set: {
             // terms is being interpreted as LeanDocument<TermId> instead of just TermId. no clue why
-            // @ts-ignore 
-            terms: remainingTermObjectIds
+            terms: remainingTermObjectIds as ObjectId[]
         }
     });
 

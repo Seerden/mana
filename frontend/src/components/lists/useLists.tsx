@@ -30,9 +30,7 @@ const useLists = (): UseListsReturn => {
                         _id
                     }
                     terms(populate: false) {
-                        ...on TermId {
-                            _id
-                        }
+                        _id
                     }
                 }
             }

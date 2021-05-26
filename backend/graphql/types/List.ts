@@ -1,9 +1,10 @@
 import { Field, ID, InputType, ObjectType } from "type-graphql";
-import { prop as Property, getModelForClass, Ref, index, mongoose, modelOptions, Severity } from '@typegoose/typegoose';
+import { prop as Property, getModelForClass, index, mongoose, modelOptions, Severity } from '@typegoose/typegoose';
 import { ReviewSession } from "./ReviewSession";
 import { dbConn } from "../../db/db";
-import { TermsUnion } from "../resolvers/ListResolver";
 import { ObjectId } from "mongodb";
+import { Term } from "./Term";
+import { Ref } from "../../custom_types";
 
 type ListStateUnion = 'untouched' | 'seeding' | 'seeded';
 
@@ -44,9 +45,9 @@ export class List {
     to: string[];
 
     @Property({ ref: "Term" })
-    @Field(() => [TermsUnion])
+    @Field(() => [Term])
     // terms?: Array<Ref<Term>>
-    terms?: Array<typeof TermsUnion>
+    terms: Ref<Term>[]
 
     @Property({ ref: "ReviewSession" })
     @Field(() => [ReviewSession], { nullable: true })
@@ -65,8 +66,8 @@ export class List {
     setMembership: Array<mongoose.Types.ObjectId>; // @todo: implement Set type
 
     @Property({ _id: false })
-    @Field(() => ListState)
-    reviewDates: ListState
+    @Field(() => ListState, { nullable: true })
+    reviewDates?: ListState
 }
 
 @ObjectType()

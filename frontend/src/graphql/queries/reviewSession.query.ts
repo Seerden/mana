@@ -73,7 +73,6 @@ export function useQueryReviewSessionsByUser() {
     const [owner, setOwner] = useState(params.username);
 
     const { data, refetch, ...rest } = useQuery<[ReviewSession] | null>(['reviewSessionsByUser', owner], async () => {
-        // @ts-ignore
         const response = await request(process.env.REACT_APP_GRAPHQL_URI!, reviewSessionsByUserQuery, { owner }) ;
         return response.reviewSessionsByUser;
     }, { enabled: true, retry: false, refetchOnMount: true, refetchOnWindowFocus: false });
