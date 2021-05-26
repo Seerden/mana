@@ -3,7 +3,7 @@ import { termSessionsByDirection } from '../list.api';
 import duration from 'dayjs/plugin/duration.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
-import { Term, TermUpdateObject } from 'graphql/codegen-output';
+import { ReviewSettings, Term, TermUpdateObject } from 'graphql/codegen-output';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
@@ -192,12 +192,15 @@ function getLastReviewDate(term) {
  * Assign new saturation levels to each term based on the user's performance in the review session that just occurred.
  * Each parameter is actually a piece of state, so this function should be used in conjunction with useCallback
  */
-export function makeNewSaturationLevels(termsToReview: Term[], termUpdateArray: TermUpdateObject[], reviewSettings) {
+export function makeNewSaturationLevels(termsToReview: Term[], termUpdateArray: TermUpdateObject[], reviewSettings: ReviewSettings) {
     return termsToReview.map(termInReview => {
+
+        console.log(termInReview.history);
+
         let _term = {  // copy term, add this session's history to it
             ...termInReview,
             history: [
-                ...termInReview.history!,
+                ...[Object.keys(termInReview).includes('history') ? termInReview.history : []],
                 termUpdateArray.find(termToUpdate => termInReview._id === termToUpdate._id)!.history
             ]
         };

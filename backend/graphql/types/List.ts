@@ -25,7 +25,7 @@ class ListState { // @todo: rename to ListReviewDateArray
 @index({ collation: { locale: 'en', strength: 2 } })
 export class List {
     @Field(() => ID)
-    readonly _id: ObjectId
+    _id: ObjectId
 
     @Property()
     @Field(() => String)

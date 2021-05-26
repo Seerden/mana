@@ -1,6 +1,7 @@
 import { ListModel } from "../graphql/types/List";
 import mongoose from 'mongoose';
 import { ReviewSessionModel } from "../graphql/types/ReviewSession";
+import { Term } from "../graphql/types/Term";
 
 export async function removeExistingListSessions() {
     const bulkOps = [];
@@ -67,6 +68,32 @@ async function unsetAllListStates() {
     })
 }
 
+async function copyListToTestAccount() {
+    const list = await ListModel.findOne({ owner: 'seerden', name: 'KKLC 0271-0300'}).populate('terms');
+    delete list._id;
+    list.owner = 'test';
+    const newList = new ListModel(list);
+    const savedList = await newList.save();
+    console.log(savedList);
+}
+
+async function logTestListTermHistories() {
+    const list = await ListModel.findOne({ owner: 'test', name: 'KKLC 0271-0300' }).populate('terms').lean().exec();
+
+    for (const term of list.terms) {
+        try {
+            //@ts-ignore
+            // console.log(term.history)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
 export async function inspectDatabase() {
-    // console.log(await setEmptyListReviewDateArrays())
+    // await copyListToTestAccount();
+    // await logTestListTermHistories();
+
+
+
 }

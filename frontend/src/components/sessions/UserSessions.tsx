@@ -14,7 +14,7 @@ const UserSessions = (props) => {
                 {params.username}'s review sessions
             </header>
 
-            {sessions && sessions.map((session, idx) => <SessionCard key={`session-card-${idx}`} session={session} />)}
+            {sessions && sessions.map((session, idx) => <SessionCard key={`session-card-${idx}`} session={session} />).reverse()}
         </div>
 
     )
