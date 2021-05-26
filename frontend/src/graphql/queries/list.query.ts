@@ -44,6 +44,9 @@ const CoreListFields = gql`
             forwards
             backwards
         }
+        sessions {
+            _id
+        }
     }
 `;
 

@@ -46,7 +46,7 @@ const TermHistory = memo(({ history }: { history: any[] }) => {
                         <div
                             key={uuidv4()}
                             className="TermHistory__history">
-                            { el.content.map((passfail, index) => <PassfailIcon {...{passfail, index}} />) }
+                            { el.content.map((passfail, index) => <PassfailIcon key={`passfailicon-${index}`} {...{passfail, index}} />) }
                         </div>
                     </div>
                 </div>

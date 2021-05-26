@@ -31,7 +31,7 @@ const Review = memo((props) => {
 
             {futureTerms.length > 0 &&
                 <>
-                    {makeReviewCard(futureTerms[0])}
+                    {makeReviewCard({ ...futureTerms[0] })}
 
                     {backWasShown
                         ?

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useReducer, useCallback } from 'react';
+import React, { useMemo, useEffect, useReducer, useCallback, useState } from 'react';
 import { useRecoilValue, useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { makeReviewList } from 'helpers/reviewHelpers';
 import qs from 'query-string';
@@ -24,18 +24,19 @@ export function useReview() {
         return makeReviewList(termsToReview, reviewSettings.n)
     }, [reviewSettings.n, termsToReview]);
 
+    const [futureTerms, reduceFutureTerms] = useReducer(termReducer, () => initializeFutureTerms());
+
     const makeReviewCard = useCallback((term: Term) => {
         return (
             <ReviewCard
-                setBackWasShown={setBackWasShown}
                 direction={reviewSettings.direction}
                 term={term}
+                setBackWasShown={setBackWasShown}
             />
         )
-    }, [reviewSettings.direction]);
+    }, [reviewSettings.direction, futureTerms]);
 
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
-    const [futureTerms, reduceFutureTerms] = useReducer(termReducer, () => initializeFutureTerms());
     const setTimePerCard = useSetRecoilState(timePerCardState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
     const newReviewSession = useReviewSession();
@@ -51,7 +52,7 @@ export function useReview() {
     useEffect(() => {
         location.pathname.includes('list') && refetchLists();
 
-        return () => resetTermsToReview() ;
+        return () => resetTermsToReview();
     }, []);
 
     useEffect(() => {
@@ -79,6 +80,7 @@ export function useReview() {
     }, [backWasShown])
 
     useEffect(() => {  // end review session once futureTerms.length reaches 0
+        console.log({ futureTerms });
         if (termsToReview.length > 0 && futureTerms?.length === 0) {
             reduceTermUpdateArray({ type: 'saturation', newSaturationLevels: makeNewSaturationLevelsCallback() })
             reduceTermUpdateArray({ type: 'date' });

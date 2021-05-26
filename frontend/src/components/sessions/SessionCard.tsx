@@ -1,7 +1,7 @@
 // import PassfailIcon from "components/_shared/PassfailIcon";
 import { ReviewSession } from "graphql/codegen-output";
 import { humanizedDateDifference, timeSince } from "helpers/time";
-import React from "react";
+import React, { memo } from "react";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 import { ImClock } from "react-icons/im";
 import TimePerCardChart from "./TimePerCardChart";
@@ -10,7 +10,7 @@ type SessionCardProps = {
     session: ReviewSession,
 }
 
-const SessionCard = ({ session }: SessionCardProps) => {
+const SessionCard = memo(({ session }: SessionCardProps) => {
     const { n, direction } = session.settings;
     const DirectionIcon = direction === 'forwards' ? BiArrowToRight : BiArrowToLeft;
     const termCount = session.terms.termIds.length;
@@ -92,6 +92,6 @@ const SessionCard = ({ session }: SessionCardProps) => {
 
         </div>
     )
-}
+});
 
 export default SessionCard
