@@ -186,7 +186,7 @@ type SuccessOrError {
 type Term {
   _id: ID!
   from: String!
-  history: [TermHistory!]
+  history: [TermHistory!]!
   languages: TermLanguages
   listMembership: [List!]
   owner: String!

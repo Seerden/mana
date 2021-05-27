@@ -69,7 +69,7 @@ export class Term {
     from: string;
 
     @prop({ default: [], _id: false })
-    @Field(() => [TermHistory], { nullable: true })
+    @Field(() => [TermHistory])
     history: TermHistory[];
 
     @prop({ required: true, _id: false })

@@ -3,7 +3,7 @@ import { termSessionsByDirection } from '../list.api';
 import duration from 'dayjs/plugin/duration.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
-import { ReviewSettings, Term, TermUpdateObject } from 'graphql/codegen-output';
+import { ReviewSettings, Term, TermHistory, TermUpdateObject } from 'graphql/codegen-output';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
@@ -157,7 +157,7 @@ export function suggestTermsForReview(terms) {
     return terms.reduce((acc, curTerm, index) => {
         for (const direction of ['forwards', 'backwards']) {
             let sat = curTerm.saturation[direction];
-            const lastReviewed = getLastReviewDate(curTerm);
+            const lastReviewed = getLastReviewDateFromTerm(curTerm);
             if ([0, 1, 2, 3, 4].includes(sat)) {
                 if (now - new Date(lastReviewed[direction]).valueOf() > saturationLevels[sat].timescale) {
                     acc = { ...acc, [direction]: [...acc[direction], curTerm] }
@@ -170,21 +170,25 @@ export function suggestTermsForReview(terms) {
     }, { forwards: [], backwards: [] })
 }
 
+export function filterTermHistoryEntriesByDirection(history: TermHistory[] | undefined, direction: Direction) {
+    if (history) {
+        return history.filter(entry => entry.direction === direction);
+    }
+}
+
 /**
  * Extract date of last 'forwards' and 'backwards' review from a term's history
  * @param {*} term 
  */
-function getLastReviewDate(term) {
-    let history = term.history;
+export function getLastReviewDateFromTerm(term: Term) {
+    let history = term.history!;
 
-    let filterByDirection = (direction) => history.filter(entry => entry.direction === direction);
-
-    let forwards = filterByDirection('forwards');
-    let backwards = filterByDirection('backwards');
+    let forwards = filterTermHistoryEntriesByDirection(history, 'forwards');
+    let backwards = filterTermHistoryEntriesByDirection(history, 'backwards');
 
     return ({
-        forwards: forwards.reverse()[0]?.date || null,
-        backwards: backwards.reverse()[0]?.date || null
+        forwards: forwards?.reverse()[0]?.date || null,
+        backwards: backwards?.reverse()[0]?.date || null
     })
 }
 

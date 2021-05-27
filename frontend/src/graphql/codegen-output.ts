@@ -284,7 +284,7 @@ export type Term = {
   languages?: Maybe<TermLanguages>;
   to: Scalars['String'];
   from: Scalars['String'];
-  history?: Maybe<Array<TermHistory>>;
+  history: Array<TermHistory>;
   saturation: TermSaturation;
   listMembership?: Maybe<Array<List>>;
 };
@@ -630,7 +630,7 @@ export type TermResolvers<ContextType = any, ParentType extends ResolversParentT
   languages?: Resolver<Maybe<ResolversTypes['TermLanguages']>, ParentType, ContextType>;
   to?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  history?: Resolver<Maybe<Array<ResolversTypes['TermHistory']>>, ParentType, ContextType>;
+  history?: Resolver<Array<ResolversTypes['TermHistory']>, ParentType, ContextType>;
   saturation?: Resolver<ResolversTypes['TermSaturation'], ParentType, ContextType>;
   listMembership?: Resolver<Maybe<Array<ResolversTypes['List']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
