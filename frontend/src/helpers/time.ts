@@ -1,20 +1,17 @@
-import dayjs, { duration } from 'dayjs';
+import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import advancedFormat from 'dayjs/plugin/advancedFormat'
-  dayjs.extend(advancedFormat)
-  dayjs.extend(relativeTime);
-  dayjs.extend(duration);
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import duration from 'dayjs/plugin/duration'
+dayjs.extend(advancedFormat);
+dayjs.extend(relativeTime);
+dayjs.extend(duration);
 
 /**
  * Return time to or from the given date
  * @returns {string} e.g. '2 days ago'
  */
 export function timeSince(date: Date | null): string | null {
-    if (date) {
-        return dayjs(date).fromNow();
-    }
-
-    return null
+    return date? dayjs(date).fromNow() : null;
 }
 
 /**
@@ -27,6 +24,8 @@ export function formatDate(date: Date, format: string): string {  // @todo: figu
 
 export type Timescale = 'minutes' | 'hours' | 'seconds';
 
-export const dateDifference = (date1: Date, date2: Date, timescale: Timescale) => dayjs(date1).diff(dayjs(date2), timescale);
+export function dateDifference (date1: Date, date2: Date, timescale: Timescale) {
+    return dayjs(date1).diff(dayjs(date2), timescale);
+};
 
-export const humanizedDateDifference = (date1: Date, date2: Date, timescale: Timescale) => dayjs.duration(dateDifference(date1, date2, timescale), timescale).humanize()
+export const humanizedDateDifference = (date1: Date, date2: Date) => dayjs.duration(dayjs(date1).diff(date2)).humanize()

@@ -61,6 +61,9 @@
         ]
     },
     "devDependencies": {
-        "@types/d3-array": "^2.12.1"
+        "@types/d3-array": "^2.12.1",
+        "@types/jest": "^26.0.23",
+        "jest": "^27.0.1",
+        "ts-jest": "^27.0.1"
     }
 }
