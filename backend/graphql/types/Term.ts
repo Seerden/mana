@@ -69,12 +69,12 @@ export class Term {
     from: string;
 
     @prop({ default: [], _id: false })
-    @Field(() => [TermHistory])
+    @Field(() => [TermHistory], { nullable: 'items'})
     history: TermHistory[];
 
     @prop({ required: true, _id: false })
     @Field(() => TermSaturation)
-    saturation: TermSaturation
+    saturation: TermSaturation;
 
     @prop()
     @Field(() => [List], { nullable: true })

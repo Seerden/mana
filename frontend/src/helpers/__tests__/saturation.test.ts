@@ -17,7 +17,7 @@ const mockTermWithHistory: Partial<Term> = {
 describe("filterTermHistoryEntriesByDirection", () => {
     test("... returns empty array for term without history entries for given direction", () => {
         expect(
-            filterTermHistoryEntriesByDirection(mockTermWithHistory.history, DIRECTIONS.BACKWARDS)
+            filterTermHistoryEntriesByDirection(mockTermWithHistory.history!, DIRECTIONS.BACKWARDS)
         ).toStrictEqual([])
     });
 

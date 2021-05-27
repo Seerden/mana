@@ -3,7 +3,7 @@ import { termSessionsByDirection } from '../list.api';
 import duration from 'dayjs/plugin/duration.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
-import { ReviewSettings, Term, TermHistory, TermUpdateObject } from 'graphql/codegen-output';
+import { Maybe, ReviewSettings, Term, TermHistory, TermUpdateObject } from 'graphql/codegen-output';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
@@ -170,9 +170,9 @@ export function suggestTermsForReview(terms) {
     }, { forwards: [], backwards: [] })
 }
 
-export function filterTermHistoryEntriesByDirection(history: TermHistory[] | undefined, direction: Direction) {
+export function filterTermHistoryEntriesByDirection(history: Maybe<TermHistory>[], direction: Direction) {
     if (history) {
-        return history.filter(entry => entry.direction === direction);
+        return history.filter(entry => entry ? entry.direction === direction : false);
     }
 }
 
@@ -181,7 +181,7 @@ export function filterTermHistoryEntriesByDirection(history: TermHistory[] | und
  * @param {*} term 
  */
 export function getLastReviewDateFromTerm(term: Term) {
-    let history = term.history!;
+    let history = term.history;
 
     let forwards = filterTermHistoryEntriesByDirection(history, 'forwards');
     let backwards = filterTermHistoryEntriesByDirection(history, 'backwards');
