@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouteProps } from "hooks/routerHooks";
-import { useQueryReviewSessionsByUser } from "graphql/queries/reviewSession.query";
+import { useQueryReviewSessionsByUser } from "graphql/hooks/reviewSession.query";
 import SessionCard from "./SessionCard";
 import './style/UserSessions.scss';
 

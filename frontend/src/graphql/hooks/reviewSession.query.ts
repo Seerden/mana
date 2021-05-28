@@ -1,7 +1,8 @@
 import request, { gql } from "graphql-request";
-import { Maybe, MaybeReviewSession, ReviewSession, ReviewSessionBaseInput, TermUpdateObject } from "graphql/codegen-output";
+import { MaybeReviewSession, ReviewSession, ReviewSessionBaseInput, TermUpdateObject } from "graphql/codegen-output";
+import { ReviewSessionCoreFields } from "graphql/fragments/reviewSession.fragments";
 import { useRouteProps } from "hooks/routerHooks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 
 const createReviewSessionMutation = gql`
@@ -31,31 +32,6 @@ export function useCreateReviewSessionMutation() {
 
     return { mutate, data, ...rest };
 }
-
-const ReviewSessionCoreFields = gql`
-    fragment ReviewSessionCoreFields on ReviewSession {
-        owner
-        listIds {
-            _id
-        }
-        date {
-            start
-            end
-        }
-        terms {
-            listId
-            termIds
-        }
-        settings {
-            direction
-            n
-            sessionStart
-            sessionEnd
-        }
-        passfail
-        timePerCard
-    }
-`
 
 const reviewSessionsByUserQuery = gql`
 ${ReviewSessionCoreFields}

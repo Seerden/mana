@@ -3,7 +3,7 @@ import { useRouteProps } from 'hooks/routerHooks';
 import NewListTerm from './NewListTerm';
 import { NewListTermInput } from 'graphql/codegen-output';
 import './style/NewList.scss';
-import { useMutateCreateList } from 'graphql/queries/list.query';
+import { useMutateCreateList } from 'graphql/hooks/list.query';
 import { BiArrowToRight } from 'react-icons/bi';
 
 export type FormOutput = {

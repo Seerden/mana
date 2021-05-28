@@ -7,9 +7,9 @@ import ListTerm from './ListTerm';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
 import { FilterInterface, TruncatedTerm } from './list.types';
-import { useMutateDeleteList, useMutateUpdateList, useQueryListsById } from "graphql/queries/list.query";
+import { useMutateDeleteList, useMutateUpdateList, useQueryListsById } from "graphql/hooks/list.query";
 import { List } from "graphql/codegen-output";
-import { DeleteTermsVariables, useMutateDeleteTerms } from "graphql/queries/term.query";
+import { DeleteTermsVariables, useMutateDeleteTerms } from "graphql/hooks/term.query";
 
 function useList() {
     const [list, setList] = useState<List | null>(null);

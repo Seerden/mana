@@ -6,7 +6,7 @@ import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import TermModal from './TermModal';
 import SaturationIcon from 'components/SaturationFilter/SaturationIcon';
 import { TermPropsInterface } from './list.types';
-import { useMutateEditTerm } from "graphql/queries/term.query";
+import { useMutateEditTerm } from "graphql/hooks/term.query";
 import './style/ListTerm.scss'
 
 const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {

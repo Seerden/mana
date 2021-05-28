@@ -9,8 +9,8 @@ import { useRouteProps } from './routerHooks';
 import useReviewSession from './useReviewSession';
 import { makeNewSaturationLevels } from 'helpers/srs/saturation';
 import { Term, TermUpdateObject } from 'graphql/codegen-output';
-import { useCreateReviewSessionMutation } from 'graphql/queries/reviewSession.query';
-import { useQueryListsById } from 'graphql/queries/list.query';
+import { useCreateReviewSessionMutation } from 'graphql/hooks/reviewSession.query';
+import { useQueryListsById } from 'graphql/hooks/list.query';
 import { TermUpdateDate, TermUpdatePassfail, TermUpdateSaturation } from './useReview.types';
 
 export function useReview() {
