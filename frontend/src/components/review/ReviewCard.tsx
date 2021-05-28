@@ -1,56 +1,23 @@
-import React, { memo, useState, useRef, useEffect, useCallback } from "react";
+import { Term } from "graphql/codegen-output";
+import React, { memo } from "react";
 import './style/ReviewCard.scss';
+import { useReviewCard } from "./useReviewCard";
 
-const ReviewCard = memo(({ setBackWasShown, direction, term }: { setBackWasShown: React.Dispatch<React.SetStateAction<boolean>>, direction: 'forwards' | 'backwards', term: any }) => {
-    const [side, setSide] = useState(direction === 'forwards' ? 'from' : 'to');
-    const [flipping, setFlipping] = useState(false);
-    const [fade, setFade] = useState(false);
-    const toggleSide = () => setSide(cur => cur === 'from' ? 'to' : 'from');
-    let timeouts = useRef<any[]>([]);
+type ReviewCardProps = {
+    setBackWasShown: React.Dispatch<React.SetStateAction<boolean>>, 
+    direction: 'forwards' | 'backwards', 
+    term: Term
+}
 
-    useEffect(() => {  // add, remove or recreate up/down key handler
-        window.addEventListener('keyup', handleArrowUpDownKeyup)
-        return () => {
-            window.removeEventListener('keyup', handleArrowUpDownKeyup)
-        }
-    }, [side])  // only flips correctly once per render if side not specified as dependency
-
-    useEffect(() => {  // when new term is shown, reset card state
-        setSide(direction === 'forwards' ? 'from' : 'to')
-        setFade(true)
-        timeouts.current.push(setTimeout(() => {
-            setFade(false)
-        }, 150))
-    }, [term])
-
-    useEffect(() => {  // clean up timeouts on unmount
-        return () => {
-            for (let timeout of timeouts.current) {
-                window.clearTimeout(timeout);
-            }
-        }
-    }, [])
-
-    function handleArrowUpDownKeyup(e) {
-        if (['ArrowUp', 'ArrowDown'].includes(e.code)) {
-            flip();
-        }
-    }
-
-    const flip = useCallback(() => {
-        let duration = 250; // match keyframes animation duration
-        setBackWasShown(true);
-        setFlipping(true);
-        timeouts.current.push(setTimeout(() => setFlipping(false), duration));
-        timeouts.current.push(setTimeout(() => toggleSide(), duration / 2));
-    }, [setFlipping, setBackWasShown, setSide]);
+const ReviewCard = memo(({ setBackWasShown, direction, term }: ReviewCardProps ) => {
+    const { side, fade, flipping, flip } = useReviewCard(direction, term, setBackWasShown);
 
     return (
         <div
             onClick={flip}
             className={`ReviewCard ${fade ? 'fadein' : ''} ${flipping ? 'flip' : ''}`}
         >
-            { term[side] }
+            { term[side]}
         </div>
     )
 })

@@ -11,6 +11,7 @@ import { makeNewSaturationLevels } from 'helpers/srs/saturation';
 import { Term, TermUpdateObject } from 'graphql/codegen-output';
 import { useCreateReviewSessionMutation } from 'graphql/queries/reviewSession.query';
 import { useQueryListsById } from 'graphql/queries/list.query';
+import { TermUpdateDate, TermUpdatePassfail, TermUpdateSaturation } from './useReview.types';
 
 export function useReview() {
     const { params, location } = useRouteProps();
@@ -34,7 +35,7 @@ export function useReview() {
                 setBackWasShown={setBackWasShown}
             />
         )
-    }, [reviewSettings.direction, futureTerms]);
+    }, [reviewSettings.direction]);
 
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const setTimePerCard = useSetRecoilState(timePerCardState);
@@ -52,10 +53,6 @@ export function useReview() {
     }, []);
 
     useEffect(() => {
-        console.log(termsToReview.map(term => term.history));
-    }, [termsToReview])
-
-    useEffect(() => {
         if (reviewSettings.sessionEnd) {
             if (!mutateResponse) {
                 mutateCreateReviewSession({ newReviewSession, termUpdateArray })
@@ -66,7 +63,7 @@ export function useReview() {
     }, [mutateResponse, reviewSettings.sessionEnd]);
 
     useEffect(() => {
-        lists && isFullListReview && setTermsToReview(lists[0].terms as Term[]);
+        lists && isFullListReview && setTermsToReview(lists[0].terms);
     }, [lists]);
 
     useEffect(() => {
@@ -109,21 +106,6 @@ export function useReview() {
             default:
                 return terms
         }
-    }
-
-    type TermUpdatePassfail = { // @todo: this should be a union of objects. one for saturation case, one for passfail case
-        type: 'passfail',
-        passfail: PassFail,
-        currentTerm: Term
-    };
-
-    type TermUpdateSaturation = {
-        type: 'saturation',
-        newSaturationLevels: ReturnType<typeof makeNewSaturationLevels>
-    };
-
-    type TermUpdateDate = {
-        type: 'date'
     }
 
     /** 'reducer' to update value of termUpdateArray
@@ -196,7 +178,7 @@ export function useReview() {
         setTimePerCard(cur => [...cur, new Date()])
         reduceFutureTerms({ type: passfail });
         setBackWasShown(false);
-    }, [futureTerms, setPassfail, setTimePerCard, backWasShown])
+    }, [futureTerms, backWasShown])
 
     /** ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons */
     function handleLeftRightArrowKeyDown(e: KeyboardEvent) {
