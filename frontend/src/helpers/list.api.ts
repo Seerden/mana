@@ -16,7 +16,7 @@ export const extractSessionsByDirection = (list, direction: Direction) => { // @
  * @param {Object} term 
  */
 export const termSessionsByDirection = (term: Term, direction: Direction) => {
-    return term.history!.filter(session => session.direction === direction)
+    return term.history!.filter(session => session?.direction === direction)
 }
 
 export const colorMap = {
