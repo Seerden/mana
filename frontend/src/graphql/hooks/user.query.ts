@@ -1,17 +1,7 @@
-import request, { gql } from "graphql-request";
+import request from "graphql-request";
 import { MaybeUser } from "graphql/codegen-output";
+import { registerUserMutation } from "graphql/operations/user.operations";
 import { useMutation } from "react-query";
-
-const registerUserMutation = gql`
-mutation ($username: String!, $password: String!) {
-    createUser(username: $username, password: $password) {
-        error 
-        user {
-            username
-        }
-    }
-}
-`
 
 export function useMutateRegisterUser() {
     const mutationResponse = useMutation<MaybeUser, any, NewUser>("registerUser", async ({ username, password }) => {
