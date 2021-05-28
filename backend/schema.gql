@@ -86,7 +86,7 @@ input NewListFromClientInput {
   name: String!
   owner: String!
   terms: [NewListTermInput!]!
-  to: String!
+  to: [String!]!
 }
 
 input NewListTermInput {

@@ -65,7 +65,7 @@ export class List {
     @Field(() => [String])
     setMembership: Array<mongoose.Types.ObjectId>; // @todo: implement Set type
 
-    @Property({ _id: false })
+    @Property({ _id: false, default: { forwards: [], backwards: []} })
     @Field(() => ListState, { nullable: true })
     reviewDates?: ListState
 }

@@ -160,7 +160,7 @@ export type NewListFromClientInput = {
   owner: Scalars['String'];
   name: Scalars['String'];
   from: Scalars['String'];
-  to: Scalars['String'];
+  to: Array<Scalars['String']>;
   terms: Array<NewListTermInput>;
 };
 

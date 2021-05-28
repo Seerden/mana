@@ -1,4 +1,4 @@
-import { ListModel } from "../types/List";
+import { List, ListModel } from "../types/List";
 import { Term } from "../types/Term";
 import mongoose from 'mongoose';
 import { ListUpdateAction, ListUpdatePayload, NewListFromClient } from "../types/input_types/list";
@@ -68,14 +68,14 @@ export async function createListDocument(newList: NewListFromClient) {
         try {
             const termIds = savedTerms.terms.map(term => new mongoose.Types.ObjectId(term._id))
 
-            const newListForDatabase = {
+            const newListForDatabase: Partial<List> = {
                 ...newList,
                 terms: termIds,
                 created: new Date(),
                 sessions: new Array(),
-                state: {
-                    forwards: 'untouched',
-                    backwards: 'untouched'
+                reviewDates: {
+                    forwards: [],
+                    backwards: []
                 }
             };
 

@@ -5,7 +5,7 @@ import qs from 'query-string';
 import { timePerCardState, passfailState, reviewSettingsState, termsToReviewState, termUpdateArrayState, reviewStageState } from 'recoil/atoms/reviewAtoms';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
 import ReviewCard from 'components/review/ReviewCard';
-import { useRouteProps } from './routerHooks';
+import { useRouteProps } from '../routerHooks';
 import useReviewSession from './useReviewSession';
 import { makeNewSaturationLevels } from 'helpers/srs/saturation';
 import { Term, TermUpdateObject } from 'graphql/codegen-output';

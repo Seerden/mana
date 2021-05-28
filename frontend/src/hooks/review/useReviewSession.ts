@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import { useRouteProps } from './routerHooks';
 import { reviewSettingsState, termsToReviewState, timePerCardState, passfailState } from 'recoil/atoms/reviewAtoms';
 import { useRecoilValue } from 'recoil';
 import { convertDateListToDeltaTime } from 'helpers/reviewHelpers';
 import { Id, ReviewSessionBaseInput } from 'graphql/codegen-output';
+import { useRouteProps } from 'hooks/routerHooks';
 
 function useReviewSession() {
     const { params, location } = useRouteProps();

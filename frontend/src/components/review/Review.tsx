@@ -1,7 +1,7 @@
 import React, { memo, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useRouteProps } from 'hooks/routerHooks';
-import { useReview } from 'hooks/useReview';
+import { useReview } from 'hooks/review/useReview';
 import ReviewInfo from './ReviewInfo';
 import './style/Review.scss';
 

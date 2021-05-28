@@ -22,8 +22,8 @@ export class NewListFromClient {
     @Field()
     from: string
 
-    @Field()
-    to: string
+    @Field(() => [String])
+    to: string[]
 
     @Field(() => [NewListTerm])
     terms: NewListTerm[] // NewTerm? 
