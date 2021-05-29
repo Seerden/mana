@@ -2,7 +2,6 @@ import React, { memo } from "react";
 import './style/List.scss';
 import useList from './useList';
 
-import ListMeta from "./sections/ListMeta/ListMeta";
 import ListTerms from './sections/ListTerms';
 import ListTitleBar from './sections/ListTitleBar';
 
@@ -29,7 +28,6 @@ const List = memo((props) => {
                     {list &&
                         <>
                             <ListTitleBar {...{ handleListTitleBlur, list, handleDelete }} />
-                            <ListMeta {...{ terms, suggestedTermsForReview, updateTermsToReview, numTermsToReview, setSelectingTerms, selectingTerms }} />
                             <ListTerms {...{ filter, setFilter, termsToDisplay, list }} />
                         </>
                     }

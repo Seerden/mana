@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { timeSince } from "helpers/time";
   dayjs.extend(relativeTime);
 
 type TimerProps = {
@@ -23,7 +24,7 @@ function useTimer ({ start }: TimerProps) {
         }
     }, [])
 
-    const timeSinceStart = useMemo(() => start && dayjs(start).fromNow(), [elapsed]);
+    const timeSinceStart = useMemo(() => timeSince(start), [elapsed]);
     const title = start ? `${dayjs(start).format('hh:mm:ss A')}`: '';
 
     return {

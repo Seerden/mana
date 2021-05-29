@@ -8,33 +8,37 @@ interface SaturationIconProps {
     style?: React.CSSProperties
 }
 
+function makeTooltip(direction, saturation) {
+    if (saturation) {
+        if (!(typeof saturation[direction] === 'number')) {
+            return 'Not enough reviews to judge memorization. Get on it!';
+        }
+    
+        if (saturation < 2) {
+            return `${direction}: Review soon!`;
+        }
+    
+        return `${direction}: No need to review yet`;
+    }
+    
+    return `${direction}: No need to review yet`;
+}
+
 const SaturationIcon = memo(({ direction, classes, saturation, style }: SaturationIconProps) => {
+    const color = typeof saturation === 'number' ? colorBySaturation(saturation) : colorBySaturation(saturation, direction);
+
     const saturationIconStyle = {
         width: '20px',
         height: '20px',
         padding: '0rem',
         borderRadius: '50%',
-        backgroundColor: colorBySaturation(saturation) || '#333',
+        backgroundColor: color || '#333',
         boxShadow: "0 0 1rem black",
         border: "2px solid transparent",
         ...style
     }
 
-    function makeTooltip(direction, saturation) {
-        if (saturation) {
-            if (!(typeof saturation[direction] === 'number')) {
-                return 'Not enough reviews to judge memorization. Get on it!';
-            }
-        
-            if (saturation < 2) {
-                return `${direction}: Review soon!`;
-            }
-        
-            return `${direction}: No need to review yet`;
-        }
-        
-        return `${direction}: No need to review yet`;
-    }
+    
 
     return (
         <span 
