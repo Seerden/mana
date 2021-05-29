@@ -28,10 +28,10 @@ export const colorMap = {
 }
 
 export const colorBySaturation = (
-    saturation: {forwards: number, backwards: number} | number | undefined, 
+    saturation: {forwards: number, backwards: number} | number | undefined | string,  
     direction: Direction | undefined = undefined) => {
-    if (typeof saturation === 'number') {
-        return colorMap[saturation]
+    if (typeof saturation === 'number' || typeof saturation === 'string') {
+        return colorMap[Number(saturation)]
     }
     
     else if (direction && saturation) {

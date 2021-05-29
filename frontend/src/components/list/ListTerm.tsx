@@ -1,4 +1,4 @@
-import React, { memo, useState, useMemo, useEffect } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
 import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
@@ -10,11 +10,10 @@ import { useMutateEditTerm } from "graphql/hooks/term.query";
 import './style/ListTerm.scss'
 
 const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {
-    const [term, setTerm] = useState<any>(() => (termFromProps)),  // @todo: fix any type to be combination of TermInterface and TermElementInterface, after figuring out why I'm using two Term(*?)Interface types
-        [confirmingDelete, setConfirmingDelete] = useState(false),
-        [open, setOpen] = useState<boolean>(false);
+    const [term, setTerm] = useState<any>(() => (termFromProps));  // @todo: fix any type to be combination of TermInterface and TermElementInterface, after figuring out why I'm using two Term(*?)Interface types
+    const [confirmingDelete, setConfirmingDelete] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
 
-    // ----- REFACTOR
     const [listAtom, setListAtom] = useRecoilState(listState)
     const selectingTerms = useRecoilValue(selectingTermsToReviewState);
     const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
@@ -69,7 +68,7 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
         if (e.target.value && term[side] !== e.target.value) {
             let newTerm = { ...term, [side]: e.target.value };
             setTerm(newTerm);
-            
+
             const mutationVariables = {
                 _id: term._id,
                 [side]: e.target.value
@@ -80,7 +79,7 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
 
             // assume the mutation will be successful, and just edit the term in the list in-place
             let newListContent: any[] = [...listAtom.terms!];
-            newListContent[idx] = {...newListContent[idx], [side]: e.target.value} ;
+            newListContent[idx] = { ...newListContent[idx], [side]: e.target.value };
             let newList = { ...listAtom, terms: [...newListContent] };
             setListAtom(newList);
         }
@@ -108,7 +107,7 @@ const ListTerm = memo(({ handleTermDelete, term: termFromProps, idx }: TermProps
                             : <ImCheckboxUnchecked />
                         }
                     </div>
-                    : 
+                    :
                     ''
                 }
             </li>

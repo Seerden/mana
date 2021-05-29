@@ -8,7 +8,10 @@ export interface TermElementInterface {
 }
 
 export interface FilterInterface {
-    saturation: { level: number | null, direction: "any" | "forwards" | "backwards"}
+    saturation: { 
+        level: number | { forwards: number, backwards: number} | undefined, 
+        direction: "any" | "forwards" | "backwards"
+    }
 }
 
 export interface TermPropsInterface {

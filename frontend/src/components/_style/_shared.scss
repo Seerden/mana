@@ -1,3 +1,13 @@
+%responsive-section {
+    @media screen and (min-width: 1280px) {
+        max-width: 70rem;
+    }
+    
+    @media screen and (min-width: 768px) {
+        min-width: 700px;
+    }
+}
+
 %shared-button {
     display: block;
     margin: 0.8rem 0;

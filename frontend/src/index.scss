@@ -1,3 +1,5 @@
+@use './components/_style/shared';
+
 :root {
     --text-light: azure;
     --text-dark: #191919;
@@ -26,14 +28,6 @@ body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
-
-.PageHeader {
-    font-weight: 600;
-    font-size: 1.6rem;
-    padding-bottom: 0.2em;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #333;
 }
 
 .Button {

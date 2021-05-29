@@ -12,11 +12,12 @@ interface SaturationFilterProps {
 }
 
 const SaturationFilter = memo(({ filter, setFilter }: SaturationFilterProps) => {
-    const [saturationFilter, setSaturationFilter] = useState<FilterInterface["saturation"]>({level: null, direction: 'any'});
+    const [saturationFilter, setSaturationFilter] = useState<FilterInterface["saturation"]>({level: undefined, direction: 'any'});
     const [filterDisplayState, setFilterDisplayState] = useState('initial');
 
     useEffect(() => {
         setFilter(cur => ({ ...cur, saturation: saturationFilter }))
+        console.log(saturationFilter);
     }, [saturationFilter, setFilter])
 
     const handleIconClick = (level) => {
@@ -75,9 +76,7 @@ const SaturationFilter = memo(({ filter, setFilter }: SaturationFilterProps) => 
 
     return (
         <>
-            <div
-                className="SaturationFilter"
-            >
+            <div className="SaturationFilter">
                 {filterDisplayState === 'initial' &&
                     <>
                         <button
@@ -95,7 +94,7 @@ const SaturationFilter = memo(({ filter, setFilter }: SaturationFilterProps) => 
                                 className="SaturationFilter__reset"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setSaturationFilter({level: null, direction: 'any'});
+                                    setSaturationFilter({level: undefined, direction: 'any'});
                                 }}
                             />
                         </button>

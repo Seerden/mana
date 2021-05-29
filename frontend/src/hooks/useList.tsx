@@ -3,10 +3,10 @@ import { useSetRecoilState, useRecoilState, useRecoilValue, useResetRecoilState 
 import { useRouteProps } from 'hooks/routerHooks';
 import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
 import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
-import ListTerm from './ListTerm';
+import ListTerm from '../components/list/ListTerm';
 import { termsToReviewState } from "recoil/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
-import { FilterInterface, TruncatedTerm } from './list.types';
+import { FilterInterface, TruncatedTerm } from '../components/list/list.types';
 import { useMutateDeleteList, useMutateUpdateList, useQueryListsById } from "graphql/hooks/list.query";
 import { List } from "graphql/codegen-output";
 import { DeleteTermsVariables, useMutateDeleteTerms } from "graphql/hooks/term.query";

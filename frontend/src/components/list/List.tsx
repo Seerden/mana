@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 import './style/List.scss';
-import useList from './useList';
+import useList from '../../hooks/useList';
 
-import ListTerms from './sections/ListTerms';
-import ListTitleBar from './sections/ListTitleBar';
+import ListTerms from './ListTerms';
+import ListTitleBar from './ListTitleBar';
 
 const List = memo((props) => {
     const {
