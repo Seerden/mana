@@ -6,10 +6,6 @@ import './Terms.scss';
 const ListTerms = ({ filter, setFilter, termsToDisplay, list }) => {
     const showingString = filter.saturation.level ? 'Showing filtered list' : 'Showing all terms';
 
-    useEffect(() => {
-        console.log(termsToDisplay);
-    }, [termsToDisplay])
-
     return (
         <section className="Terms">
             <ul className="List__terms">

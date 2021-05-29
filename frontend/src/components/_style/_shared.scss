@@ -47,3 +47,40 @@
 //     background-color: crimson;
 //     border: 1px dashed yellow;
 // }
+
+%shared-temp-section {
+    border: 3px solid #333;
+    padding: 1rem;
+    width: 800px;
+    margin-top: 1rem;
+}
+
+%shared-link {
+    display: inline-block;
+    padding: 0.3rem 1.5rem;
+    color: azure;
+    background-color: #222;
+    border: 2px solid deepskyblue;
+    color: azure;
+    border-radius: 3px;
+    text-decoration: none;
+
+    transition: all 100ms ease-in, transform 25ms ease-in;
+
+    &:hover, &:active {
+        background-color: deepskyblue;
+        color: black;
+        box-shadow:  0 0.3rem 0 -0.2rem deepskyblue;
+        transform: translateY(-0.1rem);
+    }
+
+}
+
+%shared-subsection-header {
+    font-size: 1.3rem;
+    background-color: #ccc;
+    color: #111;
+    padding: 0.2rem 0.5rem;
+    width: max-content;
+    margin-bottom: 0.5rem;
+}

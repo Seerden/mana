@@ -4,6 +4,7 @@ import useList from '../../hooks/useList';
 
 import ListTerms from './ListTerms';
 import ListTitleBar from './ListTitleBar';
+import ListReviewButtons from "./ListReviewButtons";
 
 const List = memo((props) => {
     const {
@@ -28,6 +29,7 @@ const List = memo((props) => {
                     {list &&
                         <>
                             <ListTitleBar {...{ handleListTitleBlur, list, handleDelete }} />
+                            <ListReviewButtons />
                             <ListTerms {...{ filter, setFilter, termsToDisplay, list }} />
                         </>
                     }
