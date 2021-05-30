@@ -35,6 +35,10 @@ const NewList = memo((props) => {
     }, [formOutput, numTerms, focussedInput, setFocussedInput])
 
     useEffect(() => {
+        console.log(formOutput);
+    }, [formOutput])
+
+    useEffect(() => {
         isSuccess && navigate(`/u/${params.username}/lists`)
     }, [isSuccess])
 
@@ -42,9 +46,9 @@ const NewList = memo((props) => {
      * Add 10 new rows if user presses tab on last input. 
      * Autofocus the first newly added term. */
     const tabListener = (e: KeyboardEvent) => {
-        if (!e.shiftKey && e.key === "Tab" && focussedInput?.index === termInputs.length-1 && focussedInput.side === 'to') {
+        if (!e.shiftKey && e.key === "Tab" && focussedInput?.index === termInputs.length - 1 && focussedInput.side === 'to') {
             e.preventDefault();
-            setNumTerms(cur => cur+10);
+            setNumTerms(cur => cur + 10);
             setFocussedInput(cur => ({ index: cur!.index, side: 'from' }));
         }
     };
@@ -65,11 +69,11 @@ const NewList = memo((props) => {
                 <NewListTerm
                     key={`term-${i + 1}`}
                     index={i}
-                    autoFocus={i === focussedInput?.index!+1}
+                    autoFocus={i === focussedInput?.index! + 1}
                     focussedInput={focussedInput}
                     setFocussedInput={setFocussedInput}
                     formOutput={formOutput}   // @todo: formOutput should be recoil atom. Passing the state through props like this for any number of terms might lead to stale closures
-                    setFormOutput={setFormOutput} 
+                    setFormOutput={setFormOutput}
                 />
             )
         };
@@ -83,8 +87,16 @@ const NewList = memo((props) => {
 
 
     function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
-        if (e.currentTarget.value !== formOutput[e.currentTarget.name]) {
-            setFormOutput({ ...formOutput, [e.currentTarget.name]: e.currentTarget.value });
+        const { name, value } = e.currentTarget;
+        if (value !== formOutput[name]) {
+            if (Array.isArray(formOutput[name])) {
+                setFormOutput({
+                    ...formOutput,
+                    [e.currentTarget.name]: [...formOutput[e.currentTarget.name], e.currentTarget.value]
+                })
+            } else {
+                setFormOutput({ ...formOutput, [e.currentTarget.name]: e.currentTarget.value });
+            }
         }
     }
 
@@ -92,7 +104,7 @@ const NewList = memo((props) => {
         e.preventDefault();
 
         if (["name", "from", "to", "owner"].every(entry => {
-            return formOutput.hasOwnProperty(entry) && typeof formOutput[entry] == 'string'
+            return formOutput.hasOwnProperty(entry) && (typeof formOutput[entry] == 'string' || Array.isArray(formOutput[entry]))
         })) {
             const terms = formOutput.terms?.filter(term => term !== null);
 
@@ -115,30 +127,49 @@ const NewList = memo((props) => {
             <form className="NewList__form">
 
                 <section className="NewList__form--header">
+                    <div className="NewList__form--name">
+
+                    </div>
+                    <label className="NewList__form--name-label">
+                        List name
+                    </label>
                     <input
-                        className="NewList__form--name"
+                        className="NewList__form--name-input"
                         onBlur={handleBlur}
                         type="text"
                         name="name"
-                        placeholder="List name"
+                        placeholder="week 3 vocabulary"
                     />
 
                     <div className="NewList__form--languages">
-                        <input
-                            className="NewList__form--languages-language"
-                            onBlur={handleBlur}
-                            type="text"
-                            name="from"
-                            placeholder="Original language"
-                        />
+                        <div className="NewList__form--languages-language">
+                            <label
+                                htmlFor="from"
+                                className="NewList__form--languages-language-label"
+                            >Original language</label>
+                            <input
+                                className="NewList__form--languages-language-input"
+                                onBlur={handleBlur}
+                                type="text"
+                                name="from"
+                                placeholder="Klingon"
+                            />
+                        </div>
                         <BiArrowToRight className="NewList__form--languages-icon" />
-                        <input
-                            className="NewList__form--languages-language"
-                            onBlur={handleBlur}
-                            type="text"
-                            name="to"
-                            placeholder="Translated language"
-                        />
+
+                        <div className="NewList__form--languages-language">
+                            <label
+                                htmlFor="to"
+                                className="NewList__form--languages-language-label"
+                            >Target language</label>
+                            <input
+                                className="NewList__form--languages-language-input"
+                                onBlur={handleBlur}
+                                type="text"
+                                name="to"
+                                placeholder="Elvish"
+                            />
+                        </div>
                     </div>
                 </section>
 

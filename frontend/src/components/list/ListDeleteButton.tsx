@@ -2,6 +2,8 @@ import React from "react";
 import { useToggle } from "hooks/useToggle";
 
 const ListDeleteButton = ({ handleDelete }) => {
+    const base = "ListDeleteButton"
+
     const [confirming, toggleConfirming] = useToggle(false);
 
     return (

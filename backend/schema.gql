@@ -32,7 +32,7 @@ type List {
   sessions: [ReviewSession!]
   setMembership: [String!]!
   terms(populate: Boolean): [Term!]!
-  to: [String!]!
+  to: String!
 }
 
 type ListState {
@@ -86,7 +86,7 @@ input NewListFromClientInput {
   name: String!
   owner: String!
   terms: [NewListTermInput!]!
-  to: [String!]!
+  to: String!
 }
 
 input NewListTermInput {

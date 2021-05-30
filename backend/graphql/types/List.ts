@@ -41,8 +41,8 @@ export class List {
     from: string;
 
     @Property()
-    @Field(() => [String])
-    to: string[];
+    @Field()
+    to: string;
 
     @Property({ ref: "Term" })
     @Field(() => [Term])

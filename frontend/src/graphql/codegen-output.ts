@@ -37,7 +37,7 @@ export type List = {
   owner: Scalars['String'];
   name: Scalars['String'];
   from: Scalars['String'];
-  to: Array<Scalars['String']>;
+  to: Scalars['String'];
   terms: Array<Term>;
   sessions?: Maybe<Array<ReviewSession>>;
   created: Scalars['DateTime'];
@@ -160,7 +160,7 @@ export type NewListFromClientInput = {
   owner: Scalars['String'];
   name: Scalars['String'];
   from: Scalars['String'];
-  to: Array<Scalars['String']>;
+  to: Scalars['String'];
   terms: Array<NewListTermInput>;
 };
 
@@ -529,7 +529,7 @@ export type ListResolvers<ContextType = any, ParentType extends ResolversParentT
   owner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  to?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  to?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   terms?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<ListTermsArgs, never>>;
   sessions?: Resolver<Maybe<Array<ResolversTypes['ReviewSession']>>, ParentType, ContextType>;
   created?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;

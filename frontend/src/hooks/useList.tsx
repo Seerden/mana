@@ -13,7 +13,7 @@ import { DeleteTermsVariables, useMutateDeleteTerms } from "graphql/hooks/term.q
 
 function useList() {
     const [list, setList] = useState<List | null>(null);
-    const [filter, setFilter] = useState<FilterInterface>({ saturation: { level: null, direction: 'any' } });
+    const [filter, setFilter] = useState<FilterInterface>({ saturation: { level: undefined, direction: 'any' } });
     const [truncatedTerms, setTruncatedTerms] = useState<Array<TruncatedTerm>>([]);
     const { params, navigate } = useRouteProps();
     const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
@@ -110,12 +110,12 @@ function useList() {
 
     const handleListTitleBlur = useCallback((e) => {
         e.persist();
-
+        
         if (list && list.terms.length > 0) {
             if(!e.currentTarget.innerText) {
                 e.currentTarget.innerText = list.name;
             }
-
+            
             if (e.currentTarget.innerText && e.currentTarget.innerText !== list.name) {
                 let updatedList: List = { ...list, name: e.currentTarget.innerText }
                 if (updatedList.terms && updatedList.terms.length > 0) {

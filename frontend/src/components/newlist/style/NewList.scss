@@ -1,6 +1,8 @@
 @use '../../_style/shared';
 
 .NewList {
+    $index-width: 2rem;
+
     &__form {
         $language-width: 40%;
         $language-gap: 0.5rem;
@@ -67,7 +69,7 @@
 
         }
 
-        &--name, &--languages-language {
+        &--name-input, &--languages-language-input {
             background-color: #333;
             outline: none;
             border: none;
@@ -102,16 +104,42 @@
         }
 
         &--name {
+            &-input {
+                width: 100%;
+                padding: 1rem;
+                font-size: 1.2rem;
+                box-shadow: -0.4rem 0.4rem 0 -0.2rem #111;
+                border-radius: 3px;
+            }
+
+            &-label {
+                font-size: 1.5rem;
+            }
+        }
+
+        &--languages-language-label, &--name-label {
+            position: relative;
+            display: block;
             width: 100%;
-            padding: 1rem;
-            font-size: 1.2rem;
-            box-shadow: -0.4rem 0.4rem 0 -0.2rem #111;
-            border-radius: 3px;
-            
+            font-weight: 500;
+            background-color: #111;
+            z-index: 1;
+            padding: 0.4rem 0.9rem;
+            outline: 3px solid #111;
+
+            ::placeholder {
+                font-style: italic;
+            }
         }
 
         &--languages-language {
             width: $language-width;
+
+            &-input {
+                display: inline-block;
+                z-index: 0;
+                width: 100%;
+            }
         }
     }
 
@@ -128,6 +156,10 @@
                 width: 50%;
                 padding: 0.75rem 0.5rem;
                 background-color: #111;
+
+                &:nth-of-type(even) {
+                    width: calc(50%-$index-width);
+                }
 
             }
         }
@@ -155,6 +187,7 @@
             display: flex;
             text-align: center;
             height: $term-height;
+            // width: $index-width;
             width: 2rem;
             justify-content: center;
             align-items: center;
@@ -171,7 +204,7 @@
         &--inputs {
             display: flex;
             width: 100%;
-            justify-content: space-between;
+            // justify-content: space-between;
         }
 
         &--input {
@@ -179,7 +212,7 @@
             display: inline-block;
             padding: 0.3rem 0.5rem;
             color: #ddd;
-            width: 49%;
+            width: 100%;
             font-size: 0.85rem;
             border: none;
             background-color: #2a2a2a;
@@ -188,6 +221,10 @@
             border: 1px solid #111;
 
             transition: all 100ms linear, outline 5ms ease-in, box-shadow 0ms linear;
+
+            &:nth-of-type(1) {
+                width: calc(100% - 2rem);
+            }
 
             &:focus, &:active {
                 outline: none;
