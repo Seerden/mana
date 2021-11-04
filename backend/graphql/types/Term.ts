@@ -76,8 +76,8 @@ export class Term {
     @Field(() => TermSaturation)
     saturation: TermSaturation;
 
-    @prop()
-    @Field(() => [List], { nullable: true })
+    @prop({ ref: 'List' })
+    @Field(() => [List], { nullable: 'items' })
     listMembership: Ref<List>[];
 }
 

@@ -78,7 +78,8 @@ export function useReview() {
 
     useEffect(() => {  // end review session once futureTerms.length reaches 0
         if (termsToReview.length > 0 && futureTerms?.length === 0) {
-            reduceTermUpdateArray({ type: 'saturation', newSaturationLevels: makeNewSaturationLevels(termsToReview, termUpdateArray, reviewSettings) })
+            const newSaturationLevels = makeNewSaturationLevels(termsToReview, termUpdateArray, reviewSettings);
+            reduceTermUpdateArray({ type: 'saturation', newSaturationLevels })
             reduceTermUpdateArray({ type: 'date' });
             setReviewSettings(current => ({
                 ...current,

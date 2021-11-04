@@ -17,7 +17,6 @@ const SaturationFilter = memo(({ filter, setFilter }: SaturationFilterProps) => 
 
     useEffect(() => {
         setFilter(cur => ({ ...cur, saturation: saturationFilter }))
-        console.log(saturationFilter);
     }, [saturationFilter, setFilter])
 
     const handleIconClick = (level) => {

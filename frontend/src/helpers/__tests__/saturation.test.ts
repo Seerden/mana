@@ -1,4 +1,5 @@
 import { Term, TermHistory } from 'graphql/codegen-output';
+import { termSessionsByDirection } from 'helpers/list.api';
 import { filterTermHistoryEntriesByDirection, getLastReviewDateFromTerm } from '../srs/saturation';
 
 const DIRECTIONS = {
@@ -67,6 +68,7 @@ describe('getLastReviewDateFromTerm', () => {
     const now = new Date();
 
     const term: Term = {
+        listMembership: [],
         owner: 'me',
         saturation: {
             forwards: 1,
@@ -127,3 +129,11 @@ describe('getLastReviewDateFromTerm', () => {
         ).toStrictEqual({ forwards: null, backwards: null })
     })
 });
+
+describe("", () => {
+    test("... returns array of length 1 if 1 only 1 session with given direction", () => {
+        expect(
+            termSessionsByDirection(mockTermWithHistory as Term, 'forwards')
+        ).toHaveLength(1)
+    })
+})

@@ -71,6 +71,7 @@ export async function bulkUpdateTerms(updateObj: Array<TermUpdateObject>) {
     if (bulkOperations.length > 0) {
         const response = await TermModel.bulkWrite(bulkOperations);
 
+        console.log(response);
         return response.modifiedCount;
     }
 

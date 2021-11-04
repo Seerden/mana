@@ -188,7 +188,7 @@ type Term {
   from: String!
   history: [TermHistory]!
   languages: TermLanguages
-  listMembership: [List!]
+  listMembership: [List]!
   owner: String!
   saturation: TermSaturation!
   to: String!

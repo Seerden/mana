@@ -42,10 +42,9 @@ export const saturationLevels = [
  * @note saturation should be done on a per-term basis, since object structure for review input might not be rigid
  * @param {Object} term List model contains .content, which is an array of terms, of which this ('term') is an entry.
  */
-export function saturate(term, direction) {
+export function saturate(term: Term, direction: Direction) {
     // filter term's history by direction
     const filteredHistory = termSessionsByDirection(term, direction);
-
     if (!filteredHistory || filteredHistory.length < 3) {
         return null;
     }
@@ -53,7 +52,8 @@ export function saturate(term, direction) {
     if (filteredHistory.length === 3 || !term.saturation[direction]) { // if reviewed exactly n times, seeding has just ended, so we can saturate based on seeding round
         return saturateUnseededTerm(filteredHistory);
     } else if (filteredHistory.length > 3 || term.saturation[direction]) {
-        return saturateSeededTerm(filteredHistory, term.saturation[direction])
+        const newSaturation = saturateSeededTerm(filteredHistory, term.saturation[direction]);
+        return newSaturation;
     }
 }
 
@@ -83,62 +83,65 @@ export function saturateUnseededTerm(filteredHistory) {
 
 /**
  * Determine saturation of a term that already has a saturation level.
- * @param {[content: string[], date: Date, direction: String]} filteredHistory array of (at least 3) history entries, filtered by specified direction
+ * @param filteredHistory array of (at least 3) history entries, filtered by specified direction
  * @param {Number} saturation The term's current saturation level for the specified direction
  */
-export function saturateSeededTerm(filteredHistory, saturation) {
+export function saturateSeededTerm(filteredHistory: Maybe<TermHistory>[], saturation: number | undefined | null) {
     const [currentSession, previousSession, secondToLastSession] = filteredHistory.reverse().slice(0, 3);
     // const timeBetween = currentSession?.date - previousSession?.date;
     // const currentTimescale = saturationLevels[Number(saturation)]?.timescale; 
 
-    const fail = countDict(currentSession.content).fail;
-    const previousFail = countDict(previousSession.content).fail;
-    const secondTolastFail = countDict(secondToLastSession.content).fail;
-
-    switch (String(saturation)) {  // new saturation level depends on two things: current performance, current saturation level
-        case '0':
-            return fail ? 0 : 1;
-        case '1':
-            if (fail) {
-                if (fail > 1) return 0;
-                if (currentSession.content[0] === 'pass') return 1;
-                return 0;
-            } else {
-                if (!previousFail && !secondTolastFail) {
-                    return 2
-                }
-                return 1
-            }
-        case '2':
-            if (fail) {
-                if (fail > 2) return 0;
-                return currentSession.content[0] === 'pass' ? 2 : 1;
-            } else {
-                if (!previousFail) {
-                    return 3
-                }
-            }
-            break;
-        case '3':
-            if (fail) {
-                if (fail === 1) {
-                    return 2
+    if (currentSession && previousSession && secondToLastSession) {
+        const fail = countDict(currentSession.content).fail;
+        const previousFail = countDict(previousSession.content).fail;
+        const secondTolastFail = countDict(secondToLastSession.content).fail;
+    
+        switch (String(saturation)) {  // new saturation level depends on two things: current performance, current saturation level
+            case '0':
+                return fail ? 0 : 1;
+            case '1':
+                if (fail) {
+                    if (fail > 1) return 0;
+                    if (currentSession.content[0] === 'pass') return 1;
+                    return 0;
                 } else {
+                    if (!previousFail && !secondTolastFail) {
+                        return 2
+                    }
                     return 1
                 }
-
-            } else {
-                if (!previousFail && !secondTolastFail) {
-                    return 4
+            case '2':
+                if (fail) {
+                    if (fail > 2) return 0;
+                    return currentSession.content[0] === 'pass' ? 2 : 1;
+                } else {
+                    if (!previousFail) {
+                        return 3
+                    }
                 }
-                return 3
-            }
-        case '4':
-            if (fail) {
-                return fail > 1 ? 2 : 3
-            } else return 4
-        default:
-            return saturation
+                break;
+            case '3':
+                if (fail) {
+                    if (fail === 1) {
+                        return 2
+                    } else {
+                        return 1
+                    }
+    
+                } else {
+                    if (!previousFail && !secondTolastFail) {
+                        return 4
+                    }
+                    return 3
+                }
+            case '4':
+                if (fail) {
+                    return fail > 1 ? 2 : 3
+                } else return 4
+            default:
+                return saturation
+        }
+
     }
 
 }
@@ -172,7 +175,7 @@ export function suggestTermsForReview(terms) {
 
 export function filterTermHistoryEntriesByDirection(history: Maybe<TermHistory>[], direction: Direction) {
     if (history) {
-        return history.filter(entry => entry ? entry.direction === direction : false);
+        return history.filter(entry => entry?.direction === direction);
     }
 }
 
@@ -208,14 +211,16 @@ export function makeNewSaturationLevels(termsToReview: Term[], termUpdateArray: 
             history: [
                 ...[Object.keys(termInReview).includes('history') ? termInReview.history : []],
                 termUpdateArray.find(termToUpdate => termInReview._id === termToUpdate._id)?.history
-            ]
+            ] as TermHistory[]
         };
 
         const saturation = { 
             ...termCopy.saturation, 
-            [reviewSettings.direction]: saturate(termCopy, reviewSettings.direction) 
+            [reviewSettings.direction]: saturate(termCopy, reviewSettings.direction as Direction) 
         };
 
+        console.log(termInReview.saturation);
+        console.log(saturation);
         return ({ 
             termId: termCopy._id, 
             saturation 
