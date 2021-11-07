@@ -3,6 +3,8 @@ import { request} from 'graphql-request';
 import { ErrorOrSuccess, TermEditObject } from "gql/codegen-output";
 import { editTermMutation, deleteTermsMutation } from "gql/operations/term.operations";
 
+const uri = process.env.GRAPHQL_URI;
+
 /**
  * Variables for term deletion from list mutation
  * @property listId id of the list whose terms are being removed
@@ -17,7 +19,7 @@ export type DeleteTermsVariables = {
 
 export function useMutateEditTerm() {
     const { mutate, data, ...rest } = useMutation<Number, any, TermEditObject>("editTerm", async (variables) => {
-        const response = await request(process.env.REACT_APP_GRAPHQL_URI!, editTermMutation, {updateObj: variables});
+        const response = await request(uri, editTermMutation, {updateObj: variables});
         return response;
     }, { retry: false });
 
@@ -27,7 +29,7 @@ export function useMutateEditTerm() {
 
 export function useMutateDeleteTerms() {
     const { mutate, data, ...rest } = useMutation<ErrorOrSuccess, any, DeleteTermsVariables>("deleteTerms", async (variables) => {
-        const response = await request(process.env.REACT_APP_GRAPHQL_URI!, deleteTermsMutation, variables);
+        const response = await request(uri, deleteTermsMutation, variables);
         return response
     }, { retry: false });
 

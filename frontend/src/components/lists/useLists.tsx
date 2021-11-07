@@ -11,10 +11,8 @@ const useLists = (): UseListsReturn => {
     const [sortBy, setSortBy] = useState<string>('name');  // @todo: refine type
     const { params } = useRouteProps();
 
-    const uri = "http://localhost:5000/graphql";
-
     const { isFetching, data: lists } = useQuery("listsByUser", async () => {
-        const { listsByUser } = await request(uri, gql`
+        const { listsByUser } = await request(process.env.GRAPHQL_URI, gql`
             query {
                 listsByUser(owner: "${params.username}") {
                     _id

@@ -1,8 +1,9 @@
 const path = require('path');
 const miniCss = require('mini-css-extract-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-    devtool: 'inline-source-map',
+    devtool: 'cheap-module-source-map',
     entry: {
         index: path.resolve(__dirname, 'src/index.tsx')
     },
@@ -22,6 +23,10 @@ module.exports = {
                 },
                 "changeOrigin": true
             }
+        },
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
         }
     },
     module: {
@@ -57,5 +62,6 @@ module.exports = {
     },
     plugins: [
         new miniCss(),
+        new Dotenv()
     ]
 };

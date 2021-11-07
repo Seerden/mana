@@ -10,9 +10,11 @@ type ReviewSessionVariables = {
     termUpdateArray: TermUpdateObject[]
 }
 
+const uri = process.env.GRAPHQL_URI
+
 export function useCreateReviewSessionMutation() {
     const { mutate, data, ...rest } = useMutation<MaybeReviewSession, any, ReviewSessionVariables>("createReviewSession", async ({ newReviewSession, termUpdateArray }) => {
-        const response = await request(process.env.REACT_APP_GRAPHQL_URI!, createReviewSessionMutation, {
+        const response = await request(uri, createReviewSessionMutation, {
             newReviewSession: newReviewSession,
             termUpdateArray: termUpdateArray
         })
@@ -27,7 +29,7 @@ export function useQueryReviewSessionsByUser() {
     const [owner, setOwner] = useState(params.username);
 
     const { data, refetch, ...rest } = useQuery<[ReviewSession] | null>(['reviewSessionsByUser', owner], async () => {
-        const response = await request(process.env.REACT_APP_GRAPHQL_URI!, reviewSessionsByUserQuery, { owner }) ;
+        const response = await request(uri, reviewSessionsByUserQuery, { owner }) ;
         return response.reviewSessionsByUser;
     }, { enabled: true, retry: false, refetchOnMount: true, refetchOnWindowFocus: false });
 

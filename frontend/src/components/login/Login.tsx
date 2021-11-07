@@ -15,9 +15,8 @@ const Login = () => {
     const [authError, setErr] = useState<any>(false);
     const [message, setMessage] = useState<null | string>(null);
 
-    const uri = "http://localhost:5000/graphql";
     const { mutate, data, ...rest } = useMutation<MaybeUser>("login", async () => {
-        const { login } = await request(uri, gql`
+        const { login } = await request(process.env.GRAPHQL_URI, gql`
             mutation {
                 login(username: "${user?.username}", password: "${user?.password}") {
                     error 

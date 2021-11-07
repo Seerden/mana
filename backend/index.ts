@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import express from 'express';
-
+import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 import session from 'express-session';
 import connectMongo from 'connect-mongo';
@@ -25,6 +25,7 @@ import { ReviewSessionResolver } from './graphql/resolvers/ReviewSessionResolver
 async function startServer() {
     const app = express();
 
+    app.use(cors());
     app.use(log);
 
     app.use(express.urlencoded({ limit: '5mb', parameterLimit: 10000, extended: true }));
