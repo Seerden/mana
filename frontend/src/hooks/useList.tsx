@@ -1,15 +1,15 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useSetRecoilState, useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { useRouteProps } from 'hooks/routerHooks';
-import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
-import { selectingTermsToReviewState, listState } from 'recoil/atoms/listAtoms';
+import { numTermsToReviewState } from 'state/selectors/reviewSelectors';
+import { selectingTermsToReviewState, listState } from 'state/atoms/listAtoms';
 import ListTerm from '../components/list/ListTerm';
-import { termsToReviewState } from "recoil/atoms/reviewAtoms";
+import { termsToReviewState } from "state/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
 import { FilterInterface, TruncatedTerm } from '../components/list/list.types';
-import { useMutateDeleteList, useMutateUpdateList, useQueryListsById } from "graphql/hooks/list.query";
-import { List } from "graphql/codegen-output";
-import { DeleteTermsVariables, useMutateDeleteTerms } from "graphql/hooks/term.query";
+import { useMutateDeleteList, useMutateUpdateList, useQueryListsById } from "gql/hooks/list.query";
+import { List } from "gql/codegen-output";
+import { DeleteTermsVariables, useMutateDeleteTerms } from "gql/hooks/term.query";
 
 function useList() {
     const [list, setList] = useState<List | null>(null);

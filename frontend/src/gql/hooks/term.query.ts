@@ -1,7 +1,7 @@
 import { useMutation } from "react-query";
 import { request} from 'graphql-request';
-import { ErrorOrSuccess, TermEditObject } from "graphql/codegen-output";
-import { editTermMutation, deleteTermsMutation } from "graphql/operations/term.operations";
+import { ErrorOrSuccess, TermEditObject } from "gql/codegen-output";
+import { editTermMutation, deleteTermsMutation } from "gql/operations/term.operations";
 
 /**
  * Variables for term deletion from list mutation

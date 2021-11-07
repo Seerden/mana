@@ -1,4 +1,4 @@
-import { List } from 'graphql/codegen-output';
+import { List } from 'gql/codegen-output';
 import { atom } from 'recoil';
 
 export const selectingTermsToReviewState = atom<boolean>({

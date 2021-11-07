@@ -5,7 +5,7 @@ import './style/ListsItem.scss';
 import { BiArrowToRight } from "react-icons/bi";
 import { colorByLastReviewDate, getLastReviewDate } from './lists.helpers'
 import { timeSince } from "helpers/time";
-import { List } from "graphql/codegen-output";
+import { List } from "gql/codegen-output";
 
 const ListsItem = memo(({ list }: { list: List}) => {
     const { params } = useRouteProps();

@@ -3,7 +3,7 @@ import { termSessionsByDirection } from '../list.api';
 import duration from 'dayjs/plugin/duration.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
-import { Maybe, ReviewSettings, Term, TermHistory, TermUpdateObject } from 'graphql/codegen-output';
+import { Maybe, ReviewSettings, Term, TermHistory, TermUpdateObject } from 'gql/codegen-output';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 

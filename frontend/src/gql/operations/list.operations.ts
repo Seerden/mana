@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import { CoreListFields, CoreTermFields } from "graphql/fragments/list.fragments";
+import { CoreListFields, CoreTermFields } from "gql/fragments/list.fragments";
 
 export const updateListMutation = gql`
 mutation ($listId: String!, $action: ListUpdateActionInput!, $payload: ListUpdatePayloadInput!) {

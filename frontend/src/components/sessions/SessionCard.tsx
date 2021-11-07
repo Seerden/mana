@@ -1,5 +1,5 @@
 // import PassfailIcon from "components/_shared/PassfailIcon";
-import { ReviewSession } from "graphql/codegen-output";
+import { ReviewSession } from "gql/codegen-output";
 import { humanizedDateDifference, timeSince } from "helpers/time";
 import React, { memo } from "react";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";

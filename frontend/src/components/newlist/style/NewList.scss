@@ -158,7 +158,7 @@
                 background-color: #111;
 
                 &:nth-of-type(even) {
-                    width: calc(50%-$index-width);
+                    width: calc(50% - $index-width);
                 }
 
             }

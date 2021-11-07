@@ -1,21 +1,16 @@
-import React from "react";
 import { useToggle } from "hooks/useToggle";
 
 const ListDeleteButton = ({ handleDelete }) => {
-    const base = "ListDeleteButton"
-
     const [confirming, toggleConfirming] = useToggle(false);
 
     return (
         <span className="ListDeleteButton">
-            {!confirming
-                ?
+            {!confirming ?
                 <input
                     onClick={() => toggleConfirming()}
                     type="button"
                     value="Delete list"
-                />
-                : 
+                /> :
                 <>
                     <input
                         onClick={handleDelete}
@@ -28,10 +23,9 @@ const ListDeleteButton = ({ handleDelete }) => {
                         value="Keep"
                     />
                 </>
-
             }
         </span>
     )
-}
+};
 
 export default ListDeleteButton

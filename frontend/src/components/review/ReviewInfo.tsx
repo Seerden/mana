@@ -2,8 +2,8 @@ import React, { memo } from "react";
 import useTimer from '../../hooks/useTimer';
 import './style/ReviewInfo.scss';
 import { useRecoilState, useRecoilValue } from "recoil";
-import { reviewSettingsState } from "recoil/atoms/reviewAtoms";
-import { numTermsToReviewState } from "recoil/selectors/reviewSelectors";
+import { reviewSettingsState } from "state/atoms/reviewAtoms";
+import { numTermsToReviewState } from "state/selectors/reviewSelectors";
 
 type ReviewInfoProps = {
     progress: number,

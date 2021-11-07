@@ -2,15 +2,15 @@ import React, { useMemo, useEffect, useReducer, useCallback, useState } from 're
 import { useRecoilValue, useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { makeReviewList } from 'helpers/reviewHelpers';
 import qs from 'query-string';
-import { timePerCardState, passfailState, reviewSettingsState, termsToReviewState, termUpdateArrayState, reviewStageState } from 'recoil/atoms/reviewAtoms';
-import { numTermsToReviewState } from 'recoil/selectors/reviewSelectors';
+import { timePerCardState, passfailState, reviewSettingsState, termsToReviewState, termUpdateArrayState, reviewStageState } from 'state/atoms/reviewAtoms';
+import { numTermsToReviewState } from 'state/selectors/reviewSelectors';
 import ReviewCard from 'components/review/ReviewCard';
 import { useRouteProps } from '../routerHooks';
 import useReviewSession from './useReviewSession';
 import { makeNewSaturationLevels } from 'helpers/srs/saturation';
-import { Term, TermUpdateObject } from 'graphql/codegen-output';
-import { useCreateReviewSessionMutation } from 'graphql/hooks/reviewSession.query';
-import { useQueryListsById } from 'graphql/hooks/list.query';
+import { Term, TermUpdateObject } from 'gql/codegen-output';
+import { useCreateReviewSessionMutation } from 'gql/hooks/reviewSession.query';
+import { useQueryListsById } from 'gql/hooks/list.query';
 import { TermUpdateDate, TermUpdatePassfail, TermUpdateSaturation } from './useReview.types';
 
 export function useReview() {

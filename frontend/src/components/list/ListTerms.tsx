@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
 import SaturationFilter from 'components/SaturationFilter/SaturationFilter';
-
 import './Terms.scss';
 
 const ListTerms = ({ filter, setFilter, termsToDisplay, list }) => {

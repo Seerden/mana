@@ -1,4 +1,4 @@
-import { Term, TermHistory } from 'graphql/codegen-output';
+import { Term, TermHistory } from 'gql/codegen-output';
 import { termSessionsByDirection } from 'helpers/list.api';
 import { filterTermHistoryEntriesByDirection, getLastReviewDateFromTerm } from '../srs/saturation';
 

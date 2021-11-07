@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { List } from 'graphql/codegen-output';
+import { List } from 'gql/codegen-output';
 import { ColorType } from './lists.types';
 
 export function colorByLastReviewDate(reviewDate: Date | null): ColorType {

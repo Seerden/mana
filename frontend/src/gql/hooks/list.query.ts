@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "react-query";
 import { request} from 'graphql-request';
-import { List, ListUpdateActionInput, ListUpdatePayloadInput, MaybeList, NewListFromClientInput, SuccessOrError } from "graphql/codegen-output";
-import { createListMutation, deleteListMutation, listsByIdQuery, updateListMutation } from "graphql/operations/list.operations";
+import { List, ListUpdateActionInput, ListUpdatePayloadInput, MaybeList, NewListFromClientInput, SuccessOrError } from "gql/codegen-output";
+import { createListMutation, deleteListMutation, listsByIdQuery, updateListMutation } from "gql/operations/list.operations";
 
 export function useQueryListsById(ids: [String]) {
     const { data, refetch, isLoading, isFetching, ...rest } = useQuery<[List]>("listsById", async () => {

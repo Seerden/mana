@@ -1,5 +1,5 @@
 import { gql } from "graphql-request"
-import { ReviewSessionCoreFields } from "graphql/fragments/reviewSession.fragments"
+import { ReviewSessionCoreFields } from "gql/fragments/reviewSession.fragments"
 
 export const createReviewSessionMutation = gql`
 mutation ($newReviewSession: ReviewSessionBaseInput!, $termUpdateArray: [TermUpdateObject!]!) {

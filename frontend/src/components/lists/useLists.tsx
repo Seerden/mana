@@ -4,7 +4,7 @@ import { useRouteProps } from 'hooks/routerHooks'
 import { UseListsReturn } from './lists.types';
 import { gql, request } from 'graphql-request';
 import { useQuery } from "react-query";
-import { List } from "graphql/codegen-output";
+import { List } from "gql/codegen-output";
 
 const useLists = (): UseListsReturn => {
     const [filter, setFilter] = useState<string>('');

@@ -1,7 +1,7 @@
 import { putUserInLocalStorage, removeUserFromLocalStorage } from "helpers/localStorageHelpers";
 import { useCallback, useEffect, useMemo } from "react";
 import { useRecoilState } from "recoil";
-import { currentUserState } from "recoil/atoms/authAtoms";
+import { currentUserState } from "state/atoms/authAtoms";
 
 export function useLogin() {
     const [currentUser, setCurrentUser] = useRecoilState(currentUserState)

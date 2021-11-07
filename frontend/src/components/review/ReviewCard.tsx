@@ -1,4 +1,4 @@
-import { Term } from "graphql/codegen-output";
+import { Term } from "gql/codegen-output";
 import React, { memo } from "react";
 import './style/ReviewCard.scss';
 import { useReviewCard } from "./useReviewCard";

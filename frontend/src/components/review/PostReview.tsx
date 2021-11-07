@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useResetRecoilState, useRecoilValue } from 'recoil';
 import { Link } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
-import { timePerCardState, reviewSettingsState, termsToReviewState, reviewStageState } from 'recoil/atoms/reviewAtoms';
+import { timePerCardState, reviewSettingsState, termsToReviewState, reviewStageState } from 'state/atoms/reviewAtoms';
 import { convertDateListToDeltaTime } from 'helpers/reviewHelpers';
 
 const PostReview = () => {

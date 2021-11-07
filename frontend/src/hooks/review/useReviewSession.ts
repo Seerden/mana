@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { reviewSettingsState, termsToReviewState, timePerCardState, passfailState } from 'recoil/atoms/reviewAtoms';
+import { reviewSettingsState, termsToReviewState, timePerCardState, passfailState } from 'state/atoms/reviewAtoms';
 import { useRecoilValue } from 'recoil';
 import { convertDateListToDeltaTime } from 'helpers/reviewHelpers';
-import { Id, ReviewSessionBaseInput } from 'graphql/codegen-output';
+import { Id, ReviewSessionBaseInput } from 'gql/codegen-output';
 import { useRouteProps } from 'hooks/routerHooks';
 
 function useReviewSession() {

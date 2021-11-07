@@ -1,22 +1,20 @@
 import { useLogin } from 'hooks/useLogin';
-import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useRouteProps } from '../../hooks/routerHooks';
 import './style/Header.scss';
 
 const Header = () => {
     const { currentUser } = useLogin();
-
     return (
         <div className="Header">
-            { currentUser ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
+            {currentUser ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
         </div>
     )
-}
+};
 
 export default Header;
 
-function isActive(to, location) {
+function isActive(to: string, location) {
     if (to === location.pathname) {
         return true;
     }
@@ -65,7 +63,6 @@ const HeaderLoggedIn = () => {
 
 const HeaderLoggedOut = () => {
     const { location } = useRouteProps();
-
     return (
         <nav>
             <span id="Logo">Mana</span>
@@ -74,19 +71,19 @@ const HeaderLoggedOut = () => {
                 to="/"
             >
                 Home
-        </NavLink>
+            </NavLink>
             <NavLink
                 className={`NavLink ${isActive(`/login`, location) ? 'NavLink__active' : ''}`}
                 to={`/login`}
             >
                 Log in
-        </NavLink>
+            </NavLink>
             <NavLink
                 className={`NavLink ${isActive(`/register`, location) ? 'NavLink__active' : ''}`}
                 to={`/register`}
             >
                 Register
-        </NavLink>
+            </NavLink>
         </nav>
 
     )

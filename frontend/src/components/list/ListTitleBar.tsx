@@ -1,5 +1,4 @@
-import { List } from "graphql/codegen-output";
-import React from "react";
+import { List } from "gql/codegen-output";
 import ListDeleteButton from './ListDeleteButton';
 
 import './ListTitleBar.scss';

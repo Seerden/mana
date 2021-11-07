@@ -1,4 +1,4 @@
-import { Term, TermHistoryInput, TermUpdateObject } from 'graphql/codegen-output';
+import { Term, TermHistoryInput, TermUpdateObject } from 'gql/codegen-output';
 import { atom, selector } from 'recoil';
 
 type ReviewSettings = {

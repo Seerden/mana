@@ -1,6 +1,6 @@
 import request from "graphql-request";
-import { MaybeUser } from "graphql/codegen-output";
-import { registerUserMutation } from "graphql/operations/user.operations";
+import { MaybeUser } from "gql/codegen-output";
+import { registerUserMutation } from "gql/operations/user.operations";
 import { useMutation } from "react-query";
 
 export function useMutateRegisterUser() {

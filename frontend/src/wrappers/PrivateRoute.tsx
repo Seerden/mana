@@ -1,23 +1,16 @@
-import React from "react";
-import { Route } from 'react-router-dom';
-import Private from './Private';
+import Login from "components/login/Login";
+import { useRouteProps } from "hooks/routerHooks";
+import { useLogin } from "hooks/useLogin";
 
-interface PrivateRouteProps {
-    component: React.FunctionComponent,
-    children?: React.ReactChildren | React.ReactChild,
-    path: string,
-}
+const PrivateRoute = ({ children }) => {
+    const { currentUser, isLoggedIn } = useLogin();
+    const { params } = useRouteProps();
 
-const PrivateRoute = ({component: Component, children, ...rest}: PrivateRouteProps) => {
-
-    if (children) {
-        console.log(children);
-        return null
-    }
-
-    return (
-        <Route {...rest} element={<Private component={Component}/>}/>
-    )
+    if (isLoggedIn && (currentUser === params.username)) {
+        return children
+    } else {
+        return <Login />
+    };
 }
 
 export default PrivateRoute

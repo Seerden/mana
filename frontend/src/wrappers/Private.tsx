@@ -1,7 +1,7 @@
 import { useLogin } from "hooks/useLogin";
-import React, { useState, useEffect } from "react";
-import Login from '../components/login/Login';
-import { useRouteProps } from '../hooks/routerHooks';
+import { useState, useEffect } from "react";
+import Login from 'components/login/Login';
+import { useRouteProps } from 'hooks/routerHooks';
 
 /**
  * Wrapper to hide components from unauthorized users.
@@ -9,8 +9,8 @@ import { useRouteProps } from '../hooks/routerHooks';
  * @usage           used by PrivateRoute component
  * @return          React component that displays login form or desired component based on auth state
  */
-const Private = ({ component: Component, ...rest }: { component: React.NamedExoticComponent<any> }) => {
-    const [component, setComponent] = useState(<Component key={new Date()}/>);
+const Private = ({ component: Component, ...rest }: { component: any }) => {
+    const [component, setComponent] = useState<JSX.Element>(<Component key={new Date()}/>);
     const { currentUser, isLoggedIn } = useLogin();
     const { params, location } = useRouteProps();
 

@@ -1,4 +1,4 @@
-import { Term } from "graphql/codegen-output";
+import { Term } from "gql/codegen-output";
 
 function shuffleTerms(terms: Term[]) { // @todo: extract to outside makeReviewList. why is it nested in here anyway?
     const termsCopy = [...terms];  // swap is done in-place, so keeping a copy is simply for convenience

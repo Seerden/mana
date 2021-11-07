@@ -1,11 +1,8 @@
-import React from 'react';
-
 type PassfailIconProps = {
     passfail: string,
     index: number,
     size?: number
-
-}
+};
 
 const PassfailIcon = ({ passfail, index, size=20 }: PassfailIconProps) => {
     return (
@@ -23,6 +20,6 @@ const PassfailIcon = ({ passfail, index, size=20 }: PassfailIconProps) => {
             />
         </>
     )
-}
+};
 
 export default PassfailIcon

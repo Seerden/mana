@@ -4,6 +4,7 @@
 /frontend/src/components/css/Test.css
 /frontend/src/jsx_overview.md
 /frontend/coverage
+/frontend/dist
 
 # backend
 /backend/node_modules

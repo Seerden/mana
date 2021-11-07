@@ -1,4 +1,4 @@
-import { List, Term } from "graphql/codegen-output";
+import { List, Term } from "gql/codegen-output";
 
 function mockString(length: number): string {
     return [...new Array(length).keys()]

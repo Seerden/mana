@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useRecoilState, useResetRecoilState } from 'recoil';
-import { reviewStageState, reviewSettingsState } from 'recoil/atoms/reviewAtoms';
+import { reviewStageState, reviewSettingsState } from 'state/atoms/reviewAtoms';
 import Review from './Review';
 import PreReview from './PreReview';
 import PostReview from './PostReview';

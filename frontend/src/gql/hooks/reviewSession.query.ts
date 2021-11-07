@@ -1,6 +1,6 @@
 import request from "graphql-request";
-import { MaybeReviewSession, ReviewSession, ReviewSessionBaseInput, TermUpdateObject } from "graphql/codegen-output";
-import { createReviewSessionMutation, reviewSessionsByUserQuery } from "graphql/operations/reviewSession.operations";
+import { MaybeReviewSession, ReviewSession, ReviewSessionBaseInput, TermUpdateObject } from "gql/codegen-output";
+import { createReviewSessionMutation, reviewSessionsByUserQuery } from "gql/operations/reviewSession.operations";
 import { useRouteProps } from "hooks/routerHooks";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";

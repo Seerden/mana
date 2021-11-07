@@ -1,4 +1,4 @@
-import { Term } from "graphql/codegen-output";
+import { Term } from "gql/codegen-output";
 import { Key } from "react";
 
 export interface TermElementInterface {

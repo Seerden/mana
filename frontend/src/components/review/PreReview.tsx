@@ -1,7 +1,7 @@
 import { useLogState } from "hooks/state";
 import React, { memo, useEffect, useMemo } from "react";
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { reviewSettingsState, reviewStageState } from "recoil/atoms/reviewAtoms";
+import { reviewSettingsState, reviewStageState } from "state/atoms/reviewAtoms";
 import { v4 as uuidv4 } from 'uuid';
 import './style/PreReview.scss';
 

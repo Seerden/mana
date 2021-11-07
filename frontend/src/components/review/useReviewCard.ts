@@ -1,4 +1,4 @@
-import { Term } from "graphql/codegen-output";
+import { Term } from "gql/codegen-output";
 import { useState, useRef, useEffect, useCallback } from "react";
 
 export function useReviewCard(direction: Direction, term: Term, setBackWasShown) {

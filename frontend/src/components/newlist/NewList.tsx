@@ -1,9 +1,9 @@
 import React, { useState, useEffect, memo, useCallback, useRef } from 'react';
 import { useRouteProps } from 'hooks/routerHooks';
 import NewListTerm from './NewListTerm';
-import { NewListTermInput } from 'graphql/codegen-output';
+import { NewListTermInput } from 'gql/codegen-output';
 import './style/NewList.scss';
-import { useMutateCreateList } from 'graphql/hooks/list.query';
+import { useMutateCreateList } from 'gql/hooks/list.query';
 import { BiArrowToRight } from 'react-icons/bi';
 
 export type FormOutput = {
