@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import ListsItem from './ListsItem';
 import { useRouteProps } from 'hooks/routerHooks'
-import { UseListsReturn } from './lists.types';
+import { UseListsReturn } from '../../types/lists.types';
 import { gql, request } from 'graphql-request';
 import { useQuery } from "react-query";
 import { List } from "gql/codegen-output";

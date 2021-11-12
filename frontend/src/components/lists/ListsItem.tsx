@@ -1,7 +1,7 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { Link } from 'react-router-dom';
 import { useRouteProps } from "hooks/routerHooks";
-import './style/ListsItem.scss';
+import './ListsItem.scss';
 import { BiArrowToRight } from "react-icons/bi";
 import { colorByLastReviewDate, getLastReviewDate } from './lists.helpers'
 import { timeSince } from "helpers/time";

@@ -1,15 +1,15 @@
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { useSetRecoilState, useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { useRouteProps } from 'hooks/routerHooks';
 import { numTermsToReviewState } from 'state/selectors/reviewSelectors';
 import { selectingTermsToReviewState, listState } from 'state/atoms/listAtoms';
-import ListTerm from '../components/list/ListTerm';
 import { termsToReviewState } from "state/atoms/reviewAtoms";
 import { suggestTermsForReview } from "helpers/srs/saturation";
-import { FilterInterface, TruncatedTerm } from '../components/list/list.types';
+import { FilterInterface, TruncatedTerm } from '../types/list.types';
 import { useMutateDeleteList, useMutateUpdateList, useQueryListsById } from "gql/hooks/list.query";
 import { List } from "gql/codegen-output";
 import { DeleteTermsVariables, useMutateDeleteTerms } from "gql/hooks/term.query";
+import ListTerm from "components/list/ListTerms/ListTerm";
 
 function useList() {
     const [list, setList] = useState<List | null>(null);
@@ -22,12 +22,12 @@ function useList() {
     const resetListAtom = useResetRecoilState(listState);
     const setTermsToReview = useSetRecoilState(termsToReviewState);
     const resetTermsToReview = useResetRecoilState(termsToReviewState);
-    const { data: listUpdateResponse, mutate: mutateUpdateList } = useMutateUpdateList();
+    const { mutate: mutateUpdateList } = useMutateUpdateList();
     const suggestedTermsForReview = useMemo(() => list && suggestTermsForReview(list.terms), [list]);
 
-    const { data: lists, refetch: refetchLists, isLoading, isFetching } = useQueryListsById([params.id]);
+    const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
     const { mutate: mutateDeleteList, data: listDeleteResponse } = useMutateDeleteList(params.id);
-    const { mutate: mutateDeleteTerms, data } = useMutateDeleteTerms();
+    const { mutate: mutateDeleteTerms } = useMutateDeleteTerms();
 
     function filterTermsBySaturation(terms: TruncatedTerm[]) {
         if (terms.length > 0) {

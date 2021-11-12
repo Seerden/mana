@@ -1,0 +1,32 @@
+.Footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+
+    background-color: #111;
+
+    border-top: 2px solid #222;
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    padding: 0.5rem;
+}
+
+.Footer__item {
+    background-color: #444;
+    border-radius: 30%;
+    padding: 0.2rem;
+    height: max-content;
+    display: flex;
+    align-items: center;
+}
+
+.Footer__item a {
+    display: inline-flex;
+}
+
+.Footer__item img {
+    display: inline-flex;
+    align-self: center;
+}

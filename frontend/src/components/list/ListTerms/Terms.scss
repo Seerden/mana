@@ -1,0 +1,43 @@
+@use '../../_style/shared';
+
+.Terms {
+    @extend %shared-temp-section;
+
+    &__header {
+        @extend %shared-subsection-header;
+    }
+
+    &__filterinfo {
+        border-top: 2px solid #444;
+        padding-top: 0.5rem;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.35rem;
+
+        &--filterstring {
+            width: 10rem;
+            text-align: center;
+            background-color: #333;
+            color: azure;
+            padding: 0.5rem 0.8rem;
+            border-radius: 3px;
+            border: 2px solid #111;
+            font-size: 0.9rem;
+        }
+    }
+
+    &__display {
+        &--filtered {
+            color: black;
+            padding: 0.3rem 1rem;
+            border-radius: 5px;
+            box-shadow: 0 0 1rem black;
+            margin: 0 auto;
+            width: max-content;
+            margin-top: 1rem;
+            background-color: #ccc;
+        }
+    }
+}

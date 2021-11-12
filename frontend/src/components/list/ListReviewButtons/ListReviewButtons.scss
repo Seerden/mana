@@ -1,0 +1,17 @@
+@use '../../_style/shared';
+
+.ListReviewButtons {
+    @extend %shared-temp-section;
+
+    &__header {
+        @extend %shared-subsection-header;
+    }
+
+    &__link {
+        @extend %shared-link;
+
+        &:not(:nth-of-type(1)) {
+            margin-left: 0.5rem;
+        }
+    }
+}
