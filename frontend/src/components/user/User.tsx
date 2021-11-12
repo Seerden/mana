@@ -1,6 +1,6 @@
 import { useRouteProps } from "../../hooks/routerHooks";
 import UserSessions from "components/sessions/UserSessions";
-import "./style/User.scss";
+import "./User.scss";
 
 const User = () => {
 	const { params } = useRouteProps();
