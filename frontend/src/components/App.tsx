@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './_style/App.scss';
 
-import PrivateRoute from '../wrappers/PrivateRoute';
+import Private from '../wrappers/Private';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 import ReviewPage from 'components/review/ReviewPage';
@@ -46,24 +46,23 @@ const App = () => {
                                     {/* user routes */}
                                     <Route path="u/:username">
                                         <Route index element={
-                                            <PrivateRoute>
+                                            <Private>
                                                 <User />
-                                            </PrivateRoute>
+                                            </Private>
                                         } />
-                                        {/* <PrivateRoute path="/" component={User} /> */}
 
                                         {/* Routes related to multiple lists */}
                                         <Route path="lists">
                                             <Route index element={
-                                                <PrivateRoute>
+                                                <Private>
                                                     <Lists />
-                                                </PrivateRoute>
+                                                </Private>
                                             } />
 
                                             <Route path="new" element={
-                                                <PrivateRoute>
+                                                <Private>
                                                     <NewList />
-                                                </PrivateRoute>
+                                                </Private>
                                             } />
                                         </Route>
 
@@ -71,15 +70,15 @@ const App = () => {
                                         <Route path="list">
                                             <Route path=":id">
                                                 <Route index element={
-                                                    <PrivateRoute>
+                                                    <Private>
                                                         <List />
-                                                    </PrivateRoute>
+                                                    </Private>
 
                                                 } />
                                                 <Route path="review" element={
-                                                    <PrivateRoute>
+                                                    <Private>
                                                         <ReviewPage />
-                                                    </PrivateRoute>
+                                                    </Private>
                                                 } />
                                             </Route>
                                         </Route>
