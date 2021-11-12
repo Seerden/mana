@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useRouteProps } from "hooks/routerHooks";
 import './ListsItem.scss';
 import { BiArrowToRight } from "react-icons/bi";
-import { colorByLastReviewDate, getLastReviewDate } from './lists.helpers'
+import { colorByLastReviewDate, getLastReviewDate } from '../../helpers/lists.helpers'
 import { timeSince } from "helpers/time";
 import { List } from "gql/codegen-output";
 
