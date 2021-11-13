@@ -13,8 +13,7 @@ type SettingsButtonProps = {
 };
 
 const PreReview = (props) => {
-	const [reviewSettings, setReviewSettings] =
-		useRecoilState(reviewSettingsState);
+	const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
 	const setReviewStage = useSetRecoilState(reviewStageState);
 
 	const buttons = useMemo(() => {
@@ -67,8 +66,7 @@ const PreReview = (props) => {
 								Number of cycles:
 							</label>
 							<p className="PreReview__settings--tip">
-								This is the number of times you need to get each term right to
-								complete the session.
+								This is the number of times you need to get each term right to complete the session.
 							</p>
 							<div className="PreReview__settings--cycles">{buttons}</div>
 						</li>
@@ -78,15 +76,10 @@ const PreReview = (props) => {
 								Direction:
 							</label>
 							<div className="PreReview__settings--tip">
-								<div>
-									'Forwards' means you're shown the front, and need to recall
-									the back of the card.
-								</div>
+								<div>'Forwards' means you're shown the front, and need to recall the back of the card.</div>
 								<div>'Backwards' is the other way around.</div>
 							</div>
-							<div className="PreReview__settings--directionbuttons">
-								{directionButtons}
-							</div>
+							<div className="PreReview__settings--directionbuttons">{directionButtons}</div>
 						</li>
 					</ul>
 
@@ -105,13 +98,7 @@ const PreReview = (props) => {
 export default PreReview;
 
 const SettingsButton = memo(
-	({
-		handleSettingsChange,
-		direction,
-		n,
-		value,
-		current,
-	}: SettingsButtonProps) => {
+	({ handleSettingsChange, direction, n, value, current }: SettingsButtonProps) => {
 		let selected;
 		if (n) {
 			selected = String(n) === String(value);
@@ -126,9 +113,7 @@ const SettingsButton = memo(
 					padding: "0.1rem 0.5rem",
 				}}
 				onClick={handleSettingsChange}
-				className={
-					n ? `PreReview__settings--n` : "PreReview__settings--direction"
-				}
+				className={n ? `PreReview__settings--n` : "PreReview__settings--direction"}
 				name={n ? "n" : "direction"}
 				type="button"
 				value={value}

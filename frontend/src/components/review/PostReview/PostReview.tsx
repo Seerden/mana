@@ -1,31 +1,18 @@
-import { useEffect } from "react";
-import dayjs from "dayjs";
-import { useResetRecoilState, useRecoilValue } from "recoil";
-import { Link } from "react-router-dom";
-import { useRouteProps } from "../../../hooks/routerHooks";
-import {
-	timePerCardState,
-	reviewSettingsState,
-	termsToReviewState,
-} from "state/atoms/reviewAtoms";
 import { convertDateListToDeltaTime } from "helpers/reviewHelpers";
+import { usePostReview } from "./usePostReview";
+import { Link } from "react-router-dom";
 
 const PostReview = () => {
-	const { navigate, params } = useRouteProps();
-	const formatDate = (date: Date) => dayjs(date).format("HH:mm:ss");
-	const { sessionStart, sessionEnd } = useRecoilValue(reviewSettingsState);
-	const resetTermsToReview = useResetRecoilState(termsToReviewState);
-	const timePerCard = useRecoilValue(timePerCardState);
-	const resetTimePerCard = useResetRecoilState(timePerCardState);
-	const reviewSettings = useRecoilValue(reviewSettingsState);
-
-	useEffect(() => {
-		return () => {
-			resetTermsToReview();
-			resetTimePerCard();
-		};
-	}, []);
-
+	const {
+		navigate,
+		params,
+		formatDate,
+		sessionStart,
+		sessionEnd,
+		timePerCard,
+		reviewSettings,
+	} = usePostReview();
+    
 	return (
 		<div className="Review__post">
 			<h2>Session completed.</h2>

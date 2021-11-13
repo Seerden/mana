@@ -21,10 +21,7 @@ const Review = memo((props) => {
 			<div className="PageHeader Review__title">
 				<div>Reviewing.</div>
 				<div>
-					<Link
-						className="Button"
-						to={`/u/${params.username}/list/${params.id}`}
-					>
+					<Link className="Button" to={`/u/${params.username}/list/${params.id}`}>
 						Back to list
 					</Link>
 				</div>
@@ -59,8 +56,7 @@ const Review = memo((props) => {
 						</>
 					) : (
 						<div className="Review__prevent">
-							Cannot move on to the next term until you've seen the back of the
-							card.
+							Cannot move on to the next term until you've seen the back of the card.
 						</div>
 					)}
 

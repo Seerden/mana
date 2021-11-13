@@ -32,11 +32,14 @@ import ReviewCard from "components/review/ReviewCard/ReviewCard";
 export function useReview() {
 	const { params, location } = useRouteProps();
 	const [backWasShown, setBackWasShown] = useState(false);
-	const [reviewSettings, setReviewSettings] =
-		useRecoilState(reviewSettingsState);
+	const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
 	const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
 	const setReviewStage = useSetRecoilState(reviewStageState);
 	const setPassfail = useSetRecoilState(passfailState);
+
+    useEffect(() => {
+        console.log(termsToReview);
+    }, [termsToReview])
 
 	const initializeFutureTerms = useCallback(() => {
 		return makeReviewList(termsToReview, reviewSettings.n);
@@ -63,14 +66,12 @@ export function useReview() {
 	const setTimePerCard = useSetRecoilState(timePerCardState);
 	const resetTermsToReview = useResetRecoilState(termsToReviewState);
 	const newReviewSession = useReviewSession();
-	const [termUpdateArray, setTermUpdateArray] =
-		useRecoilState(termUpdateArrayState);
+	const [termUpdateArray, setTermUpdateArray] = useRecoilState(termUpdateArrayState);
 	const { mutate: mutateCreateReviewSession, data: mutateResponse } =
 		useCreateReviewSessionMutation();
 	const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
 	const isFullListReview =
-		qs.parse(location.search).kind === "full" &&
-		location.pathname.includes("list");
+		qs.parse(location.search).kind === "full" && location.pathname.includes("list");
 
 	useEffect(() => {
 		location.pathname.includes("list") && refetchLists();

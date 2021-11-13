@@ -14,7 +14,7 @@ type PassFailArray = Array<'pass' | 'fail'>;
 
 type TimePerCard = Array<any> | Array<Date>;
 
-type ReviewStage = 'before' | 'started' | 'after' | 'completed'
+type ReviewStage = 'before' | 'started' | 'after'
 
 
 export const reviewSettingsState = atom<ReviewSettings>({

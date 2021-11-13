@@ -1,42 +1,41 @@
 import React, { useEffect, useMemo } from "react";
-import { useRecoilState, useResetRecoilState } from 'recoil';
-import { reviewStageState, reviewSettingsState } from 'state/atoms/reviewAtoms';
-import Review from '../Review';
-import PostReview from '../PostReview/PostReview';
+import { useRecoilValue, useResetRecoilState } from "recoil";
+import { reviewStageState, reviewSettingsState } from "state/atoms/reviewAtoms";
+import Review from "../Review";
+import PostReview from "../PostReview/PostReview";
 import PreReview from "../PreReview/PreReview";
 
-function ReviewPage () {
-    const [reviewStage, setReviewStage] = useRecoilState(reviewStageState);
-    const resetReviewStage = useResetRecoilState(reviewStageState);
-    const resetReviewSettings = useResetRecoilState(reviewSettingsState);
+const mapReviewStageToComponent = {
+	before: PreReview,
+	started: Review,
+	after: PostReview,
+};
 
-    const ReviewStageToRender = useMemo(() => {
-        switch (reviewStage) {
-            case 'before':
-                return PreReview
-            case 'started':
-                return Review
-            case 'after':
-                return PostReview
-            default:
-                return PreReview;
-        }
-    }, [reviewStage]) as React.ElementType;
+/**
+ * ReviewPage controls which component is rendered depending on the current review stage
+ * - `PreReview` lets user choose the settings for the review
+ * - In `Review`, the user actually does their vocabulary testing
+ * - In `PostReview`, the user is shown some statistics about the review they just performed,
+ *      and also some buttons to be redirected to wherever else they may wish to go
+ */
+function ReviewPage() {
+	const reviewStage = useRecoilValue(reviewStageState);
+	const resetReviewStage = useResetRecoilState(reviewStageState);
+	const resetReviewSettings = useResetRecoilState(reviewSettingsState);
 
-    useEffect(() => {
-        resetReviewStage();
+	const ReviewStageToRender = useMemo(() => {
+        return mapReviewStageToComponent[reviewStage] as React.ElementType;
+	}, [reviewStage]);
 
-        return () => {
-            setReviewStage('completed');
-            resetReviewSettings();
-        }
-    }, []);
+	useEffect(() => {
+		resetReviewStage();
+		return () => {
+			resetReviewStage();
+			resetReviewSettings();
+		};
+	}, []);
 
-    return (
-        <ReviewStageToRender/>
-    )
+	return <ReviewStageToRender />;
 }
 
-export default ReviewPage
-
-// @todo: implement conditional render based on termsToReview length
+export default ReviewPage;
