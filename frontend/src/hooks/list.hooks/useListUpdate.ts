@@ -11,7 +11,9 @@ export function useListUpdate(list, setList) {
     const { params, navigate } = useRouteProps();
     const { mutate: mutateUpdateList } = useMutateUpdateList();
     const { mutate: mutateDeleteTerms } = useMutateDeleteTerms();
-    const { mutate: mutateDeleteList, data: listDeleteResponse } = useMutateDeleteList(params.id);
+    const { mutate: mutateDeleteList, data: listDeleteResponse } = useMutateDeleteList(
+        params.id
+    );
 
     useEffect(() => {
         if (listDeleteResponse?.success) {
@@ -23,7 +25,7 @@ export function useListUpdate(list, setList) {
         (e) => {
             e.persist();
 
-            if (list && list.terms.length > 0) {
+            if (list?.terms?.length > 0) {
                 if (!e.currentTarget.innerText) {
                     e.currentTarget.innerText = list.name;
                 }
@@ -33,7 +35,7 @@ export function useListUpdate(list, setList) {
                     e.currentTarget.innerText !== list.name
                 ) {
                     let updatedList: List = { ...list, name: e.currentTarget.innerText };
-                    if (updatedList.terms && updatedList.terms.length > 0) {
+                    if (updatedList.terms?.length > 0) {
                         setList(updatedList);
 
                         mutateUpdateList({

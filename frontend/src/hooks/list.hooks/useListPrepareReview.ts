@@ -39,7 +39,7 @@ export function useListPrepareReview({
             type: "all" | "visible" | "none" | "overdue";
             direction: Direction;
         }) => {
-            if (list && list.terms) {
+            if (list?.terms) {
                 switch (type) {
                     case "all":
                         // @ts-ignore

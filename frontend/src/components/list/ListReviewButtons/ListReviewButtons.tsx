@@ -16,13 +16,6 @@ const ListReviewButtons = (props) => {
             >
                 Review all terms
             </Link>
-
-            <Link 
-                className={`${base}__link`}
-                to={`review?kind=selective`}
-            >
-                Select terms and review
-            </Link>
         </div>
     )
 }

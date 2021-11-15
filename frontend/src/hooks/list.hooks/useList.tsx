@@ -26,7 +26,6 @@ function useList() {
         list,
         setList
     );
-
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const setListAtom = useSetRecoilState(listState);
     const resetListAtom = useResetRecoilState(listState);

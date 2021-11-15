@@ -6,12 +6,10 @@ import { useRecoilValue } from "recoil";
 import { numTermsToReviewState } from "state/selectors/reviewSelectors";
 import { FilterInterface, TruncatedTerm } from "types/list.types";
 
-
-
 export function useListFilter() {
     const numTermsToReview = useRecoilValue(numTermsToReviewState);
     const { params } = useRouteProps();
-    const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
+    const { data: lists } = useQueryListsById([params.id]);
     const [filter, setFilter] = useState<FilterInterface>({
         saturation: { level: undefined, direction: "any" },
     });

@@ -169,8 +169,8 @@ export function saturateSeededTerm(
  * @param terms array of terms
  * @returns     object containing 'forwards' and 'backwards' array of term indices.
  */
-export function suggestTermsForReview(terms) {
-	let now = Date.now();
+export function suggestTermsForReview(terms: Term[]) {
+	let now = Date.now().valueOf();
 
 	return terms.reduce(
 		(acc, curTerm, index) => {
