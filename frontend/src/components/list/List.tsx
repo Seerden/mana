@@ -10,19 +10,17 @@ const List = memo((props) => {
 		useList();
 
 	return (
-		<>
-			<div className="PageWrapper">
-				<div className="List">
-					{list && (
-						<>
-							<ListTitleBar {...{ handleListTitleBlur, list, handleDelete }} />
-							<ListReviewButtons />
-							<ListTerms {...{ filter, setFilter, termsToDisplay, list }} />
-						</>
-					)}
-				</div>
+		<div className="PageWrapper">
+			<div className="List">
+				{list && (
+					<>
+						<ListTitleBar {...{ handleListTitleBlur, list, handleDelete }} />
+						<ListReviewButtons />
+						<ListTerms {...{ filter, setFilter, termsToDisplay, list }} />
+					</>
+				)}
 			</div>
-		</>
+		</div>
 	);
 });
 

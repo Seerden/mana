@@ -7,7 +7,7 @@ const ListDeleteButton = ({ handleDelete }) => {
         <span className="ListDeleteButton">
             {!confirming ?
                 <input
-                    onClick={() => toggleConfirming()}
+                    onClick={toggleConfirming}
                     type="button"
                     value="Delete list"
                 /> :

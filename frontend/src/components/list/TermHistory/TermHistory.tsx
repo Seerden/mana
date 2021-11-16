@@ -1,59 +1,11 @@
-import { useState, memo, Fragment } from "react";
-import dayjs from "dayjs";
-import { v4 as uuidv4 } from "uuid";
-import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
+import { useState, memo } from "react";
 import "./TermHistory.scss";
-import PassfailIcon from "components/_shared/PassfailIcon";
-import { timeSince } from "helpers/time";
+import { makeHistoryElement } from "./makeHistoryElement";
 
 const TermHistory = memo(({ history }: { history: any[] }) => {
 	const [expand, setExpand] = useState(false);
 
-	const histEl = makeHistoryElement(history);
-
-	function makeHistoryElement(history) {
-		return history.map((el) => (
-			<Fragment key={uuidv4()}>
-				<div className="TermHistory__session">
-					<div className="TermHistory__session--block">
-						<span className="TermHistory__direction">
-							{el.direction === "forwards" ? (
-								<BiArrowToRight
-									title="Reviewed front to back"
-									fill="deepskyblue"
-									size={18}
-								/>
-							) : (
-								<BiArrowToLeft
-									title="Reviewed back to front"
-									fill="limegreen"
-									size={18}
-								/>
-							)}
-						</span>
-
-						<span
-							title={dayjs(el.date).format("MMMM DD, YYYY (HH:mm)")}
-							className="TermHistory__date"
-						>
-							{timeSince(el.date)}
-						</span>
-					</div>
-
-					<div className="TermHistory__session--block">
-						<div key={uuidv4()} className="TermHistory__history">
-							{el.content.map((passfail, index) => (
-								<PassfailIcon
-									key={`passfailicon-${index}`}
-									{...{ passfail, index }}
-								/>
-							))}
-						</div>
-					</div>
-				</div>
-			</Fragment>
-		));
-	}
+	const histEl = makeHistoryElement(history).reverse();
 
 	return (
 		<>
@@ -64,17 +16,12 @@ const TermHistory = memo(({ history }: { history: any[] }) => {
 						{histEl.length === 1 ? "" : "s"}
 					</div>
 					{histEl.length > 1 && (
-						<button
-							className="TermHistory__expand"
-							onClick={() => setExpand(!expand)}
-						>
+						<button className="TermHistory__expand" onClick={() => setExpand(!expand)}>
 							{!expand ? "Showing one" : "Showing all"}
 						</button>
 					)}
 				</div>
-				<div className="TermHistory__content">
-					{expand ? histEl.reverse() : histEl.reverse()[0]}
-				</div>
+				<div className="TermHistory__content">{expand ? histEl : histEl[0]}</div>
 			</div>
 		</>
 	);
