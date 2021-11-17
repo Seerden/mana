@@ -84,6 +84,7 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
 		}
 	}
 	return {
+        open,
         setOpen,
         selectingTerms,
         selected,

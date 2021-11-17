@@ -10,6 +10,7 @@ const ListTerm = memo(
 	({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {
 		const [term, setTerm] = useState<typeof termFromProps>(() => termFromProps);
 		const {
+            open,
 			setOpen,
 			selectingTerms,
 			selected,
