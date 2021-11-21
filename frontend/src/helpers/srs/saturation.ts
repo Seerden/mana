@@ -13,7 +13,7 @@ import {
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
-let day = 1000 * 3600 * 24;
+const day = 1000 * 3600 * 24;
 export const saturationLevels = [
 	{
 		level: 0,
@@ -170,12 +170,12 @@ export function saturateSeededTerm(
  * @returns     object containing 'forwards' and 'backwards' array of term indices.
  */
 export function suggestTermsForReview(terms: Term[]) {
-	let now = Date.now().valueOf();
+	const now = Date.now().valueOf();
 
 	return terms.reduce(
-		(acc, curTerm, index) => {
+		(acc, curTerm) => {
 			for (const direction of ["forwards", "backwards"]) {
-				let sat = curTerm.saturation[direction];
+				const sat = curTerm.saturation[direction];
 				const lastReviewed = getLastReviewDateFromTerm(curTerm);
 				if ([0, 1, 2, 3, 4].includes(sat)) {
 					if (
@@ -208,10 +208,9 @@ export function filterTermHistoryEntriesByDirection(
  * @param {*} term
  */
 export function getLastReviewDateFromTerm(term: Term) {
-	let history = term.history;
-
-	let forwards = filterTermHistoryEntriesByDirection(history, "forwards");
-	let backwards = filterTermHistoryEntriesByDirection(history, "backwards");
+	const history = term.history;
+	const forwards = filterTermHistoryEntriesByDirection(history, "forwards");
+	const backwards = filterTermHistoryEntriesByDirection(history, "backwards");
 
 	return {
 		forwards: forwards?.reverse()[0]?.date || null,
@@ -220,9 +219,9 @@ export function getLastReviewDateFromTerm(term: Term) {
 }
 
 /**
- * Assign new saturation levels to each term based on 
+ * Assign new saturation levels to each term based on
  * the user's performance in the review session that just occurred.
- * Each parameter is actually a piece of state, 
+ * Each parameter is actually a piece of state,
  * so this function should be used in conjunction with useCallback
  */
 export function makeNewSaturationLevels(
@@ -242,7 +241,10 @@ export function makeNewSaturationLevels(
 		};
 		const saturation = {
 			...termCopy.saturation,
-			[reviewSettings.direction]: saturate(termCopy, reviewSettings.direction as Direction),
+			[reviewSettings.direction]: saturate(
+				termCopy,
+				reviewSettings.direction as Direction
+			),
 		};
 		return {
 			termId: termCopy._id,

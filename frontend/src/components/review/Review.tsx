@@ -34,24 +34,20 @@ const Review = memo(() => {
 					{backWasShown ? (
 						<>
 							<div className="Review__buttons">
-								<input
-									onClick={(e) => {
-										if (backWasShown) handlePassFailClick(e, "fail");
-									}}
-									disabled={!backWasShown}
-									className="Review__button Review__button--fail"
-									type="button"
-									value="Fail"
-								/>
-								<input
-									onClick={(e) => {
-										if (backWasShown) handlePassFailClick(e, "pass");
-									}}
-									disabled={!backWasShown}
-									className="Review__button Review__button--pass"
-									type="button"
-									value="Pass"
-								/>
+								{["fail", "pass"].map((str: PassFail) => {
+									return (
+										<input
+											key={str}
+											onClick={(e) => {
+												if (backWasShown) handlePassFailClick(e, str);
+											}}
+											disabled={!backWasShown}
+											className={`Review__button Review__button--${str}`}
+											type="button"
+											value={str[0].toUpperCase() + str.slice(1)}
+										/>
+									);
+								})}
 							</div>
 						</>
 					) : (
@@ -61,10 +57,7 @@ const Review = memo(() => {
 					)}
 
 					<div className="Review__progress--wrapper">
-						<div
-							className="Review__progress--bar"
-							style={{ width: `${progress}%` }}
-						/>
+						<div className="Review__progress--bar" style={{ width: `${progress}%` }} />
 					</div>
 
 					<ReviewInfo {...{ completedCount, progress }} />

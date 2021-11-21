@@ -1,46 +1,32 @@
-import { useMemo, useEffect, useReducer, useCallback, useState } from "react";
-import {
-	useRecoilValue,
-	useRecoilState,
-	useResetRecoilState,
-	useSetRecoilState,
-} from "recoil";
+import { useMemo, useEffect, useReducer, useCallback } from "react";
 import { makeReviewList } from "helpers/reviewHelpers";
-import qs from "query-string";
-import {
-	timePerCardState,
-	passfailState,
-	reviewSettingsState,
-	termsToReviewState,
-	termUpdateArrayState,
-	reviewStageState,
-} from "state/atoms/reviewAtoms";
-import { numTermsToReviewState } from "state/selectors/reviewSelectors";
-import { useRouteProps } from "../routerHooks";
-import useReviewSession from "./useReviewSession";
 import { makeNewSaturationLevels } from "helpers/srs/saturation";
-import { Term, TermUpdateObject } from "gql/codegen-output";
+import { TermUpdateObject } from "gql/codegen-output";
 import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession.query";
-import { useQueryListsById } from "gql/hooks/list.query";
 import {
 	TermUpdateDate,
 	TermUpdatePassfail,
 	TermUpdateSaturation,
 } from "../../types/useReview.types";
-import ReviewCard from "components/review/ReviewCard/ReviewCard";
+import { useInitializeReview } from "./useInitializeReview";
+import { useMakeReviewCard } from "./useMakeReviewCard";
+import { useReviewState } from "./useReviewState";
 
 export function useReview() {
-	const { params, location } = useRouteProps();
-	const [backWasShown, setBackWasShown] = useState(false);
-	const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
-	const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
-	const setReviewStage = useSetRecoilState(reviewStageState);
-	const setPassfail = useSetRecoilState(passfailState);
-
-	useEffect(() => {
-		console.log(termsToReview);
-	}, [termsToReview]);
-
+	useInitializeReview();
+	const { makeReviewCard, backWasShown, setBackWasShown } = useMakeReviewCard();
+    const {
+        reviewSettings,
+		setReviewSettings,
+		termsToReview,
+		setReviewStage,
+		setPassfail,
+        setTimePerCard,
+        termUpdateArray,
+        setTermUpdateArray,
+        newReviewSession
+    } = useReviewState();
+	
 	const initializeFutureTerms = useCallback(() => {
 		return makeReviewList(termsToReview, reviewSettings.n);
 	}, [reviewSettings.n, termsToReview]);
@@ -49,35 +35,8 @@ export function useReview() {
 		initializeFutureTerms()
 	);
 
-	const makeReviewCard = useCallback(
-		(term: Term) => {
-			return (
-				<ReviewCard
-					direction={reviewSettings.direction}
-					term={term}
-					setBackWasShown={setBackWasShown}
-				/>
-			);
-		},
-		[reviewSettings.direction]
-	);
-
-	const numTermsToReview = useRecoilValue(numTermsToReviewState);
-	const setTimePerCard = useSetRecoilState(timePerCardState);
-	const resetTermsToReview = useResetRecoilState(termsToReviewState);
-	const newReviewSession = useReviewSession();
-	const [termUpdateArray, setTermUpdateArray] = useRecoilState(termUpdateArrayState);
 	const { mutate: mutateCreateReviewSession, data: mutateResponse } =
 		useCreateReviewSessionMutation();
-	const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
-	const isFullListReview =
-		qs.parse(location.search).kind === "full" && location.pathname.includes("list");
-
-	useEffect(() => {
-		location.pathname.includes("list") && refetchLists();
-
-		return () => resetTermsToReview();
-	}, []);
 
 	useEffect(() => {
 		if (reviewSettings.sessionEnd) {
@@ -90,17 +49,11 @@ export function useReview() {
 	}, [mutateResponse, reviewSettings.sessionEnd]);
 
 	useEffect(() => {
-		lists && isFullListReview && setTermsToReview(lists[0].terms);
-	}, [lists]);
-
-	useEffect(() => {
 		termsToReview && reduceFutureTerms({ type: "init" });
 	}, [termsToReview]);
 
 	useEffect(() => {
-		// whenever backWasShown changes, remake LeftArrow/RightArrow keydown handler
 		window.addEventListener("keydown", handleLeftRightArrowKeyDown);
-
 		return () => {
 			window.removeEventListener("keydown", handleLeftRightArrowKeyDown);
 		};
@@ -121,7 +74,12 @@ export function useReview() {
 				sessionEnd: new Date(),
 			}));
 		}
-	}, [futureTerms]);
+        /* 
+            deps array doesn't take reviewSettings, even though that piece of state _is_ used in makeNewSaturationLevels,
+            this is a code smell. Simple naive fix would be to turn makeNewSaturationLevels into a callback that has reviewSettings
+            as one of its dependencies, instead of passing reviewSettings as an argument
+        */
+	}, [futureTerms, termsToReview]);
 
 	/** case pass/fail:  Handle what happens to current term after pass/fail is chosen. */
 	function termReducer(terms, { type }: { type: PassFail | "init" }) {
@@ -152,8 +110,23 @@ export function useReview() {
 	function reduceTermUpdateArray(
 		action: TermUpdatePassfail | TermUpdateSaturation | TermUpdateDate
 	) {
-		// @note: an actual reducer would have 'state' as first parameter here.
 		switch (action.type) {
+
+            /*
+                Takes termUpdateArray and maps the entire thing. 
+                For each term in termUpdateArray:
+                    - check if term._id === currentTerm._id
+                        - if false: return term as is
+                        - else:
+                            - make a copy of term,
+                            - update copy.history.content
+                            - return the copy
+                
+                Very sloppy implementation, performance-wise and readability-wise. We're recreating the entire array every time 
+                this function is called. Instead, we should just keep an array of { termId, passFail } throughout the review,
+                and derive the final termUpdateObject from this array only once, when the entire review has been completed
+
+            */
 			case "passfail": {
 				const { passfail, currentTerm } = action;
 				setTermUpdateArray((cur) =>
@@ -171,22 +144,27 @@ export function useReview() {
 					})
 				);
 				break;
-            }
+			}
+
+            /*
+                @todo: Unlike case "passfail", we only end up calling this case once per review, so performance is fine.
+                However, this should really be extracted to a function that's more apparent in what it actually does
+            */
 			case "saturation": {
 				const { newSaturationLevels } = action;
 				setTermUpdateArray((cur) =>
-					cur.map((termToUpdate, index) => {
+					cur.map((term, index) => {
 						return {
-							...termToUpdate,
+							...term,
 							saturation:
-								newSaturationLevels[index].termId === termToUpdate._id
+								newSaturationLevels[index].termId === term._id
 									? newSaturationLevels[index].saturation
-									: termToUpdate.saturation,
+									: term.saturation,
 						};
 					})
 				);
 				break;
-            }
+			}
 			case "date":
 				setTermUpdateArray((cur) =>
 					cur.map(
@@ -204,20 +182,19 @@ export function useReview() {
 		}
 	}
 
-	const { completedCount, progress } = useMemo(() => {
-		let completedCount = 0;
-		let progress = 0;
+	// total number of flashcards in the entire review session
+	const sessionLength = useMemo(() => {
+		return termsToReview.length * reviewSettings.n;
+	}, [termsToReview, reviewSettings.n]);
 
-		if (futureTerms) {
-			const sessionLength = numTermsToReview * reviewSettings.n;
-			const termsCompleted = sessionLength - futureTerms.length;
-
-			progress = Math.floor((100 * termsCompleted) / sessionLength);
-			completedCount = sessionLength - futureTerms.length;
-		}
-
-		return { completedCount, progress };
-	}, [futureTerms, numTermsToReview, reviewSettings.n]);
+	// number of seen flashcards, and session progress as a percentage
+	const [completedCount, progress] = useMemo(() => {
+		if (!futureTerms) return [0, 0];
+		const termsCompleted = sessionLength - futureTerms.length;
+		const progress = Math.floor((100 * termsCompleted) / sessionLength);
+		const completedCount = sessionLength - futureTerms.length;
+		return [completedCount, progress];
+	}, [futureTerms, sessionLength]);
 
 	/** Handle clicking the pass or fail button */
 	const handlePassFailClick = useCallback(
@@ -235,24 +212,24 @@ export function useReview() {
 		[futureTerms, backWasShown]
 	);
 
-	/** ArrowLeft/ArrowRight keydown event to simulate pressing the Pass/Fail buttons */
-	function handleLeftRightArrowKeyDown(e: KeyboardEvent) {
-		let passfail: PassFail;
-
-		if (["ArrowLeft", "ArrowRight"].includes(e.code)) {
-			switch (e.code) {
-				case "ArrowLeft":
-					passfail = "fail";
-					break;
-				case "ArrowRight":
-					passfail = "pass";
-					break;
-				default:
-					return;
-			}
-		} else return;
-
-		backWasShown && passfail && handlePassFailClick(null, passfail);
+	/**
+	 * To move to the next flashcard, the user can either
+	 *  - press one of the "PASS"/"FAIL" buttons,
+	 *  - press the left or right arrow key on their keyboard.
+	 * This function creates a keydown handler that executes handlePassFailClick
+	 * if the user just pressed either the left or right arrow keys
+	 */
+	function handleLeftRightArrowKeyDown(e: KeyboardEvent): void {
+		if (!backWasShown) return;
+		const { code } = e;
+		const mapKeyCodeToPassFail = {
+			ArrowLeft: "fail",
+			ArrowRight: "pass",
+		};
+		const passfail = mapKeyCodeToPassFail[code];
+		if (passfail) {
+			handlePassFailClick(null, passfail);
+		}
 	}
 
 	return {

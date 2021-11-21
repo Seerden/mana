@@ -1,5 +1,5 @@
 import { List } from "gql/codegen-output";
-import { useMutateDeleteList, useMutateUpdateList } from "gql/hooks/list.query";
+import { useMutateDeleteList, useMutateUpdateList } from "gql/hooks/list.mutation";
 import { DeleteTermsVariables, useMutateDeleteTerms } from "gql/hooks/term.query";
 import { useRouteProps } from "hooks/routerHooks";
 import { useCallback, useEffect } from "react";
@@ -34,7 +34,7 @@ export function useListUpdate(list, setList) {
                     e.currentTarget.innerText &&
                     e.currentTarget.innerText !== list.name
                 ) {
-                    let updatedList: List = { ...list, name: e.currentTarget.innerText };
+                    const updatedList: List = { ...list, name: e.currentTarget.innerText };
                     if (updatedList.terms?.length > 0) {
                         setList(updatedList);
 

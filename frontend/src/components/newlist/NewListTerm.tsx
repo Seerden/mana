@@ -7,9 +7,7 @@ type NewListTermProps = {
 	formOutput: FormOutput;
 	setFormOutput: React.Dispatch<React.SetStateAction<FormOutput>>;
 	focussedInput?: FocusIndex;
-	setFocussedInput: React.Dispatch<
-		React.SetStateAction<FocusIndex | undefined>
-	>;
+	setFocussedInput: React.Dispatch<React.SetStateAction<FocusIndex | undefined>>;
 	autoFocus: boolean;
 };
 
@@ -22,10 +20,7 @@ const NewListTerm = memo(
 		focussedInput,
 		autoFocus,
 	}: NewListTermProps) => {
-		function handleTermBlur(
-			e: React.FocusEvent<HTMLInputElement>,
-			idx: number
-		) {
+		function handleTermBlur(e: React.FocusEvent<HTMLInputElement>, idx: number) {
 			setFocussedInput((cur) => ({ ...cur, index: -1 }));
 
 			const copy = { ...formOutput };
