@@ -1,3 +1,5 @@
+declare module '*.scss';
+
 type Direction = 'forwards' | 'backwards';
 
 type NewUser = {

@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { NewListFromClientInput } from "gql/codegen-output";
 import { useMutateCreateList } from "gql/hooks/list.mutation";
+import { filterFalsy } from "helpers/filterFalsyValues";
 import { useRouteProps } from "hooks/routerHooks";
 import { useState, useEffect, useCallback } from "react";
 import { FormOutput, FocusIndex } from "types/newList.types";
@@ -21,7 +23,7 @@ export function useNewList() {
 	}, [formOutput, numTerms, focussedInput, setFocussedInput]);
 
 	useEffect(() => {
-		isSuccess && navigate(`/u/${params.username}/lists`);
+		if (isSuccess) navigate(`/u/${params.username}/lists`);
 	}, [isSuccess]);
 
 	/** Add a keypress listener for tab-key presses.
@@ -42,7 +44,6 @@ export function useNewList() {
 
 	useEffect(() => {
 		window.addEventListener("keydown", tabListener);
-
 		return () => {
 			window.removeEventListener("keydown", tabListener);
 		};
@@ -71,51 +72,57 @@ export function useNewList() {
 		[formOutput, focussedInput, setFocussedInput]
 	);
 
-	function handleAddRows() {
-		setNumTerms((current) => current + 10);
+	function handleAddRows(e: React.MouseEvent<HTMLInputElement, MouseEvent>, count = 10) {
+		setNumTerms((current) => current + count);
 	}
 
-	function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
-		const { name, value } = e.currentTarget;
-		if (value !== formOutput[name]) {
+	/**
+	 * Form input blur handler that updates a given formOutput field differently depending
+	 * on whether the element that blurred belongs to a field that takes an array or not.
+	 */
+	const handleBlur = useCallback(
+		(e: React.FocusEvent<HTMLInputElement>) => {
+			const { name, value } = e.currentTarget;
+			if (value === formOutput[name]) return;
+
+			/*  @fixme: seems like if we blur the same field twice, it will get pushed to the array twice.
+             that's not the intended behavior. */
 			if (Array.isArray(formOutput[name])) {
-				setFormOutput({
-					...formOutput,
-					[e.currentTarget.name]: [
-						...formOutput[e.currentTarget.name],
-						e.currentTarget.value,
-					],
-				});
+				setFormOutput((current) => ({
+					...current,
+					[name]: [...current[name], value],
+				}));
 			} else {
-				setFormOutput({
-					...formOutput,
-					[e.currentTarget.name]: e.currentTarget.value,
-				});
+				setFormOutput((current) => ({
+					...current,
+					[name]: value,
+				}));
 			}
-		}
-	}
+		},
+		[formOutput]
+	);
 
+	/**
+	 * Submit handler that submits the newly created list if and only if all fields are filled
+	 * out as required.
+	 */
 	const handleSubmit = useCallback(
 		(e: React.MouseEvent<HTMLInputElement>) => {
 			e.preventDefault();
-
+			const fields = ["name", "from", "to", "owner"];
 			if (
-				["name", "from", "to", "owner"].every((entry) => {
-					return (
-						// eslint-disable-next-line no-prototype-builtins
-						formOutput.hasOwnProperty(entry) &&
+				fields.every(
+					(entry) =>
+						entry in formOutput &&
 						(typeof formOutput[entry] == "string" || Array.isArray(formOutput[entry]))
-					);
-				})
+				)
 			) {
-				const terms = formOutput.terms?.filter((term) => term !== null);
-
-				if (terms && terms.length > 0) {
-					// @ts-ignore - because of how we check for the existence of keys above, TS doesn't know they exist
+				const nonNullTerms = filterFalsy(formOutput.terms || []);
+				if (nonNullTerms?.length) {
 					mutateCreateList({
 						...formOutput,
-						terms,
-					});
+						nonNullTerms,
+					} as NewListFromClientInput);
 				}
 			}
 		},

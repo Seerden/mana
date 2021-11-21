@@ -1,5 +1,5 @@
 import { memo } from "react";
-import "./NewList.scss";
+import cs from "./NewList.module.scss";
 import { BiArrowToRight } from "react-icons/bi";
 import { useNewList } from "./useNewList";
 
@@ -11,39 +11,38 @@ const NewList = memo(() => {
 		<div className="NewList">
 			<div className="PageHeader">New List</div>
 
-			<form className="NewList__form">
-				<section className="NewList__form--header">
-					<div className="NewList__form--name"></div>
-					<label className="NewList__form--name-label">List name</label>
+			<form className={cs.Form}>
+				<section className={cs.Name}>
+					<label className={cs.Name__label}>List name</label>
 					<input
-						className="NewList__form--name-input"
+						className={cs.Name__input}
 						onBlur={handleBlur}
 						type="text"
 						name="name"
 						placeholder="week 3 vocabulary"
 					/>
 
-					<div className="NewList__form--languages">
-						<div className="NewList__form--languages-language">
-							<label htmlFor="from" className="NewList__form--languages-language-label">
+					<div className={cs.Languages}>
+						<div className={cs.Language}>
+							<label htmlFor="from" className={cs.Language__label}>
 								Original language
 							</label>
 							<input
-								className="NewList__form--languages-language-input"
+								className={cs.Language__input}
 								onBlur={handleBlur}
 								type="text"
 								name="from"
 								placeholder="Klingon"
 							/>
 						</div>
-						<BiArrowToRight className="NewList__form--languages-icon" />
+						<BiArrowToRight className={cs.Language__icon} />
 
-						<div className="NewList__form--languages-language">
-							<label htmlFor="to" className="NewList__form--languages-language-label">
+						<div className={cs.Language}>
+							<label htmlFor="to" className={cs.Language__label}>
 								Target language
 							</label>
 							<input
-								className="NewList__form--languages-language-input"
+								className={cs.Language__input}
 								onBlur={handleBlur}
 								type="text"
 								name="to"
@@ -53,29 +52,29 @@ const NewList = memo(() => {
 					</div>
 				</section>
 
-				<section className="NewList__form--buttons">
+				<section className={cs.Buttons}>
 					<input
-						className="NewList__form--button"
-						onClick={handleAddRows}
+						className={cs.Button}
+						onClick={(e) => handleAddRows(e)}
 						type="button"
 						value="Add rows"
 					/>
 					<input
-						className="NewList__form--button"
+						className={cs.Button}
 						onClick={handleSubmit}
 						type="button"
 						value="Create list"
 					/>
 				</section>
 
-				<section className="NewList__terms">
-					{termInputs.length > 0 && (
+				<section className={cs.Terms}>
+					{termInputs.length && (
 						<>
-							<div className="NewList__terms--header">
+							<div className={cs.Terms__header}>
 								{formOutput && (
 									<>
-										<span className="NewList__terms--header-side">{formOutput.from}</span>
-										<span className="NewList__terms--header-side">{formOutput.to}</span>
+										<span className={cs.Terms__header_side}>{formOutput.from}</span>
+										<span className={cs.Terms__header_side}>{formOutput.to}</span>
 									</>
 								)}
 							</div>

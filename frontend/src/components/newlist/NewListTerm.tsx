@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import type { FormOutput, FocusIndex } from "types/newList.types";
-import "./NewList.scss";
+import cs from "./NewList.module.scss";
 
 type NewListTermProps = {
 	index: number;
@@ -40,9 +40,9 @@ const NewListTerm = memo(
 		};
 
 		return (
-			<div className="NewList__term">
+			<div className={cs.Term}>
 				<div
-					className="NewList__term--index"
+					className={cs.Term__index}
 					style={{
 						backgroundColor: isFocussed ? "deepskyblue" : "#111",
 						color: isFocussed ? "black" : "azure",
@@ -51,9 +51,9 @@ const NewListTerm = memo(
 					{index + 1}
 				</div>
 
-				<div className="NewList__term--inputs">
+				<div className={cs.Term__inputs}>
 					<input
-						className="NewList__term--input"
+						className={cs.Term__input}
 						onFocus={(e) => handleFocus(e)}
 						onBlur={(e) => handleTermBlur(e, index)}
 						type="text"
@@ -61,7 +61,7 @@ const NewListTerm = memo(
 						name="from"
 					/>
 					<input
-						className="NewList__term--input"
+						className={cs.Term__input}
 						onFocus={(e) => handleFocus(e)}
 						onBlur={(e) => handleTermBlur(e, index)}
 						type="text"
