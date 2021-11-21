@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import { memo, useState } from "react";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import "./ListTerm.scss";

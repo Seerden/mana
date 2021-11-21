@@ -33,7 +33,7 @@ export function makeReviewList(terms: Term[], n: number): any[] {
 }
 
 export function convertDateListToDeltaTime(list: Date[], start: Date) {
-	let timeDeltaArray: number[] = [];
+	const timeDeltaArray: number[] = [];
 
 	for (let i = 0; i < list.length; i++) {
 		if (i === 0) {

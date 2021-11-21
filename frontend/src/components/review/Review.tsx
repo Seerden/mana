@@ -5,7 +5,7 @@ import { useReview } from "hooks/review/useReview";
 import "./Review.scss";
 import ReviewInfo from "./ReviewInfo/ReviewInfo";
 
-const Review = memo((props) => {
+const Review = memo(() => {
 	const { params } = useRouteProps();
 	const {
 		backWasShown,

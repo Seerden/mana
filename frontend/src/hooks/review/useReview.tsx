@@ -37,9 +37,9 @@ export function useReview() {
 	const setReviewStage = useSetRecoilState(reviewStageState);
 	const setPassfail = useSetRecoilState(passfailState);
 
-    useEffect(() => {
-        console.log(termsToReview);
-    }, [termsToReview])
+	useEffect(() => {
+		console.log(termsToReview);
+	}, [termsToReview]);
 
 	const initializeFutureTerms = useCallback(() => {
 		return makeReviewList(termsToReview, reviewSettings.n);
@@ -130,15 +130,16 @@ export function useReview() {
 				return initializeFutureTerms();
 			case "pass":
 				return terms.slice(1);
-			case "fail":
+			case "fail": {
 				const newIndex = Math.floor((terms.length + 1) * Math.random());
-				let newTerms = [...terms];
-				let currentTerm = newTerms.shift();
+				const newTerms = [...terms];
+				const currentTerm = newTerms.shift();
 				if (currentTerm) {
 					newTerms.splice(newIndex, 0, currentTerm);
 					return newTerms;
 				}
 				return terms;
+			}
 			default:
 				return terms;
 		}
@@ -153,7 +154,7 @@ export function useReview() {
 	) {
 		// @note: an actual reducer would have 'state' as first parameter here.
 		switch (action.type) {
-			case "passfail":
+			case "passfail": {
 				const { passfail, currentTerm } = action;
 				setTermUpdateArray((cur) =>
 					cur.map((term) => {
@@ -162,7 +163,7 @@ export function useReview() {
 								...term,
 								history: {
 									...term.history,
-									content: [...term.history!.content, passfail],
+									content: [...term.history?.content, passfail],
 								},
 							} as TermUpdateObject; // if we don't alias the return, it'll think the date doesn't exist
 						}
@@ -170,7 +171,8 @@ export function useReview() {
 					})
 				);
 				break;
-			case "saturation":
+            }
+			case "saturation": {
 				const { newSaturationLevels } = action;
 				setTermUpdateArray((cur) =>
 					cur.map((termToUpdate, index) => {
@@ -184,6 +186,7 @@ export function useReview() {
 					})
 				);
 				break;
+            }
 			case "date":
 				setTermUpdateArray((cur) =>
 					cur.map(
@@ -202,8 +205,8 @@ export function useReview() {
 	}
 
 	const { completedCount, progress } = useMemo(() => {
-		let completedCount: number = 0;
-		let progress: number = 0;
+		let completedCount = 0;
+		let progress = 0;
 
 		if (futureTerms) {
 			const sessionLength = numTermsToReview * reviewSettings.n;

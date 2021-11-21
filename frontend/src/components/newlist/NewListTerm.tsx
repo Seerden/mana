@@ -28,15 +28,11 @@ const NewListTerm = memo(
 		) {
 			setFocussedInput((cur) => ({ ...cur, index: -1 }));
 
-			let copy = { ...formOutput };
-			// @ts-ignore
+			const copy = { ...formOutput };
 			if (!copy.terms[idx] && e.target.value) {
-				// @ts-ignore
 				copy.terms[idx] = { to: "", from: "" };
 			}
-			// @ts-ignore
 			if (e.target.value && e.target.value !== copy.terms[idx][e.target.name]) {
-				// @ts-ignore
 				copy.terms[idx][e.target.name] = e.target.value;
 				setFormOutput({ ...formOutput, terms: copy.terms });
 			}

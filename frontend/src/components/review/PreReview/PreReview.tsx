@@ -41,7 +41,7 @@ const PreReview = (props) => {
 
 	function handleSettingsChange(e) {
 		const val = e.currentTarget.value;
-		let newVal = (isNaN(Number(val)) && val) || Number(val);
+		const newVal = (isNaN(Number(val)) && val) || Number(val);
 		setReviewSettings((current) => ({ ...current, [e.target.name]: newVal }));
 	}
 

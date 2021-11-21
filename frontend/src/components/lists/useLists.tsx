@@ -38,8 +38,9 @@ const useLists = (): UseListsReturn => {
     })
 
     const handleFilterChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-        let val = e.currentTarget.value;
-        setFilter(val.length > 0 ? val : '');
+        const { value } = e.currentTarget;
+        const newValue = value.length ? value : ''
+        setFilter(newValue);
     }, [setFilter])
 
     const handleSelectChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>): void => {

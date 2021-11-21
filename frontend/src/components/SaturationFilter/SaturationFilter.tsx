@@ -32,7 +32,7 @@ const SaturationFilter = memo(
 		};
 
 		function makeIcons() {
-			let icons = Object.keys(colorMap).map((level) => {
+			const icons = Object.keys(colorMap).map((level) => {
 				const levelNumber = Number(level);
 				return (
 					<React.Fragment key={`saturation-wrapper-${level}`}>
@@ -54,7 +54,7 @@ const SaturationFilter = memo(
 			return icons;
 		}
 
-		let icons = makeIcons();
+		const icons = makeIcons();
 
 		const directionButtons = ["forwards", "backwards", "any"].map(
 			(direction) => {

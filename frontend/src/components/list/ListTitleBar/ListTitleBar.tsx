@@ -3,7 +3,7 @@ import ListDeleteButton from "../ListDeleteButton/ListDeleteButton";
 import "./ListTitleBar.scss";
 
 interface ListTitleBarProps {
-	handleListTitleBlur(e: any): void;
+	handleListTitleBlur(e): void;
 	list: List;
 	handleDelete(): void;
 }

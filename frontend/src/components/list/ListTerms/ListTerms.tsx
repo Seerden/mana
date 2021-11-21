@@ -9,7 +9,7 @@ const ListTerms = ({ filter, setFilter, termsToDisplay, list }) => {
 	return (
 		<section className="Terms">
 			<ul className="List__terms">
-				<div className="">
+				<div>
 					<header className="Terms__header">Terms</header>
 
 					<div className="Terms__filterinfo">

@@ -43,7 +43,7 @@ function useReviewSession() {
 			},
 			timePerCard: convertDateListToDeltaTime(
 				timePerCard,
-				reviewSettings.sessionStart!
+				reviewSettings.sessionStart
 			), // @todo: convert dates to deltatime
 			passfail: passfail,
 		}),

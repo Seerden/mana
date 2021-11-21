@@ -1,3 +1,4 @@
+import { Term } from "gql/codegen-output";
 import { useMutateEditTerm } from "gql/hooks/term.query";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -36,7 +37,7 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
 		e.stopPropagation();
 
 		if (indexOfTermInTermsToReview > -1) {
-			let currentTermsToReview = [...termsToReview];
+			const currentTermsToReview = [...termsToReview];
 			currentTermsToReview.splice(indexOfTermInTermsToReview, 1);
 			setTermsToReview(currentTermsToReview);
 			setSelected(false);
@@ -64,9 +65,9 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
 	function handleTermEdit(
 		e: React.FocusEvent<HTMLInputElement & { side: "from" | "to" }>
 	) {
-		let side = e.currentTarget.getAttribute("side")!;
+		const side = e.currentTarget.getAttribute("side");
 		if (e.target.value && term[side] !== e.target.value) {
-			let newTerm = { ...term, [side]: e.target.value };
+			const newTerm = { ...term, [side]: e.target.value };
 			setTerm(newTerm);
 
 			const mutationVariables = {
@@ -77,9 +78,9 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
 			mutateEditTerm(mutationVariables);
 
 			// assume the mutation will be successful, and just edit the term in the list in-place
-			let newListContent: any[] = [...listAtom.terms!];
+			const newListContent: Term[] = [...listAtom.terms];
 			newListContent[idx] = { ...newListContent[idx], [side]: e.target.value };
-			let newList = { ...listAtom, terms: [...newListContent] };
+			const newList = { ...listAtom, terms: [...newListContent] };
 			setListAtom(newList);
 		}
 	}

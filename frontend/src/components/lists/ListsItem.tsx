@@ -24,7 +24,7 @@ const ListsItem = memo(({ list }: { list: List}) => {
 
             <div className="ListsItem__languages">{list.from} <BiArrowToRight /> {list.to} </div>
 
-            { list.sessions!.length > 0 &&
+            { list.sessions?.length > 0 &&
                 <div className="ListsItem__since">
                     <em>last reviewed {timeAgo}</em>
                 </div>

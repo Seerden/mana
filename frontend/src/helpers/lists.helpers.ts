@@ -3,7 +3,7 @@ import { List } from "gql/codegen-output";
 import { ColorType } from "../types/lists.types";
 
 export function colorByLastReviewDate(reviewDate: Date | null): ColorType {
-	let day = 3600 * 24 * 1000;
+	const day = 3600 * 24 * 1000;
 
 	if (reviewDate) {
 		const now = new Date();

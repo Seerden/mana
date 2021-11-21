@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useState, useEffect, memo, useCallback, useRef } from "react";
 import { useRouteProps } from "hooks/routerHooks";
 import NewListTerm from "./NewListTerm";
@@ -43,7 +44,7 @@ const NewList = memo((props) => {
 		) {
 			e.preventDefault();
 			setNumTerms((cur) => cur + 10);
-			setFocussedInput((cur) => ({ index: cur!.index, side: "from" }));
+			setFocussedInput((cur) => ({ index: cur?.index, side: "from" }));
 		}
 	};
 
@@ -64,7 +65,7 @@ const NewList = memo((props) => {
 					<NewListTerm
 						key={`term-${i + 1}`}
 						index={i}
-						autoFocus={i === focussedInput?.index! + 1}
+						autoFocus={i === focussedInput?.index + 1}
 						focussedInput={focussedInput}
 						setFocussedInput={setFocussedInput}
 						formOutput={formOutput} // @todo: formOutput should be recoil atom. Passing the state through props like this for any number of terms might lead to stale closures
@@ -109,6 +110,7 @@ const NewList = memo((props) => {
 			if (
 				["name", "from", "to", "owner"].every((entry) => {
 					return (
+						// eslint-disable-next-line no-prototype-builtins
 						formOutput.hasOwnProperty(entry) &&
 						(typeof formOutput[entry] == "string" ||
 							Array.isArray(formOutput[entry]))

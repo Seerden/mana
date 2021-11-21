@@ -6,7 +6,7 @@ export function useReviewCard(direction: Direction, term: Term, setBackWasShown)
     const [flipping, setFlipping] = useState(false);
     const [fade, setFade] = useState(false);
     const toggleSide = () => setSide(cur => cur === 'from' ? 'to' : 'from');
-    let timeouts = useRef<any[]>([]);
+    const timeouts = useRef<any[]>([]);
 
     useEffect(() => {  // (re)create keyup handler on `side` change
         window.addEventListener('keyup', handleArrowUpDownKeyup)
@@ -25,7 +25,7 @@ export function useReviewCard(direction: Direction, term: Term, setBackWasShown)
 
     useEffect(() => {  // clean up timeouts on unmount
         return () => {
-            for (let timeout of timeouts.current) {
+            for (const timeout of timeouts.current) {
                 window.clearTimeout(timeout);
             }
         }
@@ -38,7 +38,7 @@ export function useReviewCard(direction: Direction, term: Term, setBackWasShown)
     }
 
     const flip = useCallback(() => {
-        let duration = 250; // match keyframes animation duration
+        const duration = 250; // match keyframes animation duration
         setBackWasShown(true);
         setFlipping(true);
         timeouts.current.push(setTimeout(() => setFlipping(false), duration));

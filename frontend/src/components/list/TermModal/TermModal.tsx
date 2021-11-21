@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect } from "react";
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import "./TermModal.scss";

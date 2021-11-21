@@ -16,12 +16,12 @@ const PostReview = () => {
 	return (
 		<div className="Review__post">
 			<h2>Session completed.</h2>
-			<div>Started at {formatDate(sessionStart!)}</div>
-			<div>Completed at {formatDate(sessionEnd!)}</div>
+			<div>Started at {formatDate(sessionStart)}</div>
+			<div>Completed at {formatDate(sessionEnd)}</div>
 			<div>
 				Time per card:{" "}
 				{JSON.stringify(
-					convertDateListToDeltaTime(timePerCard, reviewSettings.sessionStart!)
+					convertDateListToDeltaTime(timePerCard, reviewSettings.sessionStart)
 				)}
 			</div>
 
