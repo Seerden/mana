@@ -5,82 +5,72 @@ import { compare, hash } from "bcryptjs";
 
 @ObjectType()
 class MaybeUser {
-    @Field(() => String, { nullable: true })
-    error?: String;
+	@Field(() => String, { nullable: true })
+	error?: String;
 
-    @Field(() => User, { nullable: true })
-    user?: User
-}
-
-@ObjectType()
-class LoginResponse {
-    @Field(() => String, { nullable: true })
-    error?: String;
-
-    @Field(() => User, { nullable: true })
-    user?: Partial<User>
+	@Field(() => User, { nullable: true })
+	user?: User;
 }
 
 @Resolver()
 export class UserResolver {
-    @Query(() => [User], { name: "users" })
-    async users() {
-        return await UserModel.find()
-    }
+	@Query(() => [User], { name: "users" })
+	async users() {
+		return await UserModel.find();
+	}
 
-    @Query(() => MaybeUser, { description: "Returns currently logged in user. "})
-    async me(
-        @Ctx() { req }: ExpressContext
-    ) {
-        if (req.session.userId) {
-            return { user: UserModel.findById(req.session.userId) }
-        } return { error: "No active session" }
-    }
+	@Query(() => MaybeUser, { description: "Returns currently logged in user. " })
+	async me(@Ctx() { req }: ExpressContext) {
+		if (req.session.userId) {
+			return { user: UserModel.findById(req.session.userId) };
+		}
+		return { error: "No active session" };
+	}
 
-    @Mutation(() => MaybeUser)
-    async createUser(
-        @Arg("username") username: string,
-        @Arg("password") password: string
-    ): Promise<MaybeUser> {
-        const hashedPassword = await hash(password, 10);
+	@Mutation(() => MaybeUser)
+	async createUser(
+		@Arg("username") username: string,
+		@Arg("password") password: string
+	): Promise<MaybeUser> {
+		const hashedPassword = await hash(password, 10);
 
-        const newUser = new UserModel({
-            username,
-            password: hashedPassword
-        });
-        console.log('Register user mutation requested');
+		const newUser = new UserModel({
+			username,
+			password: hashedPassword,
+		});
+		console.log("Register user mutation requested");
 
-        const existingUser = await UserModel.findOne({ username });
-        if (!existingUser) {
-            return { user: await newUser.save() }
-        }
+		const existingUser = await UserModel.findOne({ username });
+		if (!existingUser) {
+			return { user: await newUser.save() };
+		}
 
-        return { error: 'Username already exists ' }
-    }
+		return { error: "Username already exists " };
+	}
 
-    @Mutation(() => MaybeUser, { description: "Login mutation"} )
-    async login(
-        @Arg("username", type => String) username: string,
-        @Arg("password", type => String) password: string,
-        @Ctx() { req, res }: ExpressContext
-    ): Promise<MaybeUser> {
-        const foundUser = await UserModel.findOne({ username });
+	@Mutation(() => MaybeUser, { description: "Login mutation" })
+	async login(
+		@Arg("username", (type) => String) username: string,
+		@Arg("password", (type) => String) password: string,
+		@Ctx() { req, res }: ExpressContext
+	): Promise<MaybeUser> {
+		const foundUser = await UserModel.findOne({ username });
 
-        if (foundUser) {
-            const passwordMatches = await compare(password, foundUser.password);
-            
-            if (passwordMatches) {
-                req.session.userId = foundUser._id;
-                return { user: foundUser }
-            } else {
-                res.clearCookie("mana-session");
-                req.session.destroy(null);
-                return { error: 'Invalid credentials'}
-            }
-        } else {
-            res.clearCookie("mana-session");
-            req.session.destroy(null);
-            return { error: 'Username does not exist'}
-        }
-    }
+		if (foundUser) {
+			const passwordMatches = await compare(password, foundUser.password);
+
+			if (passwordMatches) {
+				req.session.userId = foundUser._id;
+				return { user: foundUser };
+			} else {
+				res.clearCookie("mana-session");
+				req.session.destroy(null);
+				return { error: "Invalid credentials" };
+			}
+		} else {
+			res.clearCookie("mana-session");
+			req.session.destroy(null);
+			return { error: "Username does not exist" };
+		}
+	}
 }
