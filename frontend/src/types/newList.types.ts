@@ -1,6 +1,6 @@
 import { NewListTermInput } from "gql/codegen-output";
 
-export type FormOutput = {
+export type NewList = {
 	owner?: string;
 	name?: string;
 	from?: string;

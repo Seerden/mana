@@ -4,7 +4,7 @@ import { BiArrowToRight } from "react-icons/bi";
 import { useNewList } from "./useNewList";
 
 const NewList = memo(() => {
-	const { handleBlur, handleAddRows, handleSubmit, termInputs, formOutput } =
+	const { handleBlur, addRows, handleSubmit, termInputs, newList } =
 		useNewList();
 
 	return (
@@ -55,7 +55,7 @@ const NewList = memo(() => {
 				<section className={cs.Buttons}>
 					<input
 						className={cs.Button}
-						onClick={(e) => handleAddRows(e)}
+						onClick={() => addRows()}
 						type="button"
 						value="Add rows"
 					/>
@@ -71,10 +71,10 @@ const NewList = memo(() => {
 					{termInputs.length && (
 						<>
 							<div className={cs.Terms__header}>
-								{formOutput && (
+								{newList && (
 									<>
-										<span className={cs.Terms__header_side}>{formOutput.from}</span>
-										<span className={cs.Terms__header_side}>{formOutput.to}</span>
+										<span className={cs.Terms__header_side}>{newList.from}</span>
+										<span className={cs.Terms__header_side}>{newList.to}</span>
 									</>
 								)}
 							</div>

@@ -3,108 +3,106 @@ import { NewListFromClientInput } from "gql/codegen-output";
 import { useMutateCreateList } from "gql/hooks/list.mutation";
 import { filterFalsy } from "helpers/filterFalsyValues";
 import { useRouteProps } from "hooks/routerHooks";
-import { useState, useEffect, useCallback } from "react";
-import { FormOutput, FocusIndex } from "types/newList.types";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useRecoilState } from "recoil";
+import { newListState } from "state/atoms/newList.atom";
+import type { FocusIndex } from "types/newList.types";
 import NewListTerm from "./NewListTerm";
 
+/**
+ * Hook that handles functionality for the NewList form component
+ */
 export function useNewList() {
 	const { params, navigate } = useRouteProps();
 	const [numTerms, setNumTerms] = useState<number>(10);
-	const [formOutput, setFormOutput] = useState<FormOutput>(() => ({
-		owner: params.username,
-		terms: new Array(numTerms),
-	}));
-	const [termInputs, setTermInputs] = useState<JSX.Element[]>([] as JSX.Element[]);
-	const { mutate: mutateCreateList, isSuccess } = useMutateCreateList();
+	const { mutate: mutateCreateList, isSuccess } =
+		useMutateCreateList();
 	const [focussedInput, setFocussedInput] = useState<FocusIndex>();
+	const [newList, setNewList] = useRecoilState(newListState);
+	const termInputs: JSX.Element[] = useMemo(() => {
+		return new Array(numTerms).map((_, i) => (
+			<NewListTerm
+				key={`term-${i + 1}`}
+				index={i}
+				autoFocus={i === focussedInput?.index + 1}
+				focussedInput={focussedInput}
+				setFocussedInput={setFocussedInput}
+			/>
+		));
+	}, [newList, numTerms, focussedInput, setFocussedInput]);
 
 	useEffect(() => {
-		setTermInputs(makeTermInputElements(formOutput, numTerms));
-	}, [formOutput, numTerms, focussedInput, setFocussedInput]);
+		/*  newList is initialized completely empty.
+            on mount, we can populate .owner and .terms  */
+		setNewList((cur) => ({ ...cur, owner: params.username, terms: new Array(numTerms) }));
+	}, [params, numTerms]);
 
 	useEffect(() => {
-		if (isSuccess) navigate(`/u/${params.username}/lists`);
+		if (isSuccess) {
+			navigate(`/u/${params.username}/lists`);
+		}
 	}, [isSuccess]);
 
-	/** Add a keypress listener for tab-key presses.
-	 * Add 10 new rows if user presses tab on last input.
-	 * Autofocus the first newly added term. */
-	const tabListener = (e: KeyboardEvent) => {
-		if (
-			!e.shiftKey &&
-			e.key === "Tab" &&
-			focussedInput?.index === termInputs.length - 1 &&
-			focussedInput?.side === "to"
-		) {
-			e.preventDefault();
-			setNumTerms((cur) => cur + 10);
-			setFocussedInput((cur) => ({ index: cur?.index, side: "from" }));
-		}
-	};
-
 	useEffect(() => {
+		/** Keydown listener for tab-key presses:
+		 * Add 10 new rows if user presses the tab key while they're
+		 * on the last term input. Autofocus the first newly added term. */
+		function tabListener(e: KeyboardEvent) {
+			if (
+				!e.shiftKey &&
+				e.key === "Tab" &&
+				focussedInput?.index === termInputs.length - 1 &&
+				focussedInput?.side === "to"
+			) {
+				e.preventDefault();
+				addRows();
+				setFocussedInput((cur) => ({ index: cur?.index, side: "from" }));
+			}
+		}
+
 		window.addEventListener("keydown", tabListener);
+
 		return () => {
 			window.removeEventListener("keydown", tabListener);
 		};
-	}, [numTerms, focussedInput]);
+	}, [focussedInput, termInputs]);
 
-	const makeTermInputElements = useCallback(
-		(formOutput: FormOutput, numTerms: number) => {
-			const termElements: JSX.Element[] = [];
-
-			for (let i = 0; i < numTerms; i++) {
-				termElements.push(
-					<NewListTerm
-						key={`term-${i + 1}`}
-						index={i}
-						autoFocus={i === focussedInput?.index + 1}
-						focussedInput={focussedInput}
-						setFocussedInput={setFocussedInput}
-						formOutput={formOutput} // @todo: formOutput should be recoil atom. Passing the state through props like this for any number of terms might lead to stale closures
-						setFormOutput={setFormOutput}
-					/>
-				);
-			}
-
-			return termElements;
-		},
-		[formOutput, focussedInput, setFocussedInput]
-	);
-
-	function handleAddRows(e: React.MouseEvent<HTMLInputElement, MouseEvent>, count = 10) {
+	/**
+	 * Add a number (`count`) of rows (= empty terms) to the newList form.
+	 */
+	function addRows(count = 10) {
 		setNumTerms((current) => current + count);
 	}
 
 	/**
-	 * Form input blur handler that updates a given formOutput field differently depending
+	 * Form input blur handler that updates a given newList field differently depending
 	 * on whether the element that blurred belongs to a field that takes an array or not.
 	 */
 	const handleBlur = useCallback(
 		(e: React.FocusEvent<HTMLInputElement>) => {
 			const { name, value } = e.currentTarget;
-			if (value === formOutput[name]) return;
+			if (value === newList[name]) return;
 
 			/*  @fixme: seems like if we blur the same field twice, it will get pushed to the array twice.
              that's not the intended behavior. */
-			if (Array.isArray(formOutput[name])) {
-				setFormOutput((current) => ({
+			if (Array.isArray(newList[name])) {
+				setNewList((current) => ({
 					...current,
 					[name]: [...current[name], value],
 				}));
 			} else {
-				setFormOutput((current) => ({
+				setNewList((current) => ({
 					...current,
 					[name]: value,
 				}));
 			}
 		},
-		[formOutput]
+		[newList]
 	);
 
 	/**
 	 * Submit handler that submits the newly created list if and only if all fields are filled
-	 * out as required.
+	 * out as required and there is at least one term in the list.
 	 */
 	const handleSubmit = useCallback(
 		(e: React.MouseEvent<HTMLInputElement>) => {
@@ -113,27 +111,27 @@ export function useNewList() {
 			if (
 				fields.every(
 					(entry) =>
-						entry in formOutput &&
-						(typeof formOutput[entry] == "string" || Array.isArray(formOutput[entry]))
+						entry in newList &&
+						(typeof newList[entry] == "string" || Array.isArray(newList[entry]))
 				)
 			) {
-				const nonNullTerms = filterFalsy(formOutput.terms || []);
+				const nonNullTerms = filterFalsy(newList.terms || []);
 				if (nonNullTerms?.length) {
 					mutateCreateList({
-						...formOutput,
+						...newList,
 						nonNullTerms,
 					} as NewListFromClientInput);
 				}
 			}
 		},
-		[formOutput, setFormOutput]
+		[newList, setNewList]
 	);
 
 	return {
 		handleBlur,
-		handleAddRows,
+		addRows,
 		handleSubmit,
 		termInputs,
-		formOutput,
+		newList,
 	} as const;
 }
