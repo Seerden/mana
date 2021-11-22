@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouteProps } from "hooks/routerHooks";
 import { handleFormBlur } from "hooks/state";
 import LoginForm from "./LoginForm";
@@ -18,6 +18,7 @@ const Login = () => {
 	const [authError, setErr] = useState<any>(false);
 	const [message, setMessage] = useState<null | string>(null);
 
+    // @refactor -- extract to gql query file
 	const { mutate, data } = useMutation<MaybeUser>(
 		"login",
 		async () => {
@@ -45,8 +46,8 @@ const Login = () => {
 		if (data) {
 			const { error, user } = data;
 			if (user?.username && typeof login === "function") {
-				login(user?.username);
-				navigate(`/u/${user?.username}`);
+				login(user.username);
+				navigate(`/u/${user.username}`);
 			} else if (error) {
 				setErr(error);
 			}
@@ -56,7 +57,7 @@ const Login = () => {
 	/**
 	 * Handle pressing of the 'log in' button: log user in and redirect to their profile page, or flash a relevant error.
 	 */
-	function handleLogin(e: React.SyntheticEvent) {
+	function handleLogin() {
 		if (user && user.username?.length && user.password?.length) {
 			mutate();
 		} else {
