@@ -17,9 +17,7 @@ function useTimer({ start }: TimerProps) {
 	useEffect(() => {
 		if (start) {
 			const timerInterval = setInterval(() => {
-				return setElapsed(
-					Math.round(Math.floor(Date.now() - start.valueOf()) / 1000)
-				);
+				return setElapsed(Math.round(Math.floor(Date.now() - start.valueOf()) / 1000));
 			}, 1000);
 
 			return () => clearInterval(timerInterval);

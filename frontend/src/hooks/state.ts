@@ -6,8 +6,8 @@ import { useEffect } from "react";
 export const useLogState = (name, state, setState) => {
 	useEffect(() => {
 		if (state) {
-            console.log(`${name} changed:`, state);
-        }
+			console.log(`${name} changed:`, state);
+		}
 	}, [name, state, setState]);
 };
 
