@@ -15,20 +15,23 @@ import NewListTerm from "./NewListTerm";
 export function useNewList() {
 	const { params, navigate } = useRouteProps();
 	const [numTerms, setNumTerms] = useState<number>(10);
-	const { mutate: mutateCreateList, isSuccess } =
-		useMutateCreateList();
+	const { mutate: mutateCreateList, isSuccess } = useMutateCreateList();
 	const [focussedInput, setFocussedInput] = useState<FocusIndex>();
 	const [newList, setNewList] = useRecoilState(newListState);
 	const termInputs: JSX.Element[] = useMemo(() => {
-		return new Array(numTerms).map((_, i) => (
-			<NewListTerm
-				key={`term-${i + 1}`}
-				index={i}
-				autoFocus={i === focussedInput?.index + 1}
-				focussedInput={focussedInput}
-				setFocussedInput={setFocussedInput}
-			/>
-		));
+		const inputs = [];
+		for (let i = 0; i < numTerms; i++) {
+			inputs.push(
+				<NewListTerm
+					key={`term-${i + 1}`}
+					index={i}
+					autoFocus={i === focussedInput?.index + 1}
+					focussedInput={focussedInput}
+					setFocussedInput={setFocussedInput}
+				/>
+			);
+		}
+		return inputs;
 	}, [newList, numTerms, focussedInput, setFocussedInput]);
 
 	useEffect(() => {
@@ -116,10 +119,10 @@ export function useNewList() {
 				)
 			) {
 				const nonNullTerms = filterFalsy(newList.terms || []);
-				if (nonNullTerms?.length) {
+				if (nonNullTerms.length > 0) {
 					mutateCreateList({
 						...newList,
-						nonNullTerms,
+						terms: nonNullTerms,
 					} as NewListFromClientInput);
 				}
 			}

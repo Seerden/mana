@@ -3,5 +3,11 @@ import { NewList } from "types/newList.types";
 
 export const newListState = atom({
 	key: "newListState",
-	default: {} as NewList,
+	default: {
+		owner: "",
+		from: "",
+		to: "",
+		name: "",
+		terms: [],
+	} as NewList,
 });

@@ -19,7 +19,7 @@ const NewListTerm = memo(
 		function handleTermBlur(e: React.FocusEvent<HTMLInputElement>, idx: number) {
 			setFocussedInput((cur) => ({ ...cur, index: -1 }));
 			const { name, value } = e.target; // name is "from" | "to"
-			const termsCopy = [...newList.terms];
+			const termsCopy = JSON.parse(JSON.stringify(newList.terms));
 			if (!termsCopy[idx] && e.target.value) {
 				termsCopy[idx] = { to: "", from: "" };
 			}

@@ -4,8 +4,7 @@ import { BiArrowToRight } from "react-icons/bi";
 import { useNewList } from "./useNewList";
 
 const NewList = memo(() => {
-	const { handleBlur, addRows, handleSubmit, termInputs, newList } =
-		useNewList();
+	const { handleBlur, addRows, handleSubmit, termInputs, newList } = useNewList();
 
 	return (
 		<div className="NewList">
@@ -68,7 +67,7 @@ const NewList = memo(() => {
 				</section>
 
 				<section className={cs.Terms}>
-					{termInputs.length && (
+					{termInputs.length > 0 && (
 						<>
 							<div className={cs.Terms__header}>
 								{newList && (
