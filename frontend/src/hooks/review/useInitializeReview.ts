@@ -1,4 +1,4 @@
-import { useQueryListsById } from "gql/hooks/list.query";
+import { useQueryListsById } from "gql/hooks/list-query";
 import { useRouteProps } from "hooks/routerHooks";
 import qs from "query-string";
 import { useEffect } from "react";

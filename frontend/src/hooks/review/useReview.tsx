@@ -1,8 +1,8 @@
-import { useMemo, useEffect, useReducer, useCallback } from "react";
-import { makeReviewList } from "helpers/reviewHelpers";
-import { makeNewSaturationLevels } from "helpers/srs/saturation";
 import { TermUpdateObject } from "gql/codegen-output";
-import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession.query";
+import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession-query";
+import { makeReviewList } from "helpers/review-helpers";
+import { makeNewSaturationLevels } from "helpers/srs/saturation";
+import { useCallback, useEffect, useMemo, useReducer } from "react";
 import {
 	TermUpdateDate,
 	TermUpdatePassfail,
@@ -15,18 +15,18 @@ import { useReviewState } from "./useReviewState";
 export function useReview() {
 	useInitializeReview();
 	const { makeReviewCard, backWasShown, setBackWasShown } = useMakeReviewCard();
-    const {
-        reviewSettings,
+	const {
+		reviewSettings,
 		setReviewSettings,
 		termsToReview,
 		setReviewStage,
 		setPassfail,
-        setTimePerCard,
-        termUpdateArray,
-        setTermUpdateArray,
-        newReviewSession
-    } = useReviewState();
-	
+		setTimePerCard,
+		termUpdateArray,
+		setTermUpdateArray,
+		newReviewSession,
+	} = useReviewState();
+
 	const initializeFutureTerms = useCallback(() => {
 		return makeReviewList(termsToReview, reviewSettings.n);
 	}, [reviewSettings.n, termsToReview]);
@@ -74,7 +74,7 @@ export function useReview() {
 				sessionEnd: new Date(),
 			}));
 		}
-        /* 
+		/* 
             deps array doesn't take reviewSettings, even though that piece of state _is_ used in makeNewSaturationLevels,
             this is a code smell. Simple naive fix would be to turn makeNewSaturationLevels into a callback that has reviewSettings
             as one of its dependencies, instead of passing reviewSettings as an argument
@@ -111,8 +111,7 @@ export function useReview() {
 		action: TermUpdatePassfail | TermUpdateSaturation | TermUpdateDate
 	) {
 		switch (action.type) {
-
-            /*
+			/*
                 Takes termUpdateArray and maps the entire thing. 
                 For each term in termUpdateArray:
                     - check if term._id === currentTerm._id
@@ -146,7 +145,7 @@ export function useReview() {
 				break;
 			}
 
-            /*
+			/*
                 @todo: Unlike case "passfail", we only end up calling this case once per review, so performance is fine.
                 However, this should really be extracted to a function that's more apparent in what it actually does
             */

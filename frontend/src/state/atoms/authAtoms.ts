@@ -1,4 +1,4 @@
-import { getUserFromLocalStorage } from "helpers/localStorageHelpers";
+import { getUserFromLocalStorage } from "helpers/localStorage-helpers";
 import { atom } from "recoil";
 
 export const currentUserState = atom<string | null>({

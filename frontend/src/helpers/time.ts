@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import duration from "dayjs/plugin/duration";
+import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(advancedFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(duration);

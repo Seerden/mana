@@ -1,15 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
-import { useSetRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { useRouteProps } from "hooks/routerHooks";
-import { numTermsToReviewState } from "state/selectors/reviewSelectors";
-import { listState } from "state/atoms/listAtoms";
-import { useQueryListsById } from "gql/hooks/list.query";
-import { List } from "gql/codegen-output";
 import ListTerm from "components/list/ListTerms/ListTerm";
+import { List } from "gql/codegen-output";
+import { useQueryListsById } from "gql/hooks/list-query";
+import { useRouteProps } from "hooks/routerHooks";
+import { useCallback, useEffect, useState } from "react";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import { listState } from "state/atoms/listAtoms";
+import { numTermsToReviewState } from "state/selectors/reviewSelectors";
+import { TruncatedTerm } from "types/list.types";
 import { useListFilter } from "./useListFilter";
 import { useListPrepareReview } from "./useListPrepareReview";
 import { useListUpdate } from "./useListUpdate";
-import { TruncatedTerm } from "types/list.types";
 
 function useList() {
 	const [list, setList] = useState<List | null>(null);

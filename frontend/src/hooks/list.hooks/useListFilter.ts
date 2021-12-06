@@ -1,4 +1,4 @@
-import { useQueryListsById } from "gql/hooks/list.query";
+import { useQueryListsById } from "gql/hooks/list-query";
 import { filterTermsBySaturation } from "helpers/filterTermsBySaturation";
 import { useRouteProps } from "hooks/routerHooks";
 import { useMemo, useState } from "react";

@@ -1,20 +1,19 @@
+import { Id, ReviewSessionBaseInput } from "gql/codegen-output";
+import { convertDateListToDeltaTime } from "helpers/review-helpers";
+import { useRouteProps } from "hooks/routerHooks";
 import { useMemo } from "react";
+import { useRecoilValue } from "recoil";
 import {
+	passfailState,
 	reviewSettingsState,
 	termsToReviewState,
 	timePerCardState,
-	passfailState,
 } from "state/atoms/reviewAtoms";
-import { useRecoilValue } from "recoil";
-import { convertDateListToDeltaTime } from "helpers/reviewHelpers";
-import { Id, ReviewSessionBaseInput } from "gql/codegen-output";
-import { useRouteProps } from "hooks/routerHooks";
 
 function useReviewSession() {
 	const { params, location } = useRouteProps();
 	const reviewSettings = useRecoilValue(reviewSettingsState);
-	const { direction, sessionEnd, sessionStart, n, started, ended } =
-		reviewSettings;
+	const { direction, sessionEnd, sessionStart, n, started, ended } = reviewSettings;
 	const termsToReview = useRecoilValue(termsToReviewState);
 	const timePerCard = useRecoilValue(timePerCardState);
 	const passfail = useRecoilValue(passfailState);
@@ -41,10 +40,7 @@ function useReviewSession() {
 				ended,
 				started,
 			},
-			timePerCard: convertDateListToDeltaTime(
-				timePerCard,
-				reviewSettings.sessionStart
-			), // @todo: convert dates to deltatime
+			timePerCard: convertDateListToDeltaTime(timePerCard, reviewSettings.sessionStart), // @todo: convert dates to deltatime
 			passfail: passfail,
 		}),
 		[params, location, reviewSettings, termsToReview, timePerCard, passfail]

@@ -1,7 +1,7 @@
+import { useMutateRegisterUser } from "gql/hooks/user-query";
 import { useCallback, useState } from "react";
 import { handleFormBlur } from "../../hooks/state";
 import "./Register.scss";
-import { useMutateRegisterUser } from "gql/hooks/user.query";
 
 const Register = () => {
 	const [newUser, setNewUser] = useState<NewUser>({} as NewUser);

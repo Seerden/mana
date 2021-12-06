@@ -1,5 +1,15 @@
-import { SuccessOrError, MaybeList, NewListFromClientInput, ListUpdateActionInput, ListUpdatePayloadInput } from "gql/codegen-output";
-import { deleteListMutation, createListMutation, updateListMutation } from "gql/operations/list.operations";
+import {
+	ListUpdateActionInput,
+	ListUpdatePayloadInput,
+	MaybeList,
+	NewListFromClientInput,
+	SuccessOrError,
+} from "gql/codegen-output";
+import {
+	createListMutation,
+	deleteListMutation,
+	updateListMutation,
+} from "gql/operations/list-operations";
 import request from "graphql-request";
 import { useMutation } from "react-query";
 

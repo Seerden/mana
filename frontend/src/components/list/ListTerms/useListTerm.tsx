@@ -1,5 +1,5 @@
 import { Term } from "gql/codegen-output";
-import { useMutateEditTerm } from "gql/hooks/term.query";
+import { useMutateEditTerm } from "gql/hooks/term-query";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { listState, selectingTermsToReviewState } from "state/atoms/listAtoms";
@@ -85,14 +85,14 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
 		}
 	}
 	return {
-        open,
-        setOpen,
-        selectingTerms,
-        selected,
-        handleSelect,
-        handleConfirmClick,
-        handleTermEdit,
-        confirmingDelete,
-        setConfirmingDelete
-    } as const;
+		open,
+		setOpen,
+		selectingTerms,
+		selected,
+		handleSelect,
+		handleConfirmClick,
+		handleTermEdit,
+		confirmingDelete,
+		setConfirmingDelete,
+	} as const;
 }

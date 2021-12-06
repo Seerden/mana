@@ -1,4 +1,3 @@
-import request from "graphql-request";
 import {
 	MaybeReviewSession,
 	ReviewSession,
@@ -8,7 +7,8 @@ import {
 import {
 	createReviewSessionMutation,
 	reviewSessionsByUserQuery,
-} from "gql/operations/reviewSession.operations";
+} from "gql/operations/reviewSession-operations";
+import request from "graphql-request";
 import { useRouteProps } from "hooks/routerHooks";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";

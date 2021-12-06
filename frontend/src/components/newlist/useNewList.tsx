@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { NewListFromClientInput } from "gql/codegen-output";
-import { useMutateCreateList } from "gql/hooks/list.mutation";
+import { useMutateCreateList } from "gql/hooks/list-mutate";
 import { filterFalsy } from "helpers/filterFalsyValues";
 import { useRouteProps } from "hooks/routerHooks";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import { newListState } from "state/atoms/newList.atom";
 import type { FocusIndex } from "types/newList.types";

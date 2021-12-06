@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useMemo } from "react";
-import ListsItem from "./ListsItem";
+import { useQueryListsByUser } from "gql/hooks/lists-query";
+import React, { useCallback, useMemo, useState } from "react";
 import { UseListsReturn } from "../../types/lists.types";
-import { useQueryListsByUser } from "gql/hooks/lists.query";
+import ListsItem from "./ListsItem";
 
 const useLists = (): UseListsReturn => {
 	const [filter, setFilter] = useState<string>("");
@@ -25,16 +25,19 @@ const useLists = (): UseListsReturn => {
 	);
 
 	const listsElement = useMemo(() => {
-		return Array.isArray(lists) && lists.map((list) => {
-			const { name, reviewDates, lastReviewed, created, _id } = list;
-			return {
-				name,
-				reviewDates,
-				lastReviewed,
-				created,
-				element: <ListsItem key={_id} list={list} />,
-			};
-		});
+		return (
+			Array.isArray(lists) &&
+			lists.map((list) => {
+				const { name, reviewDates, lastReviewed, created, _id } = list;
+				return {
+					name,
+					reviewDates,
+					lastReviewed,
+					created,
+					element: <ListsItem key={_id} list={list} />,
+				};
+			})
+		);
 	}, [lists]);
 
 	const filteredListsElement = useMemo(() => {

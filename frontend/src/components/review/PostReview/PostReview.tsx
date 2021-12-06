@@ -1,6 +1,6 @@
-import { convertDateListToDeltaTime } from "helpers/reviewHelpers";
-import { usePostReview } from "./usePostReview";
+import { convertDateListToDeltaTime } from "helpers/review-helpers";
 import { Link } from "react-router-dom";
+import { usePostReview } from "./usePostReview";
 
 const PostReview = () => {
 	const {
@@ -12,7 +12,7 @@ const PostReview = () => {
 		timePerCard,
 		reviewSettings,
 	} = usePostReview();
-    
+
 	return (
 		<div className="Review__post">
 			<h2>Session completed.</h2>
@@ -20,9 +20,7 @@ const PostReview = () => {
 			<div>Completed at {formatDate(sessionEnd)}</div>
 			<div>
 				Time per card:{" "}
-				{JSON.stringify(
-					convertDateListToDeltaTime(timePerCard, reviewSettings.sessionStart)
-				)}
+				{JSON.stringify(convertDateListToDeltaTime(timePerCard, reviewSettings.sessionStart))}
 			</div>
 
 			<button className="Button">

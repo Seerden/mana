@@ -1,11 +1,11 @@
-import { memo } from "react";
-import { Link } from "react-router-dom";
-import { useRouteProps } from "hooks/routerHooks";
-import "./ListsItem.scss";
-import { BiArrowToRight } from "react-icons/bi";
-import { colorByLastReviewDate, getLastReviewDate } from "../../helpers/lists.helpers";
-import { timeSince } from "helpers/time";
 import { List } from "gql/codegen-output";
+import { timeSince } from "helpers/time";
+import { useRouteProps } from "hooks/routerHooks";
+import { memo } from "react";
+import { BiArrowToRight } from "react-icons/bi";
+import { Link } from "react-router-dom";
+import { colorByLastReviewDate, getLastReviewDate } from "../../helpers/lists-helpers";
+import "./ListsItem.scss";
 
 type ListsItemProps = {
 	list: List;
