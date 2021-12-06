@@ -20,7 +20,7 @@ const NewListTerm = memo(
 			setFocussedInput((cur) => ({ ...cur, index: -1 }));
 			const { name, value } = e.target; // name is "from" | "to"
 			const termsCopy = JSON.parse(JSON.stringify(newList.terms));
-			if (!termsCopy[idx] && e.target.value) {
+			if (!termsCopy[idx] && value) {
 				termsCopy[idx] = { to: "", from: "" };
 			}
 			if (value && value !== termsCopy[idx][name]) {

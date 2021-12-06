@@ -1,46 +1,20 @@
-import { useState, useEffect } from "react";
+import { useMutateLogin, UserWithPassword } from "gql/hooks/login-mutate";
 import { useRouteProps } from "hooks/routerHooks";
 import { handleFormBlur } from "hooks/state";
-import LoginForm from "./LoginForm";
-import { useMutation } from "react-query";
-import request, { gql } from "graphql-request";
-import { MaybeUser } from "gql/codegen-output";
 import { useLogin } from "hooks/useLogin";
+import { useCallback, useEffect, useState } from "react";
+import LoginForm from "./LoginForm";
 
 const Login = () => {
 	const { login } = useLogin();
 	const { navigate } = useRouteProps();
-	const [user, setUser] = useState<{
-		username: string;
-		password: string;
-	} | null>(null);
+	const [user, setUser] = useState<UserWithPassword>({ username: "", password: "" });
 	const [showPass, setShowPass] = useState(false);
 	const [authError, setErr] = useState<any>(false);
 	const [message, setMessage] = useState<null | string>(null);
 
-    // @refactor -- extract to gql query file
-	const { mutate, data } = useMutation<MaybeUser>(
-		"login",
-		async () => {
-			const { login } = await request(
-				process.env.GRAPHQL_URI,
-				gql`
-                    mutation {
-                        login(username: "${user?.username}", password: "${user?.password}") {
-                            error 
-                            user {
-                                username
-                                _id
-                            }
-                        }
-                    }
-                `
-			);
-
-			return login;
-		},
-		{ retry: false }
-	);
+	// @refactor -- extract to gql query file
+	const { mutate, data } = useMutateLogin();
 
 	useEffect(() => {
 		if (data) {
@@ -57,13 +31,14 @@ const Login = () => {
 	/**
 	 * Handle pressing of the 'log in' button: log user in and redirect to their profile page, or flash a relevant error.
 	 */
-	function handleLogin() {
-		if (user && user.username?.length && user.password?.length) {
-			mutate();
+	const handleLogin = useCallback(() => {
+		const { username, password } = user;
+		if (username?.length && password?.length) {
+			mutate(user);
 		} else {
 			setMessage("Cannot log in without both username and password");
 		}
-	}
+	}, [user]);
 
 	const loginFormProps = {
 		authError,
