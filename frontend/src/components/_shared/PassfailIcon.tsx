@@ -1,10 +1,10 @@
 type PassfailIconProps = {
-    passfail: string,
-    index: number,
-    size?: number
+    passfail: string;
+    index: number;
+    size?: number;
 };
 
-const PassfailIcon = ({ passfail, index, size=20 }: PassfailIconProps) => {
+const PassfailIcon = ({ passfail, index, size = 20 }: PassfailIconProps) => {
     return (
         <>
             <span
@@ -15,11 +15,11 @@ const PassfailIcon = ({ passfail, index, size=20 }: PassfailIconProps) => {
                     display: "inline-block",
                     margin: "0.2rem",
                     borderRadius: "50%",
-                    backgroundColor: passfail === 'pass' ? 'seagreen' : 'orangered'
+                    backgroundColor: passfail === "pass" ? "seagreen" : "orangered",
                 }}
             />
         </>
-    )
+    );
 };
 
-export default PassfailIcon
+export default PassfailIcon;

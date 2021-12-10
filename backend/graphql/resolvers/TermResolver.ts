@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Arg, Field, InputType, Int, Mutation, ObjectType, Resolver } from "type-graphql";
 import { addTermsToList, updateListTerms } from "../helpers/list";
 import {
@@ -8,7 +9,6 @@ import {
 } from "../helpers/term";
 import { TermEditObject, TermUpdateObject } from "../types/input_types/term";
 import { TermLanguages, TermSaturation } from "../types/Term";
-import mongoose from "mongoose";
 
 // We currently don't query terms by themselves,
 //  only as part of their parent list's queries,
@@ -18,7 +18,6 @@ import mongoose from "mongoose";
 	description:
 		"New term created client-side, excludes history and saturation fields, since those don't exist yet for the term",
 })
-
 export class NewTermFromClient {
 	@Field()
 	to: string;

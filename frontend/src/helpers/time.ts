@@ -11,23 +11,23 @@ dayjs.extend(duration);
  * @returns {string} e.g. '2 days ago'
  */
 export function timeSince(date: Date | null): string | null {
-	return date ? dayjs(date).fromNow() : null;
+    return date ? dayjs(date).fromNow() : null;
 }
 
 /**
  * Converts a date to a formatted string
- * @param {string} format dayjs parse format
+ * @param format dayjs parse format
  */
 export function formatDate(date: Date, format: string): string {
-	// @todo: figure out dayjs types
-	return dayjs(date).format(format);
+    // @todo: figure out dayjs types
+    return dayjs(date).format(format);
 }
 
 export type Timescale = "minutes" | "hours" | "seconds";
 
 export function dateDifference(date1: Date, date2: Date, timescale: Timescale) {
-	return dayjs(date1).diff(dayjs(date2), timescale);
+    return dayjs(date1).diff(dayjs(date2), timescale);
 }
 
 export const humanizedDateDifference = (date1: Date, date2: Date) =>
-	dayjs.duration(dayjs(date1).diff(date2)).humanize();
+    dayjs.duration(dayjs(date1).diff(date2)).humanize();

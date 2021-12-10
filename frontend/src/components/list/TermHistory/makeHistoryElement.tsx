@@ -1,8 +1,8 @@
-import PassfailIcon from 'components/_shared/PassfailIcon';
-import dayjs from 'dayjs';
-import { timeSince } from 'helpers/time';
-import { Fragment } from 'react';
-import { BiArrowToLeft, BiArrowToRight } from 'react-icons/bi';
+import PassfailIcon from "components/_shared/PassfailIcon";
+import dayjs from "dayjs";
+import { timeSince } from "helpers/time";
+import { Fragment } from "react";
+import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 import { v4 as uuidv4 } from "uuid";
 
 export function makeHistoryElement(history) {

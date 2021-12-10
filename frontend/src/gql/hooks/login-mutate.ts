@@ -3,17 +3,17 @@ import request, { gql } from "graphql-request";
 import { useMutation } from "react-query";
 
 export type UserWithPassword = {
-	username?: string;
-	password?: string;
+    username?: string;
+    password?: string;
 };
 
 export function useMutateLogin() {
-	return useMutation<MaybeUser, any, UserWithPassword>(
-		"login",
-		async (user) => {
-			const { login } = await request(
-				process.env.GRAPHQL_URI,
-				gql`
+    return useMutation<MaybeUser, any, UserWithPassword>(
+        "login",
+        async (user) => {
+            const { login } = await request(
+                process.env.GRAPHQL_URI,
+                gql`
                     mutation {
                         login(username: "${user?.username}", password: "${user?.password}") {
                             error 
@@ -24,10 +24,10 @@ export function useMutateLogin() {
                         }
                     }
                 `
-			);
+            );
 
-			return login;
-		},
-		{ retry: false }
-	);
+            return login;
+        },
+        { retry: false }
+    );
 }

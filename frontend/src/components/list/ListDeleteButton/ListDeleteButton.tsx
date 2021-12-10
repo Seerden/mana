@@ -5,27 +5,16 @@ const ListDeleteButton = ({ handleDelete }) => {
 
     return (
         <span className="ListDeleteButton">
-            {!confirming ?
-                <input
-                    onClick={toggleConfirming}
-                    type="button"
-                    value="Delete list"
-                /> :
+            {!confirming ? (
+                <input onClick={toggleConfirming} type="button" value="Delete list" />
+            ) : (
                 <>
-                    <input
-                        onClick={handleDelete}
-                        type="button"
-                        value="Delete"
-                    />
-                    <input
-                        onClick={toggleConfirming}
-                        type="button"
-                        value="Keep"
-                    />
+                    <input onClick={handleDelete} type="button" value="Delete" />
+                    <input onClick={toggleConfirming} type="button" value="Keep" />
                 </>
-            }
+            )}
         </span>
-    )
+    );
 };
 
-export default ListDeleteButton
+export default ListDeleteButton;

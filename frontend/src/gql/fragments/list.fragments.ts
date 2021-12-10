@@ -1,26 +1,26 @@
 import { gql } from "graphql-request";
 
 export const CoreTermFields = gql`
-fragment CoreTermFields on Term {
-    ...on Term {
-        _id
-        from
-        to
-        languages {
+    fragment CoreTermFields on Term {
+        ... on Term {
+            _id
             from
             to
-        }
-        history {
-            date
-            content
-            direction
-        }
-        saturation {
-            forwards
-            backwards
+            languages {
+                from
+                to
+            }
+            history {
+                date
+                content
+                direction
+            }
+            saturation {
+                forwards
+                backwards
+            }
         }
     }
-}
 `;
 
 export const CoreListFields = gql`

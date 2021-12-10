@@ -1,13 +1,12 @@
 $maincolor: deepskyblue;
 
 .Header {
-
     box-shadow: 0 3px 0 -2px #333;
     position: sticky;
     top: 0;
     left: 0;
     padding: 1rem;
-    
+
     background-color: #111;
     z-index: 10;
     height: max-content;
@@ -35,7 +34,7 @@ $maincolor: deepskyblue;
         transition: all 80ms linear;
 
         &:not(:hover) {
-            border: 2px solid #333
+            border: 2px solid #333;
         }
 
         &:hover {
@@ -71,7 +70,8 @@ $maincolor: deepskyblue;
         transition: all 100ms ease-out;
     }
 
-    &__active {  // double selector for specificity
+    &__active {
+        // double selector for specificity
         $highlight-color: deepskyblue;
         $hover-color: white;
 
@@ -86,7 +86,6 @@ $maincolor: deepskyblue;
             background-color: $hover-color;
             border-color: $hover-color;
             box-shadow: 0 0.7rem 0 0 $hover-color;
-
         }
     }
 }
