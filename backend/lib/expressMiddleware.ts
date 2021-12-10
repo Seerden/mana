@@ -1,12 +1,16 @@
 import dayjs from "dayjs";
-import { Response, Request } from "express";
+import { Request, Response } from "express";
 
 /**
- * Express middleware to log every API call that is accessed
+ * Express middleware to log every API request
  */
 export function log(req: Request, res: Response, next: (...args: any) => any) {
-    if (!req.originalUrl.includes('graphql')) {
-        console.log(`${dayjs(new Date()).format('MMM DD @ HH:mm')} - ${req.method} ${req.originalUrl}`);
+    if (!req.originalUrl.includes("graphql")) {
+        console.log(
+            `${dayjs(new Date()).format("MMM DD @ HH:mm")} - ${req.method} ${
+                req.originalUrl
+            }`
+        );
     }
 
     next();

@@ -4,42 +4,41 @@ import { Field, InputType, ObjectType } from "type-graphql";
 @InputType("NewListTermInput")
 export class NewListTerm {
     @Field()
-    from: string
+    from: string;
 
     @Field()
-    to: string
+    to: string;
 }
 
 @ObjectType()
 @InputType("NewListFromClientInput")
 export class NewListFromClient {
     @Field()
-    owner: string
+    owner: string;
 
     @Field()
-    name: string
+    name: string;
 
     @Field()
-    from: string
+    from: string;
 
     @Field(() => String)
-    to: string
+    to: string;
 
     @Field(() => [NewListTerm])
-    terms: NewListTerm[] // NewTerm? 
-
+    terms: NewListTerm[]; // NewTerm?
 }
 
 @ObjectType()
 @InputType("ListUpdateActionInput")
 export class ListUpdateAction {
     @Field(() => String)
-    type: "name"
+    type: "name";
 }
 
 @ObjectType()
 @InputType("ListUpdatePayloadInput")
 export class ListUpdatePayload {
     @Field(() => String, { nullable: true })
-    name?: string
+    name?: string;
 }

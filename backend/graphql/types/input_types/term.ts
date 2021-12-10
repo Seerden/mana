@@ -6,11 +6,11 @@ export class TermUpdateObject {
     @Field()
     _id: string;
 
-    @Field(type => TermHistory, { nullable: true })
+    @Field((type) => TermHistory, { nullable: true })
     history: TermHistory;
 
-    @Field(type => TermSaturation, { nullable: true })
-    saturation: TermSaturation
+    @Field((type) => TermSaturation, { nullable: true })
+    saturation: TermSaturation;
 }
 
 @InputType()
@@ -19,8 +19,8 @@ export class TermEditObject {
     _id: string;
 
     @Field({ nullable: true })
-    to: string
+    to: string;
 
     @Field({ nullable: true })
-    from: string
+    from: string;
 }

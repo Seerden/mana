@@ -1,16 +1,22 @@
-import { getModelForClass, modelOptions, prop, Ref, Severity } from "@typegoose/typegoose";
-import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
+import {
+    getModelForClass,
+    modelOptions,
+    prop,
+    Ref,
+    Severity,
+} from "@typegoose/typegoose";
+import { ObjectId } from "mongodb";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
 import { dbConn } from "../../db/db";
 import { withId } from "../mixins/withId";
-import { ObjectId } from 'mongodb'
-import { Term } from "./Term";
 import { List } from "./List";
+import { Term } from "./Term";
 
 @ObjectType()
 @InputType("IdInput")
 export class Id {
     @Field(() => String)
-    _id: ObjectId
+    _id: ObjectId;
 }
 
 @ObjectType()
@@ -18,7 +24,7 @@ export class Id {
 class ReviewSettings {
     @prop()
     @Field(() => String)
-    direction: 'forwards' | 'backwards';
+    direction: "forwards" | "backwards";
 
     @prop()
     @Field()
@@ -38,19 +44,19 @@ class ReviewSettings {
 
     @prop()
     @Field()
-    ended: boolean
+    ended: boolean;
 }
 
 @ObjectType()
 @InputType("ReviewSessionTermsInput")
 class ReviewSessionTerms {
-    @prop({ ref: 'List' })
+    @prop({ ref: "List" })
     @Field(() => String)
-    listId: Ref<List>
-    
-    @prop({ ref: 'Term' })
+    listId: Ref<List>;
+
+    @prop({ ref: "Term" })
     @Field(() => [String])
-    termIds: Ref<Term>[]
+    termIds: Ref<Term>[];
 }
 
 @ObjectType()
@@ -62,7 +68,7 @@ class ReviewDate {
 
     @prop()
     @Field()
-    end: Date
+    end: Date;
 }
 
 // create base ReviewSessions class without _id field
@@ -74,37 +80,36 @@ export class ReviewSessionBase {
     @Field(() => String)
     owner: String;
 
-    @prop({ ref: 'List' })
+    @prop({ ref: "List" })
     @Field(() => [Id], { nullable: true })
-    listIds: Id[]
+    listIds: Id[];
 
-    @prop({ required: true})
+    @prop({ required: true })
     @Field(() => ReviewDate)
-    date: ReviewDate
+    date: ReviewDate;
 
     @prop({ required: true })
     @Field(() => ReviewSessionTerms)
-    terms: ReviewSessionTerms
+    terms: ReviewSessionTerms;
 
     @prop({ required: true })
     @Field(() => ReviewSettings)
-    settings: ReviewSettings
+    settings: ReviewSettings;
 
     @prop({ required: true })
     @Field(() => [String])
-    passfail: string[]
+    passfail: string[];
 
     @prop({ required: true })
     @Field(() => [Int])
-    timePerCard: number[]
+    timePerCard: number[];
 }
 
 // extend this with an _id field using our withId mixin
 @ObjectType()
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
-export class ReviewSession extends withId(ReviewSessionBase) {
+export class ReviewSession extends withId(ReviewSessionBase) {}
 
-}
-
-
-export const ReviewSessionModel = getModelForClass(ReviewSession, { existingConnection: dbConn })
+export const ReviewSessionModel = getModelForClass(ReviewSession, {
+    existingConnection: dbConn,
+});

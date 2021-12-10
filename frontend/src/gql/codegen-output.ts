@@ -89,14 +89,14 @@ export type Mutation = {
   /** Add a list document to the database, append its ._id to its parent user's .lists array */
   createList: MaybeList;
   updateList: MaybeList;
-  createUser: MaybeUser;
-  /** Login mutation */
-  login: MaybeUser;
+  createReviewSession: MaybeReviewSession;
   updateTerms: Scalars['Int'];
   editTerms: Scalars['Int'];
   createTerms: ErrorOrSuccess;
   deleteTermsFromList: ErrorOrSuccess;
-  createReviewSession: MaybeReviewSession;
+  createUser: MaybeUser;
+  /** Login mutation */
+  login: MaybeUser;
 };
 
 
@@ -117,15 +117,9 @@ export type MutationUpdateListArgs = {
 };
 
 
-export type MutationCreateUserArgs = {
-  password: Scalars['String'];
-  username: Scalars['String'];
-};
-
-
-export type MutationLoginArgs = {
-  password: Scalars['String'];
-  username: Scalars['String'];
+export type MutationCreateReviewSessionArgs = {
+  termUpdateArray: Array<TermUpdateObject>;
+  newReviewSession: ReviewSessionBaseInput;
 };
 
 
@@ -151,9 +145,15 @@ export type MutationDeleteTermsFromListArgs = {
 };
 
 
-export type MutationCreateReviewSessionArgs = {
-  termUpdateArray: Array<TermUpdateObject>;
-  newReviewSession: ReviewSessionBaseInput;
+export type MutationCreateUserArgs = {
+  password: Scalars['String'];
+  username: Scalars['String'];
+};
+
+
+export type MutationLoginArgs = {
+  password: Scalars['String'];
+  username: Scalars['String'];
 };
 
 export type NewListFromClientInput = {
@@ -185,10 +185,10 @@ export type Query = {
   listsByUser: Array<List>;
   /** Query lists by id */
   listsById: Array<List>;
+  reviewSessionsByUser: Array<ReviewSession>;
   users: Array<User>;
   /** Returns currently logged in user.  */
   me: MaybeUser;
-  reviewSessionsByUser: Array<ReviewSession>;
 };
 
 
@@ -567,21 +567,21 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteList?: Resolver<ResolversTypes['SuccessOrError'], ParentType, ContextType, RequireFields<MutationDeleteListArgs, 'listId'>>;
   createList?: Resolver<ResolversTypes['MaybeList'], ParentType, ContextType, RequireFields<MutationCreateListArgs, 'newList'>>;
   updateList?: Resolver<ResolversTypes['MaybeList'], ParentType, ContextType, RequireFields<MutationUpdateListArgs, 'payload' | 'action' | 'listId'>>;
-  createUser?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
-  login?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
+  createReviewSession?: Resolver<ResolversTypes['MaybeReviewSession'], ParentType, ContextType, RequireFields<MutationCreateReviewSessionArgs, 'termUpdateArray' | 'newReviewSession'>>;
   updateTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationUpdateTermsArgs, 'updateObj'>>;
   editTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationEditTermsArgs, 'updateObj'>>;
   createTerms?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationCreateTermsArgs, 'terms'>>;
   deleteTermsFromList?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationDeleteTermsFromListArgs, 'ids' | 'listId'>>;
-  createReviewSession?: Resolver<ResolversTypes['MaybeReviewSession'], ParentType, ContextType, RequireFields<MutationCreateReviewSessionArgs, 'termUpdateArray' | 'newReviewSession'>>;
+  createUser?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
+  login?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   listsByUser?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByUserArgs, 'owner'>>;
   listsById?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByIdArgs, 'ids'>>;
+  reviewSessionsByUser?: Resolver<Array<ResolversTypes['ReviewSession']>, ParentType, ContextType, RequireFields<QueryReviewSessionsByUserArgs, 'owner'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   me?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType>;
-  reviewSessionsByUser?: Resolver<Array<ResolversTypes['ReviewSession']>, ParentType, ContextType, RequireFields<QueryReviewSessionsByUserArgs, 'owner'>>;
 };
 
 export type ReviewDateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewDate'] = ResolversParentTypes['ReviewDate']> = {

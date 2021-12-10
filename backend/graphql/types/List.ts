@@ -1,17 +1,25 @@
-import { Field, ID, InputType, ObjectType } from "type-graphql";
-import { prop as Property, getModelForClass, index, mongoose, modelOptions, Severity } from '@typegoose/typegoose';
-import { ReviewSession } from "./ReviewSession";
-import { dbConn } from "../../db/db";
+import {
+    getModelForClass,
+    index,
+    modelOptions,
+    mongoose,
+    prop as Property,
+    Severity,
+} from "@typegoose/typegoose";
 import { ObjectId } from "mongodb";
-import { Term } from "./Term";
+import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { Ref } from "../../custom_types";
+import { dbConn } from "../../db/db";
+import { ReviewSession } from "./ReviewSession";
+import { Term } from "./Term";
 
-type ListStateUnion = 'untouched' | 'seeding' | 'seeded';
+type ListStateUnion = "untouched" | "seeding" | "seeded";
 
 @ObjectType()
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @InputType("ListState")
-class ListState { // @todo: rename to ListReviewDateArray
+class ListState {
+    // @todo: rename to ListReviewDateArray
     @Property({ default: new Array() })
     @Field(() => [Date])
     forwards: Date[];
@@ -23,10 +31,10 @@ class ListState { // @todo: rename to ListReviewDateArray
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
-@index({ collation: { locale: 'en', strength: 2 } })
+@index({ collation: { locale: "en", strength: 2 } })
 export class List {
     @Field(() => ID)
-    _id: ObjectId
+    _id: ObjectId;
 
     @Property()
     @Field(() => String)
@@ -47,11 +55,11 @@ export class List {
     @Property({ ref: "Term" })
     @Field(() => [Term])
     // terms?: Array<Ref<Term>>
-    terms: Ref<Term>[]
+    terms: Ref<Term>[];
 
     @Property({ ref: "ReviewSession" })
     @Field(() => [ReviewSession], { nullable: true })
-    sessions: Array<Ref<ReviewSession>>
+    sessions: Array<Ref<ReviewSession>>;
 
     @Property()
     @Field(() => Date)
@@ -65,18 +73,18 @@ export class List {
     @Field(() => [String])
     setMembership: Array<mongoose.Types.ObjectId>; // @todo: implement Set type
 
-    @Property({ _id: false, default: { forwards: [], backwards: []} })
+    @Property({ _id: false, default: { forwards: [], backwards: [] } })
     @Field(() => ListState, { nullable: true })
-    reviewDates?: ListState
+    reviewDates?: ListState;
 }
 
 @ObjectType()
 export class MaybeList {
     @Field(() => List, { nullable: true })
-    list?: List
+    list?: List;
 
     @Field({ nullable: true })
-    error?: string
+    error?: string;
 }
 
 export const ListModel = getModelForClass(List, { existingConnection: dbConn });

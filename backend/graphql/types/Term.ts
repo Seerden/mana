@@ -1,9 +1,9 @@
 import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
-import { ObjectId } from 'mongodb';
+import { ObjectId } from "mongodb";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { Ref } from "../../custom_types";
 import { dbConn } from "../../db/db";
-import { List } from './List';
+import { List } from "./List";
 
 @ObjectType()
 @InputType("TermHistoryInput")
@@ -14,11 +14,11 @@ export class TermHistory {
 
     @prop()
     @Field(() => [String])
-    content: Array<'pass' | 'fail'>;
+    content: Array<"pass" | "fail">;
 
     @prop()
     @Field(() => String)
-    direction: 'forwards' | 'backwards';
+    direction: "forwards" | "backwards";
 }
 
 @ObjectType()
@@ -26,23 +26,23 @@ export class TermHistory {
 export class TermLanguages {
     @prop()
     @Field({ nullable: true })
-    from: string
+    from: string;
 
     @prop()
     @Field({ nullable: true })
-    to: string
+    to: string;
 }
 
-@ObjectType() 
+@ObjectType()
 @InputType("TermSaturationInput")
 export class TermSaturation {
     @prop()
     @Field({ nullable: true })
-    forwards?: number
+    forwards?: number;
 
     @prop()
     @Field({ nullable: true })
-    backwards?: number
+    backwards?: number;
 }
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
@@ -50,15 +50,15 @@ export class TermSaturation {
 @InputType("TermInput")
 export class Term {
     @Field(() => ID)
-    readonly _id: ObjectId
+    readonly _id: ObjectId;
 
     @prop({ required: true })
     @Field()
     owner: string;
 
-    @prop({_id: false})
+    @prop({ _id: false })
     @Field(() => TermLanguages, { nullable: true })
-    languages: TermLanguages
+    languages: TermLanguages;
 
     @prop({ required: true })
     @Field()
@@ -69,16 +69,16 @@ export class Term {
     from: string;
 
     @prop({ default: [], _id: false })
-    @Field(() => [TermHistory], { nullable: 'items'})
+    @Field(() => [TermHistory], { nullable: "items" })
     history: TermHistory[];
 
     @prop({ required: true, _id: false })
     @Field(() => TermSaturation)
     saturation: TermSaturation;
 
-    @prop({ ref: 'List' })
-    @Field(() => [List], { nullable: 'items' })
+    @prop({ ref: "List" })
+    @Field(() => [List], { nullable: "items" })
     listMembership: Ref<List>[];
 }
 
-export const TermModel = getModelForClass(Term, { existingConnection: dbConn })
+export const TermModel = getModelForClass(Term, { existingConnection: dbConn });
