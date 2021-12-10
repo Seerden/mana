@@ -1,6 +1,6 @@
-import { useRouteProps } from "../../hooks/routerHooks";
 import UserSessions from "components/sessions/UserSessions";
-import "./User.scss";
+import { useRouteProps } from "../../hooks/routerHooks";
+import cs from "./User.module.scss";
 
 const User = () => {
 	const { params } = useRouteProps();
@@ -9,7 +9,7 @@ const User = () => {
 	return (
 		<div className="PageWrapper">
 			<div className="User">
-				<div className="PageHeader UserHeader">User page for /u/{username}</div>
+				<div className={cs.Title}>/u/{username}'s profile</div>
 			</div>
 
 			<section>
