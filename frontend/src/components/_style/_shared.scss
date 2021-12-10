@@ -43,11 +43,6 @@
 	padding: 0.2rem 0.5rem;
 }
 
-// button:disabled {
-//     background-color: crimson;
-//     border: 1px dashed yellow;
-// }
-
 %shared-temp-section {
 	border: 3px solid #333;
 	padding: 1rem;
@@ -92,4 +87,30 @@
 	border-bottom: 5px solid var(--text-light);
 	width: max-content;
 	margin-bottom: 1em;
+}
+
+%link {
+	$color: deepskyblue;
+
+	display: inline-block;
+	padding: 0.3em 0.6em;
+	background-color: #333;
+	border-radius: 2px;
+	color: $color;
+
+	transition: all 75ms ease-in;
+
+	&:hover {
+		background-color: #282828;
+		border-radius: 0;
+	}
+
+	&:visited {
+		color: $color;
+	}
+}
+
+// outline for page-width components
+%shared-outline {
+	outline: 4px solid #333;
 }

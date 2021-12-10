@@ -1,0 +1,43 @@
+@use "../_style/shared";
+
+$field-width: 12em;
+
+.Button {
+	margin-top: 1rem;
+	display: block;
+	width: $field-width;
+	padding: 0.5em 1em;
+}
+
+.Title {
+	@extend %page-title;
+}
+
+.Link {
+	@extend %link;
+}
+
+.Form {
+	display: flex;
+	flex-flow: column wrap;
+	margin: 0 auto;
+	width: max-content;
+	padding: 2em;
+
+	@extend %shared-outline;
+}
+
+.Input {
+	width: $field-width;
+	padding: 0.3em 0.1em;
+	text-indent: 0.2em;
+}
+
+.Label {
+	font-size: 1.1em;
+	margin-bottom: 0.3em;
+}
+
+.Paragraph {
+	margin-top: 1em;
+}

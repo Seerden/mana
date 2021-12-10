@@ -1,7 +1,7 @@
 import { useMutateRegisterUser } from "gql/hooks/user-query";
 import { useCallback, useState } from "react";
 import { handleFormBlur } from "../../hooks/state";
-import "./Register.scss";
+import cs from "./Register.module.scss";
 
 const Register = () => {
 	const [newUser, setNewUser] = useState<NewUser>({} as NewUser);
@@ -17,38 +17,49 @@ const Register = () => {
 	);
 
 	return (
-		<div className="PageWrapper">
-			<div className="Register">
-				{!data?.user && (
-					<>
-						<div className="PageHeader">Register a new account</div>
-						<form className="Register__form">
-							<label htmlFor="username">Username</label>
-							<input
-								onBlur={(e) => handleFormBlur(e, newUser, setNewUser)}
-								type="text"
-								name="username"
-							/>
+		<div className="Register">
+			{!data?.user && (
+				<>
+					<form className={cs.Form}>
+						<h2 className={cs.Title}>Register a new account</h2>
+						<label className={cs.Label} htmlFor="username">
+							Username
+						</label>
 
-							<label htmlFor="password">Password</label>
-							<input
-								onBlur={(e) => handleFormBlur(e, newUser, setNewUser)}
-								type="password"
-								name="password"
-							/>
+						<input
+							className={cs.Input}
+							onBlur={(e) => handleFormBlur(e, newUser, setNewUser)}
+							type="text"
+							name="username"
+						/>
 
-							<input
-								onClick={() => handleSubmit(newUser)}
-								className="Register__button"
-								type="button"
-								value="Register"
-							/>
-						</form>
-					</>
-				)}
+						<label className={cs.Label} htmlFor="password">
+							Password
+						</label>
 
-				{data?.user && <div>{JSON.stringify(data.user)}</div>}
-			</div>
+						<input
+							className={cs.Input}
+							onBlur={(e) => handleFormBlur(e, newUser, setNewUser)}
+							type="password"
+							name="password"
+						/>
+
+						<input
+							onClick={() => handleSubmit(newUser)}
+							className={cs.Button}
+							type="button"
+							value="Register"
+						/>
+
+						<p className={cs.Paragraph}>
+							Already have an account?{" "}
+							<a className={cs.Link} href="/login">
+								Sign in here
+							</a>
+						</p>
+					</form>
+				</>
+			)}
 		</div>
 	);
 };
