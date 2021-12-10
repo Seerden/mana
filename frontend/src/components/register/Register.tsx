@@ -1,34 +1,29 @@
-import { useMutateRegisterUser } from "gql/hooks/user-query";
-import { useCallback, useState } from "react";
-import { handleFormBlur } from "../../hooks/state";
 import cs from "./Register.module.scss";
+import { useRegister } from "./useRegister";
 
 const Register = () => {
-	const [newUser, setNewUser] = useState<NewUser>({} as NewUser);
-	const { data, mutate: mutateRegisterUser } = useMutateRegisterUser();
-
-	const handleSubmit = useCallback(
-		(newUser: NewUser) => {
-			if (newUser && newUser.username && newUser.password) {
-				mutateRegisterUser(newUser);
-			}
-		},
-		[newUser]
-	);
+	const { user, handleChange, handleSubmit, message } = useRegister();
 
 	return (
 		<div className="Register">
-			{!data?.user && (
+			{!user && (
 				<>
-					<form className={cs.Form}>
+					<form
+						className={cs.Form}
+						onSubmit={(e) => {
+							e.preventDefault();
+							handleSubmit();
+						}}
+					>
 						<h2 className={cs.Title}>Register a new account</h2>
+						{message && <p className={cs.Message}>{message}</p>}
 						<label className={cs.Label} htmlFor="username">
 							Username
 						</label>
 
 						<input
 							className={cs.Input}
-							onBlur={(e) => handleFormBlur(e, newUser, setNewUser)}
+							onChange={(e) => handleChange(e)}
 							type="text"
 							name="username"
 						/>
@@ -36,20 +31,24 @@ const Register = () => {
 						<label className={cs.Label} htmlFor="password">
 							Password
 						</label>
-
 						<input
 							className={cs.Input}
-							onBlur={(e) => handleFormBlur(e, newUser, setNewUser)}
+							onChange={(e) => handleChange(e)}
 							type="password"
 							name="password"
 						/>
 
+						<label className={cs.Label} htmlFor="repeatPassword">
+							Repeat password
+						</label>
 						<input
-							onClick={() => handleSubmit(newUser)}
-							className={cs.Button}
-							type="button"
-							value="Register"
+							className={cs.Input}
+							onChange={(e) => handleChange(e)}
+							type="password"
+							name="repeatPassword"
 						/>
+
+						<input className={cs.Button} type="submit" value="Register" />
 
 						<p className={cs.Paragraph}>
 							Already have an account?{" "}
