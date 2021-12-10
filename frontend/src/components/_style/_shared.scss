@@ -1,46 +1,46 @@
 %responsive-section {
-    @media screen and (min-width: 1280px) {
-        max-width: 70rem;
-    }
-    
-    @media screen and (min-width: 768px) {
-        min-width: 700px;
-    }
+	@media screen and (min-width: 1280px) {
+		max-width: 70rem;
+	}
+
+	@media screen and (min-width: 768px) {
+		min-width: 700px;
+	}
 }
 
 %shared-button {
-    display: block;
-    margin: 0.8rem 0;
-    outline: none;
-    border: none;
-    border-radius: 3px;
-    background-color: deepskyblue;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+	display: block;
+	margin: 0.8rem 0;
+	outline: none;
+	border: none;
+	border-radius: 3px;
+	background-color: deepskyblue;
+	padding: 0.5rem 1rem;
+	font-size: 0.9rem;
 
-    transition: all 80ms linear;
+	transition: all 80ms linear;
 
-    &:not(:active):hover {
-        background-color: #333333;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 0 -4px deepskyblue, 0 0 0.5rem black;
-    }
-    &:hover {
-        box-shadow: 0 3px 0 -1px black;
-    }
+	&:not(:active):hover {
+		background-color: #333333;
+		color: white;
+		transform: translateY(-2px);
+		box-shadow: 0 5px 0 -4px deepskyblue, 0 0 0.5rem black;
+	}
+	&:hover {
+		box-shadow: 0 3px 0 -1px black;
+	}
 
-    &:active {
-        background-color: #444;
-        color: azure;
-    }
+	&:active {
+		background-color: #444;
+		color: azure;
+	}
 }
 
 %shared-heading {
-    width: max-content;
-    background-color: #333;
-    font-size: 1.4rem;
-    padding: 0.2rem 0.5rem;
+	width: max-content;
+	background-color: #333;
+	font-size: 1.4rem;
+	padding: 0.2rem 0.5rem;
 }
 
 // button:disabled {
@@ -49,38 +49,47 @@
 // }
 
 %shared-temp-section {
-    border: 3px solid #333;
-    padding: 1rem;
-    width: 800px;
-    margin-top: 1rem;
+	border: 3px solid #333;
+	padding: 1rem;
+	width: 800px;
+	margin-top: 1rem;
 }
 
 %shared-link {
-    display: inline-block;
-    padding: 0.3rem 1.5rem;
-    color: azure;
-    background-color: #222;
-    border: 2px solid deepskyblue;
-    color: azure;
-    border-radius: 3px;
-    text-decoration: none;
+	display: inline-block;
+	padding: 0.3rem 1.5rem;
+	color: azure;
+	background-color: #222;
+	border: 2px solid deepskyblue;
+	color: azure;
+	border-radius: 3px;
+	text-decoration: none;
 
-    transition: all 100ms ease-in, transform 25ms ease-in;
+	transition: all 100ms ease-in, transform 25ms ease-in;
 
-    &:hover, &:active {
-        background-color: deepskyblue;
-        color: black;
-        box-shadow:  0 0.3rem 0 -0.2rem deepskyblue;
-        transform: translateY(-0.1rem);
-    }
-
+	&:hover,
+	&:active {
+		background-color: deepskyblue;
+		color: black;
+		box-shadow: 0 0.3rem 0 -0.2rem deepskyblue;
+		transform: translateY(-0.1rem);
+	}
 }
 
 %shared-subsection-header {
-    font-size: 1.3rem;
-    background-color: #ccc;
-    color: #111;
-    padding: 0.2rem 0.5rem;
-    width: max-content;
-    margin-bottom: 0.5rem;
+	font-size: 1.3rem;
+	background-color: #ccc;
+	color: #111;
+	padding: 0.2rem 0.5rem;
+	width: max-content;
+	margin-bottom: 0.5rem;
+}
+
+%page-title {
+	font-size: 1.9em;
+	font-weight: 600;
+	padding-right: 2em;
+	border-bottom: 5px solid var(--text-light);
+	width: max-content;
+	margin-bottom: 1em;
 }

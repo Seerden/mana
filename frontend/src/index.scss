@@ -1,99 +1,83 @@
-@use './components/_style/shared';
+@use "./components/_style/shared";
 
 :root {
-    --text-light: azure;
-    --text-dark: #191919;
-    --background-secondary: #333;
-    --indent: 0.5em;
-    --width-container: 800px;
+	--text-light: azure;
+	--text-dark: #191919;
+	--background-secondary: #333;
+	--indent: 0.5em;
+	--width-container: 800px;
 }
 
-
 html {
-
-    $fonts: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Meiryo', 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-family: $fonts;
-    background-color: var(--text-dark);
-    color: var(--text-light);
-    height: 100%;
-    overflow-y: scroll;
+	$fonts: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+		"Meiryo", "Open Sans", "Helvetica Neue", sans-serif;
+	font-family: $fonts;
+	background-color: var(--text-dark);
+	color: var(--text-light);
+	height: 100%;
+	overflow-y: scroll;
 }
 
 body {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
 .Button {
-    display: inline-block;
-    font-size: 1rem;
-    font-weight: 500;
-    text-align: center;
-    margin: 0.5rem 0.2rem;
-    padding: 0.4rem;
-    background-color: deepskyblue;
-    border-radius: 5px;
-    text-decoration: none;
-    outline:none;
-    border: none;
+	display: inline-block;
+	font-size: 1rem;
+	font-weight: 500;
+	text-align: center;
+	margin: 0.5rem 0.2rem;
+	padding: 0.4rem;
+	background-color: deepskyblue;
+	border-radius: 5px;
+	text-decoration: none;
+	outline: none;
+	border: none;
 }
 .Button:hover {
-        transform: translateY(-1px) scale(1.02);
-        box-shadow: 0 0 1em black;
-    }
+	transform: translateY(-1px) scale(1.02);
+	box-shadow: 0 0 1em black;
+}
 
 .danger {
-    background-color: orangered;
+	background-color: orangered;
 }
 
 .Link {
-    display: inline-block;
-    color: deepskyblue;
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
+	display: inline-block;
+	color: deepskyblue;
+	text-decoration: none;
+	border-bottom: 1px solid transparent;
 
-    transition: all ease 100ms;
+	transition: all ease 100ms;
 
-    &:hover {
-        transform: translateY(-2px);
-        color: slateblue;
-    }
+	&:hover {
+		transform: translateY(-2px);
+		color: slateblue;
+	}
 
-    &:active {
-        border-bottom: 1px solid slateblue;
-    }
+	&:active {
+		border-bottom: 1px solid slateblue;
+	}
 }
 
 .PageWrapper {
-    margin: 2rem;
-    padding-bottom: 3rem;
+	margin: 2rem;
+	padding-bottom: 3rem;
 
-    @media screen and (max-width: 768px) {
-        margin: 0.2rem;
-    }
-}
-
-.Home__link {
-    display: inline-block;
-    padding: 0 0.4rem;
-    color: #cccccc;
-    width: max-content;
-    background-color: #333;
-    text-decoration: none;
-    transition: 100ms all linear;
-}
-
-.Home__link:hover {
-    color: white;
-    background-color: blueviolet;
+	@media screen and (max-width: 768px) {
+		margin: 0.2rem;
+	}
 }
 
 label {
-    display: flex;
+	display: flex;
 }

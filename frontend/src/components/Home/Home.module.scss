@@ -1,0 +1,54 @@
+@use "../_style/shared";
+
+$main-color: blueviolet;
+
+.Title {
+	@extend %page-title;
+}
+
+.Subtitle {
+	font-size: 1.1em;
+	margin-left: -1em;
+	margin-bottom: 0.5em;
+}
+
+.Header {
+	font-weight: 600;
+	font-size: 1.5rem;
+	border-bottom: 2px solid $main-color;
+	border-radius: 0 0 3px 0;
+	max-width: max-content;
+	margin-bottom: 0;
+	background-color: $main-color;
+	padding: 0 1rem;
+}
+
+.Section {
+	&__content {
+		margin: 0;
+		padding: 0.5rem 2rem;
+		max-width: 80%;
+		border-left: 4px solid $main-color;
+	}
+}
+
+.Paragraph {
+	&:not(&:nth-of-type(1)) {
+		margin-top: 1.5em;
+	}
+}
+
+.Link {
+	display: inline-block;
+	padding: 0 0.4rem;
+	color: #cccccc;
+	width: max-content;
+	background-color: #333;
+	text-decoration: none;
+	transition: 100ms all linear;
+
+	&:hover {
+		color: white;
+		background-color: $main-color;
+	}
+}
