@@ -1,0 +1,56 @@
+@use "../_style/shared";
+
+$field-width: 12em;
+
+.Button {
+	margin-top: 1rem;
+	display: block;
+	width: $field-width;
+	padding: 0.5em 1em;
+}
+
+.Title {
+	@extend %page-title;
+}
+
+.Link {
+	@extend %link;
+}
+
+.Form {
+	@extend %shared-outline;
+
+	display: flex;
+	flex-flow: column wrap;
+	margin: 0 auto;
+	width: max-content;
+	padding: 2em;
+}
+
+.Input {
+	width: $field-width;
+	padding: 0.3em 0.1em;
+	text-indent: 0.2em;
+}
+
+.Label {
+	font-size: 1.1em;
+	margin-bottom: 0.3em;
+
+	&:not(:nth-of-type(1)) {
+		margin-top: 0.4em;
+	}
+}
+
+.Paragraph {
+	margin-top: 1em;
+}
+
+.Message {
+	$color: orange;
+	outline: 2px solid $color;
+	background-color: #222;
+	padding: 1em 2em;
+	font-size: 1.05em;
+	margin-bottom: 1em;
+}

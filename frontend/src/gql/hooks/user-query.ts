@@ -6,7 +6,7 @@ import { useMutation } from "react-query";
 const uri = process.env.GRAPHQL_URI;
 
 export function useMutateRegisterUser() {
-	const mutationResponse = useMutation<MaybeUser, any, NewUser>(
+	return useMutation<{ createUser: MaybeUser }, any, NewUser>(
 		"registerUser",
 		async ({ username, password }) => {
 			const response = await request(uri, registerUserMutation, {
@@ -17,6 +17,4 @@ export function useMutateRegisterUser() {
 			return response;
 		}
 	);
-
-	return mutationResponse;
 }
