@@ -18,6 +18,7 @@ const dark = {
 	black: "black",
 	darker: "#111",
 	dark: "#222",
+	darkish: "#282828",
 	grey,
 } as const;
 
