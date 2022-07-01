@@ -8,27 +8,23 @@ const ListTerms = ({ filter, setFilter, termsToDisplay, list }) => {
 
 	return (
 		<S.ListTerms>
-			<ul className="List__terms">
-				<div>
-					<S.Header>Terms</S.Header>
+			<S.Header>Terms</S.Header>
 
-					<S.FilterInfo>
-						{list && list.sessions?.length > 0 && (
-							<SaturationFilter {...{ filter, setFilter }} />
-						)}
-						<S.FilterString>{showingString}</S.FilterString>
-					</S.FilterInfo>
-				</div>
-
-				{/* TODO: Loading terms... isn't styuled, but AllFiltered _is_. Why not use a variable for the string to display, and display both _with_ styles? */}
-				{!termsToDisplay && <>Loading terms...</>}
-
-				{termsToDisplay?.length === 0 && (
-					<S.AllFiltered>All terms were filtered out</S.AllFiltered>
+			<S.FilterInfo>
+				{list && list.sessions?.length > 0 && (
+					<SaturationFilter {...{ filter, setFilter }} />
 				)}
+				<S.FilterString>{showingString}</S.FilterString>
+			</S.FilterInfo>
 
-				{termsToDisplay?.length && termsToDisplay}
-			</ul>
+			{/* TODO: Loading terms... isn't styuled, but AllFiltered _is_. Why not use a variable for the string to display, and display both _with_ styles? */}
+			{!termsToDisplay && <>Loading terms...</>}
+
+			{termsToDisplay?.length === 0 && (
+				<S.AllFiltered>All terms were filtered out</S.AllFiltered>
+			)}
+
+			{termsToDisplay?.length && termsToDisplay}
 		</S.ListTerms>
 	);
 };
