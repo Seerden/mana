@@ -1,5 +1,5 @@
 import SaturationFilter from "components/SaturationFilter/SaturationFilter";
-import "./Terms.scss";
+import * as S from "./ListTerms.style";
 
 const ListTerms = ({ filter, setFilter, termsToDisplay, list }) => {
 	const showingString = filter.saturation.level
@@ -7,28 +7,29 @@ const ListTerms = ({ filter, setFilter, termsToDisplay, list }) => {
 		: "Showing all terms";
 
 	return (
-		<section className="Terms">
+		<S.ListTerms>
 			<ul className="List__terms">
 				<div>
-					<header className="Terms__header">Terms</header>
+					<S.Header>Terms</S.Header>
 
-					<div className="Terms__filterinfo">
+					<S.FilterInfo>
 						{list && list.sessions?.length > 0 && (
 							<SaturationFilter {...{ filter, setFilter }} />
 						)}
-						<span className="Terms__filterinfo--filterstring">{showingString}</span>
-					</div>
+						<S.FilterString>{showingString}</S.FilterString>
+					</S.FilterInfo>
 				</div>
 
+				{/* TODO: Loading terms... isn't styuled, but AllFiltered _is_. Why not use a variable for the string to display, and display both _with_ styles? */}
 				{!termsToDisplay && <>Loading terms...</>}
 
 				{termsToDisplay?.length === 0 && (
-					<div className="Terms__display--filtered">All terms were filtered out</div>
+					<S.AllFiltered>All terms were filtered out</S.AllFiltered>
 				)}
 
 				{termsToDisplay?.length && termsToDisplay}
 			</ul>
-		</section>
+		</S.ListTerms>
 	);
 };
 
