@@ -5,6 +5,7 @@ const blue = {
 const light = {
 	white: "white",
 	tint: "azure",
+	faded: "#ccc",
 } as const;
 
 const grey = {
