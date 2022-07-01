@@ -3,9 +3,9 @@ import ListDeleteButton from "../ListDeleteButton/ListDeleteButton";
 import * as S from "./ListTitleBar.style";
 
 interface ListTitleBarProps {
-	handleListTitleBlur(e): void;
+	handleListTitleBlur: React.FocusEventHandler;
 	list: List;
-	handleDelete(): void;
+	handleDelete: () => void;
 }
 
 const ListTitleBar = ({ handleListTitleBlur, list, handleDelete }: ListTitleBarProps) => {
