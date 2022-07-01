@@ -9,7 +9,7 @@ import useQueryClient from "../hooks/query-client";
 import Private from "../wrappers/Private";
 import * as S from "./App.style";
 import Home from "./Home/Home";
-import Footer from "./layout/Footer";
+import Footer from "./layout/Footer/Footer";
 import Header from "./layout/Header/Header";
 import List from "./list/List";
 import Lists from "./lists/Lists";
