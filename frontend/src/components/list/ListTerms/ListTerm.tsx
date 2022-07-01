@@ -1,75 +1,70 @@
-import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import { memo, useState } from "react";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
 import { TermPropsInterface } from "types/list.types";
+import SaturationIcon from "../../SaturationFilter/SaturationIcon";
 import TermModal from "../TermModal/TermModal";
-import "./ListTerm.scss";
+import * as S from "./ListTerm.style";
 import { useListTerm } from "./useListTerm";
 
 const ListTerm = memo(
-    ({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {
-        const [term, setTerm] = useState<typeof termFromProps>(() => termFromProps);
-        const {
-            open,
-            setOpen,
-            selectingTerms,
-            selected,
-            handleSelect,
-            handleConfirmClick,
-            handleTermEdit,
-            confirmingDelete,
-            setConfirmingDelete,
-        } = useListTerm({ term, handleTermDelete, idx, setTerm });
+	({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {
+		const [term, setTerm] = useState<typeof termFromProps>(() => termFromProps);
+		const {
+			open,
+			setOpen,
+			selectingTerms,
+			selected,
+			handleSelect,
+			handleConfirmClick,
+			handleTermEdit,
+			confirmingDelete,
+			setConfirmingDelete,
+		} = useListTerm({ term, handleTermDelete, idx, setTerm });
 
-        return (
-            <div className="ListTerm">
-                <li
-                    className="Term"
-                    title="Click to expand"
-                    onClick={() => setOpen(true)}
-                >
-                    <span className="Term__index">{idx + 1}</span>
-                    <span className="Term__from">{term.from}</span>
-                    <span className="Term__to">{term.to}</span>
-                    <SaturationIcon
-                        classes={"Term__saturation"}
-                        direction="forwards"
-                        saturation={term.saturation?.forwards}
-                    />
-                    <SaturationIcon
-                        classes={"Term__saturation"}
-                        direction="backwards"
-                        saturation={term.saturation?.backwards}
-                    />
-                    {selectingTerms ? (
-                        <div
-                            className="Term__select"
-                            style={{
-                                color: selected ? "seagreen" : "#555",
-                            }}
-                            onClick={handleSelect}
-                        >
-                            {selected ? <ImCheckboxChecked /> : <ImCheckboxUnchecked />}
-                        </div>
-                    ) : (
-                        ""
-                    )}
-                </li>
-                {open && (
-                    <TermModal
-                        {...{
-                            handleConfirmClick,
-                            setOpen,
-                            term,
-                            handleTermEdit,
-                            confirmingDelete,
-                            setConfirmingDelete,
-                        }}
-                    />
-                )}
-            </div>
-        );
-    }
+		return (
+			<div className="ListTerm">
+				<S.Term title="Click to expand" onClick={() => setOpen(true)}>
+					<S.TermIndex>{idx + 1}</S.TermIndex>
+					<span>{term.from}</span>
+					<span>{term.to}</span>
+
+					<S.TermSaturation>
+						<SaturationIcon
+							direction="forwards"
+							saturation={term.saturation?.forwards}
+						/>
+					</S.TermSaturation>
+					<S.TermSaturation>
+						<SaturationIcon
+							direction="backwards"
+							saturation={term.saturation?.backwards}
+						/>
+					</S.TermSaturation>
+
+					{selectingTerms ? (
+						<S.TermSelect selected={selected} onClick={handleSelect}>
+							{selected ? <ImCheckboxChecked /> : <ImCheckboxUnchecked />}
+						</S.TermSelect>
+					) : (
+						""
+					)}
+				</S.Term>
+
+				{open && (
+					<TermModal
+						{...{
+							handleConfirmClick,
+							setOpen,
+							term,
+							handleTermEdit,
+							confirmingDelete,
+							setConfirmingDelete,
+						}}
+					/>
+				)}
+			</div>
+		);
+	}
 );
 
 export default ListTerm;
