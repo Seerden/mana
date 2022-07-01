@@ -80,7 +80,7 @@ export const HeaderNavLink = styled(NavLink)<{ $isActive?: boolean }>`
 		p.$isActive &&
 		css`
 			--main: ${(p) => p.theme.colors.blue.main};
-			--white: ${(p) => p.theme.colors.white};
+			--white: ${(p) => p.theme.colors.light.white};
 
 			background-color: var(--main);
 			color: black;
