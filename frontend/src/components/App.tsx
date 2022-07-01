@@ -1,8 +1,9 @@
 import ReviewPage from "components/review/ReviewPage/ReviewPage";
 import User from "components/user/User";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "react-query";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
+import useQueryClient from "../hooks/query-client";
 import Private from "../wrappers/Private";
 import "./App.scss";
 import Home from "./Home/Home";
@@ -15,14 +16,7 @@ import NewList from "./newlist/NewList";
 import Register from "./register/Register";
 
 const App = () => {
-	const client = new QueryClient({
-		defaultOptions: {
-			queries: {
-				cacheTime: 0,
-				refetchOnWindowFocus: false,
-			},
-		},
-	});
+	const [client] = useQueryClient();
 
 	return (
 		<>
