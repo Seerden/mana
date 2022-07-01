@@ -9,8 +9,6 @@ interface ListTitleBarProps {
 }
 
 const ListTitleBar = ({ handleListTitleBlur, list, handleDelete }: ListTitleBarProps) => {
-	const base = "List__TitleBar";
-
 	return (
 		<S.TitleBar>
 			<S.TitleBarHeader>
