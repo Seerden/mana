@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import { tempSection } from "../../../helpers/theme/theme";
+import { tempSectionStyle } from "../../../helpers/theme/theme";
 
 const regularPadding = "0.5rem 1rem";
 
 // .List__TitleBar
 export const TitleBar = styled.section`
-	${tempSection};
+	${tempSectionStyle};
 
 	margin-bottom: 0;
 	padding: 0;
