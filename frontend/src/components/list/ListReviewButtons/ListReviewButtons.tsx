@@ -2,7 +2,6 @@ import * as S from "./ListReviewButtons.style";
 
 const ListReviewButtons = () => {
 	const kind = "full";
-	const base = "ListReviewButtons";
 
 	return (
 		<S.ReviewButtons>
