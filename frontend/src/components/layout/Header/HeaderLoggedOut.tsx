@@ -1,39 +1,37 @@
 import { isActive } from "helpers/link";
 import { useRouteProps } from "hooks/routerHooks";
-import { NavLink } from "react-router-dom";
+import * as S from "./Header.style";
 
 const HeaderLoggedOut = () => {
-    const { location } = useRouteProps();
-    return (
-        <nav>
-            <span id="Logo">Mana</span>
+	const { location } = useRouteProps();
+	return (
+		<S.HeaderContent>
+			<S.HeaderLogo>Mana</S.HeaderLogo>
 
-            <NavLink
-                className={`NavLink ${isActive(`/`, location) ? "NavLink__active" : ""}`}
-                to="/"
-            >
-                Home
-            </NavLink>
+			<S.HeaderNavLink
+				className={`NavLink ${isActive(`/`, location) ? "NavLink__active" : ""}`}
+				to="/"
+			>
+				Home
+			</S.HeaderNavLink>
 
-            <NavLink
-                className={`NavLink ${
-                    isActive(`/login`, location) ? "NavLink__active" : ""
-                }`}
-                to={`/login`}
-            >
-                Log in
-            </NavLink>
+			<S.HeaderNavLink
+				className={`NavLink ${isActive(`/login`, location) ? "NavLink__active" : ""}`}
+				to={`/login`}
+			>
+				Log in
+			</S.HeaderNavLink>
 
-            <NavLink
-                className={`NavLink ${
-                    isActive(`/register`, location) ? "NavLink__active" : ""
-                }`}
-                to={`/register`}
-            >
-                Register
-            </NavLink>
-        </nav>
-    );
+			<S.HeaderNavLink
+				className={`NavLink ${
+					isActive(`/register`, location) ? "NavLink__active" : ""
+				}`}
+				to={`/register`}
+			>
+				Register
+			</S.HeaderNavLink>
+		</S.HeaderContent>
+	);
 };
 
 export default HeaderLoggedOut;

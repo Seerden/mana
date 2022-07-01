@@ -1,46 +1,37 @@
 import { isActive } from "helpers/link";
 import { useRouteProps } from "hooks/routerHooks";
 import { useLogin } from "hooks/useLogin";
-import { NavLink } from "react-router-dom";
+import * as S from "./Header.style";
 
 const HeaderLoggedIn = () => {
-    const { currentUser, logout } = useLogin();
-    const { location } = useRouteProps();
+	const { currentUser, logout } = useLogin();
+	const { location } = useRouteProps();
 
-    return (
-        <nav>
-            <span id="Logo">Mana</span>
+	return (
+		<S.HeaderContent>
+			<S.HeaderLogo>Mana</S.HeaderLogo>
 
-            <NavLink
-                className={`NavLink ${isActive(`/`, location) ? "NavLink__active" : ""}`}
-                to="/"
-            >
-                Home
-            </NavLink>
+			<S.HeaderNavLink $isActive={isActive(`/`, location)} to="/">
+				Home
+			</S.HeaderNavLink>
 
-            <NavLink
-                className={`NavLink ${
-                    isActive(`/u/${currentUser}`, location) ? "NavLink__active" : ""
-                }`}
-                to={`/u/${currentUser}`}
-            >
-                My Profile
-            </NavLink>
+			<S.HeaderNavLink
+				$isActive={isActive(`/u/${currentUser}`, location)}
+				to={`/u/${currentUser}`}
+			>
+				My Profile
+			</S.HeaderNavLink>
 
-            <NavLink
-                className={`NavLink ${
-                    isActive(`/u/${currentUser}/lists`, location) ? "NavLink__active" : ""
-                }`}
-                to={`/u/${currentUser}/lists`}
-            >
-                My Lists
-            </NavLink>
+			<S.HeaderNavLink
+				$isActive={isActive(`/u/${currentUser}/lists`, location)}
+				to={`/u/${currentUser}/lists`}
+			>
+				My Lists
+			</S.HeaderNavLink>
 
-            <button className="Header__logout" onClick={() => logout()}>
-                log out
-            </button>
-        </nav>
-    );
+			<S.LogoutButton onClick={() => logout()}>log out</S.LogoutButton>
+		</S.HeaderContent>
+	);
 };
 
 export default HeaderLoggedIn;
