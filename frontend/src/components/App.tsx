@@ -8,7 +8,7 @@ import Private from "../wrappers/Private";
 import * as S from "./App.style";
 import Home from "./Home/Home";
 import Footer from "./layout/Footer";
-import Header from "./layout/Header";
+import Header from "./layout/Header/Header";
 import List from "./list/List";
 import Lists from "./lists/Lists";
 import Login from "./login/Login";
