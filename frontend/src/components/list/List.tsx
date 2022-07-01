@@ -9,15 +9,13 @@ function List() {
 
 	return (
 		<div className="PageWrapper">
-			<div className="List">
-				{list && (
-					<>
-						<ListTitleBar {...{ handleListTitleBlur, list, handleDelete }} />
-						<ListReviewButtons />
-						<ListTerms {...{ filter, setFilter, termsToDisplay, list }} />
-					</>
-				)}
-			</div>
+			{list && (
+				<>
+					<ListTitleBar {...{ handleListTitleBlur, list, handleDelete }} />
+					<ListReviewButtons />
+					<ListTerms {...{ filter, setFilter, termsToDisplay, list }} />
+				</>
+			)}
 		</div>
 	);
 }
