@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import useQueryClient from "../hooks/query-client";
 import Private from "../wrappers/Private";
-import "./App.scss";
+import * as S from "./App.style";
 import Home from "./Home/Home";
 import Footer from "./layout/Footer";
 import Header from "./layout/Header";
@@ -22,7 +22,7 @@ const App = () => {
 		<>
 			<QueryClientProvider client={client}>
 				<RecoilRoot>
-					<div className="App__wrapper">
+					<S.App>
 						<Router>
 							<Header />
 							<div className="App">
@@ -94,7 +94,7 @@ const App = () => {
 							</div>
 							<Footer />
 						</Router>
-					</div>
+					</S.App>
 				</RecoilRoot>
 			</QueryClientProvider>
 		</>
