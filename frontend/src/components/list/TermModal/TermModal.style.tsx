@@ -61,10 +61,7 @@ export const DeleteButtonWrapper = styled.div`
 	margin-left: auto;
 `;
 
-export const Input = styled.input`
-	$b1: #555;
-	$b2: #444;
-
+export const Input = styled.input<{ confirming?: boolean }>`
 	display: block;
 	width: 450px;
 	max-width: 100%;
@@ -74,11 +71,24 @@ export const Input = styled.input`
 	padding: 0.7rem 1rem;
 	background-color: #191919; // TODO: make theme value
 	color: ${(p) => p.theme.colors.light.white};
+
 	border: 3px solid ${(p) => p.theme.colors.dark.grey.dark};
+
 	box-shadow: 0px 4px 0 -2px ${(p) => p.theme.colors.dark.grey.dark},
 		0 -4px 0 -2px ${(p) => p.theme.colors.dark.grey.regular};
 
 	transition: all 50ms linear;
+
+	// Set 'confirming'-specific styles
+	${({ confirming }) =>
+		confirming &&
+		css`
+			border: 3px solid white;
+			background-color: orangered;
+			// Note that we don't have to also set box-shadow in &:focus, since the inputs are
+			// disabled if in confirming state, so they'll never be both 'confirming' and focused.
+			box-shadow: 0 0 1rem black;
+		`}
 
 	&:focus {
 		background-color: #191919; // TODO: is this necessary?
