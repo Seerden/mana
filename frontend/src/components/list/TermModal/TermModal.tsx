@@ -2,7 +2,7 @@
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import { useEffect } from "react";
 import TermHistory from "../TermHistory/TermHistory";
-import "./TermModal.scss";
+import * as S from "./TermModal.style";
 
 const TermModal = ({
 	handleConfirmClick,
@@ -37,95 +37,87 @@ const TermModal = ({
 
 	return (
 		<>
-			<div onClick={closeModal} className="TermModal__wrapper" />
-			<div className="TermModal">
-				<section>
-					<div className="TermModal__header">
-						<header>Term details</header>
-						<button title="Close modal" onClick={() => setOpen(false)}>
+			<S.ModalWrapper onClick={closeModal} />
+			<S.TermModal>
+				<S.Section>
+					<S.HeaderContainer>
+						<S.Header>Term details</S.Header>
+						<S.CloseModalButton title="Close modal" onClick={() => setOpen(false)}>
 							x
-						</button>
-					</div>
+						</S.CloseModalButton>
+					</S.HeaderContainer>
 
-					<label htmlFor="front">Front:</label>
-					<div className="TermModal__side">
-						<input
+					<S.Label htmlFor="front">Front:</S.Label>
+					<S.TermSide>
+						<S.Input
 							tabIndex={1}
 							name="front"
-							disabled={confirmingDelete}
 							title="Click to edit"
-							style={inputStyle}
-							className={`TermModal__input`}
-							onBlur={handleTermEdit}
 							type="text"
 							//@ts-ignore
 							side="from"
+							disabled={confirmingDelete}
+							style={inputStyle}
+							onBlur={handleTermEdit}
 							defaultValue={term.from}
 						/>
-						<span className="TermModal__side--saturation">
+						<S.TermSaturation>
 							<SaturationIcon
 								direction="backwards"
 								saturation={term.saturation?.backwards}
 							/>
-						</span>
-					</div>
+						</S.TermSaturation>
+					</S.TermSide>
 
-					<label htmlFor="back">Back:</label>
-					<div className="TermModal__side">
-						<input
+					<S.Label htmlFor="back">Back:</S.Label>
+					<S.TermSide>
+						<S.Input
 							name="back"
-							tabIndex={2}
 							//@ts-ignore
 							side="to"
-							disabled={confirmingDelete}
 							title="Click to edit"
-							style={inputStyle}
-							className={`TermModal__input`}
-							onBlur={handleTermEdit}
+							tabIndex={2}
 							type="text"
+							disabled={confirmingDelete}
+							style={inputStyle}
+							onBlur={handleTermEdit}
 							defaultValue={term.to}
 						/>
-						<span className="TermModal__side--saturation">
+						<S.TermSaturation>
 							<SaturationIcon
 								direction={"forwards"}
 								saturation={term.saturation?.forwards}
 							/>
-						</span>
-					</div>
-				</section>
+						</S.TermSaturation>
+					</S.TermSide>
+				</S.Section>
 
-				<section>
+				<S.Section>
 					<header> History </header>
 					<TermHistory history={term.history} />
-				</section>
+				</S.Section>
 
-				<div className="TermModal__delete--wrapper">
+				<S.DeleteButtonWrapper>
 					{!confirmingDelete ? (
-						<button
-							onClick={() => setConfirmingDelete(true)}
-							className="TermModal__delete"
-						>
+						<S.DeleteButton onClick={() => setConfirmingDelete(true)}>
 							Delete this term
-						</button>
+						</S.DeleteButton>
 					) : (
 						<>
-							<div className="TermModal__delete--confirm">Delete?</div>
-							<button
+							<S.ConfirmDeleteLabel>Delete?</S.ConfirmDeleteLabel>
+							<S.ConfirmDeleteButton
+								confirm
 								onClick={(e) => handleConfirmClick(e, { type: "delete" })}
-								className="TermModal__delete--confirm-yes"
 							>
 								Yes
-							</button>
-							<button
-								onClick={() => setConfirmingDelete(false)}
-								className="TermModal__delete--confirm-no"
-							>
+							</S.ConfirmDeleteButton>
+							<S.ConfirmDeleteButton onClick={() => setConfirmingDelete(false)}>
 								No
-							</button>
+							</S.ConfirmDeleteButton>
 						</>
 					)}
-				</div>
-			</div>
+				</S.DeleteButtonWrapper>
+			</S.TermModal>
 		</>
 	);
 };
