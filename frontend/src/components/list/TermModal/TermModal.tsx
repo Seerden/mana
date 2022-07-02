@@ -29,10 +29,11 @@ const TermModal = ({
 		return () => window.removeEventListener("keydown", handleKeydown);
 	}, []);
 
-	const inputStyle = {
-		backgroundColor: confirmingDelete ? "orangered" : "",
-		boxShadow: !confirmingDelete ? "" : "0 0 1rem black",
-		border: confirmingDelete ? "3px solid white" : "",
+	const sharedInputProps = {
+		confirming: confirmingDelete,
+		disabled: confirmingDelete,
+		title: "Click to edit",
+		type: "text",
 	};
 
 	return (
@@ -52,14 +53,10 @@ const TermModal = ({
 						<S.Input
 							tabIndex={1}
 							name="front"
-							title="Click to edit"
-							type="text"
-							//@ts-ignore
-							side="from"
-							disabled={confirmingDelete}
-							style={inputStyle}
-							onBlur={handleTermEdit}
+							data-side="from"
 							defaultValue={term.from}
+							onBlur={handleTermEdit}
+							{...sharedInputProps}
 						/>
 						<S.TermSaturation>
 							<SaturationIcon
@@ -74,14 +71,11 @@ const TermModal = ({
 						<S.Input
 							name="back"
 							//@ts-ignore
-							side="to"
-							title="Click to edit"
+							data-side="to"
 							tabIndex={2}
-							type="text"
-							disabled={confirmingDelete}
-							style={inputStyle}
-							onBlur={handleTermEdit}
 							defaultValue={term.to}
+							onBlur={handleTermEdit}
+							{...sharedInputProps}
 						/>
 						<S.TermSaturation>
 							<SaturationIcon
