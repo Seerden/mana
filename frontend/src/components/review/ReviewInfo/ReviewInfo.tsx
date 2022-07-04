@@ -3,7 +3,7 @@ import { memo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { reviewSettingsState } from "state/atoms/reviewAtoms";
 import { numTermsToReviewState } from "state/selectors/reviewSelectors";
-import "./ReviewInfo.scss";
+import * as S from "./ReviewInfo.style";
 
 type ReviewInfoProps = {
 	progress: number;
@@ -17,23 +17,21 @@ const ReviewInfo = memo(({ progress, completedCount }: ReviewInfoProps) => {
 	const { timeSinceStart, title } = useTimer({ start });
 
 	return (
-		<details className="Review__info">
-			<summary>
-				<span className="Review__info--header">
+		<S.ReviewInfo>
+			<S.Summary>
+				<S.Header>
 					<span>Session information</span>
-				</span>
-			</summary>
+				</S.Header>
+			</S.Summary>
 
-			<div className="Review__info--dynamic">
-				<div className="Review__info--completion">
-					Session completion: {progress}% ({completedCount}/{n * numTermsToReview}).
-					<div>
-						You started this session <span title={title}>{timeSinceStart}</span>.
-					</div>
+			<S.Datum>
+				Session completion: {progress}% ({completedCount}/{n * numTermsToReview}).
+				<div>
+					You started this session <span title={title}>{timeSinceStart}</span>.
 				</div>
-			</div>
+			</S.Datum>
 
-			<div className="Review__info--hideable">
+			<S.Datum>
 				<div>
 					Number of terms in this list: <strong>{numTermsToReview}</strong>.
 				</div>
@@ -44,8 +42,8 @@ const ReviewInfo = memo(({ progress, completedCount }: ReviewInfoProps) => {
 					</strong>{" "}
 					to complete the session.
 				</div>
-			</div>
-		</details>
+			</S.Datum>
+		</S.ReviewInfo>
 	);
 });
 
