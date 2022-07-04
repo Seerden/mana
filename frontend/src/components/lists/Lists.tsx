@@ -1,7 +1,6 @@
 import { useRouteProps } from "hooks/routerHooks";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import "./Lists.scss";
 import * as S from "./Lists.style";
 import useLists from "./useLists";
 
