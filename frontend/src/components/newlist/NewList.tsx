@@ -6,7 +6,7 @@ const NewList = memo(() => {
 	const { handleBlur, addRows, handleSubmit, termInputs, newList } = useNewList();
 
 	return (
-		<div className="NewList">
+		<div>
 			<div className="PageHeader">New List</div>
 
 			<S.Form>
