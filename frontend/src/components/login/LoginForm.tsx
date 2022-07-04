@@ -14,14 +14,14 @@ const LoginForm = ({
 	return (
 		<div className="PageWrapper">
 			<main>
-				<S.Header>
+				<S.Message type="header">
 					You need to be logged in to view this page. Please log in or register.
-				</S.Header>
+				</S.Message>
 
-				{message && <S.Message>{message}</S.Message>}
+				{message && <S.Message type="message">{message}</S.Message>}
 
 				{authError?.response?.status === 401 && (
-					<S.Error>Incorrect credentials. Try again.</S.Error>
+					<S.Message type="error">Incorrect credentials. Try again.</S.Message>
 				)}
 
 				<S.Form>

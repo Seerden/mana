@@ -18,27 +18,31 @@ const sharedTextStyle = css`
 	margin: 0 auto;
 `;
 
-export const Header = styled.header`
-	${sharedTextStyle};
-
-	background-color: deepskyblue;
-	color: black;
-	margin-bottom: 1rem;
-`;
-
-export const Message = styled.div`
-	${sharedTextStyle};
-
-	background-color: goldenrod;
-	color: black;
-	margin-bottom: 1rem;
-`;
-
-export const Error = styled.div`
+export const Message = styled.div<{ type?: "header" | "error" | "message" }>`
 	${sharedTextStyle}
 
-	background-color: crimson;
-	color: azure;
+	${(p) =>
+		p.type === "header" &&
+		css`
+			background-color: deepskyblue;
+			color: black;
+			margin-bottom: 1rem;
+		`}
+
+   ${(p) =>
+		p.type === "error" &&
+		css`
+			background-color: crimson;
+			color: azure;
+		`}
+
+   ${(p) =>
+		p.type === "message" &&
+		css`
+			background-color: goldenrod;
+			color: black;
+			margin-bottom: 1rem;
+		`}
 `;
 
 export const Form = styled.form`
