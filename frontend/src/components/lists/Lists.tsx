@@ -1,5 +1,4 @@
 import { useRouteProps } from "hooks/routerHooks";
-import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import "./Lists.scss";
 import * as S from "./Lists.style";
@@ -7,7 +6,9 @@ import useLists from "./useLists";
 
 function Lists() {
 	const { params } = useRouteProps();
-	const userString = useMemo(() => `/u/${params.username}`, [params.username]);
+
+	const userString = `/u/${params.username}`;
+
 	const {
 		lists,
 		filteredListsElement,
