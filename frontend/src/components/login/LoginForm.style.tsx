@@ -5,7 +5,7 @@ import { sharedButtonStyle } from "../../helpers/theme/theme";
 const maxWidth = "800px";
 const showPassWidth = "2.5rem";
 const inputWidth = "13rem";
-const passwordFieldWidth = `${inputWidth} - ${showPassWidth}`;
+const passwordFieldWidth = `calc(${inputWidth} - ${showPassWidth})`;
 
 // Header, Message, Error share some styles
 // TODO: instead of splitting up Header, Message, Error into 3 elements, why not
@@ -46,7 +46,7 @@ export const Message = styled.div<{ type?: "header" | "error" | "message" }>`
 `;
 
 export const Form = styled.form`
-	max-width: $maxwidth;
+	max-width: ${maxWidth};
 	margin: 0 auto;
 	margin-top: 1rem;
 	padding: 1rem;
@@ -65,7 +65,7 @@ export const FormFieldContent = styled.div`
 	align-items: center;
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<{ inputType: "text" | "password" }>`
 	background-color: #444;
 	border: 2px solid transparent;
 	outline: none;
@@ -78,7 +78,7 @@ export const Input = styled.input`
 		border-color: deepskyblue;
 	}
 
-	width: ${(p) => (p.type === "text" ? inputWidth : passwordFieldWidth)};
+	width: ${(p) => (p.inputType === "text" ? inputWidth : passwordFieldWidth)};
 `;
 
 export const ShowPassword = styled.div<{ showPassword?: boolean }>`

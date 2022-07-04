@@ -35,6 +35,7 @@ const LoginForm = ({
 								onBlur={(e) => handleFormBlur(e, user, setUser)}
 								required
 								autoComplete="username"
+								inputType="text"
 								type="text"
 								name="username"
 							/>
@@ -49,6 +50,7 @@ const LoginForm = ({
 								required
 								onBlur={(e) => handleFormBlur(e, user, setUser)}
 								autoComplete="password"
+								inputType="password"
 								type={showPass ? "text" : "password"}
 								name="password"
 							/>
