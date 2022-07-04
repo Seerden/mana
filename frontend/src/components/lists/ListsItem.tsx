@@ -5,7 +5,6 @@ import { memo } from "react";
 import { BiArrowToRight } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { colorByLastReviewDate, getLastReviewDate } from "../../helpers/lists-helpers";
-import "./ListsItem.scss";
 import * as S from "./ListsItem.style";
 
 type ListsItemProps = {
