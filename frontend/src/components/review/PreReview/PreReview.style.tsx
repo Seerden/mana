@@ -67,7 +67,7 @@ export const SettingsTip = styled.p`
 `;
 
 // The options for `n` and `direction` are implemented as input[type=button] elements
-export const SettingsButton = styled.input`
+export const SettingsButton = styled.input<{ selected?: boolean }>`
 	display: inline-flex;
 	text-align: center;
 	justify-content: center;
@@ -75,10 +75,15 @@ export const SettingsButton = styled.input`
 	margin-right: 3px;
 	border: 2px solid transparent;
 	outline: none;
+	padding: 0.1rem 0.5rem;
 
 	transition: all 50ms ease-in;
 
 	width: ${(p) => (p.name === "n" ? "40px" : "max-content")};
+
+	color: ${(p) => (p.selected ? "white" : "black")};
+
+	background-color: ${(p) => (p.selected ? "blueviolet" : "white")};
 
 	&:hover {
 		backface-visibility: hidden;

@@ -96,21 +96,11 @@ export default PreReview;
 
 const SettingsButton = memo(
 	({ handleSettingsChange, direction, n, value, current }: SettingsButtonProps) => {
-		let selected: boolean;
-
-		if (n) {
-			selected = String(n) === String(value);
-		} else if (direction) {
-			selected = direction === current;
-		}
+		const selected = n ? String(n) === String(value) : direction === current;
 
 		return (
 			<S.SettingsButton
-				style={{
-					color: selected ? "white" : "black",
-					backgroundColor: selected ? "blueviolet" : "white",
-					padding: "0.1rem 0.5rem",
-				}}
+				selected={selected}
 				onClick={handleSettingsChange}
 				name={n ? "n" : "direction"}
 				type="button"
