@@ -44,11 +44,11 @@ export function useNewList() {
 		}));
 	}, [params, numTerms]);
 
-	useEffect(() => {
-		/** Keydown listener for tab-key presses:
-		 * Add 10 new rows if user presses the tab key while they're
-		 * on the last term input. Autofocus the first newly added term. */
-		function tabListener(e: KeyboardEvent) {
+	/** Keydown listener for tab-key presses:
+	 * Add 10 new rows if user presses the tab key while they're
+	 * on the last term input. Autofocus the first newly added term. */
+	const tabListener = useCallback(
+		(e: KeyboardEvent) => {
 			if (
 				!e.shiftKey &&
 				e.key === "Tab" &&
@@ -59,8 +59,13 @@ export function useNewList() {
 				addRows();
 				setFocussedInput((cur) => ({ index: cur?.index, side: "from" }));
 			}
-		}
+		},
+		[focussedInput, termInputs]
+	);
 
+	// TODO: Do we need these dependencies here if tabListener is wrapped in
+	// useCallback()? Carefully test this behavior before deciding.
+	useEffect(() => {
 		window.addEventListener("keydown", tabListener);
 
 		return () => {
