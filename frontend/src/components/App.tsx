@@ -1,7 +1,7 @@
 import ReviewPage from "components/review/ReviewPage/ReviewPage";
 import User from "components/user/User";
 import { QueryClientProvider } from "react-query";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
 import { theme } from "../helpers/theme/theme";
