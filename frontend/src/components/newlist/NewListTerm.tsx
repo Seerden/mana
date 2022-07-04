@@ -22,10 +22,12 @@ const NewListTerm = memo(
 
 			if (!value) return;
 
-			const termsCopy = JSON.parse(JSON.stringify(newList.terms));
+			const termsCopy = newList.terms.slice();
+
 			if (!termsCopy[idx]) {
 				termsCopy[idx] = { to: "", from: "" };
 			}
+
 			if (value !== termsCopy[idx][name]) {
 				termsCopy[idx][name] = value;
 				setNewList({ ...newList, terms: termsCopy });
