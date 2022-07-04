@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import * as S from "./PreReview.style";
 
 type SettingsButtonProps = {
-	handleSettingsChange: (e?: any) => void;
+	handleSettingsChange: (e: React.MouseEvent<HTMLInputElement>) => void;
 	direction?: Direction;
 	n?: number | string;
 	value: Direction | number;
