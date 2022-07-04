@@ -18,22 +18,14 @@ const Register = () => {
 						{message && <S.Message>{message}</S.Message>}
 						<S.Label htmlFor="username">Username</S.Label>
 
-						<S.Input
-							onChange={(e) => handleChange(e)}
-							type="text"
-							name="username"
-						/>
+						<S.Input onChange={handleChange} type="text" name="username" />
 
 						<S.Label htmlFor="password">Password</S.Label>
-						<S.Input
-							onChange={(e) => handleChange(e)}
-							type="password"
-							name="password"
-						/>
+						<S.Input onChange={handleChange} type="password" name="password" />
 
 						<S.Label htmlFor="repeatPassword">Repeat password</S.Label>
 						<S.Input
-							onChange={(e) => handleChange(e)}
+							onChange={handleChange}
 							type="password"
 							name="repeatPassword"
 						/>
