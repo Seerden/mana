@@ -49,7 +49,7 @@ const NewList = memo(() => {
 				</S.Buttons>
 
 				<S.Terms>
-					{termInputs.length > 0 && (
+					{termInputs.length && (
 						<>
 							<S.TermsHeader>
 								{newList && (
