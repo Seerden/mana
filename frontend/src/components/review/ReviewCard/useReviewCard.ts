@@ -20,7 +20,7 @@ export function useReviewCard(direction: Direction, term: Term, setBackWasShown)
 	}, []);
 
 	useEffect(() => {
-		// when new term is shown, reset card state
+		// When a new term is shown, reset card state
 		setSide(direction === "forwards" ? "from" : "to");
 		setFade(true);
 		timeouts.current.push(
