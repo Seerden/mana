@@ -24,7 +24,7 @@ const ListTerms = ({ filter, setFilter, termsToDisplay, list }) => {
 				<S.AllFiltered>All terms were filtered out</S.AllFiltered>
 			)}
 
-			{termsToDisplay?.length && termsToDisplay}
+			{termsToDisplay?.length > 0 && termsToDisplay}
 		</S.ListTerms>
 	);
 };
