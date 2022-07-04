@@ -20,9 +20,7 @@ function newUserValidationMessage(newUser: NewUserFormValues) {
 	if (!(password === repeatPassword)) return "Passwords don't match";
 }
 
-/**
- * Functionality for ./Register.tsx
- */
+/** Functionality for ./Register.tsx */
 export function useRegister() {
 	const { data, mutate: mutateRegisterUser } = useMutateRegisterUser();
 	const [message, setMessage] = useState<string>(null);
@@ -67,6 +65,7 @@ export function useRegister() {
 
 	const handleSubmit = useCallback(() => {
 		const message = newUserValidationMessage(newUser);
+
 		if (message) {
 			setMessage(message);
 		} else {
