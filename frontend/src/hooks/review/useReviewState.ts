@@ -1,11 +1,11 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
-    passfailState,
-    reviewSettingsState,
-    reviewStageState,
-    termsToReviewState,
-    termUpdateArrayState,
-    timePerCardState,
+	passfailState,
+	reviewSettingsState,
+	reviewStageState,
+	termsToReviewState,
+	termUpdateArrayState,
+	timePerCardState,
 } from "state/atoms/reviewAtoms";
 import useReviewSession from "./useReviewSession";
 
@@ -15,23 +15,23 @@ import useReviewSession from "./useReviewSession";
  * and return the things useReview needs, if only just to reduce LOC in useReview
  */
 export function useReviewState() {
-    const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
-    const termsToReview = useRecoilValue(termsToReviewState);
-    const setReviewStage = useSetRecoilState(reviewStageState);
-    const setPassfail = useSetRecoilState(passfailState);
-    const setTimePerCard = useSetRecoilState(timePerCardState);
-    const [termUpdateArray, setTermUpdateArray] = useRecoilState(termUpdateArrayState);
-    const newReviewSession = useReviewSession();
+	const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
+	const termsToReview = useRecoilValue(termsToReviewState);
+	const setReviewStage = useSetRecoilState(reviewStageState);
+	const setPassfail = useSetRecoilState(passfailState);
+	const setTimePerCard = useSetRecoilState(timePerCardState);
+	const [termUpdateArray, setTermUpdateArray] = useRecoilState(termUpdateArrayState);
+	const newReviewSession = useReviewSession();
 
-    return {
-        reviewSettings,
-        setReviewSettings,
-        termsToReview,
-        setReviewStage,
-        setPassfail,
-        setTimePerCard,
-        termUpdateArray,
-        setTermUpdateArray,
-        newReviewSession,
-    } as const;
+	return {
+		reviewSettings,
+		setReviewSettings,
+		termsToReview,
+		setReviewStage,
+		setPassfail,
+		setTimePerCard,
+		termUpdateArray,
+		setTermUpdateArray,
+		newReviewSession,
+	} as const;
 }
