@@ -97,3 +97,16 @@ export const sharedHeadingStyle = css`
 	font-size: 1.4rem;
 	padding: 0.2rem 0.5rem;
 `;
+
+export const sharedOutlineStyle = css`
+	outline: 4px solid #333;
+`;
+
+export const sharedPageTitleStyle = css`
+	font-size: 1.9em;
+	font-weight: 600;
+	padding-right: 2em;
+	border-bottom: 5px solid var(--text-light); // TODO: does this get picked up by Styled components?
+	width: max-content;
+	margin-bottom: 1em;
+`;
