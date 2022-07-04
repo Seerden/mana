@@ -29,6 +29,7 @@ export function useRegister() {
 	const { login } = useLogin();
 	const { navigate } = useRouteProps();
 
+	// TODO: this should be inside the onSuccess of useMutateRegisterUser()
 	useEffect(() => {
 		if (!data) return;
 
