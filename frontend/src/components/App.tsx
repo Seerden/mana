@@ -20,8 +20,6 @@ import Register from "./register/Register";
 const App = () => {
 	const [client] = useQueryClient();
 
-	console.log(theme);
-
 	return (
 		<>
 			<QueryClientProvider client={client}>
