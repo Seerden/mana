@@ -74,11 +74,8 @@ const PreReview = () => {
 					<li key="review-direction">
 						<S.SettingsLabel htmlFor="direction">Direction:</S.SettingsLabel>
 						<S.SettingsTip>
-							<div>
-								'Forwards' means you're shown the front, and need to recall the
-								back of the card.
-							</div>
-							<div>'Backwards' is the other way around.</div>
+							'Forwards' means you're shown the front, and need to recall the back
+							of the card. 'Backwards' is the other way around.
 						</S.SettingsTip>
 						<S.Buttons>{directionButtons}</S.Buttons>
 					</li>
