@@ -9,17 +9,25 @@ import { newListState } from "state/atoms/newList.atom";
 import type { FocusIndex } from "types/newList.types";
 import NewListTerm from "./NewListTerm";
 
-/**
- * Hook that handles functionality for the NewList form component
- */
+/** Hook that handles functionality for the NewList form component. */
 export function useNewList() {
 	const { params, navigate } = useRouteProps();
-	const [numTerms, setNumTerms] = useState<number>(10);
+
 	const { mutate: mutateCreateList } = useMutateCreateList({
 		onSuccess: () => navigate(`/u/${params.username}/lists`),
 	});
+
+	const [numTerms, setNumTerms] = useState<number>(10);
+
+	/** Add a number (`count`) of rows (= empty terms) to the newList form. */
+	function addRows(count = 10) {
+		setNumTerms((current) => current + count);
+	}
+
 	const [focussedInput, setFocussedInput] = useState<FocusIndex>();
+
 	const [newList, setNewList] = useRecoilState(newListState);
+
 	const termInputs: JSX.Element[] = useMemo(() => {
 		return Array(numTerms)
 			.fill(null)
@@ -72,13 +80,6 @@ export function useNewList() {
 			window.removeEventListener("keydown", tabListener);
 		};
 	}, [focussedInput, termInputs]);
-
-	/**
-	 * Add a number (`count`) of rows (= empty terms) to the newList form.
-	 */
-	function addRows(count = 10) {
-		setNumTerms((current) => current + count);
-	}
 
 	/**
 	 * Form input blur handler that updates a given newList field differently depending
