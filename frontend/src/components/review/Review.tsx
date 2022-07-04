@@ -28,7 +28,7 @@ const Review = memo(() => {
 				</div>
 			</S.Header>
 
-			{futureTerms.length > 0 && (
+			{futureTerms.length && (
 				<>
 					{makeReviewCard({ ...futureTerms[0] })}
 
