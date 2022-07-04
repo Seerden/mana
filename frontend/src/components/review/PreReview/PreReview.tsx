@@ -39,10 +39,12 @@ const PreReview = () => {
 		));
 	}, [reviewSettings.direction]);
 
-	function handleSettingsChange(e) {
-		const val = e.currentTarget.value;
-		const newVal = (isNaN(Number(val)) && val) || Number(val);
-		setReviewSettings((current) => ({ ...current, [e.target.name]: newVal }));
+	function handleSettingsChange(e: React.MouseEvent<HTMLInputElement>) {
+		const { name, value } = e.currentTarget;
+
+		const newVal = isNaN(Number(value)) ? value : Number(value);
+
+		setReviewSettings((current) => ({ ...current, [name]: newVal }));
 	}
 
 	function handleReviewStartClick() {
