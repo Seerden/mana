@@ -12,7 +12,7 @@ type SettingsButtonProps = {
 	current?: Direction;
 };
 
-const PreReview = (props) => {
+const PreReview = () => {
 	const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
 	const setReviewStage = useSetRecoilState(reviewStageState);
 
