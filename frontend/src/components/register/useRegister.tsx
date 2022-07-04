@@ -30,14 +30,17 @@ export function useRegister() {
 	const { navigate } = useRouteProps();
 
 	useEffect(() => {
-		if (data) {
-			const { createUser } = data;
-			const { error, user } = createUser;
-			if (error) setMessage(error);
-			if (user) {
-				login(user.username);
-				navigate(`/u/${user.username}`);
-			}
+		if (!data) return;
+
+		const { createUser } = data;
+
+		const { error, user } = createUser;
+
+		if (error) setMessage(error);
+
+		if (user) {
+			login(user.username);
+			navigate(`/u/${user.username}`);
 		}
 	}, [data]);
 
