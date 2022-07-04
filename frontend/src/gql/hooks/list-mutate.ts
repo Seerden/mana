@@ -36,7 +36,7 @@ export function useMutateCreateList({ onSuccess }: { onSuccess?: (args?: any) =>
 			});
 			return response;
 		},
-		{ retry: false, onSuccess: onSuccess?.() }
+		{ retry: false, onSuccess: () => onSuccess?.() }
 	);
 	return { mutate, data, ...rest };
 }
