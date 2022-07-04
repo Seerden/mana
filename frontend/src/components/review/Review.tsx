@@ -7,8 +7,13 @@ import ReviewInfo from "./ReviewInfo/ReviewInfo";
 
 const Review = memo(() => {
 	const { params } = useRouteProps();
-	const { backWasShown, futureTerms, completion, handlePassFailClick, makeReviewCard } =
-		useReview();
+	const {
+		backWasShown,
+		remainingTerms,
+		completion,
+		handlePassFailClick,
+		makeReviewCard,
+	} = useReview();
 
 	return (
 		<S.Review className="PageWrapper">
@@ -22,9 +27,9 @@ const Review = memo(() => {
 				</div>
 			</S.Header>
 
-			{futureTerms.length && (
+			{remainingTerms.length && (
 				<>
-					{makeReviewCard({ ...futureTerms[0] })}
+					{makeReviewCard({ ...remainingTerms[0] })}
 
 					{backWasShown ? (
 						<>

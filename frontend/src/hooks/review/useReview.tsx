@@ -2,7 +2,7 @@ import { TermUpdateObject } from "gql/codegen-output";
 import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession-query";
 import { makeReviewList } from "helpers/review-helpers";
 import { makeNewSaturationLevels } from "helpers/srs/saturation";
-import { useCallback, useEffect, useMemo, useReducer } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	TermUpdateDate,
 	TermUpdatePassfail,
@@ -27,13 +27,18 @@ export function useReview() {
 		newReviewSession,
 	} = useReviewState();
 
-	const initializeFutureTerms = useCallback(() => {
+	const initialTerms = useMemo(() => {
 		return makeReviewList(termsToReview, reviewSettings.n);
-	}, [reviewSettings.n, termsToReview]);
+	}, [termsToReview, reviewSettings.n]);
 
-	const [futureTerms, reduceFutureTerms] = useReducer(termReducer, () =>
-		initializeFutureTerms()
-	);
+	const [remainingTerms, setRemainingTerms] = useState(initialTerms);
+
+	// termsToReview might be empty on initial mount, since useInitivalReview may
+	// not have grabbed the terms and parsed them into termsToReview yet. Hence
+	// this effect is strictly necessary.
+	useEffect(() => {
+		setRemainingTerms(initialTerms);
+	}, [termsToReview, reviewSettings.n]);
 
 	const { mutate: mutateCreateReviewSession, data: mutateResponse } =
 		useCreateReviewSessionMutation();
@@ -43,14 +48,10 @@ export function useReview() {
 			if (!mutateResponse) {
 				mutateCreateReviewSession({ newReviewSession, termUpdateArray });
 			} else {
-				setReviewStage("after");
+				// setReviewStage("after");
 			}
 		}
 	}, [mutateResponse, reviewSettings.sessionEnd]);
-
-	useEffect(() => {
-		termsToReview && reduceFutureTerms({ type: "init" });
-	}, [termsToReview]);
 
 	useEffect(() => {
 		window.addEventListener("keydown", handleLeftRightArrowKeyDown);
@@ -61,7 +62,7 @@ export function useReview() {
 
 	useEffect(() => {
 		// end review session once futureTerms.length reaches 0
-		if (termsToReview.length > 0 && futureTerms?.length === 0) {
+		if (termsToReview.length && remainingTerms?.length === 0) {
 			const newSaturationLevels = makeNewSaturationLevels(
 				termsToReview,
 				termUpdateArray,
@@ -79,27 +80,35 @@ export function useReview() {
             this is a code smell. Simple naive fix would be to turn makeNewSaturationLevels into a callback that has reviewSettings
             as one of its dependencies, instead of passing reviewSettings as an argument
         */
-	}, [futureTerms, termsToReview]);
+	}, [remainingTerms, termsToReview]);
 
-	/** case pass/fail:  Handle what happens to current term after pass/fail is chosen. */
-	function termReducer(terms, { type }: { type: PassFail | "init" }) {
-		switch (type) {
-			case "init":
-				return initializeFutureTerms();
-			case "pass":
-				return terms.slice(1);
-			case "fail": {
-				const newIndex = Math.floor((terms.length + 1) * Math.random());
-				const newTerms = [...terms];
-				const currentTerm = newTerms.shift();
-				if (currentTerm) {
-					newTerms.splice(newIndex, 0, currentTerm);
-					return newTerms;
-				}
-				return terms;
-			}
-			default:
-				return terms;
+	// Shuffle the first term back into the array at a random spot. If it's the
+	// only remaining card, return (a copy of) the array as it is.
+	function shuffleCurrentTerm(terms: any[]) {
+		if (terms.length === 1) {
+			return terms.slice();
+		}
+
+		const newIndex = Math.floor((terms.length + 1) * Math.random());
+		const termsCopy = terms.slice();
+		const currentTerm = termsCopy.shift();
+		termsCopy.splice(newIndex, 0, currentTerm);
+
+		return termsCopy;
+	}
+
+	// This function either removes or re-shuffles the first entry of
+	// remainingTerms depending on `passfail`. Intended only to be triggered on
+	// user interaction with a ReviewCard.
+	function updateRemainingTerms({ passfail }: { passfail: PassFail }) {
+		// If 'pass', then the card can be removed from the deck.
+		if (passfail === "pass") {
+			setRemainingTerms((current) => current.slice(1));
+		}
+
+		// If 'fail', the card has to be re-placed in the deck at a random index.
+		if (passfail === "fail") {
+			setRemainingTerms((current) => shuffleCurrentTerm(current));
 		}
 	}
 
@@ -188,35 +197,35 @@ export function useReview() {
 
 	// number of seen flashcards, and session progress as a percentage
 	const completion = useMemo(() => {
-		if (!futureTerms)
+		if (!remainingTerms)
 			return {
 				count: 0,
 				percentage: 0,
 			};
 
-		const completedCount = sessionLength - futureTerms.length;
+		const completedCount = sessionLength - remainingTerms.length;
 		const progress = Math.floor((100 * completedCount) / sessionLength);
 
 		return {
 			count: completedCount,
 			percentage: progress,
 		};
-	}, [futureTerms, sessionLength]);
+	}, [remainingTerms, sessionLength]);
 
 	/** Handle clicking the pass or fail button */
 	const handlePassFailClick = useCallback(
 		(e, passfail: PassFail) => {
 			reduceTermUpdateArray({
 				type: "passfail",
-				currentTerm: futureTerms[0],
+				currentTerm: remainingTerms[0],
 				passfail,
 			});
 			setPassfail((cur) => [...cur, passfail]);
 			setTimePerCard((cur) => [...cur, new Date()]);
-			reduceFutureTerms({ type: passfail });
+			updateRemainingTerms({ passfail });
 			setBackWasShown(false);
 		},
-		[futureTerms, backWasShown]
+		[remainingTerms, backWasShown]
 	);
 
 	/**
@@ -244,8 +253,7 @@ export function useReview() {
 	return {
 		backWasShown,
 		setBackWasShown,
-		futureTerms,
-		reduceFutureTerms,
+		remainingTerms,
 		completion,
 		handlePassFailClick,
 		makeReviewCard,
