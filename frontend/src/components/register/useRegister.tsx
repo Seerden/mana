@@ -15,7 +15,7 @@ type NewUserFormValues = {
  */
 function newUserValidationMessage(newUser: NewUserFormValues) {
 	const { username, password, repeatPassword } = newUser;
-	if (!(username?.length > 0)) return "Must include username";
+	if (!username?.length) return "Must include username";
 	if (!password.length || !repeatPassword.length) return "Must fill out password fields";
 	if (!(password === repeatPassword)) return "Passwords don't match";
 }
