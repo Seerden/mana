@@ -1,11 +1,11 @@
 import { useRouteProps } from "hooks/routerHooks";
-import { memo, useMemo } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import "./Lists.scss";
 import * as S from "./Lists.style";
 import useLists from "./useLists";
 
-const Lists = memo((props) => {
+function Lists() {
 	const { params } = useRouteProps();
 	const userString = useMemo(() => `/u/${params.username}`, [params.username]);
 	const {
@@ -88,6 +88,6 @@ const Lists = memo((props) => {
 			)}
 		</>
 	);
-});
+}
 
 export default Lists;
