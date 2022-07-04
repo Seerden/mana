@@ -2,7 +2,7 @@ import { colorMap } from "helpers/list.api";
 import React, { useEffect, useState } from "react";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 import { FilterInterface } from "types/list.types";
-import SaturationIcon from "./SaturationIcon";
+import * as S from "./SaturationFilter.style";
 
 export function useSaturationFilter(setFilter) {
 	const [saturationFilter, setSaturationFilter] = useState<
@@ -32,18 +32,16 @@ export function useSaturationFilter(setFilter) {
 			const levelNumber = Number(level);
 			return (
 				<React.Fragment key={`saturation-wrapper-${level}`}>
-					<div
+					<S.IconWrapper
 						onClick={() => {
 							handleIconClick(level);
 						}}
-						className="SaturationFilter__icon--wrapper"
 					>
-						<SaturationIcon
-							classes="SaturationFilter__icon"
+						<S.FilterIcon
 							key={`saturation-filter-level-${level}`}
 							saturation={levelNumber}
 						/>
-					</div>
+					</S.IconWrapper>
 				</React.Fragment>
 			);
 		});
@@ -54,8 +52,7 @@ export function useSaturationFilter(setFilter) {
 
 	const directionButtons = ["forwards", "backwards", "any"].map((direction) => {
 		return (
-			<button
-				className="SaturationFilter__direction--button"
+			<S.DirectionButton
 				key={`saturation-filter-${direction}`}
 				value={direction}
 				onClick={() => handleDirectionIconClick(direction)}
@@ -66,7 +63,7 @@ export function useSaturationFilter(setFilter) {
 						{direction === "forwards" ? <BiArrowToRight /> : <BiArrowToLeft />}
 					</span>
 				)}
-			</button>
+			</S.DirectionButton>
 		);
 	});
 

@@ -1,7 +1,7 @@
 import { colorBySaturation } from "helpers/list.api";
 import React, { memo } from "react";
 import { FilterInterface } from "types/list.types";
-import "./SaturationFilter.scss";
+import * as S from "./SaturationFilter.style";
 import { useSaturationFilter } from "./useSaturationFilter";
 
 interface SaturationFilterProps {
@@ -19,42 +19,23 @@ const SaturationFilter = memo(({ setFilter }: SaturationFilterProps) => {
 		directionButtons,
 	} = useSaturationFilter(setFilter);
 
-	const labelButtonStyles: React.CSSProperties = {
-		boxShadow: `0 8px 0 -7px ${
-			saturationFilter ? colorBySaturation(saturationFilter.level) || "#333" : "#333"
-		}, 0 0 1rem black`,
-		border: `2px solid ${
-			saturationFilter ? colorBySaturation(saturationFilter.level) || "#333" : "#333"
-		}`,
-	};
-
-	const iconsDivStyles: React.CSSProperties = {
-		border: `2px solid ${
-			saturationFilter ? colorBySaturation(saturationFilter.level) : "#333"
-		}`,
-	};
-
-	const filterDivStyles: React.CSSProperties = {
-		border: `2px solid ${
-			saturationFilter ? colorBySaturation(saturationFilter.level) : "#333"
-		}`,
-	};
-
 	return (
 		<>
-			<div className="SaturationFilter">
+			<S.SaturationFilter>
 				{filterDisplayState === "initial" && (
 					<>
-						<button
+						<S.FilterLabelButton
 							onClick={() => setFilterDisplayState("level")}
-							className="SaturationFilter__label"
-							style={labelButtonStyles}
+							borderAndShadowColor={
+								saturationFilter
+									? colorBySaturation(saturationFilter.level) ?? "#333"
+									: "#333"
+							}
 						>
 							Filter by saturation level
-							<input
+							<S.ResetButton
 								type="button"
 								value="Reset"
-								className="SaturationFilter__reset"
 								onClick={(e) => {
 									e.stopPropagation();
 									setSaturationFilter({
@@ -63,22 +44,30 @@ const SaturationFilter = memo(({ setFilter }: SaturationFilterProps) => {
 									});
 								}}
 							/>
-						</button>
+						</S.FilterLabelButton>
 					</>
 				)}
 
 				{filterDisplayState === "level" && (
-					<div className="SaturationFilter__icons" style={iconsDivStyles}>
+					<S.FilterIcons
+						borderColor={
+							saturationFilter ? colorBySaturation(saturationFilter.level) : "#333"
+						}
+					>
 						{icons}
-					</div>
+					</S.FilterIcons>
 				)}
 
 				{filterDisplayState === "direction" && (
-					<div className="SaturationFilter__filter" style={filterDivStyles}>
-						<div className="SaturationFilter__direction">{directionButtons}</div>
-					</div>
+					<S.Filter
+						borderColor={
+							saturationFilter ? colorBySaturation(saturationFilter.level) : "#333"
+						}
+					>
+						<S.Direction>{directionButtons}</S.Direction>
+					</S.Filter>
 				)}
-			</div>
+			</S.SaturationFilter>
 		</>
 	);
 });
