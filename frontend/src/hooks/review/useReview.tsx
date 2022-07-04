@@ -220,12 +220,14 @@ export function useReview() {
 	 */
 	function handleLeftRightArrowKeyDown(e: KeyboardEvent): void {
 		if (!backWasShown) return;
-		const { code } = e;
+
 		const mapKeyCodeToPassFail = {
 			ArrowLeft: "fail",
 			ArrowRight: "pass",
 		};
-		const passfail = mapKeyCodeToPassFail[code];
+
+		const passfail = mapKeyCodeToPassFail[e.code];
+
 		if (passfail) {
 			handlePassFailClick(null, passfail);
 		}
