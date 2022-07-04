@@ -1,5 +1,5 @@
 import { Term } from "gql/codegen-output";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function useReviewCard(direction: Direction, term: Term, setBackWasShown) {
 	const [side, setSide] = useState(direction === "forwards" ? "from" : "to");
@@ -42,13 +42,13 @@ export function useReviewCard(direction: Direction, term: Term, setBackWasShown)
 		}
 	}
 
-	const flip = useCallback(() => {
+	function flip() {
 		const duration = 250; // match keyframes animation duration
 		setBackWasShown(true);
 		setFlipping(true);
 		timeouts.current.push(setTimeout(() => setFlipping(false), duration));
 		timeouts.current.push(setTimeout(() => toggleSide(), duration / 2));
-	}, [setFlipping, setBackWasShown, setSide]);
+	}
 
 	return {
 		flip,
