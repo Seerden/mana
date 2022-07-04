@@ -1,8 +1,7 @@
-import { memo } from "react";
 import * as S from "./NewList.style";
 import { useNewList } from "./useNewList";
 
-const NewList = memo(() => {
+function NewList() {
 	const { handleBlur, addRows, handleSubmit, termInputs, newList } = useNewList();
 
 	return (
@@ -66,6 +65,6 @@ const NewList = memo(() => {
 			</S.Form>
 		</div>
 	);
-});
+}
 
 export default NewList;
