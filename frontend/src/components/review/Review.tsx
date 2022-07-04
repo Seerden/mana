@@ -1,11 +1,10 @@
 import { useReview } from "hooks/review/useReview";
 import { useRouteProps } from "hooks/routerHooks";
-import { memo } from "react";
 import { Link } from "react-router-dom";
 import * as S from "./Review.style";
 import ReviewInfo from "./ReviewInfo/ReviewInfo";
 
-const Review = memo(() => {
+const Review = () => {
 	const { params } = useRouteProps();
 	const {
 		backWasShown,
@@ -66,6 +65,6 @@ const Review = memo(() => {
 			)}
 		</S.Review>
 	);
-});
+};
 
 export default Review;
