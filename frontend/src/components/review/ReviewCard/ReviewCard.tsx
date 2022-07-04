@@ -1,6 +1,6 @@
 import { Term } from "gql/codegen-output";
 import React, { memo } from "react";
-import "./ReviewCard.scss";
+import * as S from "./ReviewCard.style";
 import { useReviewCard } from "./useReviewCard";
 
 type ReviewCardProps = {
@@ -13,12 +13,9 @@ const ReviewCard = memo(({ setBackWasShown, direction, term }: ReviewCardProps) 
 	const { side, fade, flipping, flip } = useReviewCard(direction, term, setBackWasShown);
 
 	return (
-		<div
-			onClick={flip}
-			className={`ReviewCard ${fade ? "fadein" : ""} ${flipping ? "flip" : ""}`}
-		>
+		<S.ReviewCard flipping={flipping} fadeIn={fade} onClick={flip}>
 			{term[side]}
-		</div>
+		</S.ReviewCard>
 	);
 });
 
