@@ -9,12 +9,15 @@ export function useReviewCard(direction: Direction, term: Term, setBackWasShown)
 	const timeouts = useRef<any[]>([]);
 
 	useEffect(() => {
-		// (re)create keyup handler on `side` change
 		window.addEventListener("keyup", handleArrowUpDownKeyup);
 		return () => {
 			window.removeEventListener("keyup", handleArrowUpDownKeyup);
+
+			for (const timeout of timeouts.current) {
+				window.clearTimeout(timeout);
+			}
 		};
-	}, [side]);
+	}, []);
 
 	useEffect(() => {
 		// when new term is shown, reset card state
@@ -27,16 +30,7 @@ export function useReviewCard(direction: Direction, term: Term, setBackWasShown)
 		);
 	}, [term]);
 
-	useEffect(() => {
-		// clean up timeouts on unmount
-		return () => {
-			for (const timeout of timeouts.current) {
-				window.clearTimeout(timeout);
-			}
-		};
-	}, []);
-
-	function handleArrowUpDownKeyup(e) {
+	function handleArrowUpDownKeyup(e: KeyboardEvent) {
 		if (["ArrowUp", "ArrowDown"].includes(e.code)) {
 			flip();
 		}
