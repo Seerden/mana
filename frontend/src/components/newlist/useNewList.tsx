@@ -9,6 +9,19 @@ import { newListState } from "state/atoms/newList.atom";
 import type { FocusIndex } from "types/newList.types";
 import NewListTerm from "./NewListTerm";
 
+/*
+   TODO: numTerms is a piece of intermediate state, the changing of which
+   triggers some updates in other pieces of state. This is not declarative at
+   all and I dislike it strongly. Refactor the control flow of this component to
+   be more declarative.
+
+   Something similar can be said about the flow of:
+   - initializing newList from recoil state,
+   - setting newList.owner and newList.terms in an effect
+   - updating termInputs based on changes made to newList
+   It's like a cascading waterfall of state sewage.
+*/
+
 /** Hook that handles functionality for the NewList form component. */
 export function useNewList() {
 	const { params, navigate } = useRouteProps();
