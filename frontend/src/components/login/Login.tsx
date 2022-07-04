@@ -15,15 +15,18 @@ const Login = () => {
 
 	const { mutate, data } = useMutateLogin();
 
+	// TODO: the code from this effect should be executed in useMutateLogin's
+	// onSuccess callback, instead.
 	useEffect(() => {
-		if (data) {
-			const { error, user } = data;
-			if (user?.username && typeof login === "function") {
-				login(user.username);
-				navigate(`/u/${user.username}`);
-			} else if (error) {
-				setErr(error);
-			}
+		if (!data) return;
+
+		const { error, user } = data;
+
+		if (user?.username && typeof login === "function") {
+			login(user.username);
+			navigate(`/u/${user.username}`);
+		} else if (error) {
+			setErr(error);
 		}
 	}, [data]);
 
@@ -35,7 +38,7 @@ const Login = () => {
 		if (username?.length && password?.length) {
 			mutate(user);
 		} else {
-			setMessage("Cannot log in without both username and password");
+			setMessage("You need to input a username and a password to be able to log in.");
 		}
 	}, [user]);
 
