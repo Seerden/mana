@@ -2,7 +2,7 @@ import { memo, useMemo } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { reviewSettingsState, reviewStageState } from "state/atoms/reviewAtoms";
 import { v4 as uuidv4 } from "uuid";
-import "./PreReview.scss";
+import * as S from "./PreReview.style";
 
 type SettingsButtonProps = {
 	handleSettingsChange: (e?: any) => void;
@@ -55,49 +55,40 @@ const PreReview = (props) => {
 	}
 
 	return (
-		<>
-			<div className="PreReview">
-				<div className="PreReview__header PageHeader">Review settings</div>
+		<S.PreReview>
+			<div className="PageHeader">Review settings</div>
 
-				<form className="PreReview__settings">
-					<ul className="PreReview__settings--list">
-						<li key="review-cycles">
-							<label className="PreReview__settings--label" htmlFor="n">
-								Number of cycles:
-							</label>
-							<p className="PreReview__settings--tip">
-								This is the number of times you need to get each term right to
-								complete the session.
-							</p>
-							<div className="PreReview__settings--cycles">{buttons}</div>
-						</li>
+			<form>
+				<S.SettingsList>
+					<li key="review-cycles">
+						<S.SettingsLabel htmlFor="n">Number of cycles:</S.SettingsLabel>
+						<S.SettingsTip>
+							This is the number of times you need to get each term right to
+							complete the session.
+						</S.SettingsTip>
+						<S.Buttons>{buttons}</S.Buttons>
+					</li>
 
-						<li key="review-direction">
-							<label className="PreReview__settings--label" htmlFor="direction">
-								Direction:
-							</label>
-							<div className="PreReview__settings--tip">
-								<div>
-									'Forwards' means you're shown the front, and need to recall the
-									back of the card.
-								</div>
-								<div>'Backwards' is the other way around.</div>
+					<li key="review-direction">
+						<S.SettingsLabel htmlFor="direction">Direction:</S.SettingsLabel>
+						<S.SettingsTip>
+							<div>
+								'Forwards' means you're shown the front, and need to recall the
+								back of the card.
 							</div>
-							<div className="PreReview__settings--directionbuttons">
-								{directionButtons}
-							</div>
-						</li>
-					</ul>
+							<div>'Backwards' is the other way around.</div>
+						</S.SettingsTip>
+						<S.Buttons>{directionButtons}</S.Buttons>
+					</li>
+				</S.SettingsList>
 
-					<input
-						onClick={handleReviewStartClick}
-						className="PreReview__start"
-						type="button"
-						value="Start the review with these settings"
-					/>
-				</form>
-			</div>
-		</>
+				<S.StartReviewButton
+					onClick={handleReviewStartClick}
+					type="button"
+					value="Start the review with these settings"
+				/>
+			</form>
+		</S.PreReview>
 	);
 };
 
@@ -112,14 +103,13 @@ const SettingsButton = memo(
 			selected = direction === current;
 		}
 		return (
-			<input
+			<S.SettingsButton
 				style={{
 					color: selected ? "white" : "black",
 					backgroundColor: selected ? "blueviolet" : "white",
 					padding: "0.1rem 0.5rem",
 				}}
 				onClick={handleSettingsChange}
-				className={n ? `PreReview__settings--n` : "PreReview__settings--direction"}
 				name={n ? "n" : "direction"}
 				type="button"
 				value={value}
