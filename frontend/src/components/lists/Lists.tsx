@@ -74,14 +74,14 @@ const Lists = memo((props) => {
 				<div className="PageWrapper">
 					<div className="PageHeader">
 						Lists by{" "}
-						<Link className="Link" to={`/u/${params.username}`}>
+						<Link className="Link" to={userString}>
 							/u/{params.username}
 						</Link>
 					</div>
 
 					<div>It appears you don't have any lists.</div>
 
-					<S.UserPageLink to={`/u/${params.username}/lists/new`}>
+					<S.UserPageLink to={`${userString}/lists/new`}>
 						Create a new list
 					</S.UserPageLink>
 				</div>
