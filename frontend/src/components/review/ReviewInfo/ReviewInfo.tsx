@@ -6,11 +6,13 @@ import { numTermsToReviewState } from "state/selectors/reviewSelectors";
 import * as S from "./ReviewInfo.style";
 
 type ReviewInfoProps = {
-	progress: number;
-	completedCount: number;
+	completion: {
+		count: number;
+		percentage: number;
+	};
 };
 
-const ReviewInfo = memo(({ progress, completedCount }: ReviewInfoProps) => {
+const ReviewInfo = memo(({ completion }: ReviewInfoProps) => {
 	const [reviewSettings] = useRecoilState(reviewSettingsState);
 	const numTermsToReview = useRecoilValue(numTermsToReviewState);
 	const { sessionStart: start, n } = reviewSettings;
@@ -25,7 +27,8 @@ const ReviewInfo = memo(({ progress, completedCount }: ReviewInfoProps) => {
 			</S.Summary>
 
 			<S.Datum>
-				Session completion: {progress}% ({completedCount}/{n * numTermsToReview}).
+				Session completion: {completion.percentage}% ({completion.count}/
+				{n * numTermsToReview}).
 				<div>
 					You started this session <span title={title}>{timeSinceStart}</span>.
 				</div>

@@ -7,14 +7,8 @@ import ReviewInfo from "./ReviewInfo/ReviewInfo";
 
 const Review = memo(() => {
 	const { params } = useRouteProps();
-	const {
-		backWasShown,
-		futureTerms,
-		progress,
-		completedCount,
-		handlePassFailClick,
-		makeReviewCard,
-	} = useReview();
+	const { backWasShown, futureTerms, completion, handlePassFailClick, makeReviewCard } =
+		useReview();
 
 	return (
 		<S.Review className="PageWrapper">
@@ -59,10 +53,10 @@ const Review = memo(() => {
 					)}
 
 					<S.ProgressWrapper>
-						<S.ProgressBar widthPercent={`${progress}%`} />
+						<S.ProgressBar widthPercent={`${completion.percentage}%`} />
 					</S.ProgressWrapper>
 
-					<ReviewInfo {...{ completedCount, progress }} />
+					<ReviewInfo completion={completion} />
 				</>
 			)}
 		</S.Review>

@@ -187,12 +187,20 @@ export function useReview() {
 	}, [termsToReview, reviewSettings.n]);
 
 	// number of seen flashcards, and session progress as a percentage
-	const [completedCount, progress] = useMemo(() => {
-		if (!futureTerms) return [0, 0];
-		const termsCompleted = sessionLength - futureTerms.length;
-		const progress = Math.floor((100 * termsCompleted) / sessionLength);
+	const completion = useMemo(() => {
+		if (!futureTerms)
+			return {
+				count: 0,
+				percentage: 0,
+			};
+
 		const completedCount = sessionLength - futureTerms.length;
-		return [completedCount, progress];
+		const progress = Math.floor((100 * completedCount) / sessionLength);
+
+		return {
+			count: completedCount,
+			percentage: progress,
+		};
 	}, [futureTerms, sessionLength]);
 
 	/** Handle clicking the pass or fail button */
@@ -238,9 +246,8 @@ export function useReview() {
 		setBackWasShown,
 		futureTerms,
 		reduceFutureTerms,
-		progress,
-		completedCount,
+		completion,
 		handlePassFailClick,
 		makeReviewCard,
-	};
+	} as const;
 }
