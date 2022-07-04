@@ -2,7 +2,7 @@ import React, { memo, useMemo } from "react";
 import { useRecoilState } from "recoil";
 import { newListState } from "state/atoms/newList.atom";
 import type { FocusIndex } from "types/newList.types";
-import cs from "./NewList.module.scss";
+import * as S from "./NewListTerm.style";
 
 type NewListTermProps = {
 	index: number;
@@ -35,29 +35,27 @@ const NewListTerm = memo(
 		};
 
 		const inputProps: Partial<React.InputHTMLAttributes<HTMLInputElement>> = {
-			className: cs.Term__input,
 			onFocus: (e) => handleFocus(e),
 			onBlur: (e) => handleTermBlur(e, index),
 			type: "text",
 		};
 
 		return (
-			<div className={cs.Term}>
-				<div
-					className={cs.Term__index}
+			<S.Term>
+				<S.TermIndex
 					style={{
 						backgroundColor: isFocussed ? "deepskyblue" : "#111",
 						color: isFocussed ? "#111" : "azure",
 					}}
 				>
 					{index + 1}
-				</div>
+				</S.TermIndex>
 
-				<div className={cs.Term__inputs}>
-					<input {...inputProps} autoFocus={autoFocus} name="from" />
-					<input {...inputProps} name="to" />
-				</div>
-			</div>
+				<S.TermInputs>
+					<S.TermInput {...inputProps} autoFocus={autoFocus} name="from" />
+					<S.TermInput {...inputProps} name="to" />
+				</S.TermInputs>
+			</S.Term>
 		);
 	}
 );

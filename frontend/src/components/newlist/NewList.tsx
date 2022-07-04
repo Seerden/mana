@@ -1,6 +1,5 @@
 import { memo } from "react";
-import { BiArrowToRight } from "react-icons/bi";
-import cs from "./NewList.module.scss";
+import * as S from "./NewList.style";
 import { useNewList } from "./useNewList";
 
 const NewList = memo(() => {
@@ -10,80 +9,61 @@ const NewList = memo(() => {
 		<div className="NewList">
 			<div className="PageHeader">New List</div>
 
-			<form className={cs.Form}>
-				<section className={cs.Name}>
-					<label className={cs.Name__label}>List name</label>
-					<input
-						className={cs.Name__input}
+			<S.Form>
+				<S.Name>
+					<S.NameLabel>List name</S.NameLabel>
+					<S.NameInput
 						onBlur={handleBlur}
 						type="text"
 						name="name"
 						placeholder="week 3 vocabulary"
 					/>
 
-					<div className={cs.Languages}>
-						<div className={cs.Language}>
-							<label htmlFor="from" className={cs.Language__label}>
-								Original language
-							</label>
-							<input
-								className={cs.Language__input}
+					<S.Languages>
+						<S.Language>
+							<S.LanguageLabel htmlFor="from">Original language</S.LanguageLabel>
+							<S.LanguageInput
 								onBlur={handleBlur}
 								type="text"
 								name="from"
 								placeholder="Klingon"
 							/>
-						</div>
-						<BiArrowToRight className={cs.Language__icon} />
+						</S.Language>
+						<S.LanguageIcon />
 
-						<div className={cs.Language}>
-							<label htmlFor="to" className={cs.Language__label}>
-								Target language
-							</label>
-							<input
-								className={cs.Language__input}
+						<S.Language>
+							<S.LanguageLabel>Target language</S.LanguageLabel>
+							<S.LanguageInput
 								onBlur={handleBlur}
 								type="text"
 								name="to"
 								placeholder="Elvish"
 							/>
-						</div>
-					</div>
-				</section>
+						</S.Language>
+					</S.Languages>
+				</S.Name>
 
-				<section className={cs.Buttons}>
-					<input
-						className={cs.Button}
-						onClick={() => addRows()}
-						type="button"
-						value="Add rows"
-					/>
-					<input
-						className={cs.Button}
-						onClick={handleSubmit}
-						type="button"
-						value="Create list"
-					/>
-				</section>
+				<S.Buttons>
+					<S.Button onClick={() => addRows()} type="button" value="Add rows" />
+					<S.Button onClick={handleSubmit} type="button" value="Create list" />
+				</S.Buttons>
 
-				<section className={cs.Terms}>
+				<S.Terms>
 					{termInputs.length > 0 && (
 						<>
-							<div className={cs.Terms__header}>
+							<S.TermsHeader>
 								{newList && (
 									<>
-										<span className={cs.Terms__header_side}>
-											{newList.from}
-										</span>
-										<span className={cs.Terms__header_side}>{newList.to}</span>
+										<S.TermsHeaderSide>{newList.from}</S.TermsHeaderSide>
+										<S.TermsHeaderSide>{newList.to}</S.TermsHeaderSide>
 									</>
 								)}
-							</div>
+							</S.TermsHeader>
 							{termInputs}
 						</>
 					)}
-				</section>
-			</form>
+				</S.Terms>
+			</S.Form>
 		</div>
 	);
 });
