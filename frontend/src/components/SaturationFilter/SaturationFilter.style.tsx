@@ -77,12 +77,13 @@ export const FilterLabelButton = styled.button<{ borderAndShadowColor?: string }
 `;
 
 export const FilterIcons = styled.div<{ borderColor?: string }>`
-	${iconsLabelDirectionProps}
+	${iconsLabelDirectionProps};
 
 	border: 2px solid ${(p) => p.borderColor};
 `;
 
 export const Direction = styled.div`
+	display: flex;
 	justify-content: space-evenly;
 	height: 100%;
 	align-items: center;
