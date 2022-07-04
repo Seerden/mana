@@ -6,9 +6,9 @@ import PreReview from "../PreReview/PreReview";
 import Review from "../Review";
 
 const mapReviewStageToComponent = {
-    before: PreReview,
-    started: Review,
-    after: PostReview,
+	before: PreReview,
+	started: Review,
+	after: PostReview,
 };
 
 /**
@@ -19,23 +19,23 @@ const mapReviewStageToComponent = {
  *      and also some buttons to be redirected to wherever else they may wish to go
  */
 function ReviewPage() {
-    const reviewStage = useRecoilValue(reviewStageState);
-    const resetReviewStage = useResetRecoilState(reviewStageState);
-    const resetReviewSettings = useResetRecoilState(reviewSettingsState);
+	const reviewStage = useRecoilValue(reviewStageState);
+	const resetReviewStage = useResetRecoilState(reviewStageState);
+	const resetReviewSettings = useResetRecoilState(reviewSettingsState);
 
-    const ReviewStageToRender = useMemo(() => {
-        return mapReviewStageToComponent[reviewStage] as React.ElementType;
-    }, [reviewStage]);
+	const ReviewStageToRender = useMemo(() => {
+		return mapReviewStageToComponent[reviewStage] as React.ElementType;
+	}, [reviewStage]);
 
-    useEffect(() => {
-        resetReviewStage();
-        return () => {
-            resetReviewStage();
-            resetReviewSettings();
-        };
-    }, []);
+	useEffect(() => {
+		resetReviewStage();
+		return () => {
+			resetReviewStage();
+			resetReviewSettings();
+		};
+	}, []);
 
-    return <ReviewStageToRender />;
+	return <ReviewStageToRender />;
 }
 
 export default ReviewPage;
