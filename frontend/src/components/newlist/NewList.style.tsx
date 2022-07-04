@@ -19,7 +19,7 @@ export const Form = styled.form`
 `;
 
 // Should be renamed to Header or something
-export const Name = styled.section`
+export const NameAndLanguages = styled.section`
 	display: flex;
 	width: 100%;
 	margin: 0 auto;

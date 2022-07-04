@@ -10,7 +10,7 @@ const NewList = memo(() => {
 			<div className="PageHeader">New List</div>
 
 			<S.Form>
-				<S.Name>
+				<S.NameAndLanguages>
 					<S.NameLabel>List name</S.NameLabel>
 					<S.NameInput
 						onBlur={handleBlur}
@@ -41,7 +41,7 @@ const NewList = memo(() => {
 							/>
 						</S.Language>
 					</S.Languages>
-				</S.Name>
+				</S.NameAndLanguages>
 
 				<S.Buttons>
 					<S.Button onClick={() => addRows()} type="button" value="Add rows" />
