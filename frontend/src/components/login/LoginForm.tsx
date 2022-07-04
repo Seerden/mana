@@ -1,5 +1,5 @@
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import * as S from "./Login.style";
+import * as S from "./LoginForm.style";
 
 const LoginForm = ({
 	authError,
