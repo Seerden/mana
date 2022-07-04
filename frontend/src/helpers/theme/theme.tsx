@@ -43,3 +43,57 @@ export const sharedLinkStyle = css`
 		color: var(--color);
 	}
 `;
+
+export const sharedButtonStyle = css`
+	display: block;
+	margin: 0.8rem 0;
+	outline: none;
+	border: none;
+	border-radius: 3px;
+	background-color: deepskyblue;
+	padding: 0.5rem 1rem;
+	font-size: 0.9rem;
+
+	transition: all 80ms linear;
+
+	&:not(:active):hover {
+		background-color: #333333;
+		color: white;
+		transform: translateY(-2px);
+		box-shadow: 0 5px 0 -4px deepskyblue, 0 0 0.5rem black;
+	}
+	&:hover {
+		box-shadow: 0 3px 0 -1px black;
+	}
+
+	&:active {
+		background-color: #444;
+		color: azure;
+	}
+`;
+
+// Matches old .Link class
+export const linkStyle = css`
+	display: inline-block;
+	color: deepskyblue;
+	text-decoration: none;
+	border-bottom: 1px solid transparent;
+
+	transition: all ease 100ms;
+
+	&:hover {
+		transform: translateY(-2px);
+		color: slateblue;
+	}
+
+	&:active {
+		border-bottom: 1px solid slateblue;
+	}
+`;
+
+export const sharedHeadingStyle = css`
+	width: max-content;
+	background-color: #333;
+	font-size: 1.4rem;
+	padding: 0.2rem 0.5rem;
+`;
