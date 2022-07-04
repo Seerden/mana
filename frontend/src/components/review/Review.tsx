@@ -26,7 +26,7 @@ const Review = () => {
 				</div>
 			</S.Header>
 
-			{remainingTerms.length && (
+			{remainingTerms.length > 0 && (
 				<>
 					{makeReviewCard({ ...remainingTerms[0] })}
 
