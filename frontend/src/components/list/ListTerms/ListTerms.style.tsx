@@ -31,6 +31,7 @@ export const FilterString = styled.span`
 `;
 
 export const AllFiltered = styled.span`
+	display: inline-block;
 	color: ${(p) => p.theme.colors.dark.black};
 	padding: 0.3rem 1rem;
 	border-radius: 5px;
