@@ -42,14 +42,7 @@ const NewListTerm = memo(
 
 		return (
 			<S.Term>
-				<S.TermIndex
-					style={{
-						backgroundColor: isFocussed ? "deepskyblue" : "#111",
-						color: isFocussed ? "#111" : "azure",
-					}}
-				>
-					{index + 1}
-				</S.TermIndex>
+				<S.TermIndex isFocussed={isFocussed}>{index + 1}</S.TermIndex>
 
 				<S.TermInputs>
 					<S.TermInput {...inputProps} autoFocus={autoFocus} name="from" />

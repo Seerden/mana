@@ -18,7 +18,7 @@ export const Term = styled.div`
 
 const termHeight = "1.8rem";
 
-export const TermIndex = styled.div`
+export const TermIndex = styled.div<{ isFocussed?: boolean }>`
 	padding: 0.3rem 0;
 	display: flex;
 	text-align: center;
@@ -28,9 +28,11 @@ export const TermIndex = styled.div`
 	align-items: center;
 	font-size: 0.9rem;
 	display: inline-block;
-	color: #ccc;
 	border-radius: 4px 0 0 4px;
 	user-select: none;
+
+	background-color: ${(p) => (p.isFocussed ? "deepskyblue" : "#111")};
+	color: ${(p) => (p.isFocussed ? "#111" : "azure")};
 
 	transition: all 50ms linear;
 `;
