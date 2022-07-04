@@ -29,6 +29,7 @@ function ReviewPage() {
 
 	useEffect(() => {
 		resetReviewStage();
+
 		return () => {
 			resetReviewStage();
 			resetReviewSettings();
