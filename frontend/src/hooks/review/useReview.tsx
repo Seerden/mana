@@ -48,7 +48,7 @@ export function useReview() {
 			if (!mutateResponse) {
 				mutateCreateReviewSession({ newReviewSession, termUpdateArray });
 			} else {
-				// setReviewStage("after");
+				setReviewStage("after");
 			}
 		}
 	}, [mutateResponse, reviewSettings.sessionEnd]);
