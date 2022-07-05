@@ -6,13 +6,8 @@ import ReviewInfo from "./ReviewInfo/ReviewInfo";
 
 const Review = () => {
 	const { params } = useRouteProps();
-	const {
-		backWasShown,
-		remainingTerms,
-		completion,
-		handlePassFailClick,
-		makeReviewCard,
-	} = useReview();
+	const { backWasShown, remainingTerms, completion, handlePassFail, makeReviewCard } =
+		useReview();
 
 	return (
 		<S.Review className="PageWrapper">
@@ -38,8 +33,8 @@ const Review = () => {
 										<S.Button
 											passfail={passfail}
 											key={passfail}
-											onClick={(e) => {
-												handlePassFailClick(e, passfail);
+											onClick={() => {
+												handlePassFail({ passfail });
 											}}
 											disabled={!backWasShown}
 											type="button"
