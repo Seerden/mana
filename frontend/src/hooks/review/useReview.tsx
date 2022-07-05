@@ -223,7 +223,7 @@ export function useReview() {
 
 	/** Update all necessary state to move on to the next ReviewCard. */
 	const handlePassFailClick = useCallback(
-		(_: React.MouseEvent<HTMLButtonElement>, passfail: PassFail) => {
+		(_: React.MouseEvent<HTMLInputElement>, passfail: PassFail) => {
 			if (!backWasShown) return;
 
 			reduceTermUpdateArray({
