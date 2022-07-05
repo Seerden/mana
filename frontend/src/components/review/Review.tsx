@@ -33,17 +33,17 @@ const Review = () => {
 					{backWasShown ? (
 						<>
 							<S.Buttons>
-								{["fail", "pass"].map((str: PassFail) => {
+								{["fail", "pass"].map((passfail: PassFail) => {
 									return (
 										<S.Button
-											passfail={str}
-											key={str}
+											passfail={passfail}
+											key={passfail}
 											onClick={(e) => {
-												if (backWasShown) handlePassFailClick(e, str);
+												handlePassFailClick(e, passfail);
 											}}
 											disabled={!backWasShown}
 											type="button"
-											value={str[0].toUpperCase() + str.slice(1)}
+											value={passfail[0].toUpperCase() + passfail.slice(1)}
 										/>
 									);
 								})}

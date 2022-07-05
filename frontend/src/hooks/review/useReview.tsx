@@ -224,17 +224,23 @@ export function useReview() {
 	/** Update all necessary state to move on to the next ReviewCard. */
 	const handlePassFailClick = useCallback(
 		(_: React.MouseEvent<HTMLButtonElement>, passfail: PassFail) => {
+			if (!backWasShown) return;
+
 			reduceTermUpdateArray({
 				type: "passfail",
 				currentTerm: remainingTerms[0],
 				passfail,
 			});
+
 			setPassfail((cur) => [...cur, passfail]);
+
 			setTimePerCard((cur) => [...cur, new Date()]);
+
 			updateRemainingTerms({ passfail });
+
 			setBackWasShown(false);
 		},
-		[remainingTerms]
+		[remainingTerms, backWasShown]
 	);
 
 	/** Keydown handler that calls handlePassFailClick. */
