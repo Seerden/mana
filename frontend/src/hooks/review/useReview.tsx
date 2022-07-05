@@ -12,6 +12,11 @@ import { useInitializeReview } from "./useInitializeReview";
 import { useMakeReviewCard } from "./useMakeReviewCard";
 import { useReviewState } from "./useReviewState";
 
+const mapKeyCodeToPassFail = {
+	ArrowLeft: "fail",
+	ArrowRight: "pass",
+};
+
 export function useReview() {
 	useInitializeReview();
 	const { makeReviewCard, backWasShown, setBackWasShown } = useMakeReviewCard();
@@ -27,21 +32,20 @@ export function useReview() {
 		newReviewSession,
 	} = useReviewState();
 
+	const { mutate: mutateCreateReviewSession, data: mutateResponse } =
+		useCreateReviewSessionMutation();
+
 	const initialTerms = useMemo(() => {
 		return makeReviewList(termsToReview, reviewSettings.n);
 	}, [termsToReview, reviewSettings.n]);
 
 	const [remainingTerms, setRemainingTerms] = useState(initialTerms);
 
-	// termsToReview might be empty on initial mount, since useInitivalReview may
-	// not have grabbed the terms and parsed them into termsToReview yet. Hence
-	// this effect is strictly necessary.
+	// Need this since termsToReview might be empty (since useInitialReview may
+	// not be done fetching and parsing lists->termsToReviewyet).
 	useEffect(() => {
 		setRemainingTerms(initialTerms);
 	}, [termsToReview, reviewSettings.n]);
-
-	const { mutate: mutateCreateReviewSession, data: mutateResponse } =
-		useCreateReviewSessionMutation();
 
 	useEffect(() => {
 		if (reviewSettings.sessionEnd) {
@@ -54,9 +58,9 @@ export function useReview() {
 	}, [mutateResponse, reviewSettings.sessionEnd]);
 
 	useEffect(() => {
-		window.addEventListener("keydown", handleLeftRightArrowKeyDown);
+		window.addEventListener("keydown", handlePassFailKeydown);
 		return () => {
-			window.removeEventListener("keydown", handleLeftRightArrowKeyDown);
+			window.removeEventListener("keydown", handlePassFailKeydown);
 		};
 	}, [backWasShown]);
 
@@ -68,17 +72,22 @@ export function useReview() {
 				termUpdateArray,
 				reviewSettings
 			);
+
 			reduceTermUpdateArray({ type: "saturation", newSaturationLevels });
+
 			reduceTermUpdateArray({ type: "date" });
+
 			setReviewSettings((current) => ({
 				...current,
 				sessionEnd: new Date(),
 			}));
 		}
 		/* 
-            deps array doesn't take reviewSettings, even though that piece of state _is_ used in makeNewSaturationLevels,
-            this is a code smell. Simple naive fix would be to turn makeNewSaturationLevels into a callback that has reviewSettings
-            as one of its dependencies, instead of passing reviewSettings as an argument
+         Deps array doesn't take reviewSettings, even though that piece of state
+         _is_  used in makeNewSaturationLevels, this is a code smell. Simple
+         naive fix would  be to turn makeNewSaturationLevels into a callback
+         that has reviewSettings as one of its dependencies, instead of passing
+         reviewSettings as an argument.
         */
 	}, [remainingTerms, termsToReview]);
 
@@ -97,9 +106,9 @@ export function useReview() {
 		return termsCopy;
 	}
 
-	// This function either removes or re-shuffles the first entry of
-	// remainingTerms depending on `passfail`. Intended only to be triggered on
-	// user interaction with a ReviewCard.
+	// Remove or re-shuffle the first entry of remainingTerms depending on
+	// `passfail`. Intended only to be triggered on user interaction with a
+	// ReviewCard.
 	function updateRemainingTerms({ passfail }: { passfail: PassFail }) {
 		// If 'pass', then the card can be removed from the deck.
 		if (passfail === "pass") {
@@ -195,7 +204,7 @@ export function useReview() {
 		return termsToReview.length * reviewSettings.n;
 	}, [termsToReview, reviewSettings.n]);
 
-	// number of seen flashcards, and session progress as a percentage
+	// Session progress state derived from other pieces of state.
 	const completion = useMemo(() => {
 		if (!remainingTerms)
 			return {
@@ -212,9 +221,9 @@ export function useReview() {
 		};
 	}, [remainingTerms, sessionLength]);
 
-	/** Handle clicking the pass or fail button */
+	/** Update all necessary state to move on to the next ReviewCard. */
 	const handlePassFailClick = useCallback(
-		(e, passfail: PassFail) => {
+		(_: React.MouseEvent<HTMLButtonElement>, passfail: PassFail) => {
 			reduceTermUpdateArray({
 				type: "passfail",
 				currentTerm: remainingTerms[0],
@@ -225,30 +234,22 @@ export function useReview() {
 			updateRemainingTerms({ passfail });
 			setBackWasShown(false);
 		},
-		[remainingTerms, backWasShown]
+		[remainingTerms]
 	);
 
-	/**
-	 * To move to the next flashcard, the user can either
-	 *  - press one of the "PASS"/"FAIL" buttons,
-	 *  - press the left or right arrow key on their keyboard.
-	 * This function creates a keydown handler that executes handlePassFailClick
-	 * if the user just pressed either the left or right arrow keys
-	 */
-	function handleLeftRightArrowKeyDown(e: KeyboardEvent): void {
-		if (!backWasShown) return;
+	/** Keydown handler that calls handlePassFailClick. */
+	const handlePassFailKeydown = useCallback(
+		(e: KeyboardEvent) => {
+			if (!backWasShown) return;
 
-		const mapKeyCodeToPassFail = {
-			ArrowLeft: "fail",
-			ArrowRight: "pass",
-		};
+			const passfail = mapKeyCodeToPassFail[e.code];
 
-		const passfail = mapKeyCodeToPassFail[e.code];
-
-		if (passfail) {
-			handlePassFailClick(null, passfail);
-		}
-	}
+			if (passfail) {
+				handlePassFailClick(null, passfail);
+			}
+		},
+		[backWasShown]
+	);
 
 	return {
 		backWasShown,
