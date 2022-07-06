@@ -1,9 +1,5 @@
-import { Suspense } from "react";
+import { ReactChildren, Suspense } from "react";
 
-export default function Suspended(Component: React.ComponentType) {
-    return (
-        <Suspense fallback={<></>}>
-            <Component />
-        </Suspense>
-    );
+export default function Suspended({ children }: { children: ReactChildren }) {
+	return <Suspense fallback={<></>}>{children}</Suspense>;
 }
