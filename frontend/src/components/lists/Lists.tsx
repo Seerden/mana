@@ -20,7 +20,7 @@ function Lists() {
 
 	return (
 		<>
-			{lists?.length && (
+			{lists?.length > 0 && (
 				<div className="PageWrapper">
 					<div className="PageHeader">
 						Lists by
