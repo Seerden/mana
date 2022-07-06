@@ -26,24 +26,20 @@ const Review = () => {
 					{makeReviewCard({ ...remainingTerms[0] })}
 
 					{backWasShown ? (
-						<>
-							<S.Buttons>
-								{["fail", "pass"].map((passfail: PassFail) => {
-									return (
-										<S.Button
-											passfail={passfail}
-											key={passfail}
-											onClick={() => {
-												handlePassFail({ passfail });
-											}}
-											disabled={!backWasShown}
-											type="button"
-											value={passfail[0].toUpperCase() + passfail.slice(1)}
-										/>
-									);
-								})}
-							</S.Buttons>
-						</>
+						<S.Buttons>
+							{["fail", "pass"].map((passfail: PassFail) => {
+								return (
+									<S.Button
+										passfail={passfail}
+										key={passfail}
+										onClick={() => handlePassFail({ passfail })}
+										disabled={!backWasShown}
+										type="button"
+										value={passfail[0].toUpperCase() + passfail.slice(1)}
+									/>
+								);
+							})}
+						</S.Buttons>
 					) : (
 						<S.PreventNextCard>
 							Cannot move on to the next term until you've seen the back of the
