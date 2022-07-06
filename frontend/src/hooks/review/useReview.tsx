@@ -138,7 +138,7 @@ export function useReview() {
 	/**
 	 * Update all necessary state to move on to the next ReviewCard. This
 	 * function can either be called through a keydown event handler, or manually
-	 * if passed `passfail`. As such, this either takes `e` _or_ `passfail`
+	 * if passed `passfail`. As such, this either takes `e` _or_ `passfail`.
 	 */
 	const handlePassFail = useCallback(
 		({ e, passfail }: { e?: KeyboardEvent; passfail?: PassFail }) => {
@@ -167,13 +167,12 @@ export function useReview() {
 
 	useEffect(() => {
 		window.addEventListener("keydown", (e) => handlePassFail({ e }));
-		return () => {
-			window.removeEventListener("keydown", (e) => handlePassFail({ e }));
-		};
+
+		return () => window.removeEventListener("keydown", (e) => handlePassFail({ e }));
 	}, []);
 
 	useEffect(() => {
-		// end review session once futureTerms.length reaches 0
+		// End review session once there are no more remainingTerms.
 		if (termsToReview.length && remainingTerms?.length === 0) {
 			const newSaturationLevels = makeNewSaturationLevels(
 				termsToReview,
@@ -199,8 +198,10 @@ export function useReview() {
         */
 	}, [remainingTerms, termsToReview]);
 
-	// Shuffle the first term back into the array at a random spot. If it's the
-	// only remaining card, return (a copy of) the array as it is.
+	/**
+	 * Shuffle the first term back into the array at a random spot. If it's the
+	 * only remaining card, return (a copy of) the given array.
+	 */
 	function shuffleCurrentTerm(terms: any[]) {
 		if (terms.length === 1) {
 			return terms.slice();
@@ -214,22 +215,21 @@ export function useReview() {
 		return termsCopy;
 	}
 
-	// Remove or re-shuffle the first entry of remainingTerms depending on
-	// `passfail`. Intended only to be triggered on user interaction with a
-	// ReviewCard.
+	/**
+	 * Remove (case `pass`) or re-shuffle (case `fail`) the first entry of
+	 * remainingTerms `depending` on given `passfail`. Intended only to be
+	 * triggered on user interaction with a ReviewCard.
+	 */
 	function updateRemainingTerms({ passfail }: { passfail: PassFail }) {
-		// If 'pass', then the card can be removed from the deck.
-		if (passfail === "pass") {
-			setRemainingTerms((current) => current.slice(1));
-		}
-
-		// If 'fail', the card has to be re-placed in the deck at a random index.
-		if (passfail === "fail") {
-			setRemainingTerms((current) => shuffleCurrentTerm(current));
+		switch (passfail) {
+			case "pass":
+				return setRemainingTerms((current) => current.slice(1));
+			case "fail":
+				return setRemainingTerms((current) => shuffleCurrentTerm(current));
 		}
 	}
 
-	// Session progress state derived from other pieces of state.
+	/** Session progress state derived from other pieces of state. */
 	const completion = useMemo(() => {
 		if (!remainingTerms)
 			return {
