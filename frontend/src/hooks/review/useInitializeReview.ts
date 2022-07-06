@@ -6,14 +6,14 @@ import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { termsToReviewState } from "state/atoms/reviewAtoms";
 
 export function useInitializeReview() {
-    const { params, location } = useRouteProps();
-    const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
-    const setTermsToReview = useSetRecoilState(termsToReviewState);
-    const resetTermsToReview = useResetRecoilState(termsToReviewState);
-    const isFullListReview =
-        qs.parse(location.search).kind === "full" && location.pathname.includes("list");
+	const { params, location } = useRouteProps();
+	const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
+	const setTermsToReview = useSetRecoilState(termsToReviewState);
+	const resetTermsToReview = useResetRecoilState(termsToReviewState);
+	const isFullListReview =
+		qs.parse(location.search).kind === "full" && location.pathname.includes("list");
 
-    /* 
+	/* 
         useReview handles various types of reviews
         for the case where a user manually selects a partial list, the terms to be reviewed 
         (termsToReview) will already be present at this stage. For a full-list review, 
@@ -33,20 +33,22 @@ export function useInitializeReview() {
                         /review?kind=saturation&level=0    
     */
 
-    // if full-list review, fetch list from database
-    useEffect(() => {
-        location.pathname.includes("list") && refetchLists();
+	// if full-list review, fetch list from database
+	useEffect(() => {
+		if (location.pathname.includes("list")) {
+			refetchLists();
+		}
 
-        return () => resetTermsToReview();
-    }, []);
+		return () => resetTermsToReview();
+	}, []);
 
-    /*
+	/*
         if full-list review and list has been fetched (which is a result from the above useEffect), 
         put list's terms in termsToReview 
     */
-    useEffect(() => {
-        if (lists?.length && isFullListReview) {
-            setTermsToReview(lists[0].terms);
-        }
-    }, [lists]);
+	useEffect(() => {
+		if (lists?.length && isFullListReview) {
+			setTermsToReview(lists[0].terms);
+		}
+	}, [lists]);
 }
