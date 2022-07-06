@@ -229,11 +229,6 @@ export function useReview() {
 		}
 	}
 
-	// total number of flashcards in the entire review session
-	const sessionLength = useMemo(() => {
-		return termsToReview.length * reviewSettings.n;
-	}, [termsToReview, reviewSettings.n]);
-
 	// Session progress state derived from other pieces of state.
 	const completion = useMemo(() => {
 		if (!remainingTerms)
@@ -242,6 +237,9 @@ export function useReview() {
 				percentage: 0,
 			};
 
+		// Total number of flashcards in the review session.
+		const sessionLength = termsToReview.length * reviewSettings.n;
+
 		const completedCount = sessionLength - remainingTerms.length;
 		const progress = Math.floor((100 * completedCount) / sessionLength);
 
@@ -249,7 +247,7 @@ export function useReview() {
 			count: completedCount,
 			percentage: progress,
 		};
-	}, [remainingTerms, sessionLength]);
+	}, [remainingTerms, termsToReview.length, reviewSettings.n]);
 
 	return {
 		backWasShown,
