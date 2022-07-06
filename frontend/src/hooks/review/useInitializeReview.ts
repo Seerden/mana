@@ -7,11 +7,20 @@ import { termsToReviewState } from "state/atoms/reviewAtoms";
 
 export function useInitializeReview() {
 	const { params, location } = useRouteProps();
-	const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
+
 	const setTermsToReview = useSetRecoilState(termsToReviewState);
 	const resetTermsToReview = useResetRecoilState(termsToReviewState);
+
 	const isFullListReview =
 		qs.parse(location.search).kind === "full" && location.pathname.includes("list");
+
+	const { refetch: fetchLists } = useQueryListsById([params.id], {
+		onSuccess: (lists) => {
+			if (isFullListReview) {
+				setTermsToReview(lists[0].terms);
+			}
+		},
+	});
 
 	/* 
         useReview handles various types of reviews
@@ -36,19 +45,9 @@ export function useInitializeReview() {
 	// if full-list review, fetch list from database
 	useEffect(() => {
 		if (location.pathname.includes("list")) {
-			refetchLists();
+			fetchLists();
 		}
 
 		return () => resetTermsToReview();
 	}, []);
-
-	/*
-        if full-list review and list has been fetched (which is a result from the above useEffect), 
-        put list's terms in termsToReview 
-    */
-	useEffect(() => {
-		if (lists?.length && isFullListReview) {
-			setTermsToReview(lists[0].terms);
-		}
-	}, [lists]);
 }
