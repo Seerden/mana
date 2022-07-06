@@ -33,7 +33,7 @@ export function useReview() {
 	} = useReviewState();
 
 	const { mutate: mutateCreateReviewSession, data: mutateResponse } =
-		useCreateReviewSessionMutation();
+		useCreateReviewSessionMutation(() => setReviewStage("after"));
 
 	const initialTerms = useMemo(() => {
 		return makeReviewList(termsToReview, reviewSettings.n);
@@ -48,12 +48,8 @@ export function useReview() {
 	}, [termsToReview, reviewSettings.n]);
 
 	useEffect(() => {
-		if (reviewSettings.sessionEnd) {
-			if (!mutateResponse) {
-				mutateCreateReviewSession({ newReviewSession, termUpdateArray });
-			} else {
-				setReviewStage("after");
-			}
+		if (reviewSettings.sessionEnd && !mutateResponse) {
+			mutateCreateReviewSession({ newReviewSession, termUpdateArray });
 		}
 	}, [mutateResponse, reviewSettings.sessionEnd]);
 
