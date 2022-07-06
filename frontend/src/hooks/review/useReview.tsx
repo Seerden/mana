@@ -171,31 +171,27 @@ export function useReview() {
 		return () => window.removeEventListener("keydown", (e) => handlePassFail({ e }));
 	}, []);
 
+	const handleEndReviewSession = useCallback(() => {
+		const newSaturationLevels = makeNewSaturationLevels(
+			termsToReview,
+			termUpdateArray,
+			reviewSettings.direction
+		);
+
+		reduceTermUpdateArray({ type: "saturation", newSaturationLevels });
+		reduceTermUpdateArray({ type: "date" });
+
+		setReviewSettings((current) => ({
+			...current,
+			sessionEnd: new Date(),
+		}));
+	}, [remainingTerms, termsToReview, reviewSettings.direction]);
+
 	useEffect(() => {
 		// End review session once there are no more remainingTerms.
 		if (termsToReview.length && remainingTerms?.length === 0) {
-			const newSaturationLevels = makeNewSaturationLevels(
-				termsToReview,
-				termUpdateArray,
-				reviewSettings
-			);
-
-			reduceTermUpdateArray({ type: "saturation", newSaturationLevels });
-
-			reduceTermUpdateArray({ type: "date" });
-
-			setReviewSettings((current) => ({
-				...current,
-				sessionEnd: new Date(),
-			}));
+			handleEndReviewSession();
 		}
-		/* 
-         Deps array doesn't take reviewSettings, even though that piece of state
-         _is_  used in makeNewSaturationLevels, this is a code smell. Simple
-         naive fix would  be to turn makeNewSaturationLevels into a callback
-         that has reviewSettings as one of its dependencies, instead of passing
-         reviewSettings as an argument.
-        */
 	}, [remainingTerms, termsToReview]);
 
 	/**
