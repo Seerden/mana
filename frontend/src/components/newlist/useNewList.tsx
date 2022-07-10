@@ -84,15 +84,13 @@ export function useNewList() {
 		[focussedInput, termInputs]
 	);
 
-	// TODO: Do we need these dependencies here if tabListener is wrapped in
-	// useCallback()? Carefully test this behavior before deciding.
 	useEffect(() => {
 		window.addEventListener("keydown", tabListener);
 
 		return () => {
 			window.removeEventListener("keydown", tabListener);
 		};
-	}, [focussedInput, termInputs]);
+	}, [tabListener]);
 
 	/**
 	 * Form input blur handler that updates a given newList field differently depending
