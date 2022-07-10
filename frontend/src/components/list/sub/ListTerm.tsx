@@ -2,9 +2,9 @@ import { memo, useState } from "react";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
 import { TermPropsInterface } from "types/list.types";
 import SaturationIcon from "../../SaturationFilter/SaturationIcon";
-import TermModal from "../TermModal/TermModal";
+import { useListTerm } from "../hooks/useListTerm";
 import * as S from "./ListTerm.style";
-import { useListTerm } from "./useListTerm";
+import TermModal from "./TermModal";
 
 const ListTerm = memo(
 	({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {

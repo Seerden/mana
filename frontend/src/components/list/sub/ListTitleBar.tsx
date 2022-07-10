@@ -1,5 +1,5 @@
 import { List } from "gql/codegen-output";
-import ListDeleteButton from "../ListDeleteButton/ListDeleteButton";
+import ListDeleteButton from "./ListDeleteButton";
 import * as S from "./ListTitleBar.style";
 
 interface ListTitleBarProps {

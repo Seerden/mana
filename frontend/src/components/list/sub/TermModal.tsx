@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import { useEffect } from "react";
-import TermHistory from "../TermHistory/TermHistory";
+import TermHistory from "./TermHistory";
 import * as S from "./TermModal.style";
 
 const TermModal = ({
