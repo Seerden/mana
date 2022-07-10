@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { makeHistoryElement } from "./makeHistoryElement";
+import { makeHistoryElement } from "../helpers/makeHistoryElement";
 import * as S from "./TermHistory.style";
 
 const TermHistory = memo(({ history }: { history: any[] }) => {

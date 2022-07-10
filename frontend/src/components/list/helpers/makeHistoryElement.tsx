@@ -5,7 +5,7 @@ import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 import { v4 as uuidv4 } from "uuid";
 import { colors } from "../../../helpers/theme/colors";
 
-import * as S from "./TermHistory.style";
+import * as S from "../sub/TermHistory.style";
 
 // TODO: Why is this a function and not an actual React component? Just do
 // history.map(el => <HistoryElement />), with HistoryElement the content of this
