@@ -1,6 +1,6 @@
 import { convertDateListToDeltaTime } from "helpers/review-helpers";
 import { Link } from "react-router-dom";
-import { usePostReview } from "./usePostReview";
+import { usePostReview } from "../hooks/usePostReview";
 
 const PostReview = () => {
 	const {
