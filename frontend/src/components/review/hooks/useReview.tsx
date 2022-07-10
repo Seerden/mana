@@ -2,7 +2,7 @@ import { Term, TermUpdateObject } from "gql/codegen-output";
 import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession-query";
 import { makeReviewList } from "helpers/review-helpers";
 import { makeNewSaturationLevels } from "helpers/srs/saturation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInitializeReview } from "./useInitializeReview";
 import { useMakeReviewCard } from "./useMakeReviewCard";
 import { useReviewState } from "./useReviewState";
@@ -30,6 +30,9 @@ const mapKeyCodeToPassFail = {
 
 export function useReview() {
 	useInitializeReview();
+
+	const startedRef = useRef<boolean>();
+
 	const { makeReviewCard, backWasShown, setBackWasShown } = useMakeReviewCard();
 	const {
 		reviewSettings,
@@ -151,6 +154,8 @@ export function useReview() {
 		({ e, passfail }: { e?: KeyboardEvent; passfail?: PassFail }) => {
 			if (!backWasShown) return;
 
+			startedRef.current = true;
+
 			if ((e && passfail) || (!e?.code && !passfail)) {
 				// Unhandled case, we expect exactly one of `e` and `passfail`
 				return;
@@ -179,6 +184,8 @@ export function useReview() {
 	}, []);
 
 	const handleEndReviewSession = useCallback(() => {
+		if (!startedRef.current) return;
+
 		const newSaturationLevels = makeNewSaturationLevels(
 			termsToReview,
 			termUpdateArray,
