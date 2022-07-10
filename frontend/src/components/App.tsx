@@ -1,4 +1,4 @@
-import ReviewPage from "components/review/ReviewPage/ReviewPage";
+import ReviewPage from "components/review/ReviewPage";
 import User from "components/user/User";
 import { QueryClientProvider } from "react-query";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";

@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { reviewSettingsState, reviewStageState } from "state/atoms/reviewAtoms";
-import PostReview from "../PostReview/PostReview";
-import PreReview from "../PreReview/PreReview";
-import Review from "../Review";
+import PostReview from "./PostReview/PostReview";
+import PreReview from "./PreReview/PreReview";
+import Review from "./Review";
 
 const mapReviewStageToComponent = {
 	before: PreReview,
