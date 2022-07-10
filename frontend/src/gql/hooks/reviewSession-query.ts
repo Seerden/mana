@@ -9,7 +9,7 @@ import {
 	reviewSessionsByUserQuery,
 } from "gql/operations/reviewSession-operations";
 import request from "graphql-request";
-import { useRouteProps } from "hooks/routerHooks";
+import useRouteProps from "hooks/useRouteProps";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 

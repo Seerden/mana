@@ -1,8 +1,8 @@
-import { useRouteProps } from "hooks/routerHooks";
+import useRouteProps from "hooks/useRouteProps";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
+import useLists from "./hooks/useLists";
 import * as S from "./Lists.style";
-import useLists from "./useLists";
 
 function Lists() {
 	const { params } = useRouteProps();
