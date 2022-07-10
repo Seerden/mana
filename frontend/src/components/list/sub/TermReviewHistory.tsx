@@ -8,7 +8,7 @@ import { timeSince } from "../../../helpers/time";
 import PassfailIcon from "../../_shared/PassfailIcon";
 import * as S from "./TermReviewHistory.style";
 
-const TermReviewHistory = ({ history }: { history: TermHistory[] }) => {
+export default function TermReviewHistory({ history }: { history: TermHistory[] }) {
 	const [showAll, setShowAll] = useState(false);
 
 	const historyElements = [...history]
@@ -37,9 +37,7 @@ const TermReviewHistory = ({ history }: { history: TermHistory[] }) => {
 			</S.History>
 		</>
 	);
-};
-
-export default TermReviewHistory;
+}
 
 type HistoryElementProps = {
 	historyEntry: TermHistory;
