@@ -1,7 +1,7 @@
 import { Term } from "gql/codegen-output";
 import React, { memo } from "react";
+import { useReviewCard } from "../hooks/useReviewCard";
 import * as S from "./ReviewCard.style";
-import { useReviewCard } from "./useReviewCard";
 
 type ReviewCardProps = {
 	setBackWasShown: React.Dispatch<React.SetStateAction<boolean>>;
