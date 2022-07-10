@@ -1,7 +1,7 @@
+import { filterTermsBySaturation } from "components/list/helpers/filterTermsBySaturation";
 import { FilterInterface, TruncatedTerm } from "components/list/types/list.types";
 import { numTermsToReviewState } from "components/review/state/reviewSelectors";
 import { useQueryListsById } from "gql/hooks/list-query";
-import { filterTermsBySaturation } from "helpers/filterTermsBySaturation";
 import { useRouteProps } from "hooks/routerHooks";
 import { useMemo, useState } from "react";
 import { useRecoilValue } from "recoil";

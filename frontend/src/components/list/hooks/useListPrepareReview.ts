@@ -1,9 +1,9 @@
+import { filterTermsBySaturation } from "components/list/helpers/filterTermsBySaturation";
 import { selectingTermsToReviewState } from "components/list/state/listAtoms";
 import { FilterInterface } from "components/list/types/list.types";
 import { termsToReviewState } from "components/review/state/reviewAtoms";
 import { List } from "gql/codegen-output";
 import { Maybe } from "graphql/jsutils/Maybe";
-import { filterTermsBySaturation } from "helpers/filterTermsBySaturation";
 import { suggestTermsForReview } from "helpers/srs/saturation";
 import { useCallback, useMemo } from "react";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";

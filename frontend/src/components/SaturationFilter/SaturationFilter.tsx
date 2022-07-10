@@ -1,8 +1,8 @@
 import { FilterInterface } from "components/list/types/list.types";
 import { colorBySaturation } from "helpers/list.api";
 import React, { memo } from "react";
+import { useSaturationFilter } from "./hooks/useSaturationFilter";
 import * as S from "./SaturationFilter.style";
-import { useSaturationFilter } from "./useSaturationFilter";
 
 interface SaturationFilterProps {
 	filter: FilterInterface;
