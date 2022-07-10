@@ -1,6 +1,9 @@
+import {
+	reviewSettingsState,
+	reviewStageState,
+} from "components/review/state/reviewAtoms";
 import { memo, useMemo } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { reviewSettingsState, reviewStageState } from "state/atoms/reviewAtoms";
 import { v4 as uuidv4 } from "uuid";
 import * as S from "./PreReview.style";
 

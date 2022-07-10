@@ -1,11 +1,11 @@
-import dayjs from "dayjs";
-import { useEffect } from "react";
-import { useRecoilValue, useResetRecoilState } from "recoil";
 import {
 	reviewSettingsState,
 	termsToReviewState,
 	timePerCardState,
-} from "state/atoms/reviewAtoms";
+} from "components/review/state/reviewAtoms";
+import dayjs from "dayjs";
+import { useEffect } from "react";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { useRouteProps } from "../../../hooks/routerHooks";
 
 export function usePostReview() {

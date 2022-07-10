@@ -1,9 +1,9 @@
+import { termsToReviewState } from "components/review/state/reviewAtoms";
 import { useQueryListsById } from "gql/hooks/list-query";
 import { useRouteProps } from "hooks/routerHooks";
 import qs from "query-string";
 import { useEffect } from "react";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
-import { termsToReviewState } from "state/atoms/reviewAtoms";
 
 export function useInitializeReview() {
 	const { params, location } = useRouteProps();

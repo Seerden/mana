@@ -1,11 +1,11 @@
 import ListTerm from "components/list/ListTerms/ListTerm";
+import { numTermsToReviewState } from "components/review/state/reviewSelectors";
 import { List } from "gql/codegen-output";
 import { useQueryListsById } from "gql/hooks/list-query";
 import { useRouteProps } from "hooks/routerHooks";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { listState } from "state/atoms/listAtoms";
-import { numTermsToReviewState } from "state/selectors/reviewSelectors";
 import { TruncatedTerm } from "types/list.types";
 import { useListFilter } from "./useListFilter";
 import { useListPrepareReview } from "./useListPrepareReview";

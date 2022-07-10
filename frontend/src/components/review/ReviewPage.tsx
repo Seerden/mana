@@ -1,6 +1,9 @@
+import {
+	reviewSettingsState,
+	reviewStageState,
+} from "components/review/state/reviewAtoms";
 import React, { useEffect, useMemo } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
-import { reviewSettingsState, reviewStageState } from "state/atoms/reviewAtoms";
 import PostReview from "./PostReview";
 import PreReview from "./PreReview/PreReview";
 import Review from "./Review";

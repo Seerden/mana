@@ -1,9 +1,9 @@
+import { termsToReviewState } from "components/review/state/reviewAtoms";
 import { Term } from "gql/codegen-output";
 import { useMutateEditTerm } from "gql/hooks/term-query";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { listState, selectingTermsToReviewState } from "state/atoms/listAtoms";
-import { termsToReviewState } from "state/atoms/reviewAtoms";
 
 export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
 	const [confirmingDelete, setConfirmingDelete] = useState(false);

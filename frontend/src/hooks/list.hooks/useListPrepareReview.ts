@@ -1,3 +1,4 @@
+import { termsToReviewState } from "components/review/state/reviewAtoms";
 import { List } from "gql/codegen-output";
 import { Maybe } from "graphql/jsutils/Maybe";
 import { filterTermsBySaturation } from "helpers/filterTermsBySaturation";
@@ -5,7 +6,6 @@ import { suggestTermsForReview } from "helpers/srs/saturation";
 import { useCallback, useMemo } from "react";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import { selectingTermsToReviewState } from "state/atoms/listAtoms";
-import { termsToReviewState } from "state/atoms/reviewAtoms";
 import { FilterInterface } from "types/list.types";
 
 type Args = {
@@ -18,7 +18,9 @@ export function useListPrepareReview({ list, filter, truncatedTerms }: Args) {
 	const setTermsToReview = useSetRecoilState(termsToReviewState);
 	const resetTermsToReview = useResetRecoilState(termsToReviewState);
 
-	const [selectingTerms, setSelectingTerms] = useRecoilState(selectingTermsToReviewState);
+	const [selectingTerms, setSelectingTerms] = useRecoilState(
+		selectingTermsToReviewState
+	);
 
 	const suggestedTermsForReview = useMemo(
 		() => list && suggestTermsForReview(list.terms),
@@ -43,7 +45,9 @@ export function useListPrepareReview({ list, filter, truncatedTerms }: Args) {
 							Array.from(
 								new Set([
 									...cur,
-									...filterTermsBySaturation(filter, truncatedTerms).map((t) => t.term),
+									...filterTermsBySaturation(filter, truncatedTerms).map(
+										(t) => t.term
+									),
 								])
 							)
 						);

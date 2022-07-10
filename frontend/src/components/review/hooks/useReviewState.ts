@@ -1,4 +1,3 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
 	passfailState,
 	reviewSettingsState,
@@ -6,7 +5,8 @@ import {
 	termsToReviewState,
 	termUpdateArrayState,
 	timePerCardState,
-} from "state/atoms/reviewAtoms";
+} from "components/review/state/reviewAtoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import useReviewSession from "./useReviewSession";
 
 /**
