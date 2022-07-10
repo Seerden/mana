@@ -3,52 +3,51 @@ import { memo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { reviewSettingsState } from "state/atoms/reviewAtoms";
 import { numTermsToReviewState } from "state/selectors/reviewSelectors";
-import "./ReviewInfo.scss";
+import * as S from "./ReviewInfo.style";
 
 type ReviewInfoProps = {
-    progress: number;
-    completedCount: number;
+	completion: {
+		count: number;
+		percentage: number;
+	};
 };
 
-const ReviewInfo = memo(({ progress, completedCount }: ReviewInfoProps) => {
-    const [reviewSettings] = useRecoilState(reviewSettingsState);
-    const numTermsToReview = useRecoilValue(numTermsToReviewState);
-    const { sessionStart: start, n } = reviewSettings;
-    const { timeSinceStart, title } = useTimer({ start });
+const ReviewInfo = memo(({ completion }: ReviewInfoProps) => {
+	const [reviewSettings] = useRecoilState(reviewSettingsState);
+	const numTermsToReview = useRecoilValue(numTermsToReviewState);
+	const { sessionStart: start, n } = reviewSettings;
+	const { timeSinceStart, title } = useTimer({ start });
 
-    return (
-        <details className="Review__info">
-            <summary>
-                <span className="Review__info--header">
-                    <span>Session information</span>
-                </span>
-            </summary>
+	return (
+		<S.ReviewInfo>
+			<S.Summary>
+				<S.Header>
+					<span>Session information</span>
+				</S.Header>
+			</S.Summary>
 
-            <div className="Review__info--dynamic">
-                <div className="Review__info--completion">
-                    Session completion: {progress}% ({completedCount}/
-                    {n * numTermsToReview}).
-                    <div>
-                        You started this session{" "}
-                        <span title={title}>{timeSinceStart}</span>.
-                    </div>
-                </div>
-            </div>
+			<S.Datum>
+				Session completion: {completion.percentage}% ({completion.count}/
+				{n * numTermsToReview}).
+				<div>
+					You started this session <span title={title}>{timeSinceStart}</span>.
+				</div>
+			</S.Datum>
 
-            <div className="Review__info--hideable">
-                <div>
-                    Number of terms in this list: <strong>{numTermsToReview}</strong>.
-                </div>
-                <div>
-                    Pass each term{" "}
-                    <strong>
-                        {n} time{n !== 1 ? "s" : ""}
-                    </strong>{" "}
-                    to complete the session.
-                </div>
-            </div>
-        </details>
-    );
+			<S.Datum>
+				<div>
+					Number of terms in this list: <strong>{numTermsToReview}</strong>.
+				</div>
+				<div>
+					Pass each term{" "}
+					<strong>
+						{n} time{n !== 1 ? "s" : ""}
+					</strong>{" "}
+					to complete the session.
+				</div>
+			</S.Datum>
+		</S.ReviewInfo>
+	);
 });
 
 export default ReviewInfo;

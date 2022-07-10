@@ -2,243 +2,251 @@ import { TermUpdateObject } from "gql/codegen-output";
 import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession-query";
 import { makeReviewList } from "helpers/review-helpers";
 import { makeNewSaturationLevels } from "helpers/srs/saturation";
-import { useCallback, useEffect, useMemo, useReducer } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-    TermUpdateDate,
-    TermUpdatePassfail,
-    TermUpdateSaturation,
+	TermUpdateDate,
+	TermUpdatePassfail,
+	TermUpdateSaturation,
 } from "../../types/useReview.types";
 import { useInitializeReview } from "./useInitializeReview";
 import { useMakeReviewCard } from "./useMakeReviewCard";
 import { useReviewState } from "./useReviewState";
 
+const mapKeyCodeToPassFail = {
+	ArrowLeft: "fail",
+	ArrowRight: "pass",
+};
+
 export function useReview() {
-    useInitializeReview();
-    const { makeReviewCard, backWasShown, setBackWasShown } = useMakeReviewCard();
-    const {
-        reviewSettings,
-        setReviewSettings,
-        termsToReview,
-        setReviewStage,
-        setPassfail,
-        setTimePerCard,
-        termUpdateArray,
-        setTermUpdateArray,
-        newReviewSession,
-    } = useReviewState();
+	useInitializeReview();
+	const { makeReviewCard, backWasShown, setBackWasShown } = useMakeReviewCard();
+	const {
+		reviewSettings,
+		setReviewSettings,
+		termsToReview,
+		setReviewStage,
+		setPassfail,
+		setTimePerCard,
+		termUpdateArray,
+		setTermUpdateArray,
+		newReviewSession,
+	} = useReviewState();
 
-    const initializeFutureTerms = useCallback(() => {
-        return makeReviewList(termsToReview, reviewSettings.n);
-    }, [reviewSettings.n, termsToReview]);
+	const { mutate: mutateCreateReviewSession, data: mutateResponse } =
+		useCreateReviewSessionMutation(() => setReviewStage("after"));
 
-    const [futureTerms, reduceFutureTerms] = useReducer(termReducer, () =>
-        initializeFutureTerms()
-    );
+	const initialTerms = useMemo(() => {
+		return makeReviewList(termsToReview, reviewSettings.n);
+	}, [termsToReview, reviewSettings.n]);
 
-    const { mutate: mutateCreateReviewSession, data: mutateResponse } =
-        useCreateReviewSessionMutation();
+	const [remainingTerms, setRemainingTerms] = useState(initialTerms);
 
-    useEffect(() => {
-        if (reviewSettings.sessionEnd) {
-            if (!mutateResponse) {
-                mutateCreateReviewSession({ newReviewSession, termUpdateArray });
-            } else {
-                setReviewStage("after");
-            }
-        }
-    }, [mutateResponse, reviewSettings.sessionEnd]);
+	// Need this since termsToReview might be empty (since useInitialReview may
+	// not be done fetching and parsing lists->termsToReviewyet).
+	useEffect(() => {
+		setRemainingTerms(initialTerms);
+	}, [termsToReview, reviewSettings.n]);
 
-    useEffect(() => {
-        termsToReview && reduceFutureTerms({ type: "init" });
-    }, [termsToReview]);
+	useEffect(() => {
+		if (reviewSettings.sessionEnd && !mutateResponse) {
+			mutateCreateReviewSession({ newReviewSession, termUpdateArray });
+		}
+	}, [mutateResponse, reviewSettings.sessionEnd]);
 
-    useEffect(() => {
-        window.addEventListener("keydown", handleLeftRightArrowKeyDown);
-        return () => {
-            window.removeEventListener("keydown", handleLeftRightArrowKeyDown);
-        };
-    }, [backWasShown]);
+	/** 'reducer' to update value of termUpdateArray
+	 *  note that this doesn't actually function as a reducer, since termUpdateArray is recoil atom state, and not React useState
+	 *  @todo: look into the possibility of implementing this as a selector
+	 */
+	function reduceTermUpdateArray(
+		action: TermUpdatePassfail | TermUpdateSaturation | TermUpdateDate
+	) {
+		switch (action.type) {
+			/*
+             Takes termUpdateArray and maps the entire thing. 
+             For each term in termUpdateArray:
+                 - check if term._id === currentTerm._id
+                     - if false: return term as is
+                     - else:
+                         - make a copy of term,
+                         - update copy.history.content
+                         - return the copy
+             
+             Very sloppy implementation, performance-wise and readability-wise. We're recreating the entire array every time 
+             this function is called. Instead, we should just keep an array of { termId, passFail } throughout the review,
+             and derive the final termUpdateObject from this array only once, when the entire review has been completed
 
-    useEffect(() => {
-        // end review session once futureTerms.length reaches 0
-        if (termsToReview.length > 0 && futureTerms?.length === 0) {
-            const newSaturationLevels = makeNewSaturationLevels(
-                termsToReview,
-                termUpdateArray,
-                reviewSettings
-            );
-            reduceTermUpdateArray({ type: "saturation", newSaturationLevels });
-            reduceTermUpdateArray({ type: "date" });
-            setReviewSettings((current) => ({
-                ...current,
-                sessionEnd: new Date(),
-            }));
-        }
-        /* 
-            deps array doesn't take reviewSettings, even though that piece of state _is_ used in makeNewSaturationLevels,
-            this is a code smell. Simple naive fix would be to turn makeNewSaturationLevels into a callback that has reviewSettings
-            as one of its dependencies, instead of passing reviewSettings as an argument
-        */
-    }, [futureTerms, termsToReview]);
+         */
+			case "passfail": {
+				const { passfail, currentTerm } = action;
+				setTermUpdateArray((cur) =>
+					cur.map((term) => {
+						if (term._id === currentTerm._id) {
+							return {
+								...term,
+								history: {
+									...term.history,
+									content: [...term.history?.content, passfail],
+								},
+							} as TermUpdateObject; // if we don't alias the return, it'll think the date doesn't exist
+						}
+						return term;
+					})
+				);
+				break;
+			}
 
-    /** case pass/fail:  Handle what happens to current term after pass/fail is chosen. */
-    function termReducer(terms, { type }: { type: PassFail | "init" }) {
-        switch (type) {
-            case "init":
-                return initializeFutureTerms();
-            case "pass":
-                return terms.slice(1);
-            case "fail": {
-                const newIndex = Math.floor((terms.length + 1) * Math.random());
-                const newTerms = [...terms];
-                const currentTerm = newTerms.shift();
-                if (currentTerm) {
-                    newTerms.splice(newIndex, 0, currentTerm);
-                    return newTerms;
-                }
-                return terms;
-            }
-            default:
-                return terms;
-        }
-    }
+			/*
+             @todo: Unlike case "passfail", we only end up calling this case once per review, so performance is fine.
+             However, this should really be extracted to a function that's more apparent in what it actually does
+         */
+			case "saturation": {
+				const { newSaturationLevels } = action;
+				setTermUpdateArray((cur) =>
+					cur.map((term, index) => {
+						return {
+							...term,
+							saturation:
+								newSaturationLevels[index].termId === term._id
+									? newSaturationLevels[index].saturation
+									: term.saturation,
+						};
+					})
+				);
+				break;
+			}
+			case "date":
+				setTermUpdateArray((cur) =>
+					cur.map(
+						(entry) =>
+							({
+								...entry,
+								history: {
+									...entry.history,
+									date: new Date(),
+								},
+							} as TermUpdateObject)
+					)
+				);
+				break;
+		}
+	}
 
-    /** 'reducer' to update value of termUpdateArray
-     *  note that this doesn't actually function as a reducer, since termUpdateArray is recoil atom state, and not React useState
-     *  @todo: look into the possibility of implementing this as a selector
-     */
-    function reduceTermUpdateArray(
-        action: TermUpdatePassfail | TermUpdateSaturation | TermUpdateDate
-    ) {
-        switch (action.type) {
-            /*
-                Takes termUpdateArray and maps the entire thing. 
-                For each term in termUpdateArray:
-                    - check if term._id === currentTerm._id
-                        - if false: return term as is
-                        - else:
-                            - make a copy of term,
-                            - update copy.history.content
-                            - return the copy
-                
-                Very sloppy implementation, performance-wise and readability-wise. We're recreating the entire array every time 
-                this function is called. Instead, we should just keep an array of { termId, passFail } throughout the review,
-                and derive the final termUpdateObject from this array only once, when the entire review has been completed
+	/**
+	 * Update all necessary state to move on to the next ReviewCard. This
+	 * function can either be called through a keydown event handler, or manually
+	 * if passed `passfail`. As such, this either takes `e` _or_ `passfail`.
+	 */
+	const handlePassFail = useCallback(
+		({ e, passfail }: { e?: KeyboardEvent; passfail?: PassFail }) => {
+			if (!backWasShown) return;
 
-            */
-            case "passfail": {
-                const { passfail, currentTerm } = action;
-                setTermUpdateArray((cur) =>
-                    cur.map((term) => {
-                        if (term._id === currentTerm._id) {
-                            return {
-                                ...term,
-                                history: {
-                                    ...term.history,
-                                    content: [...term.history?.content, passfail],
-                                },
-                            } as TermUpdateObject; // if we don't alias the return, it'll think the date doesn't exist
-                        }
-                        return term;
-                    })
-                );
-                break;
-            }
+			if ((e && passfail) || (!e?.code && !passfail)) {
+				// Unhandled case, we expect exactly one of `e` and `passfail`
+				return;
+			}
 
-            /*
-                @todo: Unlike case "passfail", we only end up calling this case once per review, so performance is fine.
-                However, this should really be extracted to a function that's more apparent in what it actually does
-            */
-            case "saturation": {
-                const { newSaturationLevels } = action;
-                setTermUpdateArray((cur) =>
-                    cur.map((term, index) => {
-                        return {
-                            ...term,
-                            saturation:
-                                newSaturationLevels[index].termId === term._id
-                                    ? newSaturationLevels[index].saturation
-                                    : term.saturation,
-                        };
-                    })
-                );
-                break;
-            }
-            case "date":
-                setTermUpdateArray((cur) =>
-                    cur.map(
-                        (entry) =>
-                            ({
-                                ...entry,
-                                history: {
-                                    ...entry.history,
-                                    date: new Date(),
-                                },
-                            } as TermUpdateObject)
-                    )
-                );
-                break;
-        }
-    }
+			const passOrFail = passfail ?? mapKeyCodeToPassFail[e.code];
 
-    // total number of flashcards in the entire review session
-    const sessionLength = useMemo(() => {
-        return termsToReview.length * reviewSettings.n;
-    }, [termsToReview, reviewSettings.n]);
+			reduceTermUpdateArray({
+				type: "passfail",
+				currentTerm: remainingTerms[0],
+				passfail: passOrFail,
+			});
 
-    // number of seen flashcards, and session progress as a percentage
-    const [completedCount, progress] = useMemo(() => {
-        if (!futureTerms) return [0, 0];
-        const termsCompleted = sessionLength - futureTerms.length;
-        const progress = Math.floor((100 * termsCompleted) / sessionLength);
-        const completedCount = sessionLength - futureTerms.length;
-        return [completedCount, progress];
-    }, [futureTerms, sessionLength]);
+			setPassfail((cur) => cur.concat(passOrFail));
+			setTimePerCard((cur) => cur.concat(new Date()));
+			updateRemainingTerms({ passfail: passOrFail });
+			setBackWasShown(false);
+		},
+		[remainingTerms, backWasShown]
+	);
 
-    /** Handle clicking the pass or fail button */
-    const handlePassFailClick = useCallback(
-        (e, passfail: PassFail) => {
-            reduceTermUpdateArray({
-                type: "passfail",
-                currentTerm: futureTerms[0],
-                passfail,
-            });
-            setPassfail((cur) => [...cur, passfail]);
-            setTimePerCard((cur) => [...cur, new Date()]);
-            reduceFutureTerms({ type: passfail });
-            setBackWasShown(false);
-        },
-        [futureTerms, backWasShown]
-    );
+	useEffect(() => {
+		window.addEventListener("keydown", (e) => handlePassFail({ e }));
 
-    /**
-     * To move to the next flashcard, the user can either
-     *  - press one of the "PASS"/"FAIL" buttons,
-     *  - press the left or right arrow key on their keyboard.
-     * This function creates a keydown handler that executes handlePassFailClick
-     * if the user just pressed either the left or right arrow keys
-     */
-    function handleLeftRightArrowKeyDown(e: KeyboardEvent): void {
-        if (!backWasShown) return;
-        const { code } = e;
-        const mapKeyCodeToPassFail = {
-            ArrowLeft: "fail",
-            ArrowRight: "pass",
-        };
-        const passfail = mapKeyCodeToPassFail[code];
-        if (passfail) {
-            handlePassFailClick(null, passfail);
-        }
-    }
+		return () => window.removeEventListener("keydown", (e) => handlePassFail({ e }));
+	}, []);
 
-    return {
-        backWasShown,
-        setBackWasShown,
-        futureTerms,
-        reduceFutureTerms,
-        progress,
-        completedCount,
-        handlePassFailClick,
-        makeReviewCard,
-    };
+	const handleEndReviewSession = useCallback(() => {
+		const newSaturationLevels = makeNewSaturationLevels(
+			termsToReview,
+			termUpdateArray,
+			reviewSettings.direction
+		);
+
+		reduceTermUpdateArray({ type: "saturation", newSaturationLevels });
+		reduceTermUpdateArray({ type: "date" });
+
+		setReviewSettings((current) => ({
+			...current,
+			sessionEnd: new Date(),
+		}));
+	}, [remainingTerms, termsToReview, reviewSettings.direction]);
+
+	useEffect(() => {
+		// End review session once there are no more remainingTerms.
+		if (termsToReview.length && remainingTerms?.length === 0) {
+			handleEndReviewSession();
+		}
+	}, [remainingTerms, termsToReview]);
+
+	/**
+	 * Shuffle the first term back into the array at a random spot. If it's the
+	 * only remaining card, return (a copy of) the given array.
+	 */
+	function shuffleCurrentTerm(terms: any[]) {
+		if (terms.length === 1) {
+			return terms.slice();
+		}
+
+		const newIndex = Math.floor((terms.length + 1) * Math.random());
+		const termsCopy = terms.slice();
+		const currentTerm = termsCopy.shift();
+		termsCopy.splice(newIndex, 0, currentTerm);
+
+		return termsCopy;
+	}
+
+	/**
+	 * Remove (case `pass`) or re-shuffle (case `fail`) the first entry of
+	 * remainingTerms `depending` on given `passfail`. Intended only to be
+	 * triggered on user interaction with a ReviewCard.
+	 */
+	function updateRemainingTerms({ passfail }: { passfail: PassFail }) {
+		switch (passfail) {
+			case "pass":
+				return setRemainingTerms((current) => current.slice(1));
+			case "fail":
+				return setRemainingTerms((current) => shuffleCurrentTerm(current));
+		}
+	}
+
+	/** Session progress state derived from other pieces of state. */
+	const completion = useMemo(() => {
+		if (!remainingTerms)
+			return {
+				count: 0,
+				percentage: 0,
+			};
+
+		// Total number of flashcards in the review session.
+		const sessionLength = termsToReview.length * reviewSettings.n;
+
+		const completedCount = sessionLength - remainingTerms.length;
+		const progress = Math.floor((100 * completedCount) / sessionLength);
+
+		return {
+			count: completedCount,
+			percentage: progress,
+		};
+	}, [remainingTerms, termsToReview.length, reviewSettings.n]);
+
+	return {
+		backWasShown,
+		setBackWasShown,
+		remainingTerms,
+		completion,
+		handlePassFail,
+		makeReviewCard,
+	} as const;
 }

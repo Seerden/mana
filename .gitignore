@@ -19,3 +19,4 @@ node_modules
 
 _*.md
 
+\frontend\src\gql\codegen-output.ts

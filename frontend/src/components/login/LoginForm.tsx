@@ -1,91 +1,77 @@
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
-import "./Login.scss";
+import * as S from "./LoginForm.style";
 
 const LoginForm = ({
-    authError,
-    user,
-    setUser,
-    showPass,
-    setShowPass,
-    message,
-    handleFormBlur,
-    handleLogin,
+	authError,
+	user,
+	setUser,
+	showPass,
+	setShowPass,
+	message,
+	handleFormBlur,
+	handleLogin,
 }) => {
-    return (
-        <div className="PageWrapper">
-            <div className="Login">
-                <header className="Login__header">
-                    You need to be logged in to view this page. Please log in or register.
-                </header>
+	return (
+		<div className="PageWrapper">
+			<main>
+				<S.Message type="header">
+					You need to be logged in to view this page. Please log in or register.
+				</S.Message>
 
-                {message && <div className="Login__message">{message}</div>}
+				{message && <S.Message type="message">{message}</S.Message>}
 
-                {authError?.response?.status === 401 && (
-                    <div className="Login__error">Incorrect credentials. Try again.</div>
-                )}
+				{authError?.response?.status === 401 && (
+					<S.Message type="error">Incorrect credentials. Try again.</S.Message>
+				)}
 
-                <form className="Login__form">
-                    <header className="PageHeader">Log in</header>
+				<S.Form>
+					<header className="PageHeader">Log in</header>
 
-                    <div className="Login__form--field">
-                        <label className="Login__input--label" htmlFor="username">
-                            Username
-                        </label>
+					<S.FormField>
+						<S.InputLabel htmlFor="username">Username</S.InputLabel>
 
-                        <div className="Login__form--field--content">
-                            <input
-                                className="Login__input--username"
-                                onBlur={(e) => handleFormBlur(e, user, setUser)}
-                                required
-                                autoComplete="username"
-                                type="text"
-                                name="username"
-                            />
-                        </div>
-                    </div>
+						<S.FormFieldContent>
+							<S.Input
+								onBlur={(e) => handleFormBlur(e, user, setUser)}
+								required
+								autoComplete="username"
+								inputType="text"
+								type="text"
+								name="username"
+							/>
+						</S.FormFieldContent>
+					</S.FormField>
 
-                    <div className="Login__form--field">
-                        <label className="Login__input--label" htmlFor="password">
-                            Password
-                        </label>
-                        <div className="Login__form--field--content">
-                            <input
-                                className="Login__input--password"
-                                required
-                                onBlur={(e) => handleFormBlur(e, user, setUser)}
-                                autoComplete="password"
-                                type={`${showPass ? "text" : "password"}`}
-                                name="password"
-                            />
-                            <div
-                                className="Login__showPassword"
-                                style={{
-                                    color: showPass ? "white" : "#777",
-                                    backgroundColor: showPass ? "#333" : "#333",
-                                }}
-                                onClick={() => setShowPass((showPass) => !showPass)}
-                            >
-                                {showPass ? <AiFillEye /> : <AiFillEyeInvisible />}
-                            </div>
-                        </div>
-                    </div>
+					<S.FormField>
+						<S.InputLabel htmlFor="password">Password</S.InputLabel>
 
-                    <div className="Login__buttons">
-                        <input
-                            className="Login__button"
-                            onClick={handleLogin}
-                            type="button"
-                            value="Log in"
-                        />
-                        <Link className="Login__register" to="/register">
-                            Register
-                        </Link>
-                    </div>
-                </form>
-            </div>
-        </div>
-    );
+						<S.FormFieldContent>
+							<S.Input
+								required
+								onBlur={(e) => handleFormBlur(e, user, setUser)}
+								autoComplete="password"
+								inputType="password"
+								type={showPass ? "text" : "password"}
+								name="password"
+							/>
+							<S.ShowPassword
+								showPassword={showPass}
+								onClick={() => setShowPass((showPass) => !showPass)}
+							>
+								{showPass ? <AiFillEye /> : <AiFillEyeInvisible />}
+							</S.ShowPassword>
+						</S.FormFieldContent>
+					</S.FormField>
+
+					<S.Buttons>
+						<S.LoginButton type="button" onClick={handleLogin} value="Log in" />
+
+						<S.RegisterLink to="/register">Register</S.RegisterLink>
+					</S.Buttons>
+				</S.Form>
+			</main>
+		</div>
+	);
 };
 
 export default LoginForm;

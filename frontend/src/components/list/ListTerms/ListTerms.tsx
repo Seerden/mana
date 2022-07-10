@@ -1,41 +1,32 @@
 import SaturationFilter from "components/SaturationFilter/SaturationFilter";
-import "./Terms.scss";
+import * as S from "./ListTerms.style";
 
 const ListTerms = ({ filter, setFilter, termsToDisplay, list }) => {
-    const showingString = filter.saturation.level
-        ? "Showing filtered list"
-        : "Showing all terms";
+	const showingString = filter.saturation.level
+		? "Showing filtered list"
+		: "Showing all terms";
 
-    return (
-        <section className="Terms">
-            <ul className="List__terms">
-                <div>
-                    <header className="Terms__header">Terms</header>
+	return (
+		<S.ListTerms>
+			<S.Header>Terms</S.Header>
 
-                    <div className="Terms__filterinfo">
-                        {list && list.sessions?.length > 0 && (
-                            <SaturationFilter {...{ filter, setFilter }} />
-                        )}
-                        <span className="Terms__filterinfo--filterstring">
-                            {showingString}
-                        </span>
-                    </div>
-                </div>
+			<S.FilterInfo>
+				{list && list.sessions?.length > 0 && (
+					<SaturationFilter {...{ filter, setFilter }} />
+				)}
+				<S.FilterString>{showingString}</S.FilterString>
+			</S.FilterInfo>
 
-                {termsToDisplay ? (
-                    termsToDisplay.length > 0 ? (
-                        termsToDisplay
-                    ) : (
-                        <div className="Terms__display--filtered">
-                            All terms were filtered out
-                        </div>
-                    )
-                ) : (
-                    <div>Loading terms..</div>
-                )}
-            </ul>
-        </section>
-    );
+			{/* TODO: Loading terms... isn't styuled, but AllFiltered _is_. Why not use a variable for the string to display, and display both _with_ styles? */}
+			{!termsToDisplay && <>Loading terms...</>}
+
+			{termsToDisplay?.length === 0 && (
+				<S.AllFiltered>All terms were filtered out</S.AllFiltered>
+			)}
+
+			{termsToDisplay?.length > 0 && termsToDisplay}
+		</S.ListTerms>
+	);
 };
 
 export default ListTerms;

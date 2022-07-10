@@ -1,33 +1,30 @@
 import { memo, useState } from "react";
 import { makeHistoryElement } from "./makeHistoryElement";
-import "./TermHistory.scss";
+import * as S from "./TermHistory.style";
 
 const TermHistory = memo(({ history }: { history: any[] }) => {
-    const [expand, setExpand] = useState(false);
+	const [expand, setExpand] = useState(false);
 
-    const histEl = makeHistoryElement(history).reverse();
+	const histEl = makeHistoryElement(history).reverse();
 
-    return (
-        <>
-            <div className="TermHistory">
-                <div className="TermHistory__header">
-                    <div className="TermHistory__desc">
-                        You've reviewed this term {histEl.length} time
-                        {histEl.length === 1 ? "" : "s"}
-                    </div>
-                    {histEl.length > 1 && (
-                        <button
-                            className="TermHistory__expand"
-                            onClick={() => setExpand(!expand)}
-                        >
-                            {!expand ? "Showing one" : "Showing all"}
-                        </button>
-                    )}
-                </div>
-                <div className="TermHistory__content">{expand ? histEl : histEl[0]}</div>
-            </div>
-        </>
-    );
+	return (
+		<>
+			<S.History>
+				<S.Header>
+					<S.Description>
+						You've reviewed this term {histEl.length} time
+						{histEl.length === 1 ? "" : "s"}
+					</S.Description>
+					{histEl.length > 1 && (
+						<S.ExpandButton onClick={() => setExpand(!expand)}>
+							{!expand ? "Showing one" : "Showing all"}
+						</S.ExpandButton>
+					)}
+				</S.Header>
+				<S.HistoryContent>{expand ? histEl : histEl[0]}</S.HistoryContent>
+			</S.History>
+		</>
+	);
 });
 
 export default TermHistory;

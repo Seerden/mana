@@ -1,50 +1,53 @@
 import PassfailIcon from "components/_shared/PassfailIcon";
 import dayjs from "dayjs";
 import { timeSince } from "helpers/time";
-import { Fragment } from "react";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 import { v4 as uuidv4 } from "uuid";
+import { colors } from "../../../helpers/theme/colors";
 
+import * as S from "./TermHistory.style";
+
+// TODO: Why is this a function and not an actual React component? Just do
+// history.map(el => <HistoryElement />), with HistoryElement the content of this
+// function
 export function makeHistoryElement(history) {
-    return history.map((el) => (
-        <Fragment key={uuidv4()}>
-            <div className="TermHistory__session">
-                <div className="TermHistory__session--block">
-                    <span className="TermHistory__direction">
-                        {el.direction === "forwards" ? (
-                            <BiArrowToRight
-                                title="Reviewed front to back"
-                                fill="deepskyblue"
-                                size={18}
-                            />
-                        ) : (
-                            <BiArrowToLeft
-                                title="Reviewed back to front"
-                                fill="limegreen"
-                                size={18}
-                            />
-                        )}
-                    </span>
+	return history.map((el) => (
+		<li key={uuidv4()}>
+			<S.HistorySession>
+				<S.HistorySessionBlock>
+					<S.Direction>
+						{el.direction === "forwards" ? (
+							<BiArrowToRight
+								title="Reviewed front to back"
+								fill={colors.blue.main}
+								size={18}
+							/>
+						) : (
+							<BiArrowToLeft
+								title="Reviewed back to front"
+								// TODO: add to green theme value
+								fill="limegreen"
+								size={18}
+							/>
+						)}
+					</S.Direction>
 
-                    <span
-                        title={dayjs(el.date).format("MMMM DD, YYYY (HH:mm)")}
-                        className="TermHistory__date"
-                    >
-                        {timeSince(el.date)}
-                    </span>
-                </div>
+					<span title={dayjs(el.date).format("MMMM DD, YYYY (HH:mm)")}>
+						{timeSince(el.date)}
+					</span>
+				</S.HistorySessionBlock>
 
-                <div className="TermHistory__session--block">
-                    <div key={uuidv4()} className="TermHistory__history">
-                        {el.content.map((passfail, index) => (
-                            <PassfailIcon
-                                key={`passfailicon-${index}`}
-                                {...{ passfail, index }}
-                            />
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </Fragment>
-    ));
+				<S.HistorySessionBlock>
+					<div key={uuidv4()}>
+						{el.content.map((passfail, index) => (
+							<PassfailIcon
+								key={`passfailicon-${index}`}
+								{...{ passfail, index }}
+							/>
+						))}
+					</div>
+				</S.HistorySessionBlock>
+			</S.HistorySession>
+		</li>
+	));
 }
