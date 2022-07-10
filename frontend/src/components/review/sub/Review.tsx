@@ -2,12 +2,19 @@ import { useReview } from "components/review/hooks/useReview";
 import useRouteProps from "hooks/useRouteProps";
 import { Link } from "react-router-dom";
 import * as S from "./Review.style";
+import ReviewCard from "./ReviewCard";
 import ReviewInfo from "./ReviewInfo";
 
 export default function Review() {
 	const { params } = useRouteProps();
-	const { backWasShown, remainingTerms, completion, handlePassFail, makeReviewCard } =
-		useReview();
+	const {
+		backWasShown,
+		remainingTerms,
+		completion,
+		handlePassFail,
+		reviewSettings,
+		setBackWasShown,
+	} = useReview();
 
 	return (
 		<S.Review className="PageWrapper">
@@ -23,7 +30,11 @@ export default function Review() {
 
 			{remainingTerms.length > 0 && (
 				<>
-					{makeReviewCard({ ...remainingTerms[0] })}
+					<ReviewCard
+						term={...remainingTerms[0]}
+						direction={reviewSettings.direction}
+						setBackWasShown={setBackWasShown}
+					/>
 
 					{backWasShown ? (
 						<S.Buttons>

@@ -3,7 +3,6 @@ import { Term, TermUpdateObject } from "gql/codegen-output";
 import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession-query";
 import { makeNewSaturationLevels } from "helpers/srs/saturation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import ReviewCard from "../sub/ReviewCard";
 import { useInitializeReview } from "./useInitializeReview";
 import { useReviewState } from "./useReviewState";
 
@@ -46,19 +45,6 @@ export function useReview() {
 		backWasShown,
 		setBackWasShown,
 	} = useReviewState();
-
-	const makeReviewCard = useCallback(
-		(term: Term) => {
-			return (
-				<ReviewCard
-					direction={reviewSettings.direction}
-					term={term}
-					setBackWasShown={setBackWasShown}
-				/>
-			);
-		},
-		[reviewSettings.direction, setBackWasShown]
-	);
 
 	const { mutate: mutateCreateReviewSession, data: mutateResponse } =
 		useCreateReviewSessionMutation(() => setReviewStage("after"));
@@ -279,6 +265,6 @@ export function useReview() {
 		remainingTerms,
 		completion,
 		handlePassFail,
-		makeReviewCard,
+		reviewSettings,
 	} as const;
 }
