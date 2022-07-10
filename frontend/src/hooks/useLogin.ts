@@ -1,7 +1,4 @@
-import {
-	putUserInLocalStorage,
-	removeUserFromLocalStorage,
-} from "helpers/localStorage-helpers";
+import { putUserInLocalStorage, removeUserFromLocalStorage } from "helpers/local-storage";
 import { useCallback, useMemo } from "react";
 import { useRecoilState } from "recoil";
 import { currentUserState } from "state/auth";
