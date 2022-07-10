@@ -6,7 +6,7 @@ import React, { useEffect, useMemo } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import PostReview from "./PostReview";
 import PreReview from "./PreReview/PreReview";
-import Review from "./Review";
+import Review from "./Review/Review";
 
 const mapReviewStageToComponent = {
 	before: PreReview,

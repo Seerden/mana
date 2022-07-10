@@ -1,8 +1,8 @@
 import { useReview } from "components/review/hooks/useReview";
 import { useRouteProps } from "hooks/routerHooks";
 import { Link } from "react-router-dom";
+import ReviewInfo from "../ReviewInfo/ReviewInfo";
 import * as S from "./Review.style";
-import ReviewInfo from "./ReviewInfo/ReviewInfo";
 
 const Review = () => {
 	const { params } = useRouteProps();
