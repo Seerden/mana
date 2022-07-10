@@ -1,11 +1,11 @@
-import "./Footer.scss";
+import * as S from "./Footer.style";
 
-const Footer = (props) => {
-    return (
-        <div className="Footer">
-            <a href="https://github.com/Seerden/mana">GitHub</a>
-        </div>
-    );
+const Footer = () => {
+	return (
+		<S.Footer>
+			<a href="https://github.com/Seerden/mana">GitHub</a>
+		</S.Footer>
+	);
 };
 
 export default Footer;
