@@ -6,7 +6,7 @@ import {
 	timePerCardState,
 } from "components/review/state/reviewAtoms";
 import { Id, ReviewSessionBaseInput } from "gql/codegen-output";
-import { useRouteProps } from "hooks/routerHooks";
+import useRouteProps from "hooks/useRouteProps";
 import { useMemo } from "react";
 import { useRecoilValue } from "recoil";
 

@@ -1,6 +1,6 @@
 import { List } from "gql/codegen-output";
 import { timeSince } from "helpers/time";
-import { useRouteProps } from "hooks/routerHooks";
+import useRouteProps from "hooks/useRouteProps";
 import { memo } from "react";
 import { BiArrowToRight } from "react-icons/bi";
 import { Link } from "react-router-dom";

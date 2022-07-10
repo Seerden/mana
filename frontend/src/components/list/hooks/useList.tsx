@@ -3,7 +3,7 @@ import { TruncatedTerm } from "components/list/types/list.types";
 import { numTermsToReviewState } from "components/review/state/reviewSelectors";
 import { List } from "gql/codegen-output";
 import { useQueryListsById } from "gql/hooks/list-query";
-import { useRouteProps } from "hooks/routerHooks";
+import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import ListTerm from "../sub/ListTerm";

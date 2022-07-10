@@ -1,6 +1,6 @@
 import { termsToReviewState } from "components/review/state/reviewAtoms";
 import { useQueryListsById } from "gql/hooks/list-query";
-import { useRouteProps } from "hooks/routerHooks";
+import useRouteProps from "hooks/useRouteProps";
 import qs from "query-string";
 import { useEffect } from "react";
 import { useResetRecoilState, useSetRecoilState } from "recoil";

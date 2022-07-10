@@ -2,7 +2,7 @@ import { filterTermsBySaturation } from "components/list/helpers/filterTermsBySa
 import { FilterInterface, TruncatedTerm } from "components/list/types/list.types";
 import { numTermsToReviewState } from "components/review/state/reviewSelectors";
 import { useQueryListsById } from "gql/hooks/list-query";
-import { useRouteProps } from "hooks/routerHooks";
+import useRouteProps from "hooks/useRouteProps";
 import { useMemo, useState } from "react";
 import { useRecoilValue } from "recoil";
 

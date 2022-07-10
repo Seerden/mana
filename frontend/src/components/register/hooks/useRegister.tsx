@@ -1,6 +1,6 @@
 import { useMutateRegisterUser } from "gql/hooks/user-query";
-import { useRouteProps } from "hooks/routerHooks";
 import { useLogin } from "hooks/useLogin";
+import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useEffect, useState } from "react";
 
 type NewUserFormValues = {

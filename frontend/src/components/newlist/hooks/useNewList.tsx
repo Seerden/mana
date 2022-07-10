@@ -3,7 +3,7 @@ import { newListState } from "components/newlist/state/newList.atom";
 import type { FocusIndex } from "components/newlist/types/newList.types";
 import { NewListFromClientInput } from "gql/codegen-output";
 import { useMutateCreateList } from "gql/hooks/list-mutate";
-import { useRouteProps } from "hooks/routerHooks";
+import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import { filterFalsy } from "../helpers/filterFalsyValues";

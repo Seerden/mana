@@ -1,5 +1,5 @@
 import { isActive } from "helpers/link";
-import { useRouteProps } from "hooks/routerHooks";
+import useRouteProps from "hooks/useRouteProps";
 import * as S from "./Header.style";
 
 const HeaderLoggedOut = () => {
