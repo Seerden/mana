@@ -1,16 +1,27 @@
-import { TermUpdateObject } from "gql/codegen-output";
+import { Term, TermUpdateObject } from "gql/codegen-output";
 import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession-query";
 import { makeReviewList } from "helpers/review-helpers";
 import { makeNewSaturationLevels } from "helpers/srs/saturation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-	TermUpdateDate,
-	TermUpdatePassfail,
-	TermUpdateSaturation,
-} from "../../../types/useReview.types";
 import { useInitializeReview } from "./useInitializeReview";
 import { useMakeReviewCard } from "./useMakeReviewCard";
 import { useReviewState } from "./useReviewState";
+
+type TermUpdatePassfail = {
+	// @todo: this should be a union of objects. one for saturation case, one for passfail case
+	type: "passfail";
+	passfail: PassFail;
+	currentTerm: Term;
+};
+
+type TermUpdateSaturation = {
+	type: "saturation";
+	newSaturationLevels: ReturnType<typeof makeNewSaturationLevels>;
+};
+
+type TermUpdateDate = {
+	type: "date";
+};
 
 const mapKeyCodeToPassFail = {
 	ArrowLeft: "fail",
