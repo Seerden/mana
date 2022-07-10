@@ -1,5 +1,5 @@
+import { useNewList } from "./hooks/useNewList";
 import * as S from "./NewList.style";
-import { useNewList } from "./useNewList";
 
 function NewList() {
 	const { handleBlur, addRows, handleSubmit, termInputs, newList } = useNewList();

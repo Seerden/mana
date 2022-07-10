@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { newListState } from "components/newlist/state/newList.atom";
+import type { FocusIndex } from "components/newlist/types/newList.types";
 import { NewListFromClientInput } from "gql/codegen-output";
 import { useMutateCreateList } from "gql/hooks/list-mutate";
 import { filterFalsy } from "helpers/filterFalsyValues";
 import { useRouteProps } from "hooks/routerHooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
-import { newListState } from "state/atoms/newList.atom";
-import type { FocusIndex } from "types/newList.types";
-import NewListTerm from "./NewListTerm";
+import NewListTerm from "../sub/NewListTerm";
 
 /*
    TODO: numTerms is a piece of intermediate state, the changing of which

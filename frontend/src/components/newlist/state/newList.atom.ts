@@ -1,5 +1,5 @@
+import { NewList } from "components/newlist/types/newList.types";
 import { atom } from "recoil";
-import { NewList } from "types/newList.types";
 
 export const newListState = atom({
 	key: "newListState",

@@ -1,7 +1,7 @@
+import { newListState } from "components/newlist/state/newList.atom";
+import type { FocusIndex } from "components/newlist/types/newList.types";
 import React, { memo, useMemo } from "react";
 import { useSetRecoilState } from "recoil";
-import { newListState } from "state/atoms/newList.atom";
-import type { FocusIndex } from "types/newList.types";
 import * as S from "./NewListTerm.style";
 
 type NewListTermProps = {
