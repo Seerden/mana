@@ -1,5 +1,5 @@
+import { useRegister } from "./hooks/useRegister";
 import * as S from "./Register.style";
-import { useRegister } from "./useRegister";
 
 const Register = () => {
 	const { user, handleChange, handleSubmit, message } = useRegister();

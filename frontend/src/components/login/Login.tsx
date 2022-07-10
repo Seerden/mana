@@ -3,7 +3,7 @@ import { useRouteProps } from "hooks/routerHooks";
 import { handleFormBlur } from "hooks/state";
 import { useLogin } from "hooks/useLogin";
 import { useCallback, useEffect, useState } from "react";
-import LoginForm from "./LoginForm";
+import LoginForm from "./sub/LoginForm";
 
 const Login = () => {
 	const { login } = useLogin();

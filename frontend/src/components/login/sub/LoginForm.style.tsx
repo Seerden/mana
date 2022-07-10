@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { sharedButtonStyle } from "../../helpers/theme/theme";
+import { sharedButtonStyle } from "../../../helpers/theme/theme";
 
 const maxWidth = "800px";
 const showPassWidth = "2.5rem";
