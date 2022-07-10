@@ -9,7 +9,7 @@ import PassfailIcon from "../../_shared/PassfailIcon";
 import * as S from "./TermReviewHistory.style";
 
 const TermReviewHistory = ({ history }: { history: TermHistory[] }) => {
-	const [expand, setExpand] = useState(false);
+	const [showAll, setShowAll] = useState(false);
 
 	const historyElements = [...history]
 		.reverse()
@@ -24,14 +24,14 @@ const TermReviewHistory = ({ history }: { history: TermHistory[] }) => {
 						{historyElements.length === 1 ? "" : "s"}
 					</S.Description>
 					{historyElements.length > 1 && (
-						<S.ExpandButton onClick={() => setExpand(!expand)}>
-							{!expand ? "Showing one" : "Showing all"}
+						<S.ExpandButton onClick={() => setShowAll(!showAll)}>
+							{!showAll ? "Showing one" : "Showing all"}
 						</S.ExpandButton>
 					)}
 				</S.Header>
 				{historyElements.length > 0 && (
 					<S.HistoryContent>
-						{expand ? historyElements : historyElements[0]}
+						{showAll ? historyElements : historyElements[0]}
 					</S.HistoryContent>
 				)}
 			</S.History>
