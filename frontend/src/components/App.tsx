@@ -5,7 +5,7 @@ import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
 import { theme } from "../helpers/theme/theme";
-import useQueryClient from "../hooks/query-client";
+import useQueryClient from "../hooks/useQueryClient";
 import Private from "../wrappers/Private";
 import * as S from "./App.style";
 import Home from "./Home/Home";
