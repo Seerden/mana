@@ -7,7 +7,7 @@ import {
 	TermUpdateDate,
 	TermUpdatePassfail,
 	TermUpdateSaturation,
-} from "../../types/useReview.types";
+} from "../../../types/useReview.types";
 import { useInitializeReview } from "./useInitializeReview";
 import { useMakeReviewCard } from "./useMakeReviewCard";
 import { useReviewState } from "./useReviewState";

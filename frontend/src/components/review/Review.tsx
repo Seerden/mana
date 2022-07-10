@@ -1,4 +1,4 @@
-import { useReview } from "hooks/review/useReview";
+import { useReview } from "components/review/hooks/useReview";
 import { useRouteProps } from "hooks/routerHooks";
 import { Link } from "react-router-dom";
 import * as S from "./Review.style";
