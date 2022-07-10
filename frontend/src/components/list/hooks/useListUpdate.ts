@@ -1,10 +1,10 @@
+import { listState } from "components/list/state/listAtoms";
 import { List } from "gql/codegen-output";
 import { useMutateDeleteList, useMutateUpdateList } from "gql/hooks/list-mutate";
 import { DeleteTermsVariables, useMutateDeleteTerms } from "gql/hooks/term-query";
 import { useRouteProps } from "hooks/routerHooks";
 import { useCallback, useEffect } from "react";
 import { useSetRecoilState } from "recoil";
-import { listState } from "state/atoms/listAtoms";
 
 export function useListUpdate(list, setList) {
 	const setListAtom = useSetRecoilState(listState);

@@ -1,4 +1,4 @@
-import useList from "hooks/list.hooks/useList";
+import useList from "components/list/hooks/useList";
 import ListReviewButtons from "./sub/ListReviewButtons";
 import ListTerms from "./sub/ListTerms";
 import ListTitleBar from "./sub/ListTitleBar";
