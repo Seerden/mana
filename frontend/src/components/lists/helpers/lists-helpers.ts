@@ -1,8 +1,7 @@
 import dayjs from "dayjs";
 import { List } from "gql/codegen-output";
-import { ColorType } from "../types/lists.types";
 
-export function colorByLastReviewDate(reviewDate: Date | null): ColorType {
+export function colorByLastReviewDate(reviewDate: Date | null) {
 	const day = 3600 * 24 * 1000;
 
 	if (reviewDate) {
