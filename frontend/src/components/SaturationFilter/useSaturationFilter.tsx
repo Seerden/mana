@@ -1,7 +1,7 @@
+import { FilterInterface } from "components/list/types/list.types";
 import { colorMap } from "helpers/list.api";
 import React, { useEffect, useState } from "react";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
-import { FilterInterface } from "types/list.types";
 import * as S from "./SaturationFilter.style";
 
 export function useSaturationFilter(setFilter) {

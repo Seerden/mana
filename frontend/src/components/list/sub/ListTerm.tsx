@@ -1,10 +1,17 @@
-import { memo, useState } from "react";
+import { Key, memo, useState } from "react";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
-import { TermPropsInterface } from "types/list.types";
+import { Term } from "../../../gql/codegen-output";
 import SaturationIcon from "../../SaturationFilter/SaturationIcon";
 import { useListTerm } from "../hooks/useListTerm";
 import * as S from "./ListTerm.style";
 import TermModal from "./TermModal";
+
+interface TermPropsInterface {
+	idx: number;
+	term: Term;
+	key: Key;
+	handleTermDelete: (idx: number) => void;
+}
 
 const ListTerm = memo(
 	({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {
