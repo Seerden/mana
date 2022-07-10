@@ -1,8 +1,8 @@
 import { useMutateLogin, UserWithPassword } from "gql/hooks/login-mutate";
-import { handleFormBlur } from "hooks/state";
 import { useLogin } from "hooks/useLogin";
 import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useEffect, useState } from "react";
+import { handleFormBlur } from "./helpers/handle-form-blur";
 import LoginForm from "./sub/LoginForm";
 
 const Login = () => {
