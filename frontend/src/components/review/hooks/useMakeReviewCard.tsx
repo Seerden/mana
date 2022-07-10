@@ -1,5 +1,5 @@
-import ReviewCard from "components/review/ReviewCard/ReviewCard";
 import { reviewSettingsState } from "components/review/state/reviewAtoms";
+import ReviewCard from "components/review/sub/ReviewCard";
 import { Term } from "gql/codegen-output";
 import { useCallback, useState } from "react";
 import { useRecoilValue } from "recoil";
