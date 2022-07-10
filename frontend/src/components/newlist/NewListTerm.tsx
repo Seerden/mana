@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from "react";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { newListState } from "state/atoms/newList.atom";
 import type { FocusIndex } from "types/newList.types";
 import * as S from "./NewListTerm.style";
@@ -13,7 +13,7 @@ type NewListTermProps = {
 
 const NewListTerm = memo(
 	({ index, setFocussedInput, focussedInput, autoFocus }: NewListTermProps) => {
-		const [newList, setNewList] = useRecoilState(newListState);
+		const setNewList = useSetRecoilState(newListState);
 		const isFocussed = useMemo(() => focussedInput?.index === index, [focussedInput]);
 
 		function handleTermBlur(e: React.FocusEvent<HTMLInputElement>, idx: number) {
@@ -22,16 +22,21 @@ const NewListTerm = memo(
 
 			if (!value) return;
 
-			const termsCopy = newList.terms.slice();
+			setNewList((cur) => {
+				const termsCopy = cur.terms.slice();
 
-			if (!termsCopy[idx]) {
-				termsCopy[idx] = { to: "", from: "" };
-			}
+				if (!termsCopy[idx]) {
+					termsCopy[idx] = { to: "", from: "" };
+					console.log("1");
+				}
 
-			if (value !== termsCopy[idx][name]) {
-				termsCopy[idx][name] = value;
-				setNewList({ ...newList, terms: termsCopy });
-			}
+				if (value !== termsCopy[idx][name]) {
+					termsCopy[idx] = { ...termsCopy[idx], [name]: value };
+					return { ...cur, terms: termsCopy };
+				}
+
+				return cur;
+			});
 		}
 
 		const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
