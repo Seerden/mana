@@ -12,6 +12,7 @@ type ReviewInfoProps = {
 	};
 };
 
+// Probably worth memoizing because of usage of useTimer().
 const ReviewInfo = memo(({ completion }: ReviewInfoProps) => {
 	const [reviewSettings] = useRecoilState(reviewSettingsState);
 	const numTermsToReview = useRecoilValue(numTermsToReviewState);

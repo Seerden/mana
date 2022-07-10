@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import * as S from "./Review.style";
 import ReviewInfo from "./ReviewInfo";
 
-const Review = () => {
+export default function Review() {
 	const { params } = useRouteProps();
 	const { backWasShown, remainingTerms, completion, handlePassFail, makeReviewCard } =
 		useReview();
@@ -56,6 +56,4 @@ const Review = () => {
 			)}
 		</S.Review>
 	);
-};
-
-export default Review;
+}

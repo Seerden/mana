@@ -2,7 +2,7 @@ import { convertDateListToDeltaTime } from "components/review/helpers/review-hel
 import { Link } from "react-router-dom";
 import { usePostReview } from "../hooks/usePostReview";
 
-const PostReview = () => {
+export default function PostReview() {
 	const {
 		navigate,
 		params,
@@ -40,6 +40,4 @@ const PostReview = () => {
 			</button>
 		</div>
 	);
-};
-
-export default PostReview;
+}

@@ -15,7 +15,7 @@ type SettingsButtonProps = {
 	current?: Direction;
 };
 
-const PreReview = () => {
+export default function PreReview() {
 	const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
 	const setReviewStage = useSetRecoilState(reviewStageState);
 
@@ -92,9 +92,7 @@ const PreReview = () => {
 			</form>
 		</S.PreReview>
 	);
-};
-
-export default PreReview;
+}
 
 const SettingsButton = memo(
 	({ handleSettingsChange, direction, n, value, current }: SettingsButtonProps) => {
