@@ -2,12 +2,13 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 import { v4 as uuidv4 } from "uuid";
+import type { TermHistory } from "../../../gql/codegen-output";
 import { colors } from "../../../helpers/theme/colors";
 import { timeSince } from "../../../helpers/time";
 import PassfailIcon from "../../_shared/PassfailIcon";
-import * as S from "./TermHistory.style";
+import * as S from "./TermReviewHistory.style";
 
-const TermHistory = ({ history }: { history: any[] }) => {
+const TermReviewHistory = ({ history }: { history: TermHistory[] }) => {
 	const [expand, setExpand] = useState(false);
 
 	const historyElements = [...history]
@@ -38,9 +39,13 @@ const TermHistory = ({ history }: { history: any[] }) => {
 	);
 };
 
-export default TermHistory;
+export default TermReviewHistory;
 
-function HistoryElement({ historyEntry }) {
+type HistoryElementProps = {
+	historyEntry: TermHistory;
+};
+
+function HistoryElement({ historyEntry }: HistoryElementProps) {
 	return (
 		<S.HistorySession>
 			<S.HistorySessionBlock>

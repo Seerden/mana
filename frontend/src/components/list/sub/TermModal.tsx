@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import { useEffect } from "react";
-import TermHistory from "./TermHistory";
 import * as S from "./TermModal.style";
+import TermReviewHistory from "./TermReviewHistory";
 
 const TermModal = ({
 	handleConfirmClick,
@@ -88,7 +88,7 @@ const TermModal = ({
 
 				<S.Section>
 					<header> History </header>
-					<TermHistory history={term.history} />
+					<TermReviewHistory history={term.history} />
 				</S.Section>
 
 				<S.DeleteButtonWrapper>
