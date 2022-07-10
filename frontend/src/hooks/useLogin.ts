@@ -1,13 +1,11 @@
 import { putUserInLocalStorage, removeUserFromLocalStorage } from "helpers/local-storage";
-import { useCallback, useMemo } from "react";
-import { useRecoilState } from "recoil";
-import { currentUserState } from "state/auth";
+import { useCallback } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { currentUserState, isLoggedInState } from "state/auth";
 
 export function useLogin() {
 	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
-	const isLoggedIn = useMemo(() => {
-		return currentUser ? true : false;
-	}, [currentUser]);
+	const isLoggedIn = useRecoilValue(isLoggedInState);
 
 	const login = useCallback(
 		(username) => {
