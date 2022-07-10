@@ -31,7 +31,7 @@ export default function PreReview() {
 	}, [reviewSettings.n]);
 
 	const directionButtons = useMemo(() => {
-		return (["forwards", "backwards"] as Direction[]).map((d) => (
+		return ["forwards", "backwards"].map((d: Direction) => (
 			<SettingsButton
 				key={uuidv4()}
 				value={d}
