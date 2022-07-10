@@ -4,7 +4,7 @@ import { useRouteProps } from "hooks/routerHooks";
 import { memo } from "react";
 import { BiArrowToRight } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import { colorByLastReviewDate, getLastReviewDate } from "../../helpers/lists-helpers";
+import { colorByLastReviewDate, getLastReviewDate } from "../helpers/lists-helpers";
 import * as S from "./ListsItem.style";
 
 type ListsItemProps = {
