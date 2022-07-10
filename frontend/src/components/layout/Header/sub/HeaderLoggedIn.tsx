@@ -1,7 +1,7 @@
 import { isActive } from "helpers/link";
 import { useLogin } from "hooks/useLogin";
 import useRouteProps from "hooks/useRouteProps";
-import * as S from "./Header.style";
+import * as S from "../Header.style";
 
 const HeaderLoggedIn = () => {
 	const { currentUser, logout } = useLogin();

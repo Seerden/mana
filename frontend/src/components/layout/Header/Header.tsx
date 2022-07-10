@@ -1,7 +1,7 @@
 import { useLogin } from "hooks/useLogin";
 import * as S from "./Header.style";
-import HeaderLoggedIn from "./HeaderLoggedIn";
-import HeaderLoggedOut from "./HeaderLoggedOut";
+import HeaderLoggedIn from "./sub/HeaderLoggedIn";
+import HeaderLoggedOut from "./sub/HeaderLoggedOut";
 
 const Header = () => {
 	const { currentUser } = useLogin();
