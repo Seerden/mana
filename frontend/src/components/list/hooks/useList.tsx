@@ -14,7 +14,7 @@ import { useListUpdate } from "./useListUpdate";
 function useList() {
 	const [list, setList] = useState<List | null>(null);
 	const { params } = useRouteProps();
-	const { data: lists, refetch: refetchLists } = useQueryListsById([params.id]);
+	const { data: lists, refetch: fetchLists } = useQueryListsById([params.id]);
 	const { filter, setFilter, termsToDisplay, truncatedTerms, setTruncatedTerms } =
 		useListFilter();
 	const {
@@ -32,7 +32,7 @@ function useList() {
 	const resetListAtom = useResetRecoilState(listState);
 
 	useEffect(() => {
-		refetchLists();
+		fetchLists();
 
 		return () => {
 			setList(null);
@@ -41,7 +41,8 @@ function useList() {
 	}, []);
 
 	useEffect(() => {
-		// set list and list context when list is returned from API
+		// Set list and list context when list is returned from API.
+		// TODO: do this in the fetch onSuccess
 		if (lists) {
 			setList(lists[0]);
 			setListAtom(lists[0]);
@@ -49,7 +50,9 @@ function useList() {
 	}, [lists]);
 
 	useEffect(() => {
-		list && extractTermsFromListAsTruncatedTerms(list);
+		if (list) {
+			extractTermsFromListAsTruncatedTerms(list);
+		}
 	}, [list]);
 
 	const extractTermsFromListAsTruncatedTerms = useCallback(
