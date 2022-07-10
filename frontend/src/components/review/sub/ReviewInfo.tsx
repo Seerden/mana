@@ -1,5 +1,5 @@
-import { reviewSettingsState } from "components/review/state/reviewAtoms";
-import { numTermsToReviewState } from "components/review/state/reviewSelectors";
+import { reviewSettingsState } from "components/review/state/review-atoms";
+import { numTermsToReviewState } from "components/review/state/review-selectors";
 import useTimer from "hooks/useTimer";
 import { memo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";

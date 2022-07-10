@@ -1,7 +1,7 @@
 import {
 	reviewSettingsState,
 	reviewStageState,
-} from "components/review/state/reviewAtoms";
+} from "components/review/state/review-atoms";
 import React, { useEffect, useMemo } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import PostReview from "./sub/PostReview";

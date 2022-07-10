@@ -1,5 +1,5 @@
 import { listState, selectingTermsToReviewState } from "components/list/state/listAtoms";
-import { termsToReviewState } from "components/review/state/reviewAtoms";
+import { termsToReviewState } from "components/review/state/review-atoms";
 import { Term } from "gql/codegen-output";
 import { useMutateEditTerm } from "gql/hooks/term-query";
 import { useEffect, useState } from "react";

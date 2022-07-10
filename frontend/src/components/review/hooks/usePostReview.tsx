@@ -2,7 +2,7 @@ import {
 	reviewSettingsState,
 	termsToReviewState,
 	timePerCardState,
-} from "components/review/state/reviewAtoms";
+} from "components/review/state/review-atoms";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";

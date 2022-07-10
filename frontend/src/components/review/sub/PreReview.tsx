@@ -1,7 +1,7 @@
 import {
 	reviewSettingsState,
 	reviewStageState,
-} from "components/review/state/reviewAtoms";
+} from "components/review/state/review-atoms";
 import { memo, useMemo } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { v4 as uuidv4 } from "uuid";

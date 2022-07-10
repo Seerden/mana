@@ -5,7 +5,7 @@ import {
 	termsToReviewState,
 	termUpdateArrayState,
 	timePerCardState,
-} from "components/review/state/reviewAtoms";
+} from "components/review/state/review-atoms";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import useReviewSession from "./useReviewSession";
 

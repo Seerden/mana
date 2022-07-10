@@ -1,4 +1,4 @@
-import { termsToReviewState } from "components/review/state/reviewAtoms";
+import { termsToReviewState } from "components/review/state/review-atoms";
 import { useQueryListsById } from "gql/hooks/list-query";
 import useRouteProps from "hooks/useRouteProps";
 import qs from "query-string";

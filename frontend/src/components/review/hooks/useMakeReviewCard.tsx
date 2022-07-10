@@ -1,4 +1,4 @@
-import { reviewSettingsState } from "components/review/state/reviewAtoms";
+import { reviewSettingsState } from "components/review/state/review-atoms";
 import ReviewCard from "components/review/sub/ReviewCard";
 import { Term } from "gql/codegen-output";
 import { useCallback, useState } from "react";

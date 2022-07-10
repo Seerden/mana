@@ -4,7 +4,7 @@ import {
 	reviewSettingsState,
 	termsToReviewState,
 	timePerCardState,
-} from "components/review/state/reviewAtoms";
+} from "components/review/state/review-atoms";
 import { Id, ReviewSessionBaseInput } from "gql/codegen-output";
 import useRouteProps from "hooks/useRouteProps";
 import { useMemo } from "react";
