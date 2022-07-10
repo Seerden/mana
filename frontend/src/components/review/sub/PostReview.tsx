@@ -1,4 +1,4 @@
-import { convertDateListToDeltaTime } from "helpers/review-helpers";
+import { convertDateListToDeltaTime } from "components/review/helpers/review-helpers";
 import { Link } from "react-router-dom";
 import { usePostReview } from "../hooks/usePostReview";
 

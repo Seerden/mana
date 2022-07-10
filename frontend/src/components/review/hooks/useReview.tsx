@@ -1,6 +1,6 @@
+import { makeReviewList } from "components/review/helpers/review-helpers";
 import { Term, TermUpdateObject } from "gql/codegen-output";
 import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession-query";
-import { makeReviewList } from "helpers/review-helpers";
 import { makeNewSaturationLevels } from "helpers/srs/saturation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInitializeReview } from "./useInitializeReview";
