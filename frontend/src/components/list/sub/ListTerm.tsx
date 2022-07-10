@@ -10,7 +10,7 @@ interface TermPropsInterface {
 	idx: number;
 	term: Term;
 	key: Key;
-	handleTermDelete: (idx: number) => void;
+	handleTermDelete(idx: number): void;
 }
 
 const ListTerm = memo(

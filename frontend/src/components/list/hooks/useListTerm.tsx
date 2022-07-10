@@ -1,11 +1,18 @@
 import { listState, selectingTermsToReviewState } from "components/list/state/listAtoms";
 import { termsToReviewState } from "components/review/state/review-atoms";
-import { Term } from "gql/codegen-output";
 import { useMutateEditTerm } from "gql/hooks/term-query";
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { Term } from "../../../gql/codegen-output";
 
-export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
+type Props = {
+	term: Term;
+	idx: number;
+	setTerm: React.Dispatch<React.SetStateAction<Term>>;
+	handleTermDelete(idx: number): void;
+};
+
+export function useListTerm({ term, handleTermDelete, idx, setTerm }: Props) {
 	const [confirmingDelete, setConfirmingDelete] = useState(false);
 	const [open, setOpen] = useState<boolean>(false);
 	const [listAtom, setListAtom] = useRecoilState(listState);
@@ -13,6 +20,8 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
 	const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
 	const { mutate: mutateEditTerm } = useMutateEditTerm();
 	let indexOfTermInTermsToReview = termsToReview.findIndex((t) => t._id === term._id);
+	// TODO: can combine selected and indexOf..., AND the following useEffect,
+	// into one useMemo() callback computation, I think.
 	const [selected, setSelected] = useState(indexOfTermInTermsToReview > -1);
 
 	useEffect(() => {
@@ -27,13 +36,19 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
 		};
 	}, []);
 
-	function handleSelect(e) {
+	/**
+	 * If term is in termsToReview, remove it. If it's not in yet, append it.
+	 * Also update `selected` state.
+	 */
+	function handleSelect(e: MouseEvent<HTMLDivElement>) {
 		e.stopPropagation();
 
 		if (indexOfTermInTermsToReview > -1) {
-			const currentTermsToReview = [...termsToReview];
-			currentTermsToReview.splice(indexOfTermInTermsToReview, 1);
-			setTermsToReview(currentTermsToReview);
+			setTermsToReview((current) => {
+				const newVal = [...current];
+				newVal.splice(indexOfTermInTermsToReview, 1);
+				return newVal;
+			});
 			setSelected(false);
 		} else {
 			setTermsToReview((current) => [...current, term]);
@@ -42,7 +57,8 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
 	}
 
 	/**
-	 * Remove the term from the list. Triggered on deletion confirmation.
+	 * Remove the term from the list. Intended usage is to trigger this on
+	 * deletion confirmation.
 	 */
 	function handleConfirmClick(e: React.SyntheticEvent, action: { type: "delete" }) {
 		e.preventDefault();
@@ -54,27 +70,29 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }) {
 	}
 
 	/**
-	 * Fire a mutation to edit the term's 'from'/'to' value in the database, and update this value in listAtom
+	 * Fire a mutation to edit the term's 'from'/'to' value in the database, and
+	 * update this value in listAtom.
 	 */
 	function handleTermEdit(
 		e: React.FocusEvent<HTMLInputElement & { side: "from" | "to" }>
 	) {
-		const side = e.currentTarget.dataset["side"];
+		const { value } = e.target;
+		const { side } = e.currentTarget.dataset;
 
-		if (e.target.value && term[side] !== e.target.value) {
-			const newTerm = { ...term, [side]: e.target.value };
+		if (value && term[side] !== value) {
+			const newTerm = { ...term, [side]: value };
 			setTerm(newTerm);
 
 			const mutationVariables = {
 				_id: term._id,
-				[side]: e.target.value,
+				[side]: value,
 			};
 
 			mutateEditTerm(mutationVariables);
 
-			// assume the mutation will be successful, and just edit the term in the list in-place
-			const newListContent: Term[] = [...listAtom.terms];
-			newListContent[idx] = { ...newListContent[idx], [side]: e.target.value };
+			// Optimistically assume successful mutation, and edit the term in the list in-place.
+			const newListContent = [...listAtom.terms];
+			newListContent[idx] = { ...newListContent[idx], [side]: value };
 			const newList = { ...listAtom, terms: [...newListContent] };
 			setListAtom(newList);
 		}
