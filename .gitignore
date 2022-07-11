@@ -20,3 +20,7 @@ node_modules
 _*.md
 
 \frontend\src\gql\codegen-output.ts
+
+docker/database-backup
+docker/pg-data
+docker/redis-data
