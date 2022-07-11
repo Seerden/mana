@@ -39,7 +39,10 @@ export function useSaturationFilter(setFilter) {
 					>
 						<S.FilterIcon
 							key={`saturation-filter-level-${level}`}
-							saturation={levelNumber}
+							// TODO: temporarily fake saturation level since it only
+							// takes {forwards, backwards} now, and no longer allows
+							// number type.
+							saturation={{ forwards: levelNumber, backwards: levelNumber }}
 						/>
 					</S.IconWrapper>
 				</React.Fragment>

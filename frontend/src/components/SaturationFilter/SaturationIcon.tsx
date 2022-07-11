@@ -20,7 +20,7 @@ function makeTooltip(direction, saturation) {
 interface SaturationIconProps {
 	direction?: "forwards" | "backwards";
 	classes?: string;
-	saturation?: { forwards: number; backwards: number } | number;
+	saturation?: { forwards: number; backwards: number };
 	style?: React.CSSProperties;
 }
 
