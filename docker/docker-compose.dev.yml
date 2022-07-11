@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+   store:
+      image: redis
+      command: ["redis-server", "--appendonly", "yes"]
+      volumes:
+         - ./redis-data:/data
+
+   database:
+      image: postgres:alpine
+      environment:
+         - POSTGRES_PASSWORD=$PG_PASS
+         - POSTGRES_USER=$PG_USER
+         - POSTGRES_DB=$PG_DB
+      volumes:
+         - ./pg-data:/var/lib/postgresql/data
+         - ./database-setup:/docker-entrypoint-initdb.d
+         - ./database-backup:/psql-backups
+      ports:
+         - "5432:5432"
+
+   backend:
+      build:
+         context: ../backend
+         dockerfile: Dockerfile
+      volumes:
+         - ../backend:/mana/backend
+         - /mana/backend/node_modules
+      depends_on:
+         - database
+         - store
+      ports:
+         - "5000:5000"
+   frontend:
+      build:
+         context: ../frontend
+         dockerfile: Dockerfile
+      volumes:
+         - ../frontend:/mana/frontend
+         - ../frontend/node_modules:/mana/frontend/node_modules
+      ports:
+         - "3000:3000"
