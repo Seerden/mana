@@ -2,7 +2,7 @@ import { convertDateListToDeltaTime } from "components/review/helpers/review-hel
 import { Link } from "react-router-dom";
 import { usePostReview } from "../hooks/usePostReview";
 
-const PostReview = () => {
+export default function PostReview() {
 	const {
 		navigate,
 		params,
@@ -14,7 +14,7 @@ const PostReview = () => {
 	} = usePostReview();
 
 	return (
-		<div className="Review__post">
+		<div>
 			<h2>Session completed.</h2>
 			<div>Started at {formatDate(sessionStart)}</div>
 			<div>Completed at {formatDate(sessionEnd)}</div>
@@ -25,21 +25,19 @@ const PostReview = () => {
 				)}
 			</div>
 
-			<button className="Button">
+			<button>
 				<Link to={`/u/${params.username}/list/${params.id}`}>Back to list</Link>
 			</button>
 
-			<button className="Button">
+			<button>
 				<Link to={`/u/${params.username}/lists`}>Back to lists overview</Link>
 			</button>
 
-			<button onClick={() => navigate(0)} className="Button">
+			<button onClick={() => navigate(0)}>
 				<Link to={`/u/${params.username}/list/${params.id}/review`}>
 					Review this list again
 				</Link>
 			</button>
 		</div>
 	);
-};
-
-export default PostReview;
+}

@@ -4,7 +4,6 @@ import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession-query";
 import { makeNewSaturationLevels } from "helpers/srs/saturation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInitializeReview } from "./useInitializeReview";
-import { useMakeReviewCard } from "./useMakeReviewCard";
 import { useReviewState } from "./useReviewState";
 
 type TermUpdatePassfail = {
@@ -33,7 +32,6 @@ export function useReview() {
 
 	const startedRef = useRef<boolean>();
 
-	const { makeReviewCard, backWasShown, setBackWasShown } = useMakeReviewCard();
 	const {
 		reviewSettings,
 		setReviewSettings,
@@ -44,6 +42,8 @@ export function useReview() {
 		termUpdateArray,
 		setTermUpdateArray,
 		newReviewSession,
+		backWasShown,
+		setBackWasShown,
 	} = useReviewState();
 
 	const { mutate: mutateCreateReviewSession, data: mutateResponse } =
@@ -206,7 +206,7 @@ export function useReview() {
 		if (termsToReview.length && remainingTerms?.length === 0) {
 			handleEndReviewSession();
 		}
-	}, [remainingTerms, termsToReview]);
+	}, [remainingTerms, termsToReview, handleEndReviewSession]);
 
 	/**
 	 * Shuffle the first term back into the array at a random spot. If it's the
@@ -265,6 +265,6 @@ export function useReview() {
 		remainingTerms,
 		completion,
 		handlePassFail,
-		makeReviewCard,
+		reviewSettings,
 	} as const;
 }

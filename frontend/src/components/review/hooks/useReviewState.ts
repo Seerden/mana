@@ -6,6 +6,7 @@ import {
 	termUpdateArrayState,
 	timePerCardState,
 } from "components/review/state/review-atoms";
+import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import useReviewSession from "./useReviewSession";
 
@@ -22,6 +23,7 @@ export function useReviewState() {
 	const setTimePerCard = useSetRecoilState(timePerCardState);
 	const [termUpdateArray, setTermUpdateArray] = useRecoilState(termUpdateArrayState);
 	const newReviewSession = useReviewSession();
+	const [backWasShown, setBackWasShown] = useState<boolean>(false);
 
 	return {
 		reviewSettings,
@@ -33,5 +35,7 @@ export function useReviewState() {
 		termUpdateArray,
 		setTermUpdateArray,
 		newReviewSession,
+		backWasShown,
+		setBackWasShown,
 	} as const;
 }

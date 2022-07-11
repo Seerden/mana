@@ -45,7 +45,7 @@ export const ExpandButton = styled.button`
 	}
 `;
 
-export const HistorySession = styled.div`
+export const HistorySession = styled.li`
 	display: flex;
 	margin-right: 0.5rem;
 	align-items: center;
