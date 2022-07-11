@@ -1,6 +1,6 @@
 import Login from "components/login/Login";
-import { useRouteProps } from "hooks/routerHooks";
 import { useLogin } from "hooks/useLogin";
+import useRouteProps from "hooks/useRouteProps";
 
 const Private = ({ children }) => {
 	const { currentUser, isLoggedIn } = useLogin();

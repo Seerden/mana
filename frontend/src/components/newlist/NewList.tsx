@@ -1,93 +1,70 @@
-import { memo } from "react";
-import { BiArrowToRight } from "react-icons/bi";
-import cs from "./NewList.module.scss";
-import { useNewList } from "./useNewList";
+import { useNewList } from "./hooks/useNewList";
+import * as S from "./NewList.style";
 
-const NewList = memo(() => {
-    const { handleBlur, addRows, handleSubmit, termInputs, newList } = useNewList();
+function NewList() {
+	const { handleBlur, addRows, handleSubmit, termInputs, newList } = useNewList();
 
-    return (
-        <div className="NewList">
-            <div className="PageHeader">New List</div>
+	return (
+		<div>
+			<div className="PageHeader">New List</div>
 
-            <form className={cs.Form}>
-                <section className={cs.Name}>
-                    <label className={cs.Name__label}>List name</label>
-                    <input
-                        className={cs.Name__input}
-                        onBlur={handleBlur}
-                        type="text"
-                        name="name"
-                        placeholder="week 3 vocabulary"
-                    />
+			<S.Form>
+				<S.NameAndLanguages>
+					<S.NameLabel>List name</S.NameLabel>
+					<S.NameInput
+						onBlur={handleBlur}
+						type="text"
+						name="name"
+						placeholder="week 3 vocabulary"
+					/>
 
-                    <div className={cs.Languages}>
-                        <div className={cs.Language}>
-                            <label htmlFor="from" className={cs.Language__label}>
-                                Original language
-                            </label>
-                            <input
-                                className={cs.Language__input}
-                                onBlur={handleBlur}
-                                type="text"
-                                name="from"
-                                placeholder="Klingon"
-                            />
-                        </div>
-                        <BiArrowToRight className={cs.Language__icon} />
+					<S.Languages>
+						<S.Language>
+							<S.LanguageLabel htmlFor="from">Original language</S.LanguageLabel>
+							<S.LanguageInput
+								onBlur={handleBlur}
+								type="text"
+								name="from"
+								placeholder="Klingon"
+							/>
+						</S.Language>
+						<S.LanguageIcon />
 
-                        <div className={cs.Language}>
-                            <label htmlFor="to" className={cs.Language__label}>
-                                Target language
-                            </label>
-                            <input
-                                className={cs.Language__input}
-                                onBlur={handleBlur}
-                                type="text"
-                                name="to"
-                                placeholder="Elvish"
-                            />
-                        </div>
-                    </div>
-                </section>
+						<S.Language>
+							<S.LanguageLabel>Target language</S.LanguageLabel>
+							<S.LanguageInput
+								onBlur={handleBlur}
+								type="text"
+								name="to"
+								placeholder="Elvish"
+							/>
+						</S.Language>
+					</S.Languages>
+				</S.NameAndLanguages>
 
-                <section className={cs.Buttons}>
-                    <input
-                        className={cs.Button}
-                        onClick={() => addRows()}
-                        type="button"
-                        value="Add rows"
-                    />
-                    <input
-                        className={cs.Button}
-                        onClick={handleSubmit}
-                        type="button"
-                        value="Create list"
-                    />
-                </section>
+				<S.Buttons>
+					<S.Button onClick={() => addRows()} type="button" value="Add rows" />
+					<S.Button onClick={handleSubmit} type="button" value="Create list" />
+				</S.Buttons>
 
-                <section className={cs.Terms}>
-                    {termInputs.length > 0 && (
-                        <>
-                            <div className={cs.Terms__header}>
-                                {newList && (
-                                    <>
-                                        <span className={cs.Terms__header_side}>
-                                            {newList.from}
-                                        </span>
-                                        <span className={cs.Terms__header_side}>
-                                            {newList.to}
-                                        </span>
-                                    </>
-                                )}
-                            </div>
-                            {termInputs}
-                        </>
-                    )}
-                </section>
-            </form>
-        </div>
-    );
-});
+				<S.Terms>
+					{termInputs.length && (
+						<>
+							<S.TermsHeader>
+								{newList && (
+									<>
+										<S.TermsHeaderSide>{newList.from}</S.TermsHeaderSide>
+										<S.TermsHeaderSide>{newList.to}</S.TermsHeaderSide>
+									</>
+								)}
+							</S.TermsHeader>
+							{termInputs}
+						</>
+					)}
+				</S.Terms>
+			</S.Form>
+		</div>
+	);
+}
 
 export default NewList;

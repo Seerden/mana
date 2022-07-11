@@ -1,14 +1,16 @@
-import ReviewPage from "components/review/ReviewPage/ReviewPage";
+import ReviewPage from "components/review/ReviewPage";
 import User from "components/user/User";
 import { QueryClientProvider } from "react-query";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import useQueryClient from "../hooks/query-client";
+import { ThemeProvider } from "styled-components";
+import { theme } from "../helpers/theme/theme";
+import useQueryClient from "../hooks/useQueryClient";
 import Private from "../wrappers/Private";
-import "./App.scss";
+import * as S from "./App.style";
 import Home from "./Home/Home";
-import Footer from "./layout/Footer";
-import Header from "./layout/Header";
+import Footer from "./layout/Footer/Footer";
+import Header from "./layout/Header/Header";
 import List from "./list/List";
 import Lists from "./lists/Lists";
 import Login from "./login/Login";
@@ -22,79 +24,81 @@ const App = () => {
 		<>
 			<QueryClientProvider client={client}>
 				<RecoilRoot>
-					<div className="App__wrapper">
-						<Router>
-							<Header />
-							<div className="App">
-								<Routes>
-									{/* home route */}
-									<Route path="/" element={<Home />} />
+					<S.App>
+						<ThemeProvider theme={theme}>
+							<Router>
+								<Header />
+								<div className="App">
+									<Routes>
+										{/* home route */}
+										<Route path="/" element={<Home />} />
 
-									<Route path="register" element={<Register />} />
-									<Route path="login" element={<Login />} />
+										<Route path="register" element={<Register />} />
+										<Route path="login" element={<Login />} />
 
-									{/* user routes */}
-									<Route path="u/:username">
-										<Route
-											index
-											element={
-												<Private>
-													<User />
-												</Private>
-											}
-										/>
-
-										{/* Routes related to multiple lists */}
-										<Route path="lists">
+										{/* user routes */}
+										<Route path="u/:username">
 											<Route
 												index
 												element={
 													<Private>
-														<Lists />
+														<User />
 													</Private>
 												}
 											/>
 
-											<Route
-												path="new"
-												element={
-													<Private>
-														<NewList />
-													</Private>
-												}
-											/>
-										</Route>
-
-										{/* Routes related to individual list */}
-										<Route path="list">
-											<Route path=":id">
+											{/* Routes related to multiple lists */}
+											<Route path="lists">
 												<Route
 													index
 													element={
 														<Private>
-															<List />
+															<Lists />
 														</Private>
 													}
 												/>
+
 												<Route
-													path="review"
+													path="new"
 													element={
 														<Private>
-															<ReviewPage />
+															<NewList />
 														</Private>
 													}
 												/>
 											</Route>
-										</Route>
-									</Route>
 
-									{/* catchall 404 route */}
-									<Route path="*" element={<div>404</div>} />
-								</Routes>
-							</div>
-							<Footer />
-						</Router>
-					</div>
+											{/* Routes related to individual list */}
+											<Route path="list">
+												<Route path=":id">
+													<Route
+														index
+														element={
+															<Private>
+																<List />
+															</Private>
+														}
+													/>
+													<Route
+														path="review"
+														element={
+															<Private>
+																<ReviewPage />
+															</Private>
+														}
+													/>
+												</Route>
+											</Route>
+										</Route>
+
+										{/* catchall 404 route */}
+										<Route path="*" element={<div>404</div>} />
+									</Routes>
+								</div>
+								<Footer />
+							</Router>
+						</ThemeProvider>
+					</S.App>
 				</RecoilRoot>
 			</QueryClientProvider>
 		</>

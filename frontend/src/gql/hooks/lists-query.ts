@@ -1,13 +1,13 @@
 import request, { gql } from "graphql-request";
-import { useRouteProps } from "hooks/routerHooks";
+import useRouteProps from "hooks/useRouteProps";
 import { useQuery } from "react-query";
 
 export function useQueryListsByUser() {
-    const { params } = useRouteProps();
-    const response = useQuery("listsByUser", async () => {
-        const { listsByUser } = await request(
-            process.env.GRAPHQL_URI,
-            gql`
+	const { params } = useRouteProps();
+	const response = useQuery("listsByUser", async () => {
+		const { listsByUser } = await request(
+			process.env.GRAPHQL_URI,
+			gql`
             query {
                 listsByUser(owner: "${params.username}") {
                     _id
@@ -28,9 +28,9 @@ export function useQueryListsByUser() {
                 }
             }
         `
-        );
+		);
 
-        return listsByUser;
-    });
-    return response;
+		return listsByUser;
+	});
+	return response;
 }
