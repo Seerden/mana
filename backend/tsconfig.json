@@ -3,20 +3,18 @@
         "module": "commonjs",
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
-        "target": "ES2020",
+        "target": "ES2021",
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
-        "lib": ["ES2020"],
+        "lib": ["ES2021"],
         "incremental": true,
         "skipLibCheck": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "types": ["node"],
-        "typeRoots": [
-            "./custom_types",
-            "./node_modules/@types"
-        ]
+        "baseUrl": ".",
+        "types": ["jest", "node"],
+        "typeRoots": ["./custom_types", "./node_modules/@types"]
     },
-    "exclude": ["./node_modules", "node_modules"]    
+    "exclude": ["./node_modules", "node_modules"]
 }
