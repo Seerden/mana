@@ -206,7 +206,7 @@ export function useReview() {
 		if (termsToReview.length && remainingTerms?.length === 0) {
 			handleEndReviewSession();
 		}
-	}, [remainingTerms, termsToReview]);
+	}, [remainingTerms, termsToReview, handleEndReviewSession]);
 
 	/**
 	 * Shuffle the first term back into the array at a random spot. If it's the
