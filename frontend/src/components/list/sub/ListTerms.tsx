@@ -1,7 +1,10 @@
 import SaturationFilter from "components/SaturationFilter/SaturationFilter";
+import useList from "../hooks/useList";
 import * as S from "./ListTerms.style";
 
-const ListTerms = ({ filter, setFilter, termsToDisplay, list }) => {
+type ListTermsProps = Partial<ReturnType<typeof useList>>;
+
+const ListTerms = ({ filter, setFilter, termsToDisplay, list }: ListTermsProps) => {
 	const showingString = filter.saturation.level
 		? "Showing filtered list"
 		: "Showing all terms";
