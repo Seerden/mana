@@ -1,6 +1,6 @@
 ```typescript
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import MyComponent from './MyComponent";
+import MyComponent from "./MyComponent";
 
 export default {
 	component: MyComponent,
@@ -8,8 +8,6 @@ export default {
 } as ComponentMeta<typeof MyComponent>;
 
 export const Basic: ComponentStory<typeof MyComponent> = (props) => (
-   <MyComponent
-      {...props}
-   />
+	<MyComponent {...props} />
 );
 ```
