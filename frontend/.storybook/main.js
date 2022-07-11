@@ -12,6 +12,7 @@ module.exports = {
 		"@storybook/addon-essentials",
 		"@storybook/addon-interactions",
 		"storybook-addon-styled-component-theme/dist/preset",
+		"storybook-addon-react-router-v6",
 	],
 	framework: "@storybook/react",
 	core: {
