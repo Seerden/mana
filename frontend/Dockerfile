@@ -1,11 +1,12 @@
-FROM node:17
+FROM node:alpine
 
-WORKDIR /app
+WORKDIR /mana/frontend
 
-COPY package.json ./
-COPY package-lock.json ./
+COPY package*.json .
+
 RUN npm install
 
 COPY . .
+EXPOSE 3000
 
 CMD ["npm", "run", "serve"]
