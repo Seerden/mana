@@ -1,16 +1,15 @@
-import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
+import "express-session";
 
 declare namespace Express {
-    interface Request {
-        user: {
-            username: string
-        }
-    }
+   interface Request {
+      user: {
+         username: string;
+      };
+   }
 }
 
 declare module "express-session" {
-    interface Session {
-        userId?: ObjectId
-    }
+   interface Session {
+      userId?: number;
+   }
 }
