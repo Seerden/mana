@@ -4,6 +4,8 @@ create table terms(
    list_id serial not null,
    from_language text not null,
    to_language text not null,
+   from_value text not null,
+   to_value text not null,
 
    constraint fk_term_user 
       foreign key(user_id)
