@@ -9,7 +9,7 @@
       "dock-down": "cd ./docker && docker-compose --file ./docker-compose.dev.yml down --volumes",
       "dev": "concurrently \"npm:codegen\" \"npm:serve --prefix ./frontend\" \"npm:start-dev --prefix ./backend\"",
       "codegen": "wait-on tcp:5000 && graphql-codegen --config codegen.yml --watch \"./backend/schema.gql\"",
-      "db": "docker exec -it docker_database_1 psql -c mana -U postgres"
+      "db": "docker exec -it docker_database_1 psql mana -U postgres"
    },
    "repository": {
       "type": "git",
