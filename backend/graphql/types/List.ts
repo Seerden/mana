@@ -1,79 +1,52 @@
-import {
-    getModelForClass,
-    index,
-    modelOptions,
-    mongoose,
-    prop as Property,
-    Severity,
-} from "@typegoose/typegoose";
-import { ObjectId } from "mongodb";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { Ref } from "../../custom_types";
-import { dbConn } from "../../db/db";
 import { ReviewSession } from "./ReviewSession";
 import { Term } from "./Term";
 
-type ListStateUnion = "untouched" | "seeding" | "seeded";
-
 @ObjectType()
-@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @InputType("ListState")
 class ListState {
     // @todo: rename to ListReviewDateArray
-    @Property({ default: new Array() })
     @Field(() => [Date])
     forwards: Date[];
 
-    @Property({ default: new Array() })
     @Field(() => [Date])
     backwards: Date[];
 }
 
-@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
-@index({ collation: { locale: "en", strength: 2 } })
 export class List {
     @Field(() => ID)
     _id: ObjectId;
 
-    @Property()
     @Field(() => String)
     owner: string;
 
-    @Property()
     @Field(() => String)
     name: string;
 
-    @Property()
     @Field(() => String)
     from: string;
 
-    @Property()
     @Field()
     to: string;
 
-    @Property({ ref: "Term" })
     @Field(() => [Term])
     // terms?: Array<Ref<Term>>
     terms: Ref<Term>[];
 
-    @Property({ ref: "ReviewSession" })
     @Field(() => [ReviewSession], { nullable: true })
     sessions: Array<Ref<ReviewSession>>;
 
-    @Property()
     @Field(() => Date)
     created: Date;
 
-    @Property()
     @Field(() => Date)
     lastReviewed?: Date;
 
-    @Property()
     @Field(() => [String])
     setMembership: Array<mongoose.Types.ObjectId>; // @todo: implement Set type
 
-    @Property({ _id: false, default: { forwards: [], backwards: [] } })
     @Field(() => ListState, { nullable: true })
     reviewDates?: ListState;
 }
@@ -86,5 +59,3 @@ export class MaybeList {
     @Field({ nullable: true })
     error?: string;
 }
-
-export const ListModel = getModelForClass(List, { existingConnection: dbConn });
