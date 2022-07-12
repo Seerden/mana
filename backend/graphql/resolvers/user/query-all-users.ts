@@ -1,5 +1,10 @@
 // @ts-nocheck
 
+import { sql } from "../../../db/init";
+import { User } from "../../types/User";
+
 export async function queryAllUsers() {
-    return await UserModel.find();
+   const users = await sql<[User?]>`select * from users`;
+
+   return users;
 }
