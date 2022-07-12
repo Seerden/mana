@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Arg, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import { asObjectId } from "../helpers/as";
 import { maybeAddSessionToList } from "../helpers/list";

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { ExpressContext } from "apollo-server-express";
 import { compare, hash } from "bcryptjs";
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";

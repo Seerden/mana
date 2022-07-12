@@ -1,6 +1,4 @@
-import { config } from "dotenv";
 import mongoose from "mongoose";
-config();
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 
