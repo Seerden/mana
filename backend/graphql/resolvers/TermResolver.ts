@@ -1,6 +1,9 @@
 import { Arg, Field, InputType, Int, Mutation, ObjectType, Resolver } from "type-graphql";
+import { bulkEditTerms, bulkUpdateTerms } from "../helpers/term";
 import { TermEditObject, TermUpdateObject } from "../types/input_types/term";
 import { TermLanguages, TermSaturation } from "../types/Term";
+import { createTerms } from "./term/create-terms";
+import { deleteTerms } from "./term/delete-terms";
 
 // We currently don't query terms by themselves,
 //  only as part of their parent list's queries,
@@ -45,30 +48,21 @@ export class TermResolver {
     async updateTerms(
         @Arg("updateObj", (type) => [TermUpdateObject]) updateObj: [TermUpdateObject]
     ) {
-        //   return await bulkUpdateTerms(updateObj);
+        return await bulkUpdateTerms(updateObj);
     }
 
     @Mutation(() => Int)
     async editTerms(
         @Arg("updateObj", (type) => [TermEditObject]) updateObj: [TermEditObject]
     ) {
-        //   return await bulkEditTerms(updateObj);
+        return await bulkEditTerms(updateObj);
     }
 
     @Mutation(() => ErrorOrSuccess)
     async createTerms(
         @Arg("terms", (type) => [NewTermFromClient]) terms: [NewTermFromClient]
     ) {
-        //   const maybeCreateTerms = await createTermDocuments(terms, null);
-        //   if (maybeCreateTerms.terms) {
-        //       const listBulkWriteResult = await addTermsToList(maybeCreateTerms.terms);
-        //       if (listBulkWriteResult.modifiedCount > 0) {
-        //           return {
-        //               success: "Terms successfully saved and added to their parent list(s)",
-        //           };
-        //       }
-        //   }
-        //   return { error: "Error saving terms" };
+        return await createTerms(terms);
     }
 
     @Mutation(() => ErrorOrSuccess)
@@ -78,15 +72,6 @@ export class TermResolver {
         remainingTermIds: [string], // @todo: create union here, because this may be an empty array if we're removing the only term in the list
         @Arg("ids", (type) => [String]) ids: [string]
     ) {
-        //   // remove term from list.terms array
-        //   const updatedList = await updateListTerms(listId, remainingTermIds);
-        //   // delete term(s) entirely if they only exist in one list
-        //   const termsDeleted = await maybeDeleteTerms(
-        //       ids.map((id) => new mongoose.Types.ObjectId(id))
-        //   );
-        //   if (updatedList && termsDeleted) {
-        //       return { success: "Terms deleted and removed from list successfully" };
-        //   }
-        //   return { error: "Error deleting terms" };
+        return await deleteTerms(listId, remainingTermIds, ids);
     }
 }

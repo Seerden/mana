@@ -2,7 +2,10 @@
 
 import { ExpressContext } from "apollo-server-express";
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
-import { User, UserModel } from "../types/User";
+import { User } from "../types/User";
+import { login } from "./user/login";
+import { queryAllUsers } from "./user/query-all-users";
+import { queryMe } from "./user/query-me";
 
 @ObjectType()
 class MaybeUser {
@@ -17,15 +20,12 @@ class MaybeUser {
 export class UserResolver {
     @Query(() => [User], { name: "users" })
     async users() {
-        return await UserModel.find();
+        return await queryAllUsers();
     }
 
     @Query(() => MaybeUser, { description: "Returns currently logged in user. " })
     async me(@Ctx() { req }: ExpressContext) {
-        if (req.session.userId) {
-            return { user: UserModel.findById(req.session.userId) };
-        }
-        return { error: "No active session" };
+        return await queryMe(res);
     }
 
     @Mutation(() => MaybeUser)
@@ -33,17 +33,7 @@ export class UserResolver {
         @Arg("username") username: string,
         @Arg("password") password: string
     ): Promise<MaybeUser> {
-        //   const hashedPassword = await hash(password, 10);
-        //   const newUser = new UserModel({
-        //       username,
-        //       password: hashedPassword,
-        //   });
-        //   console.log(`Register user mutation requested for user ${username}`);
-        //   const existingUser = await UserModel.findOne({ username });
-        //   if (!existingUser) {
-        //       return { user: await newUser.save() };
-        //   }
-        //   return { error: "Username already exists " };
+        return await createUser(username, password);
     }
 
     @Mutation(() => MaybeUser, { description: "Login mutation" })
@@ -52,21 +42,6 @@ export class UserResolver {
         @Arg("password", (type) => String) password: string,
         @Ctx() { req, res }: ExpressContext
     ): Promise<MaybeUser> {
-        //   const foundUser = await UserModel.findOne({ username });
-        //   if (foundUser) {
-        //       const passwordMatches = await compare(password, foundUser.password);
-        //       if (passwordMatches) {
-        //           req.session.userId = foundUser._id;
-        //           return { user: foundUser };
-        //       } else {
-        //           res.clearCookie("mana-session");
-        //           req.session.destroy(null);
-        //           return { error: "Invalid credentials" };
-        //       }
-        //   } else {
-        //       res.clearCookie("mana-session");
-        //       req.session.destroy(null);
-        //       return { error: "Username does not exist" };
-        //   }
+        return await login(username, password, { req, res });
     }
 }
