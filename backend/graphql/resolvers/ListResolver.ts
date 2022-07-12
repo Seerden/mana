@@ -30,6 +30,7 @@ export class ListResolver {
         @Arg("owner") owner: string,
         @Arg("populate", (type) => [String], { nullable: true }) populate: [string]
     ) {
+        // @ts-ignore
         const lists = await ListModel.find({ owner })
             // .populate(populate)
             .lean()
