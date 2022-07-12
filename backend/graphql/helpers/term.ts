@@ -104,6 +104,7 @@ export async function createTermDocuments(
         saturation: { forwards: -1, backwards: -1 },
     }));
 
+    // @ts-ignore
     let savedTerms = await TermModel.insertMany(termsToSave);
     savedTerms = Array.from(savedTerms); // need to do this to work around mongoose types,
     //  which say savedTerms doesn't have .map property
