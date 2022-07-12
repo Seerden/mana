@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 import { NewTermFromClient } from "../resolvers/TermResolver";
