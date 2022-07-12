@@ -10,18 +10,12 @@ import {
     Root,
 } from "type-graphql";
 import {
-    createListDocument,
-    deleteListFromUser,
-    updateListDocument,
-} from "../helpers/list";
-import { maybeDeleteTerms } from "../helpers/term";
-import {
     ListUpdateAction,
     ListUpdatePayload,
     NewListFromClient,
 } from "../types/input_types/list";
 import { List, ListModel, MaybeList } from "../types/List";
-import { Term, TermModel } from "../types/Term";
+import { Term } from "../types/Term";
 
 @Resolver((of) => List)
 export class ListResolver {
@@ -30,13 +24,11 @@ export class ListResolver {
         @Arg("owner") owner: string,
         @Arg("populate", (type) => [String], { nullable: true }) populate: [string]
     ) {
-        // @ts-ignore
-        const lists = await ListModel.find({ owner })
-            // .populate(populate)
-            .lean()
-            .exec();
-
-        return lists;
+        //   const lists = await ListModel.find({ owner })
+        //       // .populate(populate)
+        //       .lean()
+        //       .exec();
+        //   return lists;
     }
 
     @Query((type) => [List], { name: "listsById", description: "Query lists by id" })
@@ -63,38 +55,35 @@ export class ListResolver {
         @Root() list: List,
         @Arg("populate", (type) => Boolean, { nullable: true }) populate: boolean
     ) {
-        if (populate) {
-            return await TermModel.find({ _id: { $in: list.terms } })
-                .lean()
-                .exec();
-        }
-
-        return list.terms.map((_id) => ({ _id }));
+        //   if (populate) {
+        //       return await TermModel.find({ _id: { $in: list.terms } })
+        //           .lean()
+        //           .exec();
+        //   }
+        //   return list.terms.map((_id) => ({ _id }));
     }
 
     @Mutation(() => SuccessOrError)
     // @todo: add auth middleware
     async deleteList(@Arg("listId") listId: string): Promise<SuccessOrError> {
-        const deletedList = await ListModel.findByIdAndDelete(
-            new mongoose.Types.ObjectId(listId),
-            null,
-            null
-        );
-        if (deletedList) {
-            const listDeletedFromUserBoolean = await deleteListFromUser(
-                deletedList._id,
-                deletedList.owner
-            );
-            const deletedTerms = await maybeDeleteTerms(
-                deletedList.terms.map((term) => (term instanceof Term ? term._id : term))
-            );
-
-            if (listDeletedFromUserBoolean && deletedTerms?.deletedCount) {
-                return { success: true };
-            }
-        }
-
-        return { error: true };
+        //   const deletedList = await ListModel.findByIdAndDelete(
+        //       new mongoose.Types.ObjectId(listId),
+        //       null,
+        //       null
+        //   );
+        //   if (deletedList) {
+        //       const listDeletedFromUserBoolean = await deleteListFromUser(
+        //           deletedList._id,
+        //           deletedList.owner
+        //       );
+        //       const deletedTerms = await maybeDeleteTerms(
+        //           deletedList.terms.map((term) => (term instanceof Term ? term._id : term))
+        //       );
+        //       if (listDeletedFromUserBoolean && deletedTerms?.deletedCount) {
+        //           return { success: true };
+        //       }
+        //   }
+        //   return { error: true };
     }
 
     @Mutation(() => MaybeList, {
@@ -102,12 +91,12 @@ export class ListResolver {
             "Add a list document to the database, append its ._id to its parent user's .lists array",
     })
     async createList(@Arg("newList") newList: NewListFromClient) {
-        const savedList = await createListDocument(newList);
-        if (savedList) {
-            return { list: savedList };
-        } else {
-            return { error: "Failed to save list to database" };
-        }
+        //   const savedList = await createListDocument(newList);
+        //   if (savedList) {
+        //       return { list: savedList };
+        //   } else {
+        //       return { error: "Failed to save list to database" };
+        //   }
     }
 
     @Mutation(() => MaybeList)
@@ -116,11 +105,10 @@ export class ListResolver {
         @Arg("action") action: ListUpdateAction,
         @Arg("payload") payload: ListUpdatePayload
     ) {
-        const updatedList = await updateListDocument(listId, action, payload);
-
-        return updatedList
-            ? { list: updatedList.value }
-            : { error: "Failed to update list name in database" };
+        //   const updatedList = await updateListDocument(listId, action, payload);
+        //   return updatedList
+        //       ? { list: updatedList.value }
+        //       : { error: "Failed to update list name in database" };
     }
 }
 
