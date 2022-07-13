@@ -1,26 +1,23 @@
-import { Field, InputType } from "type-graphql";
-import { TermHistory, TermSaturation } from "../Term";
+import { Field, InputType, ObjectType } from "type-graphql";
 
-@InputType()
-export class TermUpdateObject {
-    @Field()
-    _id: string;
+@ObjectType("NewTerm")
+@InputType("NewTermInput")
+export class NewTerm {
+   @Field()
+   user_id: number;
 
-    @Field((type) => TermHistory, { nullable: true })
-    history: TermHistory;
+   @Field()
+   list_id: number;
 
-    @Field((type) => TermSaturation, { nullable: true })
-    saturation: TermSaturation;
-}
+   @Field()
+   from_language: string;
 
-@InputType()
-export class TermEditObject {
-    @Field()
-    _id: string;
+   @Field()
+   to_language: string;
 
-    @Field({ nullable: true })
-    to: string;
+   @Field()
+   from_value: string;
 
-    @Field({ nullable: true })
-    from: string;
+   @Field()
+   to_value: string;
 }

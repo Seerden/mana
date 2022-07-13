@@ -1,44 +1,37 @@
 import { Field, InputType, ObjectType } from "type-graphql";
+import { NewTerm } from "./term";
 
-@ObjectType()
-@InputType("NewListTermInput")
-export class NewListTerm {
-    @Field()
-    from: string;
+@ObjectType("NewList")
+@InputType("NewListInput")
+export class NewList {
+   @Field()
+   user_id: number;
 
-    @Field()
-    to: string;
-}
+   @Field()
+   name: string;
 
-@ObjectType()
-@InputType("NewListFromClientInput")
-export class NewListFromClient {
-    @Field()
-    owner: string;
+   @Field()
+   from_language: string;
 
-    @Field()
-    name: string;
+   @Field(() => String)
+   to_language: string;
 
-    @Field()
-    from: string;
-
-    @Field(() => String)
-    to: string;
-
-    @Field(() => [NewListTerm])
-    terms: NewListTerm[]; // NewTerm?
+   // TODO: unsure if I want to keep this structure, rename it, or use a
+   // separate input field for to-be-inserted terms.
+   @Field(() => [NewTerm])
+   terms: NewTerm[]; // NewTerm?
 }
 
 @ObjectType()
 @InputType("ListUpdateActionInput")
 export class ListUpdateAction {
-    @Field(() => String)
-    type: "name";
+   @Field(() => String)
+   type: "name";
 }
 
 @ObjectType()
 @InputType("ListUpdatePayloadInput")
 export class ListUpdatePayload {
-    @Field(() => String, { nullable: true })
-    name?: string;
+   @Field()
+   name: string;
 }
