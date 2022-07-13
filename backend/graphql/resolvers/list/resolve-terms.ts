@@ -1,11 +1,9 @@
-// @ts-nocheck
+import { sql } from "../../../db/init";
+import { List } from "../../types/List";
+import { Term } from "../../types/Term";
 
-export function resolveTerms(list, populate) {
-    if (populate) {
-        return await TermModel.find({ _id: { $in: list.terms } })
-            .lean()
-            .exec();
-    }
+export function resolveTerms(list: List, populate?: boolean) {
+   if (!populate) return [];
 
-    return list.terms.map((_id) => ({ _id }));
+   return sql<[Term?]>`select * from terms where list_id = ${list.list_id}`;
 }

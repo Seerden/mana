@@ -1,16 +1,9 @@
-// @ts-nocheck
+import { ExpressContext } from "apollo-server-express";
+import { sql } from "../../../db/init";
 
-export async function queryListsById(ids: string[], populate: string[]) {
-    let _ids = ids.map((id) => new mongoose.Types.ObjectId(id));
-
-    if (populate) {
-        return await ListModel.find({ _id: { $in: _ids } })
-            .populate(populate)
-            .lean()
-            .exec();
-    }
-
-    return await ListModel.find({ _id: { $in: _ids } })
-        .lean()
-        .exec();
+export async function queryListsById(ids: number[], { req }: Partial<ExpressContext>) {
+   const userId = req.session.userId!;
+   return await sql`select * from lists where user_id = ${userId} and list_id in ${sql(
+      ids
+   )} `;
 }

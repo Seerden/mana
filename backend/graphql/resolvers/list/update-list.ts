@@ -1,8 +1,9 @@
-// @ts-nocheck
+import { sql } from "../../../db/init";
 
-export async function updateList(listId, action, payload) {
-    const updatedList = await updateListDocument(listId, action, payload);
-    return updatedList
-        ? { list: updatedList.value }
-        : { error: "Failed to update list name in database" };
+// Only current usecase is updating list names, so let's implement it as such,
+// for now
+
+// TODO: trycatch, typing
+export async function updateListName(list_id: number, payload: { name: string }) {
+   return await sql`update lists set name = ${payload.name} where list_id = ${list_id}`;
 }
