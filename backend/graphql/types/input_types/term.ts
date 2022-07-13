@@ -1,12 +1,12 @@
-import { Field, InputType, ObjectType } from "type-graphql";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
 
 @ObjectType("NewTerm")
 @InputType("NewTermInput")
 export class NewTerm {
-   @Field()
+   @Field(() => Int)
    user_id: number;
 
-   @Field()
+   @Field(() => Int)
    list_id: number;
 
    @Field()
