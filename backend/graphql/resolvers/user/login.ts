@@ -1,34 +1,26 @@
+import { AuthenticationError, ExpressContext } from "apollo-server-express";
 import { compare } from "bcryptjs";
-import { Request, Response } from "express";
 import { sql } from "../../../db/init";
+import { destroySession } from "../../../lib/destroy-session";
 import { User } from "../../types/User";
 
-export async function login(
-   username: string,
-   password: string,
-   { req, res }: { req: Request; res: Response }
-) {
-   const [user] = await sql<
-      [User?]
-   >`select * from users where username=${username} and password=${password}`;
+export async function login(username: string, password: string, ctx: ExpressContext) {
+   const { req } = ctx;
+
+   const [user] = await sql<[User?]>`select * from users where username=${username}`;
 
    if (!user) {
-      res.clearCookie("mana-session");
-      req.session.destroy(null);
-      // TODO: type this error
-      return { error: "Username does not exist" };
+      await destroySession(ctx);
+      throw new AuthenticationError("Username doesn't exist");
    }
 
    const passwordMatches = await compare(password, user.password);
 
    if (passwordMatches) {
-      // TODO: re-type session.userId to be a number instead of an ObjectId
       req.session.userId = user.user_id;
-      return { user: user };
-   } else {
-      res.clearCookie("mana-session");
-      req.session.destroy(null);
-      // TODO: type this error
-      return { error: "Invalid credentials" };
+      return user;
    }
+
+   destroySession(ctx);
+   throw new AuthenticationError("Username and password do not match.");
 }
