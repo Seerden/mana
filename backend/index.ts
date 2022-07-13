@@ -6,6 +6,7 @@ import session from "express-session";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { v4 as uuid } from "uuid";
+import { authenticationChecker } from "./graphql/helpers/authorization";
 import { ListResolver } from "./graphql/resolvers/ListResolver";
 import { ReviewSessionResolver } from "./graphql/resolvers/ReviewSessionResolver";
 import { TermResolver } from "./graphql/resolvers/TermResolver";
@@ -37,6 +38,7 @@ async function startServer() {
    const schema = await buildSchema({
       resolvers: [UserResolver, ListResolver, TermResolver, ReviewSessionResolver],
       emitSchemaFile: true,
+      authChecker: authenticationChecker,
       // globalMiddlewares: [],
    });
 
