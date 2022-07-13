@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import session from "express-session";
+import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { v4 as uuid } from "uuid";
 import { ListResolver } from "./graphql/resolvers/ListResolver";
@@ -49,7 +50,7 @@ async function startServer() {
    const port = process.env.PORT || 5000;
 
    app.listen(port, () => {
-      console.log(`Server started on port ${port} at ${new Date()}`);
+      console.log(`Express server started on port ${port} at ${new Date()}`);
    });
 }
 
