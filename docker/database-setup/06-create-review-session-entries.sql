@@ -2,7 +2,7 @@ create table review_session_entries (
    review_entry_id serial primary key not null,
    term_id serial not null,
    review_session_id serial not null,
-   created_at timestamp not null,
+   created_at timestamp not null default now(),
    passfail varchar(4) not null, -- 'pass' | 'fail'
    time_on_card int not null,
    direction text not null, -- TODO: implement this field in case we end up allowing multi-directional reviews
