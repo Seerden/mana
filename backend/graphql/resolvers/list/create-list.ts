@@ -1,4 +1,3 @@
-import { Error } from "postgres";
 import { sql } from "../../../db/init";
 import { NewList } from "../../types/input_types/list";
 import { List } from "../../types/List";
@@ -16,21 +15,17 @@ export async function createList(newList: NewList) {
       to_language,
    };
 
-   try {
-      return await sql.begin(async (sql) => {
-         const [insertedList] = await sql<[List?]>`
+   return await sql.begin(async (sql) => {
+      const [insertedList] = await sql<[List?]>`
             insert into lists ${sql(listFields)}
          `;
 
-         const insertedTerms = await sql<[Term?]>`
+      const insertedTerms = await sql<[Term?]>`
             insert into terms ${sql(
                terms.map((t) => ({ ...t, list_id: insertedList.list_id }))
             )}
          `;
 
-         return { list: insertedList, terms: insertedTerms };
-      });
-   } catch (error) {
-      return error as Error;
-   }
+      return { list: insertedList, terms: insertedTerms };
+   });
 }
