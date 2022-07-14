@@ -1,12 +1,11 @@
 import { ExpressContext } from "apollo-server-express";
 import {
    Arg,
+   Authorized,
    Ctx,
-   Field,
    FieldResolver,
    Int,
    Mutation,
-   ObjectType,
    Query,
    Resolver,
    Root,
@@ -28,14 +27,8 @@ export class ListResolver {
       return await queryListsByUser(user_id);
    }
 
-   // @Query(() => [ListAndTerms], { nullable: "items" })
-   // async listsByUserWithTerms(@Arg("user_id") user_id: number) {
-   //    // TODO: this probably needs to be adjusted if we want to properly resolve
-   //    // .terms field with a FieldResolver
-   //    return await queryListsWithTermsByUser(user_id);
-   // }
-
    @Query(() => [List])
+   // NOTE: `queryListsById` already filters by user_id, so this doesn't need Authorized()
    async listsById(
       @Arg("ids", () => [Int]) ids: [number],
       @Ctx() { req }: ExpressContext
@@ -43,43 +36,38 @@ export class ListResolver {
       return await queryListsById(ids, { req });
    }
 
-   // TODO: rethink how we approach this, since lists don't have .terms by
-   // default, now.
-   @FieldResolver(() => Term)
+   @FieldResolver(() => [Term], { nullable: "items" })
+   @Authorized()
    async terms(
       @Root() list: List,
+      @Arg("user_id") user_id: number,
       @Arg("populate", { nullable: true }) populate?: boolean
    ) {
       return await resolveTerms(list, populate);
    }
 
-   @Mutation(() => SuccessOrError)
-   // TODO: add auth middleware
-   // TODO: reconcile return type with new function implementation
-   async deleteList(@Arg("listIds", () => [Int]) listIds: [number]) {
+   @Mutation(() => ListAndTerms)
+   @Authorized()
+   async deleteList(
+      @Arg("user_id") user_id: number, // Not used, but necessary for Authorized middleware
+      @Arg("listIds", () => [Int]) listIds: [number]
+   ) {
       return await deleteListsById(listIds);
    }
 
-   // TODO: this should really return a union of ListAndTerms | {error of some kind}
    @Mutation(() => ListAndTerms)
-   async createList(@Arg("newList") newList: NewList) {
+   @Authorized()
+   async createList(@Arg("user_id") user_id: number, @Arg("newList") newList: NewList) {
       return await createList(newList);
    }
 
    @Mutation(() => MaybeList)
+   @Authorized()
    async updateList(
+      @Arg("user_id") user_id: number,
       @Arg("list_id") list_id: number,
       @Arg("payload") payload: ListUpdatePayload
    ) {
       return await updateListName(list_id, payload);
    }
-}
-
-@ObjectType()
-class SuccessOrError {
-   @Field({ nullable: true })
-   success?: boolean;
-
-   @Field({ nullable: true })
-   error?: boolean;
 }
