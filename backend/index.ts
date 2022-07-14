@@ -8,6 +8,7 @@ import { buildSchema } from "type-graphql";
 import { v4 as uuid } from "uuid";
 import { authenticationChecker } from "./graphql/helpers/authorization";
 import { ListResolver } from "./graphql/resolvers/ListResolver";
+import { ReviewSessionEntryResolver } from "./graphql/resolvers/ReviewSessionEntryResolver";
 import { ReviewSessionResolver } from "./graphql/resolvers/ReviewSessionResolver";
 import { TermResolver } from "./graphql/resolvers/TermResolver";
 import { UserResolver } from "./graphql/resolvers/UserResolver";
@@ -36,7 +37,13 @@ async function startServer() {
    );
 
    const schema = await buildSchema({
-      resolvers: [UserResolver, ListResolver, TermResolver, ReviewSessionResolver],
+      resolvers: [
+         UserResolver,
+         ListResolver,
+         TermResolver,
+         ReviewSessionResolver,
+         ReviewSessionEntryResolver,
+      ],
       emitSchemaFile: true,
       authChecker: authenticationChecker,
       // globalMiddlewares: [],
