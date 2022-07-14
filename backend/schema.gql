@@ -3,49 +3,24 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-"""
-The javascript `Date` as string. Type represents date and time as the ISO Date string.
-"""
-scalar DateTime
-
-type ErrorOrSuccess {
-  error: String
-  success: String
-}
-
-type Id {
-  _id: String!
-}
-
-input IdInput {
-  _id: String!
-}
-
 type List {
-  _id: ID!
-  created: DateTime!
-  from: String!
-  lastReviewed: DateTime!
+  created_at: Float!
+  from_language: String!
+  last_reviewed: Float
+  list_id: Float!
   name: String!
-  owner: String!
-  reviewDates: ListState
-  sessions: [ReviewSession!]
-  setMembership: [String!]!
-  terms(populate: Boolean): [Term!]!
-  to: String!
+  terms(populate: Boolean, user_id: Float!): [Term]!
+  to_language: String!
+  user_id: Float!
 }
 
-type ListState {
-  backwards: [DateTime!]!
-  forwards: [DateTime!]!
-}
-
-input ListUpdateActionInput {
-  type: String!
+type ListAndTerms {
+  list: List!
+  terms: [Term]!
 }
 
 input ListUpdatePayloadInput {
-  name: String
+  name: String!
 }
 
 type MaybeList {
@@ -53,195 +28,62 @@ type MaybeList {
   list: List
 }
 
-type MaybeReviewSession {
-  error: String
-  savedReviewSession: ReviewSession
-}
-
-type MaybeUser {
-  error: String
-  user: User
+type Message {
+  message: String!
 }
 
 type Mutation {
-  """
-  Add a list document to the database, append its ._id to its parent user's .lists array
-  """
-  createList(newList: NewListFromClientInput!): MaybeList!
-  createReviewSession(newReviewSession: ReviewSessionBaseInput!, termUpdateArray: [TermUpdateObject!]!): MaybeReviewSession!
-  createTerms(terms: [NewTermFromClient!]!): ErrorOrSuccess!
-  createUser(password: String!, username: String!): MaybeUser!
-  deleteList(listId: String!): SuccessOrError!
-  deleteTermsFromList(ids: [String!]!, listId: String!, remainingTermIds: [String!]): ErrorOrSuccess!
-  editTerms(updateObj: [TermEditObject!]!): Int!
+  createList(newList: NewListInput!, user_id: Float!): ListAndTerms!
+  createTerms(terms: [NewTermInput!]!): [Term!]!
+  createUser(password: String!, username: String!): User!
+  deleteList(listIds: [Int!]!, user_id: Float!): ListAndTerms!
+  deleteTerms(termIds: [Int!]!): [Term!]!
+  login(password: String!, username: String!): User!
+  logout: Message!
+  updateList(list_id: Float!, payload: ListUpdatePayloadInput!, user_id: Float!): MaybeList!
 
-  """Login mutation"""
-  login(password: String!, username: String!): MaybeUser!
-  updateList(action: ListUpdateActionInput!, listId: String!, payload: ListUpdatePayloadInput!): MaybeList!
-  updateTerms(updateObj: [TermUpdateObject!]!): Int!
+  """Update a user's password"""
+  updatePassword(password: String!, user_id: Float!): User!
+
+  """Update a user's username"""
+  updateUsername(user_id: Float!, username: String!): User!
 }
 
-input NewListFromClientInput {
-  from: String!
+input NewListInput {
+  from_language: String!
   name: String!
-  owner: String!
-  terms: [NewListTermInput!]!
-  to: String!
+  terms: [NewTermInput!]!
+  to_language: String!
+  user_id: Float!
 }
 
-input NewListTermInput {
-  from: String!
-  to: String!
-}
-
-"""
-New term created client-side, excludes history and saturation fields, since those don't exist yet for the term
-"""
-input NewTermFromClient {
-  from: String!
-  languages: TermLanguagesInput!
-  listMembership: [String!]!
-  owner: String!
-  saturation: TermSaturationInput!
-  to: String!
+input NewTermInput {
+  from_language: String!
+  from_value: String!
+  list_id: Int!
+  to_language: String!
+  to_value: String!
+  user_id: Int!
 }
 
 type Query {
-  """Query lists by id"""
-  listsById(ids: [String!]!, populate: [String!]): [List!]!
-
-  """Find lists by user"""
-  listsByUser(owner: String!, populate: [String!]): [List!]!
-
-  """Returns currently logged in user. """
-  me: MaybeUser!
-  reviewSessionsByUser(owner: String!): [ReviewSession!]!
+  listsById(ids: [Int!]!): [List!]!
+  listsByUser(user_id: Float!): [List!]!
+  me: User!
   users: [User!]!
 }
 
-type ReviewDate {
-  end: DateTime!
-  start: DateTime!
-}
-
-input ReviewDateInput {
-  end: DateTime!
-  start: DateTime!
-}
-
-type ReviewSession {
-  _id: ID!
-  date: ReviewDate!
-  listIds: [Id!]
-  owner: String!
-  passfail: [String!]!
-  settings: ReviewSettings!
-  terms: ReviewSessionTerms!
-  timePerCard: [Int!]!
-}
-
-input ReviewSessionBaseInput {
-  date: ReviewDateInput!
-  listIds: [IdInput!]
-  owner: String!
-  passfail: [String!]!
-  settings: ReviewSettingsInput!
-  terms: ReviewSessionTermsInput!
-  timePerCard: [Int!]!
-}
-
-type ReviewSessionTerms {
-  listId: String!
-  termIds: [String!]!
-}
-
-input ReviewSessionTermsInput {
-  listId: String!
-  termIds: [String!]!
-}
-
-type ReviewSettings {
-  direction: String!
-  ended: Boolean!
-  n: Float!
-  sessionEnd: DateTime!
-  sessionStart: DateTime!
-  started: Boolean!
-}
-
-input ReviewSettingsInput {
-  direction: String!
-  ended: Boolean!
-  n: Float!
-  sessionEnd: DateTime!
-  sessionStart: DateTime!
-  started: Boolean!
-}
-
-type SuccessOrError {
-  error: Boolean
-  success: Boolean
-}
-
 type Term {
-  _id: ID!
-  from: String!
-  history: [TermHistory]!
-  languages: TermLanguages
-  listMembership: [List]!
-  owner: String!
-  saturation: TermSaturation!
-  to: String!
-}
-
-input TermEditObject {
-  _id: String!
-  from: String
-  to: String
-}
-
-type TermHistory {
-  content: [String!]!
-  date: DateTime!
-  direction: String!
-}
-
-input TermHistoryInput {
-  content: [String!]!
-  date: DateTime!
-  direction: String!
-}
-
-type TermLanguages {
-  from: String
-  to: String
-}
-
-input TermLanguagesInput {
-  from: String
-  to: String
-}
-
-type TermSaturation {
-  backwards: Float
-  forwards: Float
-}
-
-input TermSaturationInput {
-  backwards: Float
-  forwards: Float
-}
-
-input TermUpdateObject {
-  _id: String!
-  history: TermHistoryInput
-  saturation: TermSaturationInput
+  from_language: String!
+  list_id: Float!
+  term_id: Float!
+  to_language: String!
+  user_id: Float!
 }
 
 type User {
-  _id: String!
-  currentSession: String!
-  lists: [List!]
+  created_at: Int!
   password: String!
+  user_id: Float!
   username: String!
 }
