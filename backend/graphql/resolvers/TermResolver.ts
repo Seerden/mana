@@ -1,4 +1,4 @@
-import { Arg, Field, Int, Mutation, ObjectType, Resolver } from "type-graphql";
+import { Arg, Int, Mutation, Resolver } from "type-graphql";
 import { NewTerm } from "../types/input_types/term";
 import { Term } from "../types/Term";
 import { createTerms } from "./term/create-terms";
@@ -8,18 +8,9 @@ import { deleteTerms } from "./term/delete-terms";
 //  only as part of their parent list's queries,
 //   but this might change in the future
 
-@ObjectType()
-class ErrorOrSuccess {
-   @Field({ nullable: true })
-   error?: string;
-
-   @Field({ nullable: true })
-   success?: string;
-}
-
 @Resolver()
 export class TermResolver {
-   @Mutation(() => ErrorOrSuccess)
+   @Mutation(() => [Term])
    async createTerms(@Arg("terms", () => [NewTerm]) terms: NewTerm[]) {
       return await createTerms(terms);
    }
