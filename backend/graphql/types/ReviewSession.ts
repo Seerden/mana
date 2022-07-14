@@ -1,18 +1,16 @@
-import { Field, Int, ObjectType } from "type-graphql";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
-export class ReviewSession {
-   @Field()
-   review_session_id: number;
-
-   @Field()
+@InputType("ReviewSessionInput")
+export class ReviewSessionInput {
+   @Field(() => Int)
    user_id: number;
 
-   @Field()
+   @Field(() => Int)
    start_date: number;
 
    @Field(() => Int, { nullable: true })
-   end_date: number;
+   end_date?: number;
 
    @Field()
    direction: string;
@@ -21,11 +19,17 @@ export class ReviewSession {
    n: number;
 
    @Field(() => [Int], { nullable: "itemsAndList" })
-   set_ids: number[];
+   set_ids?: number[];
 
    @Field(() => [Int], { nullable: "itemsAndList" })
-   list_ids: number[];
+   list_ids?: number[];
 
    @Field(() => Int, { nullable: true })
-   saturation_threshold: number;
+   saturation_threshold?: number;
+}
+
+@ObjectType("ReviewSession")
+export class ReviewSession extends ReviewSessionInput {
+   @Field()
+   review_session_id: number;
 }
