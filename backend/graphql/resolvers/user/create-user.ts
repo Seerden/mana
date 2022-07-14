@@ -1,40 +1,30 @@
+import {} from "apollo-server-express";
 import { hash } from "bcryptjs";
-import { Error } from "postgres";
 import { sql } from "../../../db/init";
 import { User } from "../../types/User";
 
-type Message = {
-   message: string;
-};
-
-interface PostgresError extends Message {
-   error: Error;
-}
-
-/**
- * Attempt to insert a new user into the database. If the username already
- * exists, return a Message.
- */
+/** Insert a new user into the database. Throw if username already taken. */
 export async function createUser(username: string, password: string) {
    const hashedPassword = await hash(password, 10);
 
-   const [existingUser] = await sql<[User?]>`select * from users where username = ${sql(
-      username
-   )}`;
+   // NOTE: we'll use this more often, elsewhere: sql(condition) resolves to "username"=$1, with $1=username
+   const condition = { username };
+
+   const [existingUser] = await sql<[User?]>`select * from users where ${sql(condition)}`;
 
    if (existingUser) {
-      return { message: "Username already exists" } as Message;
+      throw new Error("Username already taken.");
    }
 
-   const newUser: Omit<User, "user_id"> = {
+   const newUser: Omit<User, "user_id" | "created_at"> = {
       username,
       password: hashedPassword,
    };
 
    try {
-      const [user] = await sql`insert into users ${sql(newUser)}`;
-      return user as User;
-   } catch (error) {
-      return { message: "Error inserting user", error } as PostgresError;
+      const [user] = await sql<[User?]>`insert into users ${sql(newUser)} returning *`;
+      return user;
+   } catch (e) {
+      throw e;
    }
 }
