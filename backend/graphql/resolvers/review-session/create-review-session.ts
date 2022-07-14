@@ -1,16 +1,44 @@
-// @ts-nocheck
-export async function createReviewSession(newReviewSession, termUpdateArray) {
-    const newReviewSessionDocument = new ReviewSessionModel(newReviewSession);
-    const savedReviewSession = await newReviewSessionDocument.save();
-    if (savedReviewSession) {
-        await bulkUpdateTerms(termUpdateArray);
-        await maybeAddSessionToList(
-            savedReviewSession._id,
-            savedReviewSession.settings.sessionEnd,
-            savedReviewSession.settings.direction,
-            savedReviewSession.listIds.map((entry) => asObjectId(entry._id))
-        );
-        return { savedReviewSession };
-    }
-    return { error: "Failed to save review session to database" };
+import { sql } from "../../../db/init";
+import { ReviewSession, ReviewSessionInput } from "../../types/ReviewSession";
+import {
+   ReviewSessionEntry,
+   ReviewSessionEntryInput,
+} from "../../types/ReviewSessionEntry";
+
+export async function createReviewSession(
+   session: ReviewSessionInput,
+   entries: ReviewSessionEntryInput[]
+) {
+   const [newSession, newEntries] = await sql.begin(async (sql) => {
+      const [insertedSession] = await sql<
+         [ReviewSession?]
+      >`insert into review_sessions ${sql(session as any)} returning *`;
+
+      if (!insertedSession)
+         throw new Error("Failed to insert review session into database");
+
+      const reviewId = insertedSession.review_session_id;
+
+      const entriesWithId: Array<
+         ReviewSessionEntryInput & { review_session_id: number }
+      > = entries.map((entry) => ({ ...entry, review_session_id: reviewId }));
+
+      const insertedEntries = await createReviewSessionEntries(entriesWithId);
+
+      return [insertedSession, insertedEntries] as const;
+   });
+
+   return { session: newSession, entries: newEntries };
+}
+
+type EntryInputWithId = ReviewSessionEntryInput & {
+   review_session_id: ReviewSession["review_session_id"];
+};
+
+async function createReviewSessionEntries(entries: EntryInputWithId[]) {
+   const insertedEntries = await sql<
+      [ReviewSessionEntry]
+   >`insert into review_session_entries ${sql(entries)} returning *`;
+
+   return insertedEntries;
 }
