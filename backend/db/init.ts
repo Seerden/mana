@@ -8,10 +8,13 @@ const PG_PORT = 5432;
 //     `postgres://${PG_USER}:${PG_PASS}@${DB_HOST}:${PG_PORT}/${PG_DB}`
 // );
 
-export const sql = postgres({
-    host: DB_HOST,
-    user: PG_USER,
-    password: PG_PASS,
-    database: PG_DB,
-    port: 5432,
-});
+export const options = {
+   host: DB_HOST,
+   user: PG_USER,
+   password: PG_PASS,
+   port: 5432,
+} as const;
+
+export const sql = postgres({ ...options, database: PG_DB });
+
+export const testSql = postgres({ ...options, database: "mana_test" });
