@@ -2,10 +2,7 @@ import { Field, InputType, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
 @InputType()
-export class NewTermWithoutListId {
-   @Field(() => Int)
-   user_id: number;
-
+export class NewTermWithoutIds {
    @Field()
    from_language: string;
 
@@ -21,7 +18,10 @@ export class NewTermWithoutListId {
 
 @ObjectType("NewTerm")
 @InputType("NewTermInput")
-export class NewTerm extends NewTermWithoutListId {
+export class NewTerm extends NewTermWithoutIds {
+   @Field(() => Int)
+   user_id: number;
+
    @Field(() => Int)
    list_id: number;
 }
