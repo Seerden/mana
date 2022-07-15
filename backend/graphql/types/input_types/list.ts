@@ -1,12 +1,9 @@
-import { Field, InputType, ObjectType } from "type-graphql";
-import { NewTermWithoutListId } from "./term";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
+import { NewTermWithoutIds } from "./term";
 
-@ObjectType("NewList")
-@InputType("NewListInput")
-export class NewList {
-   @Field()
-   user_id: number;
-
+@ObjectType()
+@InputType("NewListWithoutUserIdInput")
+export class NewListWithoutUserId {
    @Field()
    name: string;
 
@@ -16,8 +13,15 @@ export class NewList {
    @Field(() => String)
    to_language: string;
 
-   @Field(() => [NewTermWithoutListId])
-   terms: NewTermWithoutListId[];
+   @Field(() => [NewTermWithoutIds])
+   terms: NewTermWithoutIds[];
+}
+
+@ObjectType("NewList")
+@InputType("NewListInput")
+export class NewList extends NewListWithoutUserId {
+   @Field(() => Int)
+   user_id: number;
 }
 
 @ObjectType()
