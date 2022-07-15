@@ -10,7 +10,7 @@ import {
    Resolver,
    Root,
 } from "type-graphql";
-import { ListUpdatePayload, NewList } from "../types/input_types/list";
+import { ListUpdatePayload, NewListWithoutUserId } from "../types/input_types/list";
 import { List, ListAndTerms } from "../types/List";
 import { Term } from "../types/Term";
 import { createList } from "./list/create-list";
@@ -57,8 +57,11 @@ export class ListResolver {
 
    @Mutation(() => ListAndTerms)
    @Authorized()
-   async createList(@Arg("user_id") user_id: number, @Arg("newList") newList: NewList) {
-      return await createList(newList);
+   async createList(
+      @Arg("user_id") user_id: number,
+      @Arg("newList") newList: NewListWithoutUserId
+   ) {
+      return await createList(user_id, newList);
    }
 
    @Mutation(() => List, { nullable: true })
