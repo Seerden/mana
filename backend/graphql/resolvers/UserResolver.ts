@@ -12,7 +12,7 @@ import { updatePassword, updateUsername } from "./user/update-user";
 
 @Resolver()
 export class UserResolver {
-   @Query(() => [User], { name: "users" })
+   @Query(() => [User])
    @Authorized([Roles.ADMIN])
    async users() {
       return queryAllUsers();
