@@ -21,10 +21,6 @@ export async function createUser(username: string, password: string) {
       password: hashedPassword,
    };
 
-   try {
-      const [user] = await sql<[User?]>`insert into users ${sql(newUser)} returning *`;
-      return user;
-   } catch (e) {
-      throw e;
-   }
+   const [user] = await sql<[User?]>`insert into users ${sql(newUser)} returning *`;
+   return user;
 }
