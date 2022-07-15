@@ -1,8 +1,6 @@
-import { ExpressContext } from "apollo-server-express";
 import {
    Arg,
    Authorized,
-   Ctx,
    FieldResolver,
    Int,
    Mutation,
@@ -10,6 +8,7 @@ import {
    Resolver,
    Root,
 } from "type-graphql";
+import { UserId } from "../helpers/insert-user-id";
 import { ListUpdatePayload, NewListWithoutUserId } from "../types/input_types/list";
 import { List, ListAndTerms } from "../types/List";
 import { Term } from "../types/Term";
@@ -29,18 +28,17 @@ export class ListResolver {
 
    @Query(() => [List])
    // NOTE: `queryListsById` already filters by user_id, so this doesn't need Authorized()
-   async listsById(
-      @Arg("ids", () => [Int]) ids: [number],
-      @Ctx() { req }: ExpressContext
-   ) {
-      return await queryListsById(ids, { req });
+   async listsById(@UserId() user_id: number, @Arg("ids", () => [Int]) ids: [number]) {
+      return await queryListsById(user_id, ids);
    }
 
+   // NOTE: Case study: this resolves a field (terms: Term[]) of a class (List)
+   // that is everywhere protected by the UserId() decorator, so we don't need
+   // to specifically protect this, because the _root_ this is resolving a field
+   // for, should never exist if the user is not authorized to begin with.
    @FieldResolver(() => [Term], { nullable: "items" })
-   @Authorized()
    async terms(
       @Root() list: List,
-      @Arg("user_id") user_id: number,
       @Arg("populate", { nullable: true }) populate?: boolean
    ) {
       return await resolveTerms(list, populate);
