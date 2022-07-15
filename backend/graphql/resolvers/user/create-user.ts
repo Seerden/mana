@@ -10,7 +10,9 @@ export async function createUser(username: string, password: string) {
    // NOTE: we'll use this more often, elsewhere: sql(condition) resolves to "username"=$1, with $1=username
    const condition = { username };
 
-   const [existingUser] = await sql<[User?]>`select * from users where ${sql(condition)}`;
+   const [existingUser] = await sql<
+      [User?]
+   >`select * from users where username=${username}`;
 
    if (existingUser) {
       throw new Error("Username already taken.");
