@@ -13,7 +13,7 @@ for details.
 ### Postgres error propagation
 
 Postgres also throws errors automatically when it encounters issues. From above,
-it follows that, when the query traces back to a resolver function, get
+it follows that, when the query traces back to a resolver function, it's
 propagated by apollo-server to the `errors` field of the resolver result. This
 means that it'sproper to do something like:
 
