@@ -11,7 +11,7 @@ import {
    Root,
 } from "type-graphql";
 import { ListUpdatePayload, NewList } from "../types/input_types/list";
-import { List, ListAndTerms, MaybeList } from "../types/List";
+import { List, ListAndTerms } from "../types/List";
 import { Term } from "../types/Term";
 import { createList } from "./list/create-list";
 import { deleteListsById } from "./list/delete-list";
@@ -61,7 +61,7 @@ export class ListResolver {
       return await createList(newList);
    }
 
-   @Mutation(() => MaybeList)
+   @Mutation(() => List, { nullable: true })
    @Authorized()
    async updateList(
       @Arg("user_id") user_id: number,
