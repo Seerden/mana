@@ -1,6 +1,7 @@
 import { ExpressContext } from "apollo-server-express";
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { destroySession } from "../../lib/destroy-session";
+import { UserId } from "../helpers/insert-user-id";
 import { Roles } from "../helpers/roles";
 import { User } from "../types/User";
 import { Message } from "../types/utility/message";
@@ -19,9 +20,8 @@ export class UserResolver {
    }
 
    @Query(() => User)
-   @Authorized()
-   async me(@Arg("user_id") user_id: number, @Ctx() { req }: ExpressContext) {
-      return queryMe(req);
+   async me(@UserId() user_id: number) {
+      return queryMe(user_id);
    }
 
    @Mutation(() => User)
@@ -47,9 +47,8 @@ export class UserResolver {
    }
 
    @Mutation(() => User, { description: "Update a user's username" })
-   @Authorized()
    async updateUsername(
-      @Arg("user_id") user_id: number,
+      @UserId() user_id: number,
       @Arg("username")
       username: string
    ) {
@@ -57,9 +56,8 @@ export class UserResolver {
    }
 
    @Mutation(() => User, { description: "Update a user's password" })
-   @Authorized()
    async updatePassword(
-      @Arg("user_id") user_id: number,
+      @UserId() user_id: number,
       @Arg("currentPassword") currentPassword: string,
       @Arg("newPassword") newPassword: string
    ) {
