@@ -23,11 +23,6 @@ input ListUpdatePayloadInput {
   name: String!
 }
 
-type MaybeList {
-  error: String
-  list: List
-}
-
 type Message {
   message: String!
 }
@@ -41,10 +36,10 @@ type Mutation {
   deleteTerms(termIds: [Int!]!): [Term!]!
   login(password: String!, username: String!): User!
   logout: Message!
-  updateList(list_id: Float!, payload: ListUpdatePayloadInput!, user_id: Float!): MaybeList!
+  updateList(list_id: Float!, payload: ListUpdatePayloadInput!, user_id: Float!): List
 
   """Update a user's password"""
-  updatePassword(password: String!, user_id: Float!): User!
+  updatePassword(currentPassword: String!, newPassword: String!, user_id: Float!): User!
 
   """Update a user's username"""
   updateUsername(user_id: Float!, username: String!): User!
@@ -53,7 +48,7 @@ type Mutation {
 input NewListInput {
   from_language: String!
   name: String!
-  terms: [NewTermInput!]!
+  terms: [NewTermWithoutListId!]!
   to_language: String!
   user_id: Float!
 }
@@ -67,10 +62,18 @@ input NewTermInput {
   user_id: Int!
 }
 
+input NewTermWithoutListId {
+  from_language: String!
+  from_value: String!
+  to_language: String!
+  to_value: String!
+  user_id: Int!
+}
+
 type Query {
   listsById(ids: [Int!]!): [List!]!
   listsByUser(user_id: Float!): [List!]!
-  me: User!
+  me(user_id: Float!): User!
   sessionEntriesByTermIds(termIds: [Int!]!): [TermIdWithEntries!]!
   sessionsById(sessionIds: [Int!]!, user_id: Float!): [ReviewSession]!
   sessionsByUser(user_id: Float!): [ReviewSession]!
