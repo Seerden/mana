@@ -13,7 +13,11 @@ export async function updateListName(list_id: number, payload: { name: string })
    const update = { name: payload.name };
    const condition = { list_id };
 
-   return await sql<[List?]>`update lists set ${sql(update)} where ${sql(
+   const [list] = await sql<[List?]>`update lists set ${sql(update)} where ${sql(
       condition
    )} returning *`;
+
+   if (!list) throw new Error("Update query did not return a list.");
+
+   return list;
 }
