@@ -24,3 +24,6 @@ _*.md
 docker/database-backup
 docker/pg-data
 docker/redis-data
+
+docker/test-database-backup
+docker/pg-data-test
