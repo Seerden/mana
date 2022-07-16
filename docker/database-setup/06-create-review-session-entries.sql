@@ -9,9 +9,11 @@ create table review_session_entries (
 
    constraint fk_session_entry_session_id
       foreign key (review_session_id)
-      references review_sessions(review_session_id),
+      references review_sessions(review_session_id)
+      on delete cascade,
 
    constraint fk_session_entry_term_id
       foreign key(term_id)
       references terms(term_id)
+      on delete cascade
 );

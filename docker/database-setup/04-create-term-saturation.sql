@@ -7,4 +7,5 @@ create table term_saturation (
    constraint fk_saturation_term_id
       foreign key (term_id)
       references terms(term_id)
+      on delete cascade
 );

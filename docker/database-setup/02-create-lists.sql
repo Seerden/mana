@@ -4,7 +4,8 @@ create table lists (
 
    constraint fk_list_user_id
       foreign key (user_id)
-      references users(user_id),
+      references users(user_id)
+      on delete cascade,
       
    name text not null,
    from_language text not null,
