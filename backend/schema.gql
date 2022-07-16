@@ -9,7 +9,7 @@ type List {
   last_reviewed: Float
   list_id: Float!
   name: String!
-  terms(populate: Boolean, user_id: Float!): [Term]!
+  terms(populate: Boolean): [Term]!
   to_language: String!
   user_id: Float!
 }
@@ -28,29 +28,25 @@ type Message {
 }
 
 type Mutation {
-  createList(newList: NewListInput!, user_id: Float!): ListAndTerms!
+  createList(newList: NewListWithoutUserIdInput!, user_id: Float!): ListAndTerms!
   createSession(entries: [ReviewSessionEntryInput!]!, session: ReviewSessionInput!): ReviewSession!
   createTerms(terms: [NewTermInput!]!): [Term!]!
   createUser(password: String!, username: String!): User!
   deleteList(listIds: [Int!]!, user_id: Float!): ListAndTerms!
   deleteTerms(termIds: [Int!]!): [Term!]!
+  deleteUser: User!
   login(password: String!, username: String!): User!
   logout: Message!
   updateList(list_id: Float!, payload: ListUpdatePayloadInput!, user_id: Float!): List
-
-  """Update a user's password"""
-  updatePassword(currentPassword: String!, newPassword: String!, user_id: Float!): User!
-
-  """Update a user's username"""
-  updateUsername(user_id: Float!, username: String!): User!
+  updatePassword(currentPassword: String!, newPassword: String!): User!
+  updateUsername(username: String!): User!
 }
 
-input NewListInput {
+input NewListWithoutUserIdInput {
   from_language: String!
   name: String!
-  terms: [NewTermWithoutListId!]!
+  terms: [NewTermWithoutIds!]!
   to_language: String!
-  user_id: Float!
 }
 
 input NewTermInput {
@@ -62,18 +58,17 @@ input NewTermInput {
   user_id: Int!
 }
 
-input NewTermWithoutListId {
+input NewTermWithoutIds {
   from_language: String!
   from_value: String!
   to_language: String!
   to_value: String!
-  user_id: Int!
 }
 
 type Query {
   listsById(ids: [Int!]!): [List!]!
   listsByUser(user_id: Float!): [List!]!
-  me(user_id: Float!): User!
+  me: User!
   sessionEntriesByTermIds(termIds: [Int!]!): [TermIdWithEntries!]!
   sessionsById(sessionIds: [Int!]!, user_id: Float!): [ReviewSession]!
   sessionsByUser(user_id: Float!): [ReviewSession]!
