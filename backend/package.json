@@ -25,7 +25,7 @@
       "uuid": "^8.3.2"
    },
    "scripts": {
-      "test": "jest --setupFiles dotenv/config",
+      "test": "jest --setupFiles ./dotenv-config.js --detectOpenHandles --watchAll --silent",
       "start-dev": "ts-node-dev --poll --files --respawn ./index.ts",
       "build": "tsc"
    },
