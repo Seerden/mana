@@ -6,6 +6,7 @@ import { Roles } from "../helpers/roles";
 import { User } from "../types/User";
 import { Message } from "../types/utility/message";
 import { createUser } from "./user/create-user";
+import { deleteUser } from "./user/delete-user";
 import { login } from "./user/login";
 import { queryAllUsers } from "./user/query-all-users";
 import { queryMe } from "./user/query-me";
@@ -29,7 +30,7 @@ export class UserResolver {
       @Arg("username") username: string,
       @Arg("password") password: string
    ) {
-      return createUser(username, password);
+      return createUser({ username, password });
    }
 
    @Mutation(() => User)
@@ -46,7 +47,7 @@ export class UserResolver {
       return destroySession(ctx);
    }
 
-   @Mutation(() => User, { description: "Update a user's username" })
+   @Mutation(() => User)
    async updateUsername(
       @UserId() user_id: number,
       @Arg("username")
@@ -55,12 +56,17 @@ export class UserResolver {
       return updateUsername(user_id, username);
    }
 
-   @Mutation(() => User, { description: "Update a user's password" })
+   @Mutation(() => User)
    async updatePassword(
       @UserId() user_id: number,
       @Arg("currentPassword") currentPassword: string,
       @Arg("newPassword") newPassword: string
    ) {
       return updatePassword(user_id, currentPassword, newPassword);
+   }
+
+   @Mutation(() => User)
+   async deleteUser(@UserId() user_id: number) {
+      return deleteUser({ user_id });
    }
 }
