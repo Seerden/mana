@@ -9,12 +9,12 @@ export const authenticationChecker: AuthChecker<ExpressContext> = async (
 ) => {
    const { req } = context;
 
-   const { userId } = req.session;
+   const { user_id: sessionUserId } = req.session;
    const { user_id } = args;
 
-   if (userId === +ADMIN_USER_ID) return true;
+   if (sessionUserId === +ADMIN_USER_ID) return true;
 
-   if (!userId || !user_id || userId !== user_id)
+   if (!sessionUserId || !user_id || sessionUserId !== user_id)
       throw new ForbiddenError("User is not allowed to access this resource.");
 
    return true;

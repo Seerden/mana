@@ -6,14 +6,14 @@ const sessionString = "mana-session";
 
 export async function destroySession({ req, res }: ExpressContext) {
    try {
-      if (!req.session?.userId) {
+      if (!req.session?.user_id) {
          return { message: "Already logged out." };
       }
 
       res.clearCookie(sessionString);
       req.session.destroy(null);
 
-      if (!req.session?.userId) {
+      if (!req.session?.user_id) {
          return { message: "Logged out" };
       }
    } catch (error) {

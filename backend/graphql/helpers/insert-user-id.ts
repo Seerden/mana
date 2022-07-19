@@ -3,6 +3,8 @@ import { createParamDecorator } from "type-graphql";
 
 export function UserId() {
    return createParamDecorator<ExpressContext>(({ context }) => {
+      console.log({ session: context.req.session });
+
       const { user_id } = context.req.session;
 
       if (!user_id) throw new AuthenticationError("No active session.");

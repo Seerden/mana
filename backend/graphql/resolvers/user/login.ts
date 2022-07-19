@@ -17,7 +17,7 @@ export async function login(username: string, password: string, ctx: ExpressCont
    const passwordMatches = await compare(password, user.password);
 
    if (passwordMatches) {
-      req.session.userId = user.user_id;
+      req.session.user_id = user.user_id;
       return user;
    }
 
