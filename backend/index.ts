@@ -12,12 +12,10 @@ import { ReviewSessionEntryResolver } from "./graphql/resolvers/ReviewSessionEnt
 import { ReviewSessionResolver } from "./graphql/resolvers/ReviewSessionResolver";
 import { TermResolver } from "./graphql/resolvers/TermResolver";
 import { UserResolver } from "./graphql/resolvers/UserResolver";
-import { log } from "./lib/expressMiddleware";
 
 async function startServer() {
    const app = express();
    app.use(cors());
-   app.use(log);
    app.use(
       express.urlencoded({
          limit: "5mb",
