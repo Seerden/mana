@@ -23,6 +23,7 @@ async function startServer() {
          extended: true,
       }) as RequestHandler
    );
+
    app.use(express.json() as RequestHandler);
    app.use(
       session({
@@ -32,7 +33,7 @@ async function startServer() {
          /* store: TODO: Implement redis store! */
          cookie: {
             maxAge: 1000 * 3600 * 24, // set TTL to 24 hours
-            // secure: true // only set once I have https setup look at docs for handy if statement to set this only for production
+            secure: process.env.NODE_ENV === "production",
          },
          resave: true,
          saveUninitialized: false,
