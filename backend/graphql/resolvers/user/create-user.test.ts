@@ -7,6 +7,7 @@ import { createUser } from "./create-user";
 
 beforeAll(async () => {
    await resetSequences();
+   await clearDatabaseData();
 });
 
 afterAll(async () => {
