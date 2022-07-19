@@ -11,7 +11,8 @@
       "dev": "concurrently \"npm:codegen\" \"npm:serve --prefix ./frontend\" \"npm:start-dev --prefix ./backend\"",
       "codegen": "wait-on tcp:5000 && graphql-codegen --config codegen.yml --watch \"./backend/schema.gql\"",
       "db": "docker exec -it docker_database_1 psql mana -U postgres",
-      "test-db": "docker exec -it docker_testdatabase_1 psql mana-test -U postgres -p 5434"
+      "test-db": "docker exec -it docker_testdatabase_1 psql mana-test -U postgres -p 5434",
+      "store": "docker exec -it docker_store_1 redis-cli"
    },
    "repository": {
       "type": "git",
