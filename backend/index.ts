@@ -5,13 +5,13 @@ import express, { RequestHandler } from "express";
 import session from "express-session";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import { v4 as uuid } from "uuid";
 import { authenticationChecker } from "./graphql/helpers/authorization";
 import { ListResolver } from "./graphql/resolvers/ListResolver";
 import { ReviewSessionEntryResolver } from "./graphql/resolvers/ReviewSessionEntryResolver";
 import { ReviewSessionResolver } from "./graphql/resolvers/ReviewSessionResolver";
 import { TermResolver } from "./graphql/resolvers/TermResolver";
 import { UserResolver } from "./graphql/resolvers/UserResolver";
+import { initializeRedisConnection, redisSession } from "./lib/redis-client";
 
 async function startServer() {
    const app = express();
@@ -25,21 +25,10 @@ async function startServer() {
    );
 
    app.use(express.json() as RequestHandler);
-   app.use(
-      session({
-         name: "mana-session",
-         genid: () => uuid(),
-         secret: process.env.SESSION_SECRET,
-         /* store: TODO: Implement redis store! */
-         cookie: {
-            maxAge: 1000 * 3600 * 24, // set TTL to 24 hours
-            secure: process.env.NODE_ENV === "production",
-         },
-         resave: true,
-         saveUninitialized: false,
-         rolling: true,
-      })
-   );
+
+   await initializeRedisConnection();
+
+   app.use(session(redisSession));
 
    const schema = await buildSchema({
       resolvers: [
