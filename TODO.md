@@ -1,7 +1,12 @@
-Nov 12, 2021: Picking up where development left off a few months ago...
+`postgres/test/initialize`
 
-## Client
-- `client/components`:
-    - [x] Put .scss files on the same level as the components they belong to. No more `components/COMPONENT/_style/COMPONENT.scss`
-
-## Server
+-  [x] install jest and related deps
+-  [x] add npm script to launch jest
+   -  [x] include necessary environment variables
+-  [x] write a few tests to start with
+   -  [x] find IS_TEST_ENVIRONMENT variable
+   -  [x] connect to test database
+   -  [x] reset sequences
+   -  [x] create user
+   -  [x] query user
+   -  [x] delete user
