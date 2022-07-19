@@ -1,5 +1,5 @@
 create table review_session_entries (
-   review_entry_id serial primary key not null,
+   review_entry_id serial unique primary key not null,
    term_id serial not null,
    review_session_id serial not null,
    created_at timestamp not null default now(),

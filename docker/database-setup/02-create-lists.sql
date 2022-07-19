@@ -1,5 +1,5 @@
 create table lists (
-   list_id serial primary key not null,
+   list_id serial unique primary key not null,
    user_id serial not null,
 
    constraint fk_list_user_id

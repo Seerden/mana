@@ -1,5 +1,5 @@
 create table terms(
-   term_id serial not null primary key,
+   term_id serial unique not null primary key,
    user_id serial not null,
    list_id serial not null,
    from_language text not null,

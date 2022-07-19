@@ -1,5 +1,5 @@
 create table review_sessions (
-   review_session_id serial primary key not null,
+   review_session_id serial unique primary key not null,
    user_id serial not null,
       constraint fk_review_session_user_id
       foreign key(user_id)
