@@ -1,14 +1,15 @@
 overwrite: true
-schema: "http://localhost:5000/graphql"
-# documents: ./frontend/src/**/*.graphql
+schema: "./backend/schema.gql"
+# documents: ./frontend/src/**/*.ts
 documents: null
 generates:
-  ./frontend/src/gql/codegen-output.ts:
-    plugins:
-      - "typescript"
-      - "typescript-resolvers"
-      - "typescript-operations"
-      # - "typescript-react-query"
-      # - "typescript-urql"
-    # config:
-    #   withHooks: true
+   ./frontend/src/gql/codegen-output.ts:
+      plugins:
+         - "typescript"
+         - "typescript-resolvers"
+         - "typescript-operations"
+         - "typescript-react-query"
+         # - "typescript-urql"
+      config:
+         withHooks: true
+         fetcher: fetch
