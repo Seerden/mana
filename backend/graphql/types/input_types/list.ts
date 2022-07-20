@@ -1,44 +1,39 @@
-import { Field, InputType, ObjectType } from "type-graphql";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
+import { NewTermWithoutIds } from "./term";
 
 @ObjectType()
-@InputType("NewListTermInput")
-export class NewListTerm {
-    @Field()
-    from: string;
+@InputType("NewListWithoutUserIdInput")
+export class NewListWithoutUserId {
+   @Field()
+   name: string;
 
-    @Field()
-    to: string;
+   @Field()
+   from_language: string;
+
+   @Field(() => String)
+   to_language: string;
+
+   @Field(() => [NewTermWithoutIds])
+   terms: NewTermWithoutIds[];
 }
 
-@ObjectType()
-@InputType("NewListFromClientInput")
-export class NewListFromClient {
-    @Field()
-    owner: string;
-
-    @Field()
-    name: string;
-
-    @Field()
-    from: string;
-
-    @Field(() => String)
-    to: string;
-
-    @Field(() => [NewListTerm])
-    terms: NewListTerm[]; // NewTerm?
+@ObjectType("NewList")
+@InputType("NewListInput")
+export class NewList extends NewListWithoutUserId {
+   @Field(() => Int)
+   user_id: number;
 }
 
 @ObjectType()
 @InputType("ListUpdateActionInput")
 export class ListUpdateAction {
-    @Field(() => String)
-    type: "name";
+   @Field(() => String)
+   type: "name";
 }
 
 @ObjectType()
 @InputType("ListUpdatePayloadInput")
 export class ListUpdatePayload {
-    @Field(() => String, { nullable: true })
-    name?: string;
+   @Field()
+   name: string;
 }

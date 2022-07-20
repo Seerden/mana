@@ -1,36 +1,25 @@
-import {
-    getModelForClass,
-    modelOptions,
-    prop as Property,
-    Severity,
-} from "@typegoose/typegoose";
-import { ObjectId } from "mongodb";
-import { Field, ObjectType } from "type-graphql";
-import { Ref } from "../../custom_types";
-import { dbConn } from "../../db/db";
-import { List } from "./List";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
 
-@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
 export class User {
-    @Field(() => String)
-    _id: ObjectId;
+   @Field()
+   username: string;
 
-    @Property({ unique: true, required: true })
-    @Field(() => String)
-    username: string;
+   @Field()
+   password: string;
 
-    @Property({ default: new Array() })
-    @Field(() => [List], { nullable: true })
-    lists: Ref<List>[]; // mongoose ObjectId[]
+   @Field()
+   user_id: number;
 
-    @Property()
-    @Field(() => String)
-    currentSession?: ObjectId; // mongoose ObjectId
-
-    @Property({ required: true })
-    @Field()
-    password: string;
+   @Field(() => Int)
+   created_at: number;
 }
 
-export const UserModel = getModelForClass(User, { existingConnection: dbConn });
+@InputType("UserInput")
+export class UserInput implements Partial<User> {
+   @Field({ nullable: true })
+   username?: string;
+
+   @Field({ nullable: true })
+   password?: string;
+}

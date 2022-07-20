@@ -19,6 +19,7 @@ services:
          - ./database-backup:/psql-backups
       ports:
          - "5432:5432"
+      command: ["postgres", "-c", "log_statement=all"]
 
    backend:
       build:
@@ -32,6 +33,7 @@ services:
          - store
       ports:
          - "5000:5000"
+
    frontend:
       build:
          context: ../frontend
@@ -41,3 +43,19 @@ services:
          - ../frontend/node_modules:/mana/frontend/node_modules
       ports:
          - "3000:3000"
+
+   testdatabase:
+      image: postgres:alpine
+      environment:
+         - POSTGRES_PASSWORD=$PG_PASS
+         - POSTGRES_USER=$PG_USER
+         - POSTGRES_DB=$PG_TEST_DB
+      volumes:
+         - ./pg-data-test:/var/lib/postgresql/data
+         - ./database-setup:/docker-entrypoint-initdb.d
+         - ./test-database-backup:/psql-backups
+      expose:
+         - "5434"
+      ports:
+         - "5434:5434"
+      command: ["postgres", "-p 5434", "-c", "log_statement=all"]

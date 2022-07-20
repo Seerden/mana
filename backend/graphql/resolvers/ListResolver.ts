@@ -1,134 +1,74 @@
-import mongoose from "mongoose";
 import {
-    Arg,
-    Field,
-    FieldResolver,
-    Mutation,
-    ObjectType,
-    Query,
-    Resolver,
-    Root,
+   Arg,
+   Authorized,
+   FieldResolver,
+   Int,
+   Mutation,
+   Query,
+   Resolver,
+   Root,
 } from "type-graphql";
-import {
-    createListDocument,
-    deleteListFromUser,
-    updateListDocument,
-} from "../helpers/list";
-import { maybeDeleteTerms } from "../helpers/term";
-import {
-    ListUpdateAction,
-    ListUpdatePayload,
-    NewListFromClient,
-} from "../types/input_types/list";
-import { List, ListModel, MaybeList } from "../types/List";
-import { Term, TermModel } from "../types/Term";
+import { UserId } from "../helpers/insert-user-id";
+import { ListUpdatePayload, NewListWithoutUserId } from "../types/input_types/list";
+import { List, ListAndTerms } from "../types/List";
+import { Term } from "../types/Term";
+import { createList } from "./list/create-list";
+import { deleteListsById } from "./list/delete-list";
+import { queryListsById } from "./list/query-by-id";
+import { queryListsByUser } from "./list/query-by-user";
+import { resolveTerms } from "./list/resolve-terms";
+import { updateListName } from "./list/update-list";
 
-@Resolver((of) => List)
+@Resolver(() => List)
 export class ListResolver {
-    @Query((type) => [List], { name: "listsByUser", description: "Find lists by user" })
-    async listsByUser(
-        @Arg("owner") owner: string,
-        @Arg("populate", (type) => [String], { nullable: true }) populate: [string]
-    ) {
-        // @ts-ignore
-        const lists = await ListModel.find({ owner })
-            // .populate(populate)
-            .lean()
-            .exec();
+   @Query(() => [List])
+   async listsByUser(@Arg("user_id") user_id: number) {
+      return await queryListsByUser(user_id);
+   }
 
-        return lists;
-    }
+   @Query(() => [List])
+   // NOTE: `queryListsById` already filters by user_id, so this doesn't need Authorized()
+   async listsById(@UserId() user_id: number, @Arg("ids", () => [Int]) ids: [number]) {
+      return await queryListsById(user_id, ids);
+   }
 
-    @Query((type) => [List], { name: "listsById", description: "Query lists by id" })
-    async listsById(
-        @Arg("ids", (type) => [String]) ids: [string],
-        @Arg("populate", (type) => [String], { nullable: true }) populate: [string]
-    ) {
-        let _ids = ids.map((id) => new mongoose.Types.ObjectId(id));
+   // NOTE: Case study: this resolves a field (terms: Term[]) of a class (List)
+   // that is everywhere protected by the UserId() decorator, so we don't need
+   // to specifically protect this, because the _root_ this is resolving a field
+   // for, should never exist if the user is not authorized to begin with.
+   @FieldResolver(() => [Term], { nullable: "items" })
+   async terms(
+      @Root() list: List,
+      @Arg("populate", { nullable: true }) populate?: boolean
+   ) {
+      return await resolveTerms(list, populate);
+   }
 
-        if (populate) {
-            return await ListModel.find({ _id: { $in: _ids } })
-                .populate(populate)
-                .lean()
-                .exec();
-        }
+   @Mutation(() => ListAndTerms)
+   @Authorized()
+   async deleteList(
+      @Arg("user_id") user_id: number, // Not used, but necessary for Authorized middleware
+      @Arg("listIds", () => [Int]) listIds: [number]
+   ) {
+      return await deleteListsById(listIds);
+   }
 
-        return await ListModel.find({ _id: { $in: _ids } })
-            .lean()
-            .exec();
-    }
+   @Mutation(() => ListAndTerms)
+   @Authorized()
+   async createList(
+      @Arg("user_id") user_id: number,
+      @Arg("newList") newList: NewListWithoutUserId
+   ) {
+      return await createList(user_id, newList);
+   }
 
-    @FieldResolver(() => Term, { description: "Resolves ListModel.terms" })
-    async terms(
-        @Root() list: List,
-        @Arg("populate", (type) => Boolean, { nullable: true }) populate: boolean
-    ) {
-        if (populate) {
-            return await TermModel.find({ _id: { $in: list.terms } })
-                .lean()
-                .exec();
-        }
-
-        return list.terms.map((_id) => ({ _id }));
-    }
-
-    @Mutation(() => SuccessOrError)
-    // @todo: add auth middleware
-    async deleteList(@Arg("listId") listId: string): Promise<SuccessOrError> {
-        const deletedList = await ListModel.findByIdAndDelete(
-            new mongoose.Types.ObjectId(listId),
-            null,
-            null
-        );
-        if (deletedList) {
-            const listDeletedFromUserBoolean = await deleteListFromUser(
-                deletedList._id,
-                deletedList.owner
-            );
-            const deletedTerms = await maybeDeleteTerms(
-                deletedList.terms.map((term) => (term instanceof Term ? term._id : term))
-            );
-
-            if (listDeletedFromUserBoolean && deletedTerms?.deletedCount) {
-                return { success: true };
-            }
-        }
-
-        return { error: true };
-    }
-
-    @Mutation(() => MaybeList, {
-        description:
-            "Add a list document to the database, append its ._id to its parent user's .lists array",
-    })
-    async createList(@Arg("newList") newList: NewListFromClient) {
-        const savedList = await createListDocument(newList);
-        if (savedList) {
-            return { list: savedList };
-        } else {
-            return { error: "Failed to save list to database" };
-        }
-    }
-
-    @Mutation(() => MaybeList)
-    async updateList(
-        @Arg("listId") listId: string,
-        @Arg("action") action: ListUpdateAction,
-        @Arg("payload") payload: ListUpdatePayload
-    ) {
-        const updatedList = await updateListDocument(listId, action, payload);
-
-        return updatedList
-            ? { list: updatedList.value }
-            : { error: "Failed to update list name in database" };
-    }
-}
-
-@ObjectType()
-class SuccessOrError {
-    @Field({ nullable: true })
-    success?: boolean;
-
-    @Field({ nullable: true })
-    error?: boolean;
+   @Mutation(() => List, { nullable: true })
+   @Authorized()
+   async updateList(
+      @Arg("user_id") user_id: number,
+      @Arg("list_id") list_id: number,
+      @Arg("payload") payload: ListUpdatePayload
+   ) {
+      return await updateListName(list_id, payload);
+   }
 }
