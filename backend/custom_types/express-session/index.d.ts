@@ -10,6 +10,6 @@ declare namespace Express {
 
 declare module "express-session" {
    interface Session {
-      userId?: number;
+      user_id?: number;
    }
 }
