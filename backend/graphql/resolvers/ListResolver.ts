@@ -9,8 +9,7 @@ import {
    Root,
 } from "type-graphql";
 import { UserId } from "../helpers/insert-user-id";
-import { ListUpdatePayload, NewListWithoutUserId } from "../types/input_types/list";
-import { List, ListAndTerms } from "../types/List";
+import { List, ListAndTerms, ListUpdatePayload, NewListWithTerms } from "../types/List";
 import { Term } from "../types/Term";
 import { createList } from "./list/create-list";
 import { deleteListsById } from "./list/delete-list";
@@ -28,8 +27,11 @@ export class ListResolver {
 
    @Query(() => [List])
    // NOTE: `queryListsById` already filters by user_id, so this doesn't need Authorized()
-   async listsById(@UserId() user_id: number, @Arg("ids", () => [Int]) ids: [number]) {
-      return await queryListsById(user_id, ids);
+   async listsById(
+      @UserId() user_id: number,
+      @Arg("list_ids", () => [Int]) list_ids: [number]
+   ) {
+      return await queryListsById(user_id, list_ids);
    }
 
    // NOTE: Case study: this resolves a field (terms: Term[]) of a class (List)
@@ -45,19 +47,17 @@ export class ListResolver {
    }
 
    @Mutation(() => ListAndTerms)
-   @Authorized()
    async deleteList(
-      @Arg("user_id") user_id: number, // Not used, but necessary for Authorized middleware
+      @UserId() user_id: number,
       @Arg("listIds", () => [Int]) listIds: [number]
    ) {
-      return await deleteListsById(listIds);
+      return deleteListsById(user_id, listIds);
    }
 
    @Mutation(() => ListAndTerms)
-   @Authorized()
    async createList(
-      @Arg("user_id") user_id: number,
-      @Arg("newList") newList: NewListWithoutUserId
+      @UserId() user_id: number,
+      @Arg("newList") newList: NewListWithTerms
    ) {
       return await createList(user_id, newList);
    }

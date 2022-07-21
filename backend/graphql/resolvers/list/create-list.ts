@@ -1,9 +1,8 @@
 import { sql } from "../../../db/init";
-import { NewListWithoutUserId } from "../../types/input_types/list";
-import { List } from "../../types/List";
+import { List, NewListWithTerms } from "../../types/List";
 import { createTerms } from "../term/create-terms";
 
-export async function createList(user_id: number, newList: NewListWithoutUserId) {
+export async function createList(user_id: number, newList: NewListWithTerms) {
    const { from_language, name, to_language, terms } = newList;
 
    // NOTE: we don't really have to do this, since postgres would ignore the
