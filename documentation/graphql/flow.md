@@ -22,8 +22,20 @@ graphql-codegen, with a few plugins. We can run the codegen manually with `npx g
 `frontend/src/gql/codegen-output.ts` containing a bunch of types relating to our
 GraphQL schema.
 
-### Tools
+## Tools
 
 The VSCode GraphQL plugin works very well to type-check graphql operations.
 Combined with the output from the codegen, it's relatively straightforward to
 implement queries and mutations.
+
+## Implementation
+
+Implementing a query or mutation:
+
+-  backend:
+   -  define TypeGraphQL types and resolvers
+   -  run codegen using exposed schema
+-  frontend:
+   -  create gql string
+   -  create actual request
+   -  wrap request in react-query hook
