@@ -1,8 +1,8 @@
-import { useMutateLogin } from "gql/hooks/login-mutate";
+import { User, UserInput } from "gql/codegen-output";
+import { useMutateLogin } from "gql/hooks/user/useLogin";
 import { useLogin } from "hooks/useLogin";
 import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useState } from "react";
-import { User, UserInput } from "../../gql/codegen-output";
 import { handleFormBlur } from "./helpers/handle-form-blur";
 import LoginForm from "./sub/LoginForm";
 
