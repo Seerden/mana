@@ -1,7 +1,6 @@
 import { sql } from "../../../db/init";
-import { NewTerm } from "../../types/input_types/term";
-import { Term } from "../../types/Term";
+import { Term, TermWithoutId } from "../../types/Term";
 
-export async function createTerms(terms: NewTerm[]) {
+export async function createTerms(terms: TermWithoutId[]) {
    return await sql<[Term?]>`insert into terms ${sql(terms)} returning *`;
 }

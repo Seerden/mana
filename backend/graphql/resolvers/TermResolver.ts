@@ -1,6 +1,5 @@
 import { Arg, Int, Mutation, Resolver } from "type-graphql";
-import { NewTerm } from "../types/input_types/term";
-import { Term } from "../types/Term";
+import { Term, TermWithoutId } from "../types/Term";
 import { createTerms } from "./term/create-terms";
 import { deleteTerms } from "./term/delete-terms";
 
@@ -11,7 +10,7 @@ import { deleteTerms } from "./term/delete-terms";
 @Resolver()
 export class TermResolver {
    @Mutation(() => [Term])
-   async createTerms(@Arg("terms", () => [NewTerm]) terms: NewTerm[]) {
+   async createTerms(@Arg("terms", () => [TermWithoutId]) terms: TermWithoutId[]) {
       return await createTerms(terms);
    }
 

@@ -1,22 +1,33 @@
-import { Field, InputType, ObjectType } from "type-graphql";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
 
-// TODO: this shouldn't also be an InputType, because term_id doesn't exist yet
-// at this point.
 @ObjectType()
-@InputType("TermInput")
-export class Term {
-   @Field()
-   term_id: number;
-
-   @Field()
-   user_id: number;
-
-   @Field()
-   list_id: number;
-
+@InputType("TermWithoutIdsInput")
+export class TermWithoutIds {
    @Field()
    to_language: string;
 
    @Field()
    from_language: string;
+
+   @Field()
+   from_value: string;
+
+   @Field()
+   to_value: string;
+}
+
+@ObjectType()
+@InputType("TermWithoutIdInput")
+export class TermWithoutId extends TermWithoutIds {
+   @Field(() => Int)
+   user_id: number;
+
+   @Field(() => Int)
+   list_id: number;
+}
+
+@ObjectType()
+export class Term extends TermWithoutId {
+   @Field(() => Int)
+   term_id: number;
 }
