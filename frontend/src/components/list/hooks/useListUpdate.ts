@@ -1,25 +1,24 @@
 import { listState } from "components/list/state/listAtoms";
 import { List } from "gql/codegen-output";
-import { useMutateDeleteList, useMutateUpdateList } from "gql/hooks/list-mutate";
 import { DeleteTermsVariables, useMutateDeleteTerms } from "gql/hooks/term-query";
 import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useEffect } from "react";
 import { useSetRecoilState } from "recoil";
+import { useMutateDeleteList } from "../../../gql/hooks/list/useDeleteList";
+import { useMutateUpdateList } from "../../../gql/hooks/list/useUpdateList";
 
 export function useListUpdate(list, setList) {
 	const setListAtom = useSetRecoilState(listState);
 	const { params, navigate } = useRouteProps();
 	const { mutate: mutateUpdateList } = useMutateUpdateList();
 	const { mutate: mutateDeleteTerms } = useMutateDeleteTerms();
-	const { mutate: mutateDeleteList, data: listDeleteResponse } = useMutateDeleteList(
-		params.id
-	);
+	const { mutate: mutateDeleteList, data: deletedList } = useMutateDeleteList();
 
 	useEffect(() => {
-		if (listDeleteResponse?.success) {
+		if (deletedList?.list.list_id) {
 			navigate(`/u/${params.username}/lists`, { replace: true });
 		}
-	}, [listDeleteResponse]);
+	}, [deletedList]);
 
 	const handleListTitleBlur = useCallback(
 		(e) => {
@@ -38,8 +37,7 @@ export function useListUpdate(list, setList) {
 						setList(updatedList);
 
 						mutateUpdateList({
-							listId: params.id,
-							action: { type: "name" },
+							list_id: +params.id,
 							payload: { name: innerText },
 						});
 					}
@@ -74,7 +72,7 @@ export function useListUpdate(list, setList) {
 	 * Trigger the API to DELETE the entire list
 	 */
 	function handleDelete() {
-		mutateDeleteList();
+		mutateDeleteList(+params.id);
 	}
 
 	return { handleTermDelete, handleListTitleBlur, handleDelete } as const;
