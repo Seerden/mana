@@ -15,11 +15,12 @@ export class User {
    created_at: number;
 }
 
+@ObjectType()
 @InputType("UserInput")
 export class UserInput implements Partial<User> {
-   @Field({ nullable: true })
-   username?: string;
+   @Field()
+   username: string;
 
-   @Field({ nullable: true })
-   password?: string;
+   @Field()
+   password: string;
 }
