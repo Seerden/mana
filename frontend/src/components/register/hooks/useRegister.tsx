@@ -1,8 +1,8 @@
-import { useCreateUser } from "gql/hooks/user-query";
+import { UserInput } from "gql/codegen-output";
+import { useCreateUser } from "gql/hooks/user/useCreateUser";
 import { useLogin } from "hooks/useLogin";
 import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useEffect, useState } from "react";
-import { UserInput } from "../../../gql/codegen-output";
 
 type NewUserFormValues = {
 	username: string;
@@ -23,12 +23,12 @@ function newUserValidationMessage(newUser: NewUserFormValues) {
 
 /** Functionality for ./Register.tsx */
 export function useRegister() {
-	const { data, error, mutate: mutateRegisterUser } = useCreateUser();
+	const { data, error, mutate } = useCreateUser();
 	const [message, setMessage] = useState<string>(null);
 	const { login } = useLogin();
 	const { navigate } = useRouteProps();
 
-	// TODO: this should be inside the onSuccess of useMutateRegisterUser()
+	// TODO: this should be inside the onSuccess of useCreateUser()
 	useEffect(() => {
 		if (!data) return;
 
@@ -65,7 +65,7 @@ export function useRegister() {
 		if (message) {
 			setMessage(message);
 		} else {
-			mutateRegisterUser(newUser);
+			mutate(newUser);
 		}
 	}, [newUser, setMessage]);
 
