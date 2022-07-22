@@ -14,7 +14,6 @@ export class TermResolver {
       return await createTerms(terms);
    }
 
-   // TODO: does this return Term[]? Or does deleting return another type of object?
    @Mutation(() => [Term])
    async deleteTerms(@Arg("termIds", () => [Int]) termIds: number[]) {
       return await deleteTerms(termIds);
