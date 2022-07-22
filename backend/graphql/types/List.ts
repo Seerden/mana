@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from "type-graphql";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
 import { Term, TermWithoutIds } from "./Term";
 
 @ObjectType()
@@ -55,15 +55,28 @@ export class ListAndTerms {
 }
 
 @ObjectType()
-@InputType("ListUpdateActionInput")
-export class ListUpdateAction {
-   @Field(() => String)
-   type: "name";
-}
-
-@ObjectType()
 @InputType("ListUpdatePayloadInput")
 export class ListUpdatePayload {
    @Field()
    name: string;
 }
+
+@InputType("ListLanguageUpdateInput")
+export class ListLanguageUpdateInput {
+   @Field(() => Int)
+   list_id: List["list_id"];
+
+   @Field(() => String, { nullable: true })
+   from_language?: string;
+
+   @Field(() => String, { nullable: true })
+   to_language?: string;
+}
+
+@ObjectType()
+export class ListWithTerms extends List {
+   @Field(() => [Term])
+   terms: Term[];
+}
+
+export type ListId = List["list_id"];
