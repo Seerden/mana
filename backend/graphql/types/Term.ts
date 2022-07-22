@@ -31,3 +31,15 @@ export class Term extends TermWithoutId {
    @Field(() => Int)
    term_id: number;
 }
+
+@InputType("TermUpdateInput")
+export class TermUpdateInput {
+   @Field(() => Int)
+   term_id: Term["term_id"];
+
+   @Field(() => String, { nullable: true })
+   from_value?: Term["from_value"];
+
+   @Field(() => String, { nullable: true })
+   to_value?: Term["to_value"];
+}
