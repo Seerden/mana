@@ -9,14 +9,20 @@ import {
    Root,
 } from "type-graphql";
 import { UserId } from "../helpers/insert-user-id";
-import { List, ListAndTerms, ListUpdatePayload, NewListWithTerms } from "../types/List";
+import {
+   List,
+   ListAndTerms,
+   ListLanguageUpdateInput,
+   ListUpdatePayload,
+   NewListWithTerms,
+} from "../types/List";
 import { Term } from "../types/Term";
 import { createList } from "./list/create-list";
 import { deleteListsById } from "./list/delete-list";
 import { queryListsById } from "./list/query-by-id";
 import { queryListsByUser } from "./list/query-by-user";
 import { resolveTerms } from "./list/resolve-terms";
-import { updateListName } from "./list/update-list";
+import { updateListLanguage, updateListName } from "./list/update-list";
 
 @Resolver(() => List)
 export class ListResolver {
@@ -70,5 +76,13 @@ export class ListResolver {
       @Arg("payload") payload: ListUpdatePayload
    ) {
       return await updateListName(list_id, payload);
+   }
+
+   @Mutation(() => List, { nullable: true })
+   async updateListLanguage(
+      @UserId() user_id: number,
+      @Arg("payload") payload: ListLanguageUpdateInput
+   ) {
+      return updateListLanguage(user_id, payload);
    }
 }
