@@ -24,3 +24,5 @@ export class UserInput implements Partial<User> {
    @Field()
    password: string;
 }
+
+export type UserId = User["user_id"];
