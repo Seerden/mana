@@ -36,6 +36,12 @@ export type ListAndTerms = {
   terms: Array<Maybe<Term>>;
 };
 
+export type ListLanguageUpdateInput = {
+  from_language?: Maybe<Scalars['String']>;
+  list_id: Scalars['Int'];
+  to_language?: Maybe<Scalars['String']>;
+};
+
 export type ListUpdatePayloadInput = {
   name: Scalars['String'];
 };
@@ -57,14 +63,15 @@ export type Mutation = {
   login: User;
   logout: Message;
   updateList?: Maybe<List>;
+  updateListLanguage?: Maybe<List>;
   updatePassword: User;
+  updateTermValues: Array<Term>;
   updateUsername: User;
 };
 
 
 export type MutationCreateListArgs = {
-  newList: NewListWithoutUserIdInput;
-  user_id: Scalars['Float'];
+  newList: NewListWithTermsInput;
 };
 
 
@@ -75,19 +82,17 @@ export type MutationCreateSessionArgs = {
 
 
 export type MutationCreateTermsArgs = {
-  terms: Array<NewTermInput>;
+  terms: Array<TermWithoutIdInput>;
 };
 
 
 export type MutationCreateUserArgs = {
-  password: Scalars['String'];
-  username: Scalars['String'];
+  userInput: UserInput;
 };
 
 
 export type MutationDeleteListArgs = {
   listIds: Array<Scalars['Int']>;
-  user_id: Scalars['Float'];
 };
 
 
@@ -109,9 +114,19 @@ export type MutationUpdateListArgs = {
 };
 
 
+export type MutationUpdateListLanguageArgs = {
+  payload: ListLanguageUpdateInput;
+};
+
+
 export type MutationUpdatePasswordArgs = {
   currentPassword: Scalars['String'];
   newPassword: Scalars['String'];
+};
+
+
+export type MutationUpdateTermValuesArgs = {
+  updateOptions: Array<TermUpdateInput>;
 };
 
 
@@ -119,27 +134,11 @@ export type MutationUpdateUsernameArgs = {
   username: Scalars['String'];
 };
 
-export type NewListWithoutUserIdInput = {
+export type NewListWithTermsInput = {
   from_language: Scalars['String'];
   name: Scalars['String'];
-  terms: Array<NewTermWithoutIds>;
+  terms: Array<TermWithoutIdsInput>;
   to_language: Scalars['String'];
-};
-
-export type NewTermInput = {
-  from_language: Scalars['String'];
-  from_value: Scalars['String'];
-  list_id: Scalars['Int'];
-  to_language: Scalars['String'];
-  to_value: Scalars['String'];
-  user_id: Scalars['Int'];
-};
-
-export type NewTermWithoutIds = {
-  from_language: Scalars['String'];
-  from_value: Scalars['String'];
-  to_language: Scalars['String'];
-  to_value: Scalars['String'];
 };
 
 export type Query = {
@@ -155,7 +154,7 @@ export type Query = {
 
 
 export type QueryListsByIdArgs = {
-  ids: Array<Scalars['Int']>;
+  list_ids: Array<Scalars['Int']>;
 };
 
 
@@ -224,10 +223,12 @@ export type ReviewSessionInput = {
 export type Term = {
   __typename?: 'Term';
   from_language: Scalars['String'];
-  list_id: Scalars['Float'];
-  term_id: Scalars['Float'];
+  from_value: Scalars['String'];
+  list_id: Scalars['Int'];
+  term_id: Scalars['Int'];
   to_language: Scalars['String'];
-  user_id: Scalars['Float'];
+  to_value: Scalars['String'];
+  user_id: Scalars['Int'];
 };
 
 export type TermIdWithEntries = {
@@ -236,11 +237,38 @@ export type TermIdWithEntries = {
   term_id: Scalars['Int'];
 };
 
+export type TermUpdateInput = {
+  from_value?: Maybe<Scalars['String']>;
+  term_id: Scalars['Int'];
+  to_value?: Maybe<Scalars['String']>;
+};
+
+export type TermWithoutIdInput = {
+  from_language: Scalars['String'];
+  from_value: Scalars['String'];
+  list_id: Scalars['Int'];
+  to_language: Scalars['String'];
+  to_value: Scalars['String'];
+  user_id: Scalars['Int'];
+};
+
+export type TermWithoutIdsInput = {
+  from_language: Scalars['String'];
+  from_value: Scalars['String'];
+  to_language: Scalars['String'];
+  to_value: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   created_at: Scalars['Int'];
   password: Scalars['String'];
   user_id: Scalars['Float'];
+  username: Scalars['String'];
+};
+
+export type UserInput = {
+  password: Scalars['String'];
   username: Scalars['String'];
 };
 
@@ -327,13 +355,12 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ListAndTerms: ResolverTypeWrapper<ListAndTerms>;
+  ListLanguageUpdateInput: ListLanguageUpdateInput;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   ListUpdatePayloadInput: ListUpdatePayloadInput;
   Message: ResolverTypeWrapper<Message>;
   Mutation: ResolverTypeWrapper<{}>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  NewListWithoutUserIdInput: NewListWithoutUserIdInput;
-  NewTermInput: NewTermInput;
-  NewTermWithoutIds: NewTermWithoutIds;
+  NewListWithTermsInput: NewListWithTermsInput;
   Query: ResolverTypeWrapper<{}>;
   ReviewSession: ResolverTypeWrapper<ReviewSession>;
   ReviewSessionEntry: ResolverTypeWrapper<ReviewSessionEntry>;
@@ -341,7 +368,11 @@ export type ResolversTypes = {
   ReviewSessionInput: ReviewSessionInput;
   Term: ResolverTypeWrapper<Term>;
   TermIdWithEntries: ResolverTypeWrapper<TermIdWithEntries>;
+  TermUpdateInput: TermUpdateInput;
+  TermWithoutIdInput: TermWithoutIdInput;
+  TermWithoutIdsInput: TermWithoutIdsInput;
   User: ResolverTypeWrapper<User>;
+  UserInput: UserInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -351,13 +382,12 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
   Boolean: Scalars['Boolean'];
   ListAndTerms: ListAndTerms;
+  ListLanguageUpdateInput: ListLanguageUpdateInput;
+  Int: Scalars['Int'];
   ListUpdatePayloadInput: ListUpdatePayloadInput;
   Message: Message;
   Mutation: {};
-  Int: Scalars['Int'];
-  NewListWithoutUserIdInput: NewListWithoutUserIdInput;
-  NewTermInput: NewTermInput;
-  NewTermWithoutIds: NewTermWithoutIds;
+  NewListWithTermsInput: NewListWithTermsInput;
   Query: {};
   ReviewSession: ReviewSession;
   ReviewSessionEntry: ReviewSessionEntry;
@@ -365,7 +395,11 @@ export type ResolversParentTypes = {
   ReviewSessionInput: ReviewSessionInput;
   Term: Term;
   TermIdWithEntries: TermIdWithEntries;
+  TermUpdateInput: TermUpdateInput;
+  TermWithoutIdInput: TermWithoutIdInput;
+  TermWithoutIdsInput: TermWithoutIdsInput;
   User: User;
+  UserInput: UserInput;
 };
 
 export type ListResolvers<ContextType = any, ParentType extends ResolversParentTypes['List'] = ResolversParentTypes['List']> = {
@@ -392,22 +426,24 @@ export type MessageResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createList?: Resolver<ResolversTypes['ListAndTerms'], ParentType, ContextType, RequireFields<MutationCreateListArgs, 'newList' | 'user_id'>>;
+  createList?: Resolver<ResolversTypes['ListAndTerms'], ParentType, ContextType, RequireFields<MutationCreateListArgs, 'newList'>>;
   createSession?: Resolver<ResolversTypes['ReviewSession'], ParentType, ContextType, RequireFields<MutationCreateSessionArgs, 'entries' | 'session'>>;
   createTerms?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<MutationCreateTermsArgs, 'terms'>>;
-  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
-  deleteList?: Resolver<ResolversTypes['ListAndTerms'], ParentType, ContextType, RequireFields<MutationDeleteListArgs, 'listIds' | 'user_id'>>;
+  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'userInput'>>;
+  deleteList?: Resolver<ResolversTypes['ListAndTerms'], ParentType, ContextType, RequireFields<MutationDeleteListArgs, 'listIds'>>;
   deleteTerms?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<MutationDeleteTermsArgs, 'termIds'>>;
   deleteUser?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   login?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
   logout?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
   updateList?: Resolver<Maybe<ResolversTypes['List']>, ParentType, ContextType, RequireFields<MutationUpdateListArgs, 'list_id' | 'payload' | 'user_id'>>;
+  updateListLanguage?: Resolver<Maybe<ResolversTypes['List']>, ParentType, ContextType, RequireFields<MutationUpdateListLanguageArgs, 'payload'>>;
   updatePassword?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdatePasswordArgs, 'currentPassword' | 'newPassword'>>;
+  updateTermValues?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<MutationUpdateTermValuesArgs, 'updateOptions'>>;
   updateUsername?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUsernameArgs, 'username'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  listsById?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByIdArgs, 'ids'>>;
+  listsById?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByIdArgs, 'list_ids'>>;
   listsByUser?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByUserArgs, 'user_id'>>;
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   sessionEntriesByTermIds?: Resolver<Array<ResolversTypes['TermIdWithEntries']>, ParentType, ContextType, RequireFields<QuerySessionEntriesByTermIdsArgs, 'termIds'>>;
@@ -442,10 +478,12 @@ export type ReviewSessionEntryResolvers<ContextType = any, ParentType extends Re
 
 export type TermResolvers<ContextType = any, ParentType extends ResolversParentTypes['Term'] = ResolversParentTypes['Term']> = {
   from_language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  list_id?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  term_id?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  from_value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  list_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  term_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   to_language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  user_id?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  to_value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

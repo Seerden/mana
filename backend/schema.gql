@@ -19,6 +19,12 @@ type ListAndTerms {
   terms: [Term]!
 }
 
+input ListLanguageUpdateInput {
+  from_language: String
+  list_id: Int!
+  to_language: String
+}
+
 input ListUpdatePayloadInput {
   name: String!
 }
@@ -28,45 +34,31 @@ type Message {
 }
 
 type Mutation {
-  createList(newList: NewListWithoutUserIdInput!, user_id: Float!): ListAndTerms!
+  createList(newList: NewListWithTermsInput!): ListAndTerms!
   createSession(entries: [ReviewSessionEntryInput!]!, session: ReviewSessionInput!): ReviewSession!
-  createTerms(terms: [NewTermInput!]!): [Term!]!
-  createUser(password: String!, username: String!): User!
-  deleteList(listIds: [Int!]!, user_id: Float!): ListAndTerms!
+  createTerms(terms: [TermWithoutIdInput!]!): [Term!]!
+  createUser(userInput: UserInput!): User!
+  deleteList(listIds: [Int!]!): ListAndTerms!
   deleteTerms(termIds: [Int!]!): [Term!]!
   deleteUser: User!
   login(password: String!, username: String!): User!
   logout: Message!
   updateList(list_id: Float!, payload: ListUpdatePayloadInput!, user_id: Float!): List
+  updateListLanguage(payload: ListLanguageUpdateInput!): List
   updatePassword(currentPassword: String!, newPassword: String!): User!
+  updateTermValues(updateOptions: [TermUpdateInput!]!): [Term!]!
   updateUsername(username: String!): User!
 }
 
-input NewListWithoutUserIdInput {
+input NewListWithTermsInput {
   from_language: String!
   name: String!
-  terms: [NewTermWithoutIds!]!
+  terms: [TermWithoutIdsInput!]!
   to_language: String!
-}
-
-input NewTermInput {
-  from_language: String!
-  from_value: String!
-  list_id: Int!
-  to_language: String!
-  to_value: String!
-  user_id: Int!
-}
-
-input NewTermWithoutIds {
-  from_language: String!
-  from_value: String!
-  to_language: String!
-  to_value: String!
 }
 
 type Query {
-  listsById(ids: [Int!]!): [List!]!
+  listsById(list_ids: [Int!]!): [List!]!
   listsByUser(user_id: Float!): [List!]!
   me: User!
   sessionEntriesByTermIds(termIds: [Int!]!): [TermIdWithEntries!]!
@@ -117,10 +109,12 @@ input ReviewSessionInput {
 
 type Term {
   from_language: String!
-  list_id: Float!
-  term_id: Float!
+  from_value: String!
+  list_id: Int!
+  term_id: Int!
   to_language: String!
-  user_id: Float!
+  to_value: String!
+  user_id: Int!
 }
 
 type TermIdWithEntries {
@@ -128,9 +122,36 @@ type TermIdWithEntries {
   term_id: Int!
 }
 
+input TermUpdateInput {
+  from_value: String
+  term_id: Int!
+  to_value: String
+}
+
+input TermWithoutIdInput {
+  from_language: String!
+  from_value: String!
+  list_id: Int!
+  to_language: String!
+  to_value: String!
+  user_id: Int!
+}
+
+input TermWithoutIdsInput {
+  from_language: String!
+  from_value: String!
+  to_language: String!
+  to_value: String!
+}
+
 type User {
   created_at: Int!
   password: String!
   user_id: Float!
+  username: String!
+}
+
+input UserInput {
+  password: String!
   username: String!
 }
