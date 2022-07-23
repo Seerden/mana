@@ -43,3 +43,18 @@ export class TermUpdateInput {
    @Field(() => String, { nullable: true })
    to_value?: Term["to_value"];
 }
+
+@ObjectType()
+export class TermSaturation {
+   @Field(() => Int)
+   term_id: number;
+
+   @Field(() => Int)
+   forwards: number;
+
+   @Field(() => Int)
+   backwards: number;
+
+   @Field()
+   last_updated: number; // timestamp
+}
