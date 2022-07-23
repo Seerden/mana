@@ -25,13 +25,17 @@ export function useQueryListsById(
 	list_ids: Array<List["list_id"]>,
 	options?: { onSuccess: (data: List[]) => void }
 ) {
-	return useQuery<List[]>("listsById", async () => queryListsByIdRequest(list_ids), {
-		enabled: false,
-		retry: false,
-		onSuccess(lists) {
-			if (options?.onSuccess && lists?.length) {
-				options.onSuccess(lists);
-			}
-		},
-	});
+	return useQuery<List[]>(
+		["listsById", list_ids],
+		async () => queryListsByIdRequest(list_ids),
+		{
+			enabled: false,
+			retry: false,
+			onSuccess(lists) {
+				if (options?.onSuccess && lists?.length) {
+					options.onSuccess(lists);
+				}
+			},
+		}
+	);
 }
