@@ -1,4 +1,4 @@
-import { Field, InputType, Int, ObjectType } from "type-graphql";
+import { Field, Float, InputType, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class User {
@@ -11,7 +11,7 @@ export class User {
    @Field()
    user_id: number;
 
-   @Field(() => Int)
+   @Field(() => Float)
    created_at: number;
 }
 
