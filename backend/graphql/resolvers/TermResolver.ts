@@ -1,14 +1,15 @@
-import { Arg, Int, Mutation, Resolver } from "type-graphql";
-import { Term, TermUpdateInput, TermWithoutId } from "../types/Term";
+import { Arg, FieldResolver, Int, Mutation, Resolver, Root } from "type-graphql";
+import { Term, TermSaturation, TermUpdateInput, TermWithoutId } from "../types/Term";
 import { createTerms } from "./term/create-terms";
 import { deleteTerms } from "./term/delete-terms";
+import { resolveTermSaturation } from "./term/resolve-saturation";
 import { updateTermValues } from "./term/update-terms";
 
 // We currently don't query terms by themselves,
 //  only as part of their parent list's queries,
 //   but this might change in the future
 
-@Resolver()
+@Resolver(() => Term)
 export class TermResolver {
    @Mutation(() => [Term])
    async createTerms(@Arg("terms", () => [TermWithoutId]) terms: TermWithoutId[]) {
@@ -27,6 +28,11 @@ export class TermResolver {
       return updateTermValues({ updateOptions });
    }
 
-   // TODO: implement mutations for updating terms. Review-related mutations
-   // will be in ReviewSessionResolver from now on.
+   @FieldResolver(() => TermSaturation, { nullable: true })
+   async saturation(
+      @Root() term: Term,
+      @Arg("populate", { nullable: true }) populate: boolean
+   ) {
+      return resolveTermSaturation({ term, populate });
+   }
 }
