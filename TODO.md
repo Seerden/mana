@@ -26,6 +26,26 @@
 -  [ ] refactor frontend implementation of the above queries and mutations and
        adapt usage to match new signatures.
 
+-  [ ] implement term FieldResolver functions
+
+   -  [x] TermResolver.saturation FieldResolver()
+      -  [x] resolveTermSaturation()
+   -  [x] TermResolver.history FieldResolver()
+      -  [x] resolveTermHistory()
+
+-  [ ] reconcile user on mount
+
+## Authentication:
+
+-  [ ] create a useReconcileUser() function called from as high up in the
+       component tree possible, that synchronizes client-side and server-side
+       user session on mount.
+-  [ ] refactor client-side authentication to use entire user object instead of
+       just username.
+
+   -  [ ] to preserve: the only case where we actually use username currently is in the user
+          page route (/u/:username)
+
 -  [ ] trace data flow to final end-consumer hooks and components. Start
        refactoring from there
 
