@@ -20,9 +20,9 @@ export class UserResolver {
       return queryAllUsers();
    }
 
-   @Query(() => User)
-   async me(@UserId() user_id: number) {
-      return queryMe(user_id);
+   @Query(() => User, { nullable: true })
+   async me(@UserId() user_id: number, @Ctx() ctx: ExpressContext) {
+      return queryMe(user_id, ctx);
    }
 
    @Mutation(() => User)
