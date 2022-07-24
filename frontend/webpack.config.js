@@ -13,8 +13,12 @@ module.exports = {
 		filename: "bundle.js",
 		publicPath: "",
 	},
+	watchOptions: {
+		poll: 1000,
+	},
 	devServer: {
 		port: 3000,
+		host: "0.0.0.0",
 		historyApiFallback: true,
 		proxy: {
 			"/api": {
