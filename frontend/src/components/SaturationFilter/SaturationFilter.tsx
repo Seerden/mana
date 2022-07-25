@@ -1,6 +1,6 @@
 import { FilterInterface } from "components/list/types/list.types";
 import { colorBySaturation } from "helpers/list.api";
-import React, { memo } from "react";
+import React from "react";
 import { useSaturationFilter } from "./hooks/useSaturationFilter";
 import * as S from "./SaturationFilter.style";
 
@@ -9,7 +9,7 @@ interface SaturationFilterProps {
 	setFilter: React.Dispatch<React.SetStateAction<FilterInterface>>;
 }
 
-const SaturationFilter = memo(({ setFilter }: SaturationFilterProps) => {
+function SaturationFilter({ setFilter }: SaturationFilterProps) {
 	const {
 		filterDisplayState,
 		setFilterDisplayState,
@@ -70,6 +70,6 @@ const SaturationFilter = memo(({ setFilter }: SaturationFilterProps) => {
 			</S.SaturationFilter>
 		</>
 	);
-});
+}
 
 export default SaturationFilter;
