@@ -9,7 +9,7 @@ import TermModal from "./TermModal";
 interface TermPropsInterface {
 	idx: number;
 	term: Term;
-	key: Key;
+	key?: Key;
 	handleTermDelete(idx: number): void;
 }
 
@@ -29,11 +29,11 @@ const ListTerm = memo(
 		} = useListTerm({ term, handleTermDelete, idx, setTerm });
 
 		return (
-			<div className="ListTerm">
+			<>
 				<S.Term title="Click to expand" onClick={() => setOpen(true)}>
 					<S.TermIndex>{idx + 1}</S.TermIndex>
-					<span>{term.from}</span>
-					<span>{term.to}</span>
+					<span>{term.from_value}</span>
+					<span>{term.to_value}</span>
 
 					<S.TermSaturation>
 						<SaturationIcon
@@ -75,7 +75,7 @@ const ListTerm = memo(
 						}}
 					/>
 				)}
-			</div>
+			</>
 		);
 	}
 );
