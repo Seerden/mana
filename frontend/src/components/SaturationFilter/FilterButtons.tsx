@@ -1,5 +1,5 @@
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
-import { operators } from "./helpers/operators";
+import { Operator } from "./helpers/operators";
 import * as S from "./SaturationFilter.style";
 
 type InitialButtonProps = {
@@ -16,8 +16,6 @@ export function Initial({ onStartClick, onResetClick, color }: InitialButtonProp
 		</S.FilterLabelButton>
 	);
 }
-
-export type Operator = `${operators}`;
 
 type OperatorButtonProps = {
 	operator: Operator;

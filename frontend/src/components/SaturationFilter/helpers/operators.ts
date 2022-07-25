@@ -5,3 +5,5 @@ export enum operators {
 	LT = "<",
 	EQ = "=",
 }
+
+export type Operator = `${operators}`;

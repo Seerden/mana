@@ -1,6 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 
-import { Operator } from "../FilterButtons";
+import { Operator } from "../helpers/operators";
 
 // TODO: very reusable type, consider globally defining this.
 type Direction = "forwards" | "backwards";

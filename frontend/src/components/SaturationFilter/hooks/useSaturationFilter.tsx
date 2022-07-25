@@ -4,10 +4,9 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import { termFilterState } from "../../../state/filter";
 import OperatorButton, {
 	DirectionButton,
-	Operator,
 	SaturationThresholdButton,
 } from "../FilterButtons";
-import { operators } from "../helpers/operators";
+import { Operator, operators } from "../helpers/operators";
 import { FilterStep, FilterUpdate } from "../types/filter-types";
 
 export function useSaturationFilter() {
