@@ -98,6 +98,11 @@ export const DirectionButton = styled.button`
 	align-items: center;
 `;
 
+export const OperatorButton = styled(DirectionButton)`
+	min-width: 1.5rem;
+	justify-content: center;
+`;
+
 export const Filter = styled.div<{ borderColor?: string }>`
 	position: relative;
 	border-radius: 5px;
