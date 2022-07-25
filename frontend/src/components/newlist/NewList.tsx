@@ -24,7 +24,7 @@ function NewList() {
 							<S.LanguageInput
 								onBlur={handleBlur}
 								type="text"
-								name="from"
+								name="from_language"
 								placeholder="Klingon"
 							/>
 						</S.Language>
@@ -35,7 +35,7 @@ function NewList() {
 							<S.LanguageInput
 								onBlur={handleBlur}
 								type="text"
-								name="to"
+								name="to_language"
 								placeholder="Elvish"
 							/>
 						</S.Language>
@@ -53,8 +53,10 @@ function NewList() {
 							<S.TermsHeader>
 								{newList && (
 									<>
-										<S.TermsHeaderSide>{newList.from}</S.TermsHeaderSide>
-										<S.TermsHeaderSide>{newList.to}</S.TermsHeaderSide>
+										<S.TermsHeaderSide>
+											{newList.from_language}
+										</S.TermsHeaderSide>
+										<S.TermsHeaderSide>{newList.to_language}</S.TermsHeaderSide>
 									</>
 								)}
 							</S.TermsHeader>
