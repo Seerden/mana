@@ -1,11 +1,13 @@
-import request, { gql } from "graphql-request";
+import { gql } from "graphql-request";
 import { useMutation } from "react-query";
-import { uri } from "../../../helpers/graphql-uri";
+import requestClient from "../../../components/newlist/helpers/request-client";
 import { List, NewListWithTermsInput } from "../../codegen-output";
 import { listPropsFragment } from "../../fragments/list-fragments";
+import { termPropsFragment } from "../../fragments/term-fragments";
 
 const createListMutation = gql`
 	${listPropsFragment}
+	${termPropsFragment}
 	mutation ($newList: NewListWithTermsInput!) {
 		createList(newList: $newList) {
 			list {
@@ -18,8 +20,12 @@ const createListMutation = gql`
 	}
 `;
 
-const createListRequest = async (newList: NewListWithTermsInput) =>
-	request(uri, createListMutation, { newList });
+const createListRequest = async (newList: NewListWithTermsInput) => {
+	const { createList } = await requestClient.request(createListMutation, {
+		newList,
+	});
+	return createList;
+};
 
 export function useMutateCreateList({ onSuccess }: { onSuccess?: (args?: any) => any }) {
 	return useMutation<List, any, NewListWithTermsInput>(
