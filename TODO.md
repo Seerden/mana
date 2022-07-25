@@ -67,3 +67,17 @@
 
          -  useListPrepareReview
          -  useListUpdate
+
+`modernize/refactor/list`
+
+## List name update
+
+-  [ ] get list name update functionality to work again in `List.tsx`
+
+## Filter
+
+-  [x] rework and refactor list filter functionality in `List.tsx`.
+   -  [ ] there is more functionality I want to add later down the line, but for
+          now I'm happy. For later reference:
+      -  [ ] clearer filter state descriptions
+      -  [ ] accessibility.
