@@ -59,8 +59,8 @@ input NewListWithTermsInput {
 
 type Query {
   listsById(list_ids: [Int!]!): [List!]!
-  listsByUser(user_id: Float!): [List!]!
-  me: User!
+  listsByUser: [List!]!
+  me: User
   sessionEntriesByTermIds(termIds: [Int!]!): [TermIdWithEntries!]!
   sessionsById(sessionIds: [Int!]!, user_id: Float!): [ReviewSession]!
   sessionsByUser(user_id: Float!): [ReviewSession]!
@@ -110,7 +110,9 @@ input ReviewSessionInput {
 type Term {
   from_language: String!
   from_value: String!
+  history(populate: Boolean): [ReviewSessionEntry!]
   list_id: Int!
+  saturation(populate: Boolean): TermSaturation
   term_id: Int!
   to_language: String!
   to_value: String!
@@ -119,6 +121,13 @@ type Term {
 
 type TermIdWithEntries {
   entries: [ReviewSessionEntry!]!
+  term_id: Int!
+}
+
+type TermSaturation {
+  backwards: Int!
+  forwards: Int!
+  last_updated: Float!
   term_id: Int!
 }
 
@@ -145,7 +154,7 @@ input TermWithoutIdsInput {
 }
 
 type User {
-  created_at: Int!
+  created_at: Float!
   password: String!
   user_id: Float!
   username: String!
