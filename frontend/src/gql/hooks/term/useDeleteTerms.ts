@@ -1,7 +1,7 @@
 import { Term } from "gql/codegen-output";
-import request, { gql } from "graphql-request";
-import { uri } from "helpers/graphql-uri";
+import { gql } from "graphql-request";
 import { useMutation } from "react-query";
+import requestClient from "../../../components/newlist/helpers/request-client";
 
 const deleteTerms = gql`
 	mutation ($termIds: [Int!]!) {
@@ -12,7 +12,7 @@ const deleteTerms = gql`
 `;
 
 const deleteTermsRequest = async (term_ids: Term["term_id"][]) =>
-	request(uri, deleteTerms, { term_ids });
+	(await requestClient.request(deleteTerms, { term_ids })).deleteTerms;
 
 // TODO: implement onSuccess callback that presumably removes these terms
 // from the list they belong to in (global) state.

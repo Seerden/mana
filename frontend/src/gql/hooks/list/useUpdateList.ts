@@ -1,6 +1,6 @@
-import request, { gql } from "graphql-request";
+import { gql } from "graphql-request";
 import { useMutation } from "react-query";
-import { uri } from "../../../helpers/graphql-uri";
+import requestClient from "../../../components/newlist/helpers/request-client";
 import { List, ListUpdatePayloadInput } from "../../codegen-output";
 
 const updateListMutation = gql`
@@ -17,7 +17,7 @@ type UpdateListVariables = {
 };
 
 const updateListRequest = async (variables: UpdateListVariables): Promise<List> =>
-	request(uri, updateListMutation, variables);
+	(await requestClient.request(updateListMutation, variables)).updateList;
 
 export function useMutateUpdateList() {
 	return useMutation<List, any, UpdateListVariables>(

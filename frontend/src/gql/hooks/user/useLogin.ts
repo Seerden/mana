@@ -1,6 +1,6 @@
-import request, { gql } from "graphql-request";
+import { gql } from "graphql-request";
 import { useMutation } from "react-query";
-import { uri } from "../../../helpers/graphql-uri";
+import requestClient from "../../../components/newlist/helpers/request-client";
 import { User, UserInput } from "../../codegen-output";
 
 export const loginMutation = gql`
@@ -14,7 +14,7 @@ export const loginMutation = gql`
 `;
 
 const loginRequest = async (userInput: UserInput) =>
-	request(uri, loginMutation, userInput);
+	(await requestClient.request(loginMutation, userInput)).login;
 
 type UseMutateOptions = {
 	onSuccess?: (...args: any) => any;
