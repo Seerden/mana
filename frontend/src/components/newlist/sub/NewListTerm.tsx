@@ -18,7 +18,7 @@ const NewListTerm = memo(
 
 		function handleTermBlur(e: React.FocusEvent<HTMLInputElement>, idx: number) {
 			setFocussedInput((cur) => ({ ...cur, index: -1 }));
-			const { name, value } = e.target; // name is "from" | "to"
+			const { name, value } = e.target; // name is "from_value" | "to_value"
 
 			if (!value) return;
 
@@ -26,8 +26,12 @@ const NewListTerm = memo(
 				const termsCopy = cur.terms.slice();
 
 				if (!termsCopy[idx]) {
-					termsCopy[idx] = { to: "", from: "" };
-					console.log("1");
+					termsCopy[idx] = {
+						to_value: "",
+						from_value: "",
+						from_language: "",
+						to_language: "",
+					};
 				}
 
 				if (value !== termsCopy[idx][name]) {
@@ -55,8 +59,8 @@ const NewListTerm = memo(
 				<S.TermIndex isFocussed={isFocussed}>{index + 1}</S.TermIndex>
 
 				<S.TermInputs>
-					<S.TermInput {...inputProps} autoFocus={autoFocus} name="from" />
-					<S.TermInput {...inputProps} name="to" />
+					<S.TermInput {...inputProps} autoFocus={autoFocus} name="from_value" />
+					<S.TermInput {...inputProps} name="to_value" />
 				</S.TermInputs>
 			</S.Term>
 		);
