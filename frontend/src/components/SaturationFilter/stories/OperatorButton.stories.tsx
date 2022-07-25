@@ -1,7 +1,7 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { RecoilRoot } from "recoil";
-import OperatorButton, { Operator } from "../FilterButtons";
-import { operators } from "../helpers/operators";
+import OperatorButton from "../FilterButtons";
+import { Operator, operators } from "../helpers/operators";
 import * as S from "../SaturationFilter.style";
 
 export default {
