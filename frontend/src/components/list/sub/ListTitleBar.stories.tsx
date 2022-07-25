@@ -8,15 +8,14 @@ export default {
 } as ComponentMeta<typeof ListTitleBar>;
 
 const mockList: List = {
-	_id: "1",
-	created: "2022-02-10",
-	from: "Pg",
-	lastReviewed: "2022-03-04",
+	list_id: 1,
+	created_at: 1,
+	from_language: "Pg",
+	last_reviewed: 1,
 	name: "My list",
-	owner: "me",
-	setMembership: [],
+	user_id: 1,
 	terms: [],
-	to: "lang",
+	to_language: "lang",
 };
 
 export const Basic: ComponentStory<typeof ListTitleBar> = (props) => (

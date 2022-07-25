@@ -1,7 +1,7 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { QueryClientProvider } from "react-query";
+import { QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from "recoil";
-import { List, Term } from "../../../gql/codegen-output";
+import { Term } from "../../../gql/codegen-output";
 import useQueryClient from "../../../hooks/useQueryClient";
 import ListTerm from "./ListTerm";
 
@@ -11,14 +11,19 @@ export default {
 } as ComponentMeta<typeof ListTerm>;
 
 const mockTerm: Term = {
-	_id: "a",
-	from: "A",
-	history: [],
-	listMembership: [{ _id: "1" }] as List[],
-	owner: "me",
-	saturation: { forwards: 1, backwards: 2 },
-	to: "B",
-	languages: { from: "A", to: "B" },
+	user_id: 1,
+	list_id: 1,
+	term_id: 1,
+	from_language: "A",
+	to_language: "B",
+	from_value: "1",
+	to_value: "2",
+	saturation: {
+		forwards: 1,
+		backwards: 2,
+		last_updated: new Date().valueOf(),
+		term_id: 1,
+	},
 };
 
 export const Basic: ComponentStory<typeof ListTerm> = (props) => {
