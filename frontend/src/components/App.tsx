@@ -1,6 +1,6 @@
-import ReviewPage from "components/review/ReviewPage";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import User from "components/user/User";
-import { QueryClientProvider } from "react-query";
+import { QueryClientProvider } from '@tanstack/react-query';
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
@@ -23,6 +23,7 @@ const App = () => {
 	return (
 		<>
 			<QueryClientProvider client={client}>
+				<ReactQueryDevtools initialIsOpen={false} />
 				<RecoilRoot>
 					<S.App>
 						<ThemeProvider theme={theme}>
@@ -76,14 +77,6 @@ const App = () => {
 														element={
 															<Private>
 																<List />
-															</Private>
-														}
-													/>
-													<Route
-														path="review"
-														element={
-															<Private>
-																<ReviewPage />
 															</Private>
 														}
 													/>
