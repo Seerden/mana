@@ -6,6 +6,6 @@ export const termFilterState = atom<TermFilter>({
 	default: {
 		direction: "any",
 		operator: "≥",
-		value: 0,
+		value: null,
 	},
 });
