@@ -18,77 +18,75 @@ function Lists() {
 		sortBy,
 	} = useLists();
 
-	return (
-		<>
-			{lists?.length > 0 && (
-				<div className="PageWrapper">
-					<div className="PageHeader">
-						Lists by
-						{/* TODO: does .Link have any styles? */}
-						<Link className="Link" to={userString}>
-							{userString}
-						</Link>
-					</div>
+	if (!lists) return <></>;
 
-					<S.UserPageLink to={`${userString}/lists/new`}>
-						Create a new list
-					</S.UserPageLink>
-
-					<S.Header>
-						<S.Filter>
-							<S.FilterLabel htmlFor="filter">Filter lists by name</S.FilterLabel>
-
-							<S.FilterInput
-								autoFocus
-								onChange={handleFilterChange}
-								placeholder="e.g. 'vocabulary'"
-								type="text"
-								name="filter"
-								value={filter}
-							/>
-						</S.Filter>
-
-						<S.Sort>
-							<S.SortLabel htmlFor="sort">Sort lists by</S.SortLabel>
-
-							<S.SortSelect
-								onChange={handleSelectChange}
-								value={sortBy}
-								name="sort"
-							>
-								<option value="name">name</option>
-								<option value="created">creation date</option>
-								<option value="lastReviewed">last review date</option>
-							</S.SortSelect>
-						</S.Sort>
-					</S.Header>
-
-					<section>
-						<S.Heading>All lists</S.Heading>
-
-						<S.Lists>{filteredListsElement}</S.Lists>
-					</section>
+	if (lists?.length === 0) {
+		return (
+			<div className="PageWrapper">
+				<div className="PageHeader">
+					Lists by{" "}
+					<Link className="Link" to={userString}>
+						/u/{params.username}
+					</Link>
 				</div>
-			)}
 
-			{lists?.length === 0 && (
-				<div className="PageWrapper">
-					<div className="PageHeader">
-						Lists by{" "}
-						<Link className="Link" to={userString}>
-							/u/{params.username}
-						</Link>
-					</div>
+				<div>It appears you don't have any lists.</div>
 
-					<div>It appears you don't have any lists.</div>
+				<S.UserPageLink to={`${userString}/lists/new`}>
+					Create a new list
+				</S.UserPageLink>
+			</div>
+		);
+	}
 
-					<S.UserPageLink to={`${userString}/lists/new`}>
-						Create a new list
-					</S.UserPageLink>
+	if (lists?.length > 0) {
+		return (
+			<div className="PageWrapper">
+				<div className="PageHeader">
+					Lists by
+					{/* TODO: does .Link have any styles? */}
+					<Link className="Link" to={userString}>
+						{userString}
+					</Link>
 				</div>
-			)}
-		</>
-	);
+
+				<S.UserPageLink to={`${userString}/lists/new`}>
+					Create a new list
+				</S.UserPageLink>
+
+				<S.Header>
+					<S.Filter>
+						<S.FilterLabel htmlFor="filter">Filter lists by name</S.FilterLabel>
+
+						<S.FilterInput
+							type="text"
+							autoFocus
+							placeholder="e.g. 'vocabulary'"
+							name="filter"
+							value={filter}
+							onChange={handleFilterChange}
+						/>
+					</S.Filter>
+
+					<S.Sort>
+						<S.SortLabel htmlFor="sort">Sort lists by</S.SortLabel>
+
+						<S.SortSelect onChange={handleSelectChange} value={sortBy} name="sort">
+							<option value="name">name</option>
+							<option value="created">creation date</option>
+							<option value="last_reviewed">last review date</option>
+						</S.SortSelect>
+					</S.Sort>
+				</S.Header>
+
+				<section>
+					<S.Heading>All lists</S.Heading>
+
+					<S.Lists>{filteredListsElement}</S.Lists>
+				</section>
+			</div>
+		);
+	}
 }
 
 export default Lists;
