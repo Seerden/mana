@@ -1,6 +1,6 @@
-import request, { gql } from "graphql-request";
+import { gql } from "graphql-request";
 import { useQuery } from "react-query";
-import { uri } from "../../../helpers/graphql-uri";
+import requestClient from "../../../components/newlist/helpers/request-client";
 import { List } from "../../codegen-output";
 import { listPropsFragment } from "../../fragments/list-fragments";
 import { termPropsFragment } from "../../fragments/term-fragments";
@@ -18,8 +18,8 @@ const listsByIdQuery = gql`
 	}
 `;
 
-const queryListsByIdRequest = (list_ids: Array<List["list_id"]>) =>
-	request(uri, listsByIdQuery, { list_ids });
+const queryListsByIdRequest = async (list_ids: Array<List["list_id"]>) =>
+	(await requestClient.request(listsByIdQuery, { list_ids })).listsById;
 
 export function useQueryListsById(
 	list_ids: Array<List["list_id"]>,
