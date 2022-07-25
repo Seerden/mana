@@ -1,9 +1,8 @@
 import { listState, selectingTermsToReviewState } from "components/list/state/listAtoms";
-import { termsToReviewState } from "components/review/state/review-atoms";
-import { useMutateEditTerm } from "gql/hooks/term-query";
 import { MouseEvent, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Term } from "../../../gql/codegen-output";
+import useUpdateTermValues from "../../../gql/hooks/term/useUpdateTerm";
 
 type Props = {
 	term: Term;
@@ -17,16 +16,22 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }: Props) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [listAtom, setListAtom] = useRecoilState(listState);
 	const selectingTerms = useRecoilValue(selectingTermsToReviewState);
-	const [termsToReview, setTermsToReview] = useRecoilState(termsToReviewState);
-	const { mutate: mutateEditTerm } = useMutateEditTerm();
-	let indexOfTermInTermsToReview = termsToReview.findIndex((t) => t._id === term._id);
+
+	// TODO: temporarily set this to [] instead of termsToReviewState
+	const [termsToReview, setTermsToReview] = useState([]);
+	const { mutate: mutateUpdateTerms } = useUpdateTermValues();
+	let indexOfTermInTermsToReview = termsToReview.findIndex(
+		(t) => t.term_id === term.term_id
+	);
 	// TODO: can combine selected and indexOf..., AND the following useEffect,
 	// into one useMemo() callback computation, I think.
 	const [selected, setSelected] = useState(indexOfTermInTermsToReview > -1);
 
 	useEffect(() => {
 		// might be superfluous
-		indexOfTermInTermsToReview = termsToReview.findIndex((t) => t._id === term._id);
+		indexOfTermInTermsToReview = termsToReview.findIndex(
+			(t) => t.term_id === term.term_id
+		);
 		setSelected(indexOfTermInTermsToReview > -1);
 	}, [termsToReview]);
 
@@ -73,26 +78,26 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }: Props) {
 	 * Fire a mutation to edit the term's 'from'/'to' value in the database, and
 	 * update this value in listAtom.
 	 */
-	function handleTermEdit(
-		e: React.FocusEvent<HTMLInputElement & { side: "from" | "to" }>
-	) {
+	function handleTermEdit(e: React.FocusEvent<HTMLInputElement>) {
 		const { value } = e.target;
-		const { side } = e.currentTarget.dataset;
+		const { field } = e.currentTarget.dataset;
 
-		if (value && term[side] !== value) {
-			const newTerm = { ...term, [side]: value };
+		if (value && term[field] !== value) {
+			const newTerm = { ...term, [field]: value };
 			setTerm(newTerm);
 
-			const mutationVariables = {
-				_id: term._id,
-				[side]: value,
-			};
-
-			mutateEditTerm(mutationVariables);
+			mutateUpdateTerms({
+				updateOptions: [
+					{
+						term_id: term.term_id,
+						[field]: value,
+					},
+				],
+			});
 
 			// Optimistically assume successful mutation, and edit the term in the list in-place.
 			const newListContent = [...listAtom.terms];
-			newListContent[idx] = { ...newListContent[idx], [side]: value };
+			newListContent[idx] = { ...newListContent[idx], [field]: value };
 			const newList = { ...listAtom, terms: [...newListContent] };
 			setListAtom(newList);
 		}
