@@ -15,7 +15,7 @@ import { updateTermValues } from "./term/update-terms";
 export class TermResolver {
    @Mutation(() => [Term])
    async createTerms(@Arg("terms", () => [TermWithoutId]) terms: TermWithoutId[]) {
-      return await createTerms(terms);
+      return await createTerms({ terms });
    }
 
    @Mutation(() => [Term])
