@@ -2,9 +2,8 @@ import { Term } from "gql/codegen-output";
 
 type Direction = "forwards" | "backwards";
 
-/**
- * Takes a list, returns all its sessions with the specified direction, and its length.
- * @param {Object} listObj
+/** Takes a list, returns all its sessions with the specified direction, and its
+ * length.
  */
 export const extractSessionsByDirection = (list, direction: Direction) => {
 	// @todo: sessions currently don't exist as list.sessions entries.
@@ -19,7 +18,7 @@ export const extractSessionsByDirection = (list, direction: Direction) => {
  * @param {Object} term
  */
 export const termSessionsByDirection = (term: Term, direction: Direction) => {
-	return term.history!.filter((session) => session?.direction === direction);
+	return term.history?.filter((session) => session?.direction === direction);
 };
 
 export const colorMap = {
