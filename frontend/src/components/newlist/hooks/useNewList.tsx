@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { newListState } from "components/newlist/state/newList.atom";
 import type { FocusIndex } from "components/newlist/types/newList.types";
 import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
+import { NewListWithTermsInput } from "../../../gql/codegen-output";
 import { useMutateCreateList } from "../../../gql/hooks/list/useCreateList";
 import { filterFalsy } from "../helpers/filterFalsyValues";
 import NewListTerm from "../sub/NewListTerm";
@@ -59,7 +59,6 @@ export function useNewList() {
             on mount, we can populate .owner and .terms  */
 		setNewList((cur) => ({
 			...cur,
-			owner: params.username,
 			terms: new Array(numTerms),
 		}));
 	}, [params, numTerms]);
@@ -124,7 +123,9 @@ export function useNewList() {
 	const handleSubmit = useCallback(
 		(e: React.MouseEvent<HTMLInputElement>) => {
 			e.preventDefault();
-			const fields = ["name", "from", "to", "owner"];
+
+			const fields = ["name", "from_language", "to_language"];
+
 			if (
 				fields.every(
 					(entry) =>
@@ -133,11 +134,18 @@ export function useNewList() {
 				)
 			) {
 				const nonNullTerms = filterFalsy(newList.terms || []);
+
 				if (nonNullTerms.length > 0) {
-					mutateCreateList({
+					const list: NewListWithTermsInput = {
 						...newList,
-						terms: nonNullTerms,
-					});
+						terms: nonNullTerms.map((t) => ({
+							...t,
+							from_language: newList.from_language,
+							to_language: newList.to_language,
+						})),
+					};
+
+					mutateCreateList(list);
 				}
 			}
 		},
