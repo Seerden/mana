@@ -1,95 +1,25 @@
-import { listState } from "components/list/state/listAtoms";
-import { TruncatedTerm } from "components/list/types/list.types";
-import { numTermsToReviewState } from "components/review/state/review-selectors";
-import { List } from "gql/codegen-output";
-import { useQueryListsById } from "gql/hooks/list-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useQueryListsById } from "gql/hooks/list/useQueryLists";
 import useRouteProps from "hooks/useRouteProps";
-import { useCallback, useEffect, useState } from "react";
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
-import ListTerm from "../sub/ListTerm";
-import { useListFilter } from "./useListFilter";
-import { useListPrepareReview } from "./useListPrepareReview";
-import { useListUpdate } from "./useListUpdate";
+import { useEffect } from "react";
 
 function useList() {
-	const [list, setList] = useState<List | null>(null);
 	const { params } = useRouteProps();
-	const { data: lists, refetch: fetchLists } = useQueryListsById([params.id]);
-	const { filter, setFilter, termsToDisplay, truncatedTerms, setTruncatedTerms } =
-		useListFilter();
-	const {
-		selectingTerms,
-		setSelectingTerms,
-		suggestedTermsForReview,
-		updateTermsToReview,
-	} = useListPrepareReview({ list, filter, truncatedTerms });
-	const { handleListTitleBlur, handleTermDelete, handleDelete } = useListUpdate(
-		list,
-		setList
-	);
-	const numTermsToReview = useRecoilValue(numTermsToReviewState);
-	const setListAtom = useSetRecoilState(listState);
-	const resetListAtom = useResetRecoilState(listState);
+	const client = useQueryClient();
+
+	const { data: lists, refetch: fetchList } = useQueryListsById([+params.id], {
+		onSuccess: ([list]) => {
+			// TODO: check if this doesn't get called immediately.
+			client.setQueryData(["listsById", +params.id], () => [list]);
+		},
+	});
 
 	useEffect(() => {
-		fetchLists();
-
-		return () => {
-			setList(null);
-			resetListAtom();
-		};
+		fetchList();
 	}, []);
 
-	useEffect(() => {
-		// Set list and list context when list is returned from API.
-		// TODO: do this in the fetch onSuccess
-		if (lists) {
-			setList(lists[0]);
-			setListAtom(lists[0]);
-		}
-	}, [lists]);
-
-	useEffect(() => {
-		if (list) {
-			extractTermsFromListAsTruncatedTerms(list);
-		}
-	}, [list]);
-
-	const extractTermsFromListAsTruncatedTerms = useCallback(
-		(list: List) => {
-			if (list?.terms.length > 0) {
-				const newTruncatedTerms = list.terms.map((term, idx) => {
-					const termProps = {
-						handleTermDelete,
-						key: `term-${term._id}`,
-						idx: idx,
-						term,
-					};
-					return {
-						term,
-						saturation: term.saturation,
-						element: <ListTerm {...termProps} />,
-					};
-				});
-				setTruncatedTerms(newTruncatedTerms as TruncatedTerm[]);
-			}
-		},
-		[setTruncatedTerms, list]
-	);
-
 	return {
-		list,
-		truncatedTerms,
-		termsToDisplay,
-		suggestedTermsForReview,
-		selectingTerms,
-		numTermsToReview,
-		filter,
-		handleListTitleBlur,
-		handleDelete,
-		updateTermsToReview,
-		setSelectingTerms,
-		setFilter,
+		list: lists?.[0],
 	} as const;
 }
 
