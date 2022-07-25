@@ -20,3 +20,10 @@ export type FilterUpdate =
 	  }
 	| { field: "direction"; value: TermFilter["direction"] }
 	| { field: "operator"; value: Operator };
+
+export enum FilterStep {
+	INITIAL = 0,
+	DIRECTION = 1,
+	OPERATOR = 2,
+	LEVEL = 3,
+}

@@ -1,7 +1,8 @@
 import { colorBySaturation } from "helpers/list.api";
 import { Initial } from "./FilterButtons";
-import { FilterStep, useSaturationFilter } from "./hooks/useSaturationFilter";
+import { useSaturationFilter } from "./hooks/useSaturationFilter";
 import * as S from "./SaturationFilter.style";
+import { FilterStep } from "./types/filter-types";
 
 function SaturationFilter() {
 	const {
