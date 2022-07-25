@@ -1,29 +1,27 @@
 import { filterTermsBySaturation } from "components/list/helpers/filterTermsBySaturation";
-import { FilterInterface, TruncatedTerm } from "components/list/types/list.types";
-import { numTermsToReviewState } from "components/review/state/review-selectors";
-import { useQueryListsById } from "gql/hooks/list-query";
+import { FilterInterface } from "components/list/types/list.types";
+import { useQueryListsById } from "gql/hooks/list/useQueryLists";
 import useRouteProps from "hooks/useRouteProps";
 import { useMemo, useState } from "react";
-import { useRecoilValue } from "recoil";
+
+const defaultFilter: FilterInterface = {
+	saturation: { level: undefined, direction: "any" },
+};
 
 export function useListFilter() {
-	const numTermsToReview = useRecoilValue(numTermsToReviewState);
 	const { params } = useRouteProps();
-	const { data: lists } = useQueryListsById([params.id]);
-	const [filter, setFilter] = useState<FilterInterface>({
-		saturation: { level: undefined, direction: "any" },
-	});
-	const [truncatedTerms, setTruncatedTerms] = useState<Array<TruncatedTerm>>([]);
+	const { data: lists } = useQueryListsById([+params.id]);
+	const [filter, setFilter] = useState<FilterInterface>(defaultFilter);
 
-	const termsToDisplay = useMemo(() => {
-		return filterTermsBySaturation(filter, truncatedTerms)?.map((term) => term.element);
-	}, [truncatedTerms, filter, numTermsToReview, lists]);
+	const visibleTermIds = useMemo(() => {
+		if (!lists[0]?.terms) return [];
+
+		return filterTermsBySaturation(filter, lists[0].terms);
+	}, [lists[0].terms, filter]);
 
 	return {
 		filter,
 		setFilter,
-		termsToDisplay,
-		truncatedTerms,
-		setTruncatedTerms,
+		visibleTermIds,
 	} as const;
 }
