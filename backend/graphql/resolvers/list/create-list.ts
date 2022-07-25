@@ -1,5 +1,6 @@
 import { sql } from "../../../db/init";
 import { List, NewListWithTerms } from "../../types/List";
+import { TermWithoutId } from "../../types/Term";
 import { createTerms } from "../term/create-terms";
 
 export async function createList(user_id: number, newList: NewListWithTerms) {
@@ -23,9 +24,13 @@ export async function createList(user_id: number, newList: NewListWithTerms) {
          sql`abort`;
       }
 
-      const insertedTerms = await createTerms(
-         terms.map((t) => ({ ...t, list_id: insertedList.list_id, user_id }))
-      );
+      const termsToInsert: TermWithoutId[] = terms.map((t) => ({
+         ...t,
+         list_id: insertedList.list_id,
+         user_id,
+      }));
+
+      const insertedTerms = await createTerms({ sql, terms: termsToInsert });
 
       return { list: insertedList, terms: insertedTerms };
    });
