@@ -15,7 +15,12 @@ import { initializeRedisConnection, redisSession } from "./lib/redis-client";
 
 async function startServer() {
    const app = express();
-   app.use(cors());
+   app.use(
+      cors({
+         origin: true, // Could also use client domain (in dev: http://localhost:3000)
+         credentials: true,
+      })
+   );
    app.use(
       express.urlencoded({
          limit: "5mb",
@@ -48,7 +53,10 @@ async function startServer() {
       context: ({ req, res }) => ({ req, res }),
    });
 
-   server.applyMiddleware({ app });
+   server.applyMiddleware({
+      app,
+      cors: false,
+   });
 
    const port = process.env.PORT || 5000;
 
