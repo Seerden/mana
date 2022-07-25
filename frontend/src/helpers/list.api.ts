@@ -29,13 +29,6 @@ export const colorMap = {
 	4: "blueviolet",
 };
 
-export const colorBySaturation = (
-	saturation: { forwards: number; backwards: number } | number | undefined | string,
-	direction: Direction | undefined = undefined
-) => {
-	if (typeof saturation === "number" || typeof saturation === "string") {
-		return colorMap[Number(saturation)];
-	} else if (direction && saturation) {
-		return colorMap[saturation[direction]];
-	}
+export const colorBySaturation = (level: number) => {
+	return level >= 0 ? colorMap[level] : "#333";
 };

@@ -19,19 +19,15 @@ function makeTooltip(direction, saturation) {
 
 interface SaturationIconProps {
 	direction?: "forwards" | "backwards";
-	classes?: string;
-	saturation?: { forwards: number; backwards: number };
+	saturation?: number;
 	style?: React.CSSProperties;
 }
 
 // TODO: since we're using Styled components now, we don't want `classes` (and
 // possibly the same for `style`, since we can simply extend this thing with styled()
 
-function SaturationIcon({ direction, classes, saturation, style }: SaturationIconProps) {
-	const color =
-		typeof saturation === "number"
-			? colorBySaturation(saturation)
-			: colorBySaturation(saturation, direction);
+function SaturationIcon({ direction, saturation, style }: SaturationIconProps) {
+	const color = colorBySaturation(saturation);
 
 	const saturationIconStyle = {
 		width: "20px",
@@ -48,7 +44,6 @@ function SaturationIcon({ direction, classes, saturation, style }: SaturationIco
 		<span
 			title={direction ? makeTooltip(direction, saturation) : ""}
 			style={saturationIconStyle}
-			className={classes}
 		/>
 	);
 }
