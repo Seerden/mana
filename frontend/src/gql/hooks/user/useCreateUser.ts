@@ -1,6 +1,6 @@
-import request, { gql } from "graphql-request";
+import { gql } from "graphql-request";
 import { useMutation } from "react-query";
-import { uri } from "../../../helpers/graphql-uri";
+import requestClient from "../../../components/newlist/helpers/request-client";
 import { User, UserInput } from "../../codegen-output";
 
 export const createUserMutation = gql`
@@ -12,8 +12,15 @@ export const createUserMutation = gql`
 	}
 `;
 
-const createUserRequest = (userInput: UserInput) =>
-	request(uri, createUserMutation, userInput);
+const createUserRequest = async ({ username, password }: UserInput) => {
+	const vars = {
+		password,
+		username,
+	};
+
+	return (await requestClient.request(createUserMutation, { userInput: vars }))
+		.createUser;
+};
 
 export function useCreateUser() {
 	return useMutation<User, any, UserInput>("registerUser", async (userInput) =>
