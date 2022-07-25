@@ -2,13 +2,17 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 import { v4 as uuidv4 } from "uuid";
-import type { TermHistory } from "../../../gql/codegen-output";
+import { ReviewSessionEntry } from "../../../gql/codegen-output";
 import { colors } from "../../../helpers/theme/colors";
 import { timeSince } from "../../../helpers/time";
 import PassfailIcon from "../../_shared/PassfailIcon";
 import * as S from "./TermReviewHistory.style";
 
-export default function TermReviewHistory({ history }: { history: TermHistory[] }) {
+export default function TermReviewHistory({
+	history,
+}: {
+	history: ReviewSessionEntry[];
+}) {
 	const [showAll, setShowAll] = useState(false);
 
 	const historyElements = [...history]
@@ -40,7 +44,7 @@ export default function TermReviewHistory({ history }: { history: TermHistory[] 
 }
 
 type HistoryElementProps = {
-	historyEntry: TermHistory;
+	historyEntry: ReviewSessionEntry;
 };
 
 function HistoryElement({ historyEntry }: HistoryElementProps) {
@@ -64,16 +68,19 @@ function HistoryElement({ historyEntry }: HistoryElementProps) {
 					)}
 				</S.Direction>
 
-				<span title={dayjs(historyEntry.date).format("MMMM DD, YYYY (HH:mm)")}>
-					{timeSince(historyEntry.date)}
+				<span title={dayjs(historyEntry.created_at).format("MMMM DD, YYYY (HH:mm)")}>
+					{timeSince(historyEntry.created_at)}
 				</span>
 			</S.HistorySessionBlock>
 
 			<S.HistorySessionBlock>
 				<div key={uuidv4()}>
-					{historyEntry.content.map((passfail, index) => (
-						<PassfailIcon key={`passfailicon-${index}`} {...{ passfail, index }} />
-					))}
+					<PassfailIcon
+						key={`passfailicon-${historyEntry.review_entry_id}`}
+						passfail={historyEntry.passfail}
+						// TODO: temporarily force index=0 during refactor effort
+						index={0}
+					/>
 				</div>
 			</S.HistorySessionBlock>
 		</S.HistorySession>
