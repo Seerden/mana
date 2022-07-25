@@ -27,7 +27,7 @@ import { updateListLanguage, updateListName } from "./list/update-list";
 @Resolver(() => List)
 export class ListResolver {
    @Query(() => [List])
-   async listsByUser(@Arg("user_id") user_id: number) {
+   async listsByUser(@UserId() user_id: number) {
       return await queryListsByUser(user_id);
    }
 
