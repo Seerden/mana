@@ -11,17 +11,15 @@ export default function useReconcileSession() {
 		onSuccess: (me) => {
 			if (!me) {
 				if (isLoggedIn) {
-					// If query doesn't return a user, force logout server-side to clean up.
+					// If query doesn't return a user, force logout server-side to
+					// clean up, and then log out client-side..
 					mutateLogout(null, {
-						// On successful server-side logout, log-out client-side.
 						onSuccess: () => {
 							logout();
 						},
 					});
 				}
-			}
-
-			if (!isLoggedIn || me.username !== currentUser) {
+			} else if (!isLoggedIn || me.username !== currentUser) {
 				return login(me.username);
 			}
 		},
