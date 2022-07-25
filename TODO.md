@@ -37,7 +37,7 @@
 
 ## Authentication:
 
--  [ ] create a useReconcileUser() function called from as high up in the
+-  [x] create a useReconcileUser() function called from as high up in the
        component tree possible, that synchronizes client-side and server-side
        user session on mount.
 -  [ ] refactor client-side authentication to use entire user object instead of
@@ -45,6 +45,8 @@
 
    -  [ ] to preserve: the only case where we actually use username currently is in the user
           page route (/u/:username)
+
+## List
 
 -  [ ] trace data flow to final end-consumer hooks and components. Start
        refactoring from there
