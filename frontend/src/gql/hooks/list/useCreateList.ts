@@ -1,5 +1,5 @@
+import { useMutation } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { useMutation } from "react-query";
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { List, NewListWithTermsInput } from "../../codegen-output";
 import { listPropsFragment } from "../../fragments/list-fragments";
@@ -29,7 +29,7 @@ const createListRequest = async (newList: NewListWithTermsInput) => {
 
 export function useMutateCreateList({ onSuccess }: { onSuccess?: (args?: any) => any }) {
 	return useMutation<List, any, NewListWithTermsInput>(
-		"createList",
+		["createList"],
 		async (newList) => createListRequest(newList),
 		{
 			retry: false,

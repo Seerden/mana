@@ -1,5 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { useQuery } from "react-query";
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { User } from "../../codegen-output";
 import { userPropsFragment } from "../../fragments/user-fragments";
@@ -20,7 +20,7 @@ type Options = {
 };
 
 export function useQueryMe(options: Options) {
-	return useQuery<User>("me", async () => queryMeRequest(), {
+	return useQuery<User>(["me"], async () => queryMeRequest(), {
 		retry: false,
 		enabled: false,
 		onSuccess: (user) => options.onSuccess?.(user),

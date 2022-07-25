@@ -1,5 +1,5 @@
+import { useMutation } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { useMutation } from "react-query";
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { Message } from "../../codegen-output";
 
@@ -14,7 +14,7 @@ const logoutMutation = gql`
 const logoutRequest = async () => (await requestClient.request(logoutMutation)).logout;
 
 export default function useLogout() {
-	return useMutation<Message>("logout", async () => logoutRequest(), {
+	return useMutation<Message>(["logout"], async () => logoutRequest(), {
 		retry: false,
 	});
 }

@@ -1,6 +1,6 @@
+import { useMutation } from "@tanstack/react-query";
 import { Term, TermWithoutIdInput } from "gql/codegen-output";
 import { gql } from "graphql-request";
-import { useMutation } from "react-query";
 import requestClient from "../../../components/newlist/helpers/request-client";
 
 const createTermsMutation = gql`
@@ -17,7 +17,7 @@ const createTermsRequest = async (terms: TermWithoutIdInput[]) =>
 /** useMutation hook to create new Term rows for an existing list. */
 export function useCreateTerms() {
 	return useMutation<Term[], any, TermWithoutIdInput[]>(
-		"createTerms",
+		["createTerms"],
 		(terms) => createTermsRequest(terms),
 		{ retry: false }
 	);

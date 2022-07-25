@@ -1,5 +1,5 @@
+import { useMutation } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { useMutation } from "react-query";
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { User, UserInput } from "../../codegen-output";
 
@@ -23,7 +23,7 @@ type UseMutateOptions = {
 
 export function useMutateLogin(options?: UseMutateOptions) {
 	return useMutation<User, any, UserInput>(
-		"login",
+		["login"],
 		async (userInput) => {
 			if ([userInput.username, userInput.password].some((x) => !x.length)) {
 				// TODO: probably want to return an 'error'/message here.

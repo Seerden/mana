@@ -1,5 +1,5 @@
+import { useMutation } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { useMutation } from "react-query";
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { List, ListUpdatePayloadInput } from "../../codegen-output";
 
@@ -21,7 +21,7 @@ const updateListRequest = async (variables: UpdateListVariables): Promise<List> 
 
 export function useMutateUpdateList() {
 	return useMutation<List, any, UpdateListVariables>(
-		"updateList",
+		["updateList"],
 		async (variables) => updateListRequest(variables),
 		{ retry: false }
 	);

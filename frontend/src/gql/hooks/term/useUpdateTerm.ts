@@ -1,5 +1,5 @@
+import { useMutation } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { useMutation } from "react-query";
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { Mutation, MutationUpdateTermValuesArgs } from "../../codegen-output";
 
@@ -16,7 +16,7 @@ const updateTermValuesRequest = async ({ updateOptions }: MutationUpdateTermValu
 
 export default function useUpdateTermValues() {
 	return useMutation<Mutation["updateTermValues"], any, MutationUpdateTermValuesArgs>(
-		"updateTermValues",
+		["updateTermValues"],
 		async ({ updateOptions }) => updateTermValuesRequest({ updateOptions }),
 		{ retry: false }
 	);

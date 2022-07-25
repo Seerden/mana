@@ -1,5 +1,5 @@
+import { useMutation } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { useMutation } from "react-query";
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { User, UserInput } from "../../codegen-output";
 
@@ -23,7 +23,7 @@ const createUserRequest = async ({ username, password }: UserInput) => {
 };
 
 export function useCreateUser() {
-	return useMutation<User, any, UserInput>("registerUser", async (userInput) =>
+	return useMutation<User, any, UserInput>(["registerUser"], async (userInput) =>
 		createUserRequest(userInput)
 	);
 }

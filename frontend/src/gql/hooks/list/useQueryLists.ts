@@ -1,5 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { useQuery } from "react-query";
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { List } from "../../codegen-output";
 import { listPropsFragment } from "../../fragments/list-fragments";
@@ -26,7 +26,7 @@ export function useQueryListsById(
 	options?: { onSuccess: (data: List[]) => void }
 ) {
 	return useQuery<List[]>(
-		["listsById", list_ids],
+		["listsById", list_ids.length > 1 ? list_ids : list_ids[0]],
 		async () => queryListsByIdRequest(list_ids),
 		{
 			enabled: false,

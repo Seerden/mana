@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import { useQuery } from "react-query";
+import { useQuery } from '@tanstack/react-query';
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { List } from "../../codegen-output";
 import { listPropsFragment } from "../../fragments/list-fragments";
