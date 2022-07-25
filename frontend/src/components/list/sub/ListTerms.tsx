@@ -10,11 +10,12 @@ type ListTermsProps = {
 };
 
 const ListTerms = ({ list, handleTermDelete }: ListTermsProps) => {
-	const { filter, setFilter, visibleTermIds } = useListFilter();
+	const { termFilter, visibleTermIds } = useListFilter();
 
-	const showingString = filter.saturation.level
-		? "Showing filtered list"
-		: "Showing all terms";
+	const showingString =
+		typeof termFilter.value === "number"
+			? "Showing filtered list"
+			: "Showing all terms";
 
 	return (
 		<S.ListTerms>
@@ -22,7 +23,7 @@ const ListTerms = ({ list, handleTermDelete }: ListTermsProps) => {
 
 			<S.FilterInfo>
 				{/* {!!list.last_reviewed && <SaturationFilter {...{ filter, setFilter }} />} */}
-				{<SaturationFilter {...{ filter, setFilter }} />}
+				{<SaturationFilter />}
 				<S.FilterString>{showingString}</S.FilterString>
 			</S.FilterInfo>
 
