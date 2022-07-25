@@ -24,7 +24,7 @@ const ListsItem = memo(({ list }: ListsItemProps) => {
 		<S.List style={{ borderColor }}>
 			<S.ListName>
 				{/* TODO: Should have a StyledDefaultLink component somewhere because these Link className="Link" are everywhere */}
-				<Link className="Link" to={`/u/${params.username}/list/${list._id}`}>
+				<Link className="Link" to={`/u/${params.username}/list/${list.list_id}`}>
 					{list.name}
 				</Link>
 			</S.ListName>
@@ -32,10 +32,10 @@ const ListsItem = memo(({ list }: ListsItemProps) => {
 			<S.TermCount>{termCount} terms</S.TermCount>
 
 			<S.ListLanguages>
-				{list.from} <BiArrowToRight /> {list.to}{" "}
+				{list.from_language} <BiArrowToRight /> {list.to_language}{" "}
 			</S.ListLanguages>
 
-			{list.sessions?.length > 0 && (
+			{!!list.last_reviewed && (
 				<S.SinceReview>
 					<em>last reviewed {timeAgo}</em>
 				</S.SinceReview>
