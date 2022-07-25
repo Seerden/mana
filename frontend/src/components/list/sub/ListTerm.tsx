@@ -38,19 +38,13 @@ const ListTerm = memo(
 					<S.TermSaturation>
 						<SaturationIcon
 							direction="forwards"
-							saturation={{
-								forwards: term.saturation?.forwards,
-								backwards: term.saturation?.backwards,
-							}}
+							saturation={term.saturation?.forwards}
 						/>
 					</S.TermSaturation>
 					<S.TermSaturation>
 						<SaturationIcon
 							direction="backwards"
-							saturation={{
-								backwards: term.saturation?.backwards,
-								forwards: term.saturation?.forwards,
-							}}
+							saturation={term.saturation?.backwards}
 						/>
 					</S.TermSaturation>
 
