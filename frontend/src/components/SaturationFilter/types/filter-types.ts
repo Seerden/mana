@@ -1,5 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { Operator } from "../OperatorButton";
+
+import { Operator } from "../FilterButtons";
 
 // TODO: very reusable type, consider globally defining this.
 type Direction = "forwards" | "backwards";
@@ -9,7 +10,7 @@ type FilterDirection = Direction | "any";
 export type TermFilter = {
 	direction: FilterDirection;
 	operator: Operator;
-	value: number;
+	value?: number;
 };
 
 export type FilterUpdate =
