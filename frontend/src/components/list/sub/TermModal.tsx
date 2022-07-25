@@ -53,7 +53,7 @@ const TermModal = ({
 						<S.Input
 							tabIndex={1}
 							name="front"
-							data-side="from"
+							data-field="from_language"
 							defaultValue={term.from}
 							onBlur={handleTermEdit}
 							{...sharedInputProps}
@@ -70,8 +70,7 @@ const TermModal = ({
 					<S.TermSide>
 						<S.Input
 							name="back"
-							//@ts-ignore
-							data-side="to"
+							data-field="to_language"
 							tabIndex={2}
 							defaultValue={term.to}
 							onBlur={handleTermEdit}
