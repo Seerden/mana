@@ -1,20 +1,28 @@
-import request, { gql } from "graphql-request";
+import { gql } from "graphql-request";
 import { useQuery } from "react-query";
-import { uri } from "../../../helpers/graphql-uri";
+import requestClient from "../../../components/newlist/helpers/request-client";
 import { User } from "../../codegen-output";
+import { userPropsFragment } from "../../fragments/user-fragments";
 
 const queryMeMutation = gql`
+	${userPropsFragment}
 	query {
 		me {
-			user_id
-			username
-			created_at
+			...UserProps
 		}
 	}
 `;
 
-const queryMeRequest = async () => request(uri, queryMeMutation) as Promise<User>;
+const queryMeRequest = async () => (await requestClient.request(queryMeMutation)).me;
 
-export function useQueryMe() {
-	return useQuery("me", async () => queryMeRequest, { retry: false, enabled: false });
+type Options = {
+	onSuccess?: (user: User) => void;
+};
+
+export function useQueryMe(options: Options) {
+	return useQuery<User>("me", async () => queryMeRequest(), {
+		retry: false,
+		enabled: false,
+		onSuccess: (user) => options.onSuccess?.(user),
+	});
 }
