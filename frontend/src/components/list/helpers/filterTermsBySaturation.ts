@@ -1,29 +1,43 @@
-import { FilterInterface } from "components/list/types/list.types";
-import { Term } from "../../../gql/codegen-output";
+import { Term } from "gql/codegen-output";
+import { TermFilter } from "../../SaturationFilter/types/filter-types";
 
 export function filterTermsBySaturation(
-	filter: FilterInterface,
+	filter: TermFilter,
 	terms: Term[]
 ): Term["term_id"][] {
-	return terms.map((t) => t.term_id);
-
 	if (!terms?.length) return [];
-	if (!filter.saturation?.level) return terms.map((t) => t.term_id);
+	if (typeof filter.value !== "number") return terms.map((t) => t.term_id);
 
 	return terms
 		.filter((term) => {
-			if (!term.saturation) return true;
+			const { forwards = null, backwards = null } = term.saturation ?? {};
 
-			if (filter.saturation.direction !== "any") {
-				return (
-					+term.saturation?.[filter.saturation.direction] ===
-					Number(filter?.saturation.level)
-				);
-			}
-
-			const { forwards, backwards } = term.saturation;
-			// TODO: temporarily cast to number pending refactor
-			return [forwards, backwards].includes(filter?.saturation.level as number);
+			return Object.entries({ forwards, backwards }).every(([direction, value]) =>
+				isVisible(filter, value, direction as Direction)
+			);
 		})
 		.map((t) => t.term_id);
+}
+
+function isVisible(
+	{ value, direction, operator }: TermFilter,
+	saturation: number,
+	saturationDirection: "forwards" | "backwards"
+) {
+	if (direction !== "any" && direction !== saturationDirection) {
+		return false;
+	}
+
+	switch (operator) {
+		case "<":
+			return saturation < value || !saturation;
+		case "≤":
+			return saturation <= value || !saturation;
+		case "=":
+			return saturation == value;
+		case ">":
+			return saturation > value;
+		case "≥":
+			return saturation >= value;
+	}
 }
