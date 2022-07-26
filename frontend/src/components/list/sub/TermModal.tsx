@@ -1,11 +1,18 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import { useEffect } from "react";
+import { Term } from "../../../gql/codegen-output";
 import useTermModal from "../hooks/useTermModal";
 import * as S from "./TermModal.style";
 import TermReviewHistory from "./TermReviewHistory";
 
-function TermModal({ setOpen, term, handleTermEdit }) {
+type TermModalProps = {
+	setOpen: (val: boolean) => void;
+	term: Term;
+	handleTermEdit: (e: any) => void; // TODO: type this
+};
+
+function TermModal({ setOpen, term, handleTermEdit }: TermModalProps) {
 	const { handleDeleteTerm, confirmingDelete, setConfirmingDelete } = useTermModal(
 		term.term_id
 	);
@@ -51,8 +58,8 @@ function TermModal({ setOpen, term, handleTermEdit }) {
 						<S.Input
 							tabIndex={1}
 							name="front"
-							data-field="from_language"
-							defaultValue={term.from}
+							data-field="from_value"
+							defaultValue={term.from_value}
 							onBlur={handleTermEdit}
 							{...sharedInputProps}
 						/>
@@ -68,9 +75,9 @@ function TermModal({ setOpen, term, handleTermEdit }) {
 					<S.TermSide>
 						<S.Input
 							name="back"
-							data-field="to_language"
+							data-field="to_value"
 							tabIndex={2}
-							defaultValue={term.to}
+							defaultValue={term.to_value}
 							onBlur={handleTermEdit}
 							{...sharedInputProps}
 						/>
