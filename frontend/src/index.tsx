@@ -1,13 +1,8 @@
-require('file-loader?name=[name].[ext]!./index.html');
+require("file-loader?name=[name].[ext]!./index.html");
 
-import App from 'components/App';
-import { StrictMode } from 'react';
-import ReactDOM from 'react-dom';
-import './index.scss'
+import App from "components/App";
+import { createRoot } from "react-dom/client";
+import "./index.scss";
 
-ReactDOM.render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-  document.getElementById('root')
-);
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);

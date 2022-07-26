@@ -1,6 +1,6 @@
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import User from "components/user/User";
-import { QueryClientProvider } from '@tanstack/react-query';
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
