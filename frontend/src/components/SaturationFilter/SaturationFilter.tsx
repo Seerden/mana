@@ -9,6 +9,7 @@ function SaturationFilter() {
 		filterStep,
 		termFilter,
 		cycleFilterStep,
+		resetFilterStep,
 		resetTermFilter,
 		thresholdButtons,
 		operatorButtons,
@@ -26,7 +27,11 @@ function SaturationFilter() {
 						resetTermFilter();
 						cycleFilterStep();
 					}}
-					onResetClick={() => resetTermFilter()}
+					onResetClick={(e) => {
+						e.stopPropagation();
+						resetFilterStep();
+						resetTermFilter();
+					}}
 				/>
 			)}
 

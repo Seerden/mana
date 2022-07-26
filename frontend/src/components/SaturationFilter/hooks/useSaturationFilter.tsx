@@ -25,6 +25,10 @@ export function useSaturationFilter() {
 		setFilterStep((cur) => (cur + 1) % 4 ?? FilterStep.INITIAL);
 	}
 
+	function resetFilterStep() {
+		setFilterStep(FilterStep.INITIAL);
+	}
+
 	/** Update filter state and move on to next filter step. */
 	function handleFilterButtonClick({ field, value }: FilterUpdate) {
 		setTermFilter((cur) => ({ ...cur, [field]: value }));
@@ -66,6 +70,7 @@ export function useSaturationFilter() {
 		cycleFilterStep,
 		termFilter,
 		resetTermFilter,
+		resetFilterStep,
 		operatorButtons,
 		thresholdButtons,
 		directionButtons,
