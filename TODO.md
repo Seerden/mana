@@ -72,7 +72,7 @@
 
 ## List name update
 
--  [ ] get list name update functionality to work again in `List.tsx`
+-  [x] get list name update functionality to work again in `List.tsx`
 
 ## Filter
 
