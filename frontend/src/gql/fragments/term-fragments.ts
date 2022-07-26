@@ -6,6 +6,7 @@ import { gql } from "graphql-request";
  */
 export const termPropsFragment = gql`
 	fragment TermProps on Term {
+		list_id
 		term_id
 		from_language
 		to_language
