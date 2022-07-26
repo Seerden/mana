@@ -1,6 +1,6 @@
-import { listState, selectingTermsToReviewState } from "components/list/state/listAtoms";
-import { MouseEvent, useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { listState } from "components/list/state/listAtoms";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import { Term } from "../../../gql/codegen-output";
 import useUpdateTermValues from "../../../gql/hooks/term/useUpdateTerm";
 
@@ -15,51 +15,13 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }: Props) {
 	const [confirmingDelete, setConfirmingDelete] = useState(false);
 	const [open, setOpen] = useState<boolean>(false);
 	const [listAtom, setListAtom] = useRecoilState(listState);
-	const selectingTerms = useRecoilValue(selectingTermsToReviewState);
-
-	// TODO: temporarily set this to [] instead of termsToReviewState
-	const [termsToReview, setTermsToReview] = useState([]);
 	const { mutate: mutateUpdateTerms } = useUpdateTermValues();
-	let indexOfTermInTermsToReview = termsToReview.findIndex(
-		(t) => t.term_id === term.term_id
-	);
-	// TODO: can combine selected and indexOf..., AND the following useEffect,
-	// into one useMemo() callback computation, I think.
-	const [selected, setSelected] = useState(indexOfTermInTermsToReview > -1);
-
-	useEffect(() => {
-		// might be superfluous
-		indexOfTermInTermsToReview = termsToReview.findIndex(
-			(t) => t.term_id === term.term_id
-		);
-		setSelected(indexOfTermInTermsToReview > -1);
-	}, [termsToReview]);
 
 	useEffect(() => {
 		return () => {
 			setConfirmingDelete(false);
 		};
 	}, []);
-
-	/**
-	 * If term is in termsToReview, remove it. If it's not in yet, append it.
-	 * Also update `selected` state.
-	 */
-	function handleSelect(e: MouseEvent<HTMLDivElement>) {
-		e.stopPropagation();
-
-		if (indexOfTermInTermsToReview > -1) {
-			setTermsToReview((current) => {
-				const newVal = [...current];
-				newVal.splice(indexOfTermInTermsToReview, 1);
-				return newVal;
-			});
-			setSelected(false);
-		} else {
-			setTermsToReview((current) => [...current, term]);
-			setSelected(true);
-		}
-	}
 
 	/**
 	 * Remove the term from the list. Intended usage is to trigger this on
@@ -105,9 +67,6 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }: Props) {
 	return {
 		open,
 		setOpen,
-		selectingTerms,
-		selected,
-		handleSelect,
 		handleConfirmClick,
 		handleTermEdit,
 		confirmingDelete,
