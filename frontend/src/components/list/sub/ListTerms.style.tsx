@@ -20,7 +20,8 @@ export const FilterInfo = styled.div`
 `;
 
 export const FilterString = styled.span`
-	width: 10rem;
+	user-select: none;
+	width: max-content;
 	text-align: center;
 	background-color: ${(p) => p.theme.colors.dark.grey.darker};
 	color: ${(p) => p.theme.colors.light.tint};
