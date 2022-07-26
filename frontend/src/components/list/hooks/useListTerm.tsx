@@ -1,5 +1,5 @@
 import { listState } from "components/list/state/listAtoms";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { Term } from "../../../gql/codegen-output";
 import useUpdateTermValues from "../../../gql/hooks/term/useUpdateTerm";
@@ -11,16 +11,9 @@ type Props = {
 };
 
 export function useListTerm({ term, idx, setTerm }: Props) {
-	const [confirmingDelete, setConfirmingDelete] = useState(false);
 	const [open, setOpen] = useState<boolean>(false);
 	const [listAtom, setListAtom] = useRecoilState(listState);
 	const { mutate: mutateUpdateTerms } = useUpdateTermValues();
-
-	useEffect(() => {
-		return () => {
-			setConfirmingDelete(false);
-		};
-	}, []);
 
 	/**
 	 * Fire a mutation to edit the term's 'from'/'to' value in the database, and
@@ -54,7 +47,5 @@ export function useListTerm({ term, idx, setTerm }: Props) {
 		open,
 		setOpen,
 		handleTermEdit,
-		confirmingDelete,
-		setConfirmingDelete,
 	} as const;
 }

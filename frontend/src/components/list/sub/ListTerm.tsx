@@ -13,8 +13,7 @@ interface TermPropsInterface {
 
 function ListTerm({ term: termFromProps, idx }: TermPropsInterface) {
 	const [term, setTerm] = useState<typeof termFromProps>(() => termFromProps);
-	const { open, setOpen, handleTermEdit, confirmingDelete, setConfirmingDelete } =
-		useListTerm({ term, idx, setTerm });
+	const { open, setOpen, handleTermEdit } = useListTerm({ term, idx, setTerm });
 
 	return (
 		<>
@@ -38,13 +37,7 @@ function ListTerm({ term: termFromProps, idx }: TermPropsInterface) {
 			</S.Term>
 
 			{open && (
-				<TermModal
-					setOpen={setOpen}
-					term={term}
-					handleTermEdit={handleTermEdit}
-					confirmingDelete={confirmingDelete}
-					setConfirmingDelete={setConfirmingDelete}
-				/>
+				<TermModal setOpen={setOpen} term={term} handleTermEdit={handleTermEdit} />
 			)}
 		</>
 	);

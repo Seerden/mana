@@ -5,14 +5,10 @@ import useTermModal from "../hooks/useTermModal";
 import * as S from "./TermModal.style";
 import TermReviewHistory from "./TermReviewHistory";
 
-function TermModal({
-	setOpen,
-	term,
-	handleTermEdit,
-	confirmingDelete,
-	setConfirmingDelete,
-}) {
-	const { handleDeleteTerm } = useTermModal(term.term_id);
+function TermModal({ setOpen, term, handleTermEdit }) {
+	const { handleDeleteTerm, confirmingDelete, setConfirmingDelete } = useTermModal(
+		term.term_id
+	);
 
 	function closeModal(e) {
 		if (e.currentTarget === e.target) {
