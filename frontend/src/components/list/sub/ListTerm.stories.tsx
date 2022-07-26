@@ -31,14 +31,7 @@ export const Basic: ComponentStory<typeof ListTerm> = (props) => {
 	return (
 		<QueryClientProvider client={client}>
 			<RecoilRoot>
-				<ListTerm
-					term={mockTerm}
-					handleTermDelete={() => {
-						return;
-					}}
-					key={1}
-					idx={0}
-				/>
+				<ListTerm term={mockTerm} key={1} idx={0} />
 			</RecoilRoot>
 		</QueryClientProvider>
 	);
