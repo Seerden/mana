@@ -1,19 +1,17 @@
-import { listState } from "components/list/state/listAtoms";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useRecoilState } from "recoil";
-import { Term } from "../../../gql/codegen-output";
+import { List, Term } from "../../../gql/codegen-output";
 import useUpdateTermValues from "../../../gql/hooks/term/useUpdateTerm";
 
 type Props = {
 	term: Term;
 	idx: number;
-	setTerm: React.Dispatch<React.SetStateAction<Term>>;
 };
 
-export function useListTerm({ term, idx, setTerm }: Props) {
+export function useListTerm({ term, idx }: Props) {
 	const [open, setOpen] = useState<boolean>(false);
-	const [listAtom, setListAtom] = useRecoilState(listState);
 	const { mutate: mutateUpdateTerms } = useUpdateTermValues();
+	const client = useQueryClient();
 
 	/**
 	 * Fire a mutation to edit the term's 'from'/'to' value in the database, and
@@ -21,27 +19,40 @@ export function useListTerm({ term, idx, setTerm }: Props) {
 	 */
 	function handleTermEdit(e: React.FocusEvent<HTMLInputElement>) {
 		const { value } = e.target;
-		const { field } = e.currentTarget.dataset;
+		const { field } = e.currentTarget.dataset; // 'from_value' | 'to_value'
 
 		if (!value || term[field] === value) return;
 
-		const newTerm = { ...term, [field]: value };
-		setTerm(newTerm);
-
-		mutateUpdateTerms({
-			updateOptions: [
-				{
-					term_id: term.term_id,
-					[field]: value,
+		mutateUpdateTerms(
+			{
+				updateOptions: [
+					{
+						term_id: term.term_id,
+						[field]: value,
+					},
+				],
+			},
+			{
+				onSuccess: ([updatedTerm]) => {
+					// Update list in cache with new term value
+					client.setQueryData<List[]>(
+						["listsById", updatedTerm.list_id],
+						([list]) => {
+							return [
+								{
+									...list,
+									terms: list.terms.map((oldTerm) => {
+										return oldTerm.term_id !== updatedTerm.term_id
+											? oldTerm
+											: updatedTerm;
+									}),
+								},
+							];
+						}
+					);
 				},
-			],
-		});
-
-		// Optimistically assume successful mutation, and edit the term in the list in-place.
-		const newListContent = [...listAtom.terms];
-		newListContent[idx] = { ...newListContent[idx], [field]: value };
-		const newList = { ...listAtom, terms: [...newListContent] };
-		setListAtom(newList);
+			}
+		);
 	}
 	return {
 		open,

@@ -1,4 +1,4 @@
-import { Key, useState } from "react";
+import { Key } from "react";
 import { Term } from "../../../gql/codegen-output";
 import SaturationIcon from "../../SaturationFilter/SaturationIcon";
 import { useListTerm } from "../hooks/useListTerm";
@@ -11,9 +11,8 @@ interface TermPropsInterface {
 	key?: Key;
 }
 
-function ListTerm({ term: termFromProps, idx }: TermPropsInterface) {
-	const [term, setTerm] = useState<typeof termFromProps>(() => termFromProps);
-	const { open, setOpen, handleTermEdit } = useListTerm({ term, idx, setTerm });
+function ListTerm({ term, idx }: TermPropsInterface) {
+	const { open, setOpen, handleTermEdit } = useListTerm({ term, idx });
 
 	return (
 		<>
