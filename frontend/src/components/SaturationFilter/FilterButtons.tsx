@@ -1,18 +1,19 @@
+import { SyntheticEvent } from "react";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
 import { Operator } from "./helpers/operators";
 import * as S from "./SaturationFilter.style";
 
 type InitialButtonProps = {
-	onResetClick?: () => void;
-	onStartClick?: () => void;
+	onResetClick?: (e?: SyntheticEvent) => void;
+	onStartClick?: (e?: SyntheticEvent) => void;
 	color?: string;
 };
 
 export function Initial({ onStartClick, onResetClick, color }: InitialButtonProps) {
 	return (
 		<S.FilterLabelButton onClick={() => onStartClick?.()} borderAndShadowColor={color}>
-			Filter by saturation level
-			<S.ResetButton type="button" value="Reset" onClick={() => onResetClick?.()} />
+			Click to filter terms
+			<S.ResetButton type="button" value="Reset" onClick={(e) => onResetClick?.(e)} />
 		</S.FilterLabelButton>
 	);
 }
