@@ -7,8 +7,8 @@ import { FilterStep } from "./types/filter-types";
 function SaturationFilter() {
 	const {
 		filterStep,
-		cycleFilterStep,
 		termFilter,
+		cycleFilterStep,
 		resetTermFilter,
 		thresholdButtons,
 		operatorButtons,
@@ -22,7 +22,10 @@ function SaturationFilter() {
 			{filterStep === FilterStep.INITIAL && (
 				<Initial
 					color={color}
-					onStartClick={() => cycleFilterStep()}
+					onStartClick={() => {
+						resetTermFilter();
+						cycleFilterStep();
+					}}
 					onResetClick={() => resetTermFilter()}
 				/>
 			)}
