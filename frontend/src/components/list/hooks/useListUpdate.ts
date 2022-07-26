@@ -42,9 +42,11 @@ export function useListUpdate() {
 					},
 					{
 						onSuccess: (updatedList) => {
-							client.setQueryData(["listsById", list_id], () => ({
-								...updatedList,
-							}));
+							client.setQueryData(["listsById", list_id], () => [
+								{
+									...updatedList,
+								},
+							]);
 						},
 					}
 				);
