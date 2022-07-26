@@ -1,17 +1,21 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { List, Term } from "gql/codegen-output";
 import { useDeleteTerms } from "gql/hooks/term/useDeleteTerms";
 import useRouteProps from "hooks/useRouteProps";
 import { FocusEventHandler, useCallback } from "react";
-import { useQueryClient } from '@tanstack/react-query';
 import { useMutateDeleteList } from "../../../gql/hooks/list/useDeleteList";
+import { useQueryListsById } from "../../../gql/hooks/list/useQueryLists";
 import { useMutateUpdateList } from "../../../gql/hooks/list/useUpdateList";
 
 // TODO: type these arguments
 export function useListUpdate() {
 	const client = useQueryClient();
 	const { params, navigate } = useRouteProps();
+
 	const list_id = +params.id;
-	const list = client.getQueryData<List>(["list", list_id]);
+	const { data: lists } = useQueryListsById([list_id]);
+	const list = lists?.[0];
+
 	const { mutate: mutateUpdateList } = useMutateUpdateList();
 	const { mutate: mutateDeleteTerms } = useDeleteTerms();
 	const { mutate: mutateDeleteList } = useMutateDeleteList();
@@ -19,8 +23,6 @@ export function useListUpdate() {
 	const handleListTitleBlur: FocusEventHandler<HTMLHeadingElement> = useCallback(
 		(e) => {
 			e.persist();
-
-			if (!list?.terms?.length) return;
 
 			if (!e.currentTarget.innerText) {
 				// change e.currentTarget in DOM without React's knowing so
@@ -33,12 +35,19 @@ export function useListUpdate() {
 
 			const { innerText } = e.currentTarget;
 			if (innerText !== list.name) {
-				client.setQueryData(["list", list_id], () => ({ ...list, name: innerText }));
-
-				mutateUpdateList({
-					list_id: +params.id,
-					payload: { name: innerText },
-				});
+				mutateUpdateList(
+					{
+						list_id: +params.id,
+						payload: { name: innerText },
+					},
+					{
+						onSuccess: (updatedList) => {
+							client.setQueryData(["listsById", list_id], () => ({
+								...updatedList,
+							}));
+						},
+					}
+				);
 			}
 		},
 		[list]
