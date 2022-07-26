@@ -85,10 +85,12 @@ const TermModal = ({
 					</S.TermSide>
 				</S.Section>
 
-				<S.Section>
-					<header> History </header>
-					<TermReviewHistory history={term.history} />
-				</S.Section>
+				{term.history?.length > 0 && (
+					<S.Section>
+						<header> History </header>
+						<TermReviewHistory history={term.history} />
+					</S.Section>
+				)}
 
 				<S.DeleteButtonWrapper>
 					{!confirmingDelete ? (
