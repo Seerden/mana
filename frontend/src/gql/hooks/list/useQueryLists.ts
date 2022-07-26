@@ -2,18 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { List } from "../../codegen-output";
-import { listPropsFragment } from "../../fragments/list-fragments";
-import { termPropsFragment } from "../../fragments/term-fragments";
+import { listWithTermsFragment } from "../../fragments/list-fragments";
 
 const listsByIdQuery = gql`
-	${listPropsFragment}
-	${termPropsFragment}
+	${listWithTermsFragment}
 	query ($list_ids: [Int!]!) {
 		listsById(list_ids: $list_ids) {
-			...ListProps
-			terms(populate: true) {
-				...TermProps
-			}
+			...FListWithTerms
 		}
 	}
 `;
