@@ -1,27 +1,33 @@
 import { filterTermsBySaturation } from "components/list/helpers/filterTermsBySaturation";
-import { FilterInterface } from "components/list/types/list.types";
 import { useQueryListsById } from "gql/hooks/list/useQueryLists";
 import useRouteProps from "hooks/useRouteProps";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useRecoilValue } from "recoil";
+import { colorBySaturation } from "../../../helpers/list.api";
+import { termFilterState } from "../../../state/filter";
+import { TermFilter } from "../../SaturationFilter/types/filter-types";
 
-const defaultFilter: FilterInterface = {
-	saturation: { level: undefined, direction: "any" },
-};
+function makeFilterString({ operator, value, direction }: TermFilter) {
+	return value
+		? `Showing: ${direction} saturation ${operator} ${value}`
+		: "Showing all terms";
+}
 
 export function useListFilter() {
 	const { params } = useRouteProps();
 	const { data: lists } = useQueryListsById([+params.id]);
-	const [filter, setFilter] = useState<FilterInterface>(defaultFilter);
+	const termFilter = useRecoilValue(termFilterState);
 
 	const visibleTermIds = useMemo(() => {
 		if (!lists[0]?.terms) return [];
 
-		return filterTermsBySaturation(filter, lists[0].terms);
-	}, [lists[0].terms, filter]);
+		return filterTermsBySaturation(termFilter, lists[0].terms);
+	}, [lists[0].terms, termFilter]);
 
 	return {
-		filter,
-		setFilter,
+		termFilter,
 		visibleTermIds,
+		label: makeFilterString(termFilter),
+		highlightColor: colorBySaturation(termFilter.value) ?? "",
 	} as const;
 }

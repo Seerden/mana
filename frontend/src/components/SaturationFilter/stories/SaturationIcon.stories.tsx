@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import SaturationIcon from "./SaturationIcon";
+import SaturationIcon from "../SaturationIcon";
 
 export default {
 	component: SaturationIcon,

@@ -11,8 +11,8 @@ const deleteTerms = gql`
 	}
 `;
 
-const deleteTermsRequest = async (term_ids: Term["term_id"][]) =>
-	(await requestClient.request(deleteTerms, { term_ids })).deleteTerms;
+const deleteTermsRequest = async (termIds: Term["term_id"][]) =>
+	(await requestClient.request(deleteTerms, { termIds })).deleteTerms;
 
 // TODO: implement onSuccess callback that presumably removes these terms
 // from the list they belong to in (global) state.

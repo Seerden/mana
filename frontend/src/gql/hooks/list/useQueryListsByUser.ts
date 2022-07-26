@@ -1,23 +1,18 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { useQuery } from '@tanstack/react-query';
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { List } from "../../codegen-output";
-import { listPropsFragment } from "../../fragments/list-fragments";
-import { termPropsFragment } from "../../fragments/term-fragments";
+import { listWithTermsFragment } from "../../fragments/list-fragments";
 
 /**
  * NOTE: TermProps fragment does not by default include `term.saturation`.
  */
 
 const query = gql`
-	${listPropsFragment}
-	${termPropsFragment}
+	${listWithTermsFragment}
 	query {
 		listsByUser {
-			...ListProps
-			terms(populate: true) {
-				...TermProps
-			}
+			...FListWithTerms
 		}
 	}
 `;
@@ -25,5 +20,16 @@ const query = gql`
 const req = async () => (await requestClient.request(query)).listsByUser;
 
 export default function useQueryListsByUser() {
-	return useQuery<List[]>(["lists"], () => req());
+	const client = useQueryClient();
+
+	return useQuery<List[]>(["listsByUser"], () => req(), {
+		onSuccess: (lists) => {
+			// Update each list in query cache.
+			for (const list of lists) {
+				client.setQueryData(["listsById", list.list_id], () =>
+					lists.filter((l) => l.list_id === list.list_id)
+				);
+			}
+		},
+	});
 }

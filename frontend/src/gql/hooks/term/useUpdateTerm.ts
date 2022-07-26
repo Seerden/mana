@@ -2,11 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 import { gql } from "graphql-request";
 import requestClient from "../../../components/newlist/helpers/request-client";
 import { Mutation, MutationUpdateTermValuesArgs } from "../../codegen-output";
+import { termPropsFragment } from "../../fragments/term-fragments";
 
 const updateTermMutation = gql`
+	${termPropsFragment}
 	mutation ($updateOptions: [TermUpdateInput!]!) {
 		updateTermValues(updateOptions: $updateOptions) {
-			term_id
+			...TermProps
 		}
 	}
 `;

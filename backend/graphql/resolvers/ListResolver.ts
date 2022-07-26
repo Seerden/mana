@@ -1,13 +1,4 @@
-import {
-   Arg,
-   Authorized,
-   FieldResolver,
-   Int,
-   Mutation,
-   Query,
-   Resolver,
-   Root,
-} from "type-graphql";
+import { Arg, FieldResolver, Int, Mutation, Query, Resolver, Root } from "type-graphql";
 import { UserId } from "../helpers/insert-user-id";
 import {
    List,
@@ -69,13 +60,12 @@ export class ListResolver {
    }
 
    @Mutation(() => List, { nullable: true })
-   @Authorized()
    async updateList(
-      @Arg("user_id") user_id: number,
+      @UserId() user_id: number,
       @Arg("list_id") list_id: number,
       @Arg("payload") payload: ListUpdatePayload
    ) {
-      return await updateListName(list_id, payload);
+      return await updateListName(user_id, list_id, payload);
    }
 
    @Mutation(() => List, { nullable: true })

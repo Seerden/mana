@@ -6,15 +6,10 @@ import * as S from "./ListTerms.style";
 
 type ListTermsProps = {
 	list: List;
-	handleTermDelete: (args: any) => void;
 };
 
-const ListTerms = ({ list, handleTermDelete }: ListTermsProps) => {
-	const { filter, setFilter, visibleTermIds } = useListFilter();
-
-	const showingString = filter.saturation.level
-		? "Showing filtered list"
-		: "Showing all terms";
+function ListTerms({ list }: ListTermsProps) {
+	const { visibleTermIds, label, highlightColor } = useListFilter();
 
 	return (
 		<S.ListTerms>
@@ -22,8 +17,10 @@ const ListTerms = ({ list, handleTermDelete }: ListTermsProps) => {
 
 			<S.FilterInfo>
 				{/* {!!list.last_reviewed && <SaturationFilter {...{ filter, setFilter }} />} */}
-				{<SaturationFilter {...{ filter, setFilter }} />}
-				<S.FilterString>{showingString}</S.FilterString>
+				{<SaturationFilter />}
+				<S.FilterString style={{ borderRightColor: highlightColor }}>
+					{label}
+				</S.FilterString>
 			</S.FilterInfo>
 
 			{/* TODO: Loading terms... isn't styuled, but AllFiltered _is_. Why not use a variable for the string to display, and display both _with_ styles? */}
@@ -36,16 +33,9 @@ const ListTerms = ({ list, handleTermDelete }: ListTermsProps) => {
 			{visibleTermIds?.length > 0 &&
 				list.terms
 					.filter((t) => visibleTermIds.includes(t.term_id))
-					.map((t) => (
-						<ListTerm
-							key={t.term_id}
-							term={t}
-							handleTermDelete={handleTermDelete}
-							idx={t.term_id}
-						/>
-					))}
+					.map((t) => <ListTerm key={t.term_id} term={t} idx={t.term_id} />)}
 		</S.ListTerms>
 	);
-};
+}
 
 export default ListTerms;

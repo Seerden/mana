@@ -67,3 +67,41 @@
 
          -  useListPrepareReview
          -  useListUpdate
+
+`modernize/refactor/list`
+
+## List name update
+
+-  [x] get list name update functionality to work again in `List.tsx`
+
+## Filter
+
+-  [x] rework and refactor list filter functionality in `List.tsx`.
+   -  [ ] there is more functionality I want to add later down the line, but for
+          now I'm happy. For later reference:
+      -  [ ] clearer filter state descriptions
+      -  [ ] accessibility.
+
+## TermModal
+
+### History
+
+current props flow:
+
+ListTerm.tsx
+renders TermModal
+
+TermModal
+handleConfirmClick ListTerm::useListTerm
+setOpen, ListTerm::useListTerm
+term, List.tsx::ListTerm props
+handleTermEdit, ListTerm::useListTerm
+
+    confirmingDelete,       ListTerm::useListTerm
+    setConfirmingDelete,    ListTerm::useListTerm
+
+      {set}confirmingDelete are created in useListTerm, which is loaded in ListTerm, and passed as props to TermModal. ListTerm doesn't use these otherwise.
+
+      in useListTerm:
+      -  handleConfirmClick uses setConfirmingDelete
+      -  on unmount, setConfirmingDelete(false) is called

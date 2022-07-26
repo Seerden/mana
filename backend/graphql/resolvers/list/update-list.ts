@@ -1,17 +1,24 @@
 import { UserInputError } from "apollo-server-express";
 import { sql as instance, SQL } from "../../../db/init";
-import { List, ListLanguageUpdateInput, ListWithTerms } from "../../types/List";
+import { List, ListId, ListLanguageUpdateInput, ListWithTerms } from "../../types/List";
 import { Term } from "../../types/Term";
+import { UserId } from "../../types/User";
 import { listExists } from "./query-by-id";
 
 /** Update the name of a list. */
-export async function updateListName(list_id: number, payload: { name: string }) {
+export async function updateListName(
+   user_id: UserId,
+   list_id: ListId,
+   payload: { name: string }
+) {
    const update = { name: payload.name };
-   const condition = { list_id };
 
-   const [list] = await instance<[List?]>`update lists set ${instance(
-      update
-   )} where ${instance(condition)} returning *`;
+   const [list] = await instance<[List?]>`
+      update lists 
+      set ${instance(update)} 
+      where list_id=${list_id}
+      and user_id=${user_id}
+      returning *`;
 
    if (!list) throw new Error("Update query did not return a list.");
 
