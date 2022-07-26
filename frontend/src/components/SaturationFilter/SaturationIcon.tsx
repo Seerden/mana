@@ -23,9 +23,8 @@ interface SaturationIconProps {
 	style?: React.CSSProperties;
 }
 
-// TODO: since we're using Styled components now, we don't want `classes` (and
-// possibly the same for `style`, since we can simply extend this thing with styled()
-
+// TODO: consider dropping the 'style' property, and instead extend or select
+// SaturationIcon inside another styled component)
 function SaturationIcon({ direction, saturation, style }: SaturationIconProps) {
 	const color = colorBySaturation(saturation);
 
