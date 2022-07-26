@@ -4,8 +4,8 @@ import requestClient from "../../../components/newlist/helpers/request-client";
 import { List, ListUpdatePayloadInput } from "../../codegen-output";
 
 const updateListMutation = gql`
-	mutation ($user_id: Float!, $list_id: Float!, $payload: ListUpdatePayloadInput!) {
-		updateList(user_id: $user_id, list_id: $list_id, payload: $payload) {
+	mutation ($list_id: Float!, $payload: ListUpdatePayloadInput!) {
+		updateList(list_id: $list_id, payload: $payload) {
 			list_id
 		}
 	}
