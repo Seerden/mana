@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import { useEffect } from "react";
+import useTermModal from "../hooks/useTermModal";
 import * as S from "./TermModal.style";
 import TermReviewHistory from "./TermReviewHistory";
 
-const TermModal = ({
-	handleConfirmClick,
+function TermModal({
 	setOpen,
 	term,
 	handleTermEdit,
 	confirmingDelete,
 	setConfirmingDelete,
-}) => {
+}) {
+	const { handleDeleteTerm } = useTermModal(term.term_id);
+
 	function closeModal(e) {
 		if (e.currentTarget === e.target) {
 			setOpen(false);
@@ -100,10 +102,7 @@ const TermModal = ({
 					) : (
 						<>
 							<S.ConfirmDeleteLabel>Delete?</S.ConfirmDeleteLabel>
-							<S.ConfirmDeleteButton
-								confirm
-								onClick={(e) => handleConfirmClick(e, { type: "delete" })}
-							>
+							<S.ConfirmDeleteButton confirm onClick={() => handleDeleteTerm()}>
 								Yes
 							</S.ConfirmDeleteButton>
 							<S.ConfirmDeleteButton onClick={() => setConfirmingDelete(false)}>
@@ -115,6 +114,6 @@ const TermModal = ({
 			</S.TermModal>
 		</>
 	);
-};
+}
 
 export default TermModal;

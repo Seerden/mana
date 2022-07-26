@@ -6,10 +6,9 @@ import * as S from "./ListTerms.style";
 
 type ListTermsProps = {
 	list: List;
-	handleTermDelete: (args: any) => void;
 };
 
-const ListTerms = ({ list, handleTermDelete }: ListTermsProps) => {
+function ListTerms({ list }: ListTermsProps) {
 	const { termFilter, visibleTermIds } = useListFilter();
 
 	const showingString =
@@ -37,16 +36,9 @@ const ListTerms = ({ list, handleTermDelete }: ListTermsProps) => {
 			{visibleTermIds?.length > 0 &&
 				list.terms
 					.filter((t) => visibleTermIds.includes(t.term_id))
-					.map((t) => (
-						<ListTerm
-							key={t.term_id}
-							term={t}
-							handleTermDelete={handleTermDelete}
-							idx={t.term_id}
-						/>
-					))}
+					.map((t) => <ListTerm key={t.term_id} term={t} idx={t.term_id} />)}
 		</S.ListTerms>
 	);
-};
+}
 
 export default ListTerms;

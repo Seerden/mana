@@ -5,7 +5,7 @@ import ListTerms from "./sub/ListTerms";
 import ListTitleBar from "./sub/ListTitleBar";
 
 function List() {
-	const { handleListTitleBlur, handleTermDelete, handleDelete } = useListUpdate();
+	const { handleListTitleBlur, handleDelete } = useListUpdate();
 	const { list } = useList();
 
 	if (!list) return <></>;
@@ -21,7 +21,7 @@ function List() {
 
 				<ListReviewButtons />
 
-				<ListTerms list={list} handleTermDelete={handleTermDelete} />
+				<ListTerms list={list} />
 			</>
 		</div>
 	);

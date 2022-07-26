@@ -9,19 +9,12 @@ interface TermPropsInterface {
 	idx: number;
 	term: Term;
 	key?: Key;
-	handleTermDelete(idx: number): void;
 }
 
-function ListTerm({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) {
+function ListTerm({ term: termFromProps, idx }: TermPropsInterface) {
 	const [term, setTerm] = useState<typeof termFromProps>(() => termFromProps);
-	const {
-		open,
-		setOpen,
-		handleConfirmClick,
-		handleTermEdit,
-		confirmingDelete,
-		setConfirmingDelete,
-	} = useListTerm({ term, handleTermDelete, idx, setTerm });
+	const { open, setOpen, handleTermEdit, confirmingDelete, setConfirmingDelete } =
+		useListTerm({ term, idx, setTerm });
 
 	return (
 		<>
@@ -46,7 +39,6 @@ function ListTerm({ handleTermDelete, term: termFromProps, idx }: TermPropsInter
 
 			{open && (
 				<TermModal
-					handleConfirmClick={handleConfirmClick}
 					setOpen={setOpen}
 					term={term}
 					handleTermEdit={handleTermEdit}

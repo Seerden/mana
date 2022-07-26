@@ -1,6 +1,4 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { List, Term } from "gql/codegen-output";
-import { useDeleteTerms } from "gql/hooks/term/useDeleteTerms";
 import useRouteProps from "hooks/useRouteProps";
 import { FocusEventHandler, useCallback } from "react";
 import { useMutateDeleteList } from "../../../gql/hooks/list/useDeleteList";
@@ -17,7 +15,6 @@ export function useListUpdate() {
 	const list = lists?.[0];
 
 	const { mutate: mutateUpdateList } = useMutateUpdateList();
-	const { mutate: mutateDeleteTerms } = useDeleteTerms();
 	const { mutate: mutateDeleteList } = useMutateDeleteList();
 
 	const handleListTitleBlur: FocusEventHandler<HTMLHeadingElement> = useCallback(
@@ -55,22 +52,6 @@ export function useListUpdate() {
 		[list]
 	);
 
-	// TODO: instead of using idx, use the actual term_id. Requires some
-	// refactoring.
-	function handleTermDelete(term_id: Term["term_id"]) {
-		if (!list?.terms?.length) return; // TODO: why do we do this, exactly? A list can be empty, no?
-
-		// Optimistically update list state
-		client.setQueryData(["list", term_id], (cur: List) => {
-			return {
-				...cur,
-				terms: cur.terms.filter((term) => term.term_id !== term_id),
-			};
-		});
-
-		mutateDeleteTerms([term_id]);
-	}
-
 	/** Sends the mutation to delete the list and its terms entirely. */
 	// TODO: rename ->handleListDelete
 	function handleDelete() {
@@ -83,5 +64,5 @@ export function useListUpdate() {
 		});
 	}
 
-	return { handleTermDelete, handleListTitleBlur, handleDelete } as const;
+	return { handleListTitleBlur, handleDelete } as const;
 }

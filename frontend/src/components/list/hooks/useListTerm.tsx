@@ -8,10 +8,9 @@ type Props = {
 	term: Term;
 	idx: number;
 	setTerm: React.Dispatch<React.SetStateAction<Term>>;
-	handleTermDelete(idx: number): void;
 };
 
-export function useListTerm({ term, handleTermDelete, idx, setTerm }: Props) {
+export function useListTerm({ term, idx, setTerm }: Props) {
 	const [confirmingDelete, setConfirmingDelete] = useState(false);
 	const [open, setOpen] = useState<boolean>(false);
 	const [listAtom, setListAtom] = useRecoilState(listState);
@@ -22,19 +21,6 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }: Props) {
 			setConfirmingDelete(false);
 		};
 	}, []);
-
-	/**
-	 * Remove the term from the list. Intended usage is to trigger this on
-	 * deletion confirmation.
-	 */
-	function handleConfirmClick(e: React.SyntheticEvent, action: { type: "delete" }) {
-		e.preventDefault();
-		setConfirmingDelete(false);
-		setOpen(false);
-		if (action.type === "delete") {
-			handleTermDelete(idx);
-		}
-	}
 
 	/**
 	 * Fire a mutation to edit the term's 'from'/'to' value in the database, and
@@ -67,7 +53,6 @@ export function useListTerm({ term, handleTermDelete, idx, setTerm }: Props) {
 	return {
 		open,
 		setOpen,
-		handleConfirmClick,
 		handleTermEdit,
 		confirmingDelete,
 		setConfirmingDelete,
