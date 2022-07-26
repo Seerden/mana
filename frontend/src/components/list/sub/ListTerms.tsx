@@ -9,12 +9,7 @@ type ListTermsProps = {
 };
 
 function ListTerms({ list }: ListTermsProps) {
-	const { termFilter, visibleTermIds } = useListFilter();
-
-	const showingString =
-		typeof termFilter.value === "number"
-			? "Showing filtered list"
-			: "Showing all terms";
+	const { visibleTermIds, label, highlightColor } = useListFilter();
 
 	return (
 		<S.ListTerms>
@@ -23,7 +18,9 @@ function ListTerms({ list }: ListTermsProps) {
 			<S.FilterInfo>
 				{/* {!!list.last_reviewed && <SaturationFilter {...{ filter, setFilter }} />} */}
 				{<SaturationFilter />}
-				<S.FilterString>{showingString}</S.FilterString>
+				<S.FilterString style={{ borderRightColor: highlightColor }}>
+					{label}
+				</S.FilterString>
 			</S.FilterInfo>
 
 			{/* TODO: Loading terms... isn't styuled, but AllFiltered _is_. Why not use a variable for the string to display, and display both _with_ styles? */}
