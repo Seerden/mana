@@ -1,8 +1,7 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { RecoilRoot } from "recoil";
 import { Term } from "../../../gql/codegen-output";
-import useQueryClient from "../../../hooks/useQueryClient";
 import ListTerm from "./ListTerm";
 
 export default {
@@ -27,7 +26,7 @@ const mockTerm: Term = {
 };
 
 export const Basic: ComponentStory<typeof ListTerm> = (props) => {
-	const [client] = useQueryClient();
+	const client = useQueryClient();
 
 	return (
 		<QueryClientProvider client={client}>

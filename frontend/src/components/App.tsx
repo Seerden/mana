@@ -5,7 +5,7 @@ import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
 import { theme } from "../helpers/theme/theme";
-import useQueryClient from "../hooks/useQueryClient";
+import useInitializeQueryClient from "../hooks/useQueryClient";
 import Private from "../wrappers/Private";
 import * as S from "./App.style";
 import Home from "./Home/Home";
@@ -18,7 +18,7 @@ import NewList from "./newlist/NewList";
 import Register from "./register/Register";
 
 const App = () => {
-	const [client] = useQueryClient();
+	const client = useInitializeQueryClient();
 
 	return (
 		<>
