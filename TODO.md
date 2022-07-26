@@ -81,3 +81,27 @@
           now I'm happy. For later reference:
       -  [ ] clearer filter state descriptions
       -  [ ] accessibility.
+
+## TermModal
+
+### History
+
+current props flow:
+
+ListTerm.tsx
+renders TermModal
+
+TermModal
+handleConfirmClick ListTerm::useListTerm
+setOpen, ListTerm::useListTerm
+term, List.tsx::ListTerm props
+handleTermEdit, ListTerm::useListTerm
+
+    confirmingDelete,       ListTerm::useListTerm
+    setConfirmingDelete,    ListTerm::useListTerm
+
+      {set}confirmingDelete are created in useListTerm, which is loaded in ListTerm, and passed as props to TermModal. ListTerm doesn't use these otherwise.
+
+      in useListTerm:
+      -  handleConfirmClick uses setConfirmingDelete
+      -  on unmount, setConfirmingDelete(false) is called

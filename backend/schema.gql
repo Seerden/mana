@@ -43,7 +43,7 @@ type Mutation {
   deleteUser: User!
   login(password: String!, username: String!): User!
   logout: Message!
-  updateList(list_id: Float!, payload: ListUpdatePayloadInput!, user_id: Float!): List
+  updateList(list_id: Float!, payload: ListUpdatePayloadInput!): List
   updateListLanguage(payload: ListLanguageUpdateInput!): List
   updatePassword(currentPassword: String!, newPassword: String!): User!
   updateTermValues(updateOptions: [TermUpdateInput!]!): [Term!]!

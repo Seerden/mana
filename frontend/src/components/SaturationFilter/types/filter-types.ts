@@ -14,10 +14,7 @@ export type TermFilter = {
 };
 
 export type FilterUpdate =
-	| {
-			field: "value";
-			value: number;
-	  }
+	| { field: "value"; value: number }
 	| { field: "direction"; value: TermFilter["direction"] }
 	| { field: "operator"; value: Operator };
 
