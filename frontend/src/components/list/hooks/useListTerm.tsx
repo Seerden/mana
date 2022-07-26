@@ -23,25 +23,25 @@ export function useListTerm({ term, idx, setTerm }: Props) {
 		const { value } = e.target;
 		const { field } = e.currentTarget.dataset;
 
-		if (value && term[field] !== value) {
-			const newTerm = { ...term, [field]: value };
-			setTerm(newTerm);
+		if (!value || term[field] === value) return;
 
-			mutateUpdateTerms({
-				updateOptions: [
-					{
-						term_id: term.term_id,
-						[field]: value,
-					},
-				],
-			});
+		const newTerm = { ...term, [field]: value };
+		setTerm(newTerm);
 
-			// Optimistically assume successful mutation, and edit the term in the list in-place.
-			const newListContent = [...listAtom.terms];
-			newListContent[idx] = { ...newListContent[idx], [field]: value };
-			const newList = { ...listAtom, terms: [...newListContent] };
-			setListAtom(newList);
-		}
+		mutateUpdateTerms({
+			updateOptions: [
+				{
+					term_id: term.term_id,
+					[field]: value,
+				},
+			],
+		});
+
+		// Optimistically assume successful mutation, and edit the term in the list in-place.
+		const newListContent = [...listAtom.terms];
+		newListContent[idx] = { ...newListContent[idx], [field]: value };
+		const newList = { ...listAtom, terms: [...newListContent] };
+		setListAtom(newList);
 	}
 	return {
 		open,
