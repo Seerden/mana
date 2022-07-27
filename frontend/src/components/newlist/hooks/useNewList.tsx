@@ -23,7 +23,7 @@ const defaultNewList: NewListWithTermsInput = {
 	from_language: "",
 	to_language: "",
 	name: "",
-	terms: [],
+	terms: new Array(10), // 10 term inputs by default
 };
 
 /** Hook that handles functionality for the NewList form component. */
@@ -34,11 +34,12 @@ export function useNewList() {
 		onSuccess: () => navigate(`/u/${params.username}/lists`),
 	});
 
-	const [numTerms, setNumTerms] = useState<number>(10);
-
-	/** Add a number (`count`) of rows (= empty terms) to the newList form. */
+	/** Add some amount of rows (i.e. empty terms) to newList. */
 	function addRows(count = 10) {
-		setNumTerms((current) => current + count);
+		setNewList((cur) => ({
+			...cur,
+			terms: cur.terms.concat(new Array(count)),
+		}));
 	}
 
 	const [focussedInput, setFocussedInput] = useState<FocusIndex>();
@@ -46,7 +47,9 @@ export function useNewList() {
 	const [newList, setNewList] = useState<NewListWithTermsInput>(defaultNewList);
 
 	const termInputs: JSX.Element[] = useMemo(() => {
-		return Array(numTerms)
+		const termCount = newList.terms.length;
+
+		return Array(termCount)
 			.fill(null)
 			.map((_, i) => (
 				<NewListTerm
@@ -57,16 +60,7 @@ export function useNewList() {
 					setFocussedInput={setFocussedInput}
 				/>
 			));
-	}, [newList, numTerms, focussedInput, setFocussedInput]);
-
-	useEffect(() => {
-		/*  newList is initialized completely empty.
-            on mount, we can populate .owner and .terms  */
-		setNewList((cur) => ({
-			...cur,
-			terms: new Array(numTerms),
-		}));
-	}, [numTerms]);
+	}, [newList, focussedInput, setFocussedInput]);
 
 	/** Keydown listener for tab-key presses:
 	 * Add 10 new rows if user presses the tab key while they're
@@ -121,40 +115,45 @@ export function useNewList() {
 		[newList]
 	);
 
+	function isValidNewList(newList: NewListWithTermsInput) {
+		const fields = ["name", "from_language", "to_language"];
+
+		const fieldsAreValid = fields.every(
+			(entry) =>
+				entry in newList &&
+				(typeof newList[entry] == "string" || Array.isArray(newList[entry]))
+		);
+
+		const hasTerms = filterFalsy(newList.terms)?.length > 0;
+
+		return fieldsAreValid && hasTerms;
+	}
+
 	/**
-	 * Submit handler that submits the newly created list if and only if all fields are filled
-	 * out as required and there is at least one term in the list.
+	 * - validate `newList`
+	 * - filter out empty term inputs
+	 * - send `mutateCreateList` mutation
 	 */
 	const handleSubmit = useCallback(
 		(e: React.MouseEvent<HTMLInputElement>) => {
 			e.preventDefault();
 
-			const fields = ["name", "from_language", "to_language"];
+			if (!isValidNewList(newList)) return;
 
-			if (
-				fields.every(
-					(entry) =>
-						entry in newList &&
-						(typeof newList[entry] == "string" || Array.isArray(newList[entry]))
-				)
-			) {
-				const nonNullTerms = filterFalsy(newList.terms || []);
+			const terms = filterFalsy(newList.terms);
 
-				if (nonNullTerms.length > 0) {
-					const list: NewListWithTermsInput = {
-						...newList,
-						terms: nonNullTerms.map((t) => ({
-							...t,
-							from_language: newList.from_language,
-							to_language: newList.to_language,
-						})),
-					};
+			const list: NewListWithTermsInput = {
+				...newList,
+				terms: terms.map((t) => ({
+					...t,
+					from_language: newList.from_language,
+					to_language: newList.to_language,
+				})),
+			};
 
-					mutateCreateList(list);
-				}
-			}
+			mutateCreateList(list);
 		},
-		[newList, setNewList]
+		[newList]
 	);
 
 	return {
