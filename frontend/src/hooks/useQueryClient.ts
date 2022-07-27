@@ -5,6 +5,7 @@ export default function useInitializeQueryClient() {
 		defaultOptions: {
 			queries: {
 				staleTime: 0,
+				refetchOnMount: true,
 				cacheTime: 5 * 60 * 1000, // 5 minutes
 				refetchOnWindowFocus: true,
 			},

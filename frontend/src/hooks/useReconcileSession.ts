@@ -26,6 +26,8 @@ export default function useReconcileSession() {
 	});
 
 	useEffect(() => {
-		refetch();
-	}, []);
+		if (currentUser) {
+			refetch();
+		}
+	}, [currentUser]);
 }
