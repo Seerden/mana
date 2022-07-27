@@ -1,24 +1,20 @@
 import dayjs from "dayjs";
 import { useState } from "react";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
-import { ReviewSessionEntry } from "../../../gql/codegen-output";
+import { Term } from "../../../gql/codegen-output";
 import { colors } from "../../../helpers/theme/colors";
 import { timeSince } from "../../../helpers/time";
 import PassfailIcon from "../../_shared/PassfailIcon";
 import * as S from "./TermReviewHistory.style";
 
-export default function TermReviewHistory({
-	history,
-}: {
-	history: ReviewSessionEntry[];
-}) {
+export default function TermReviewHistory({ history }: { history: Term["history"] }) {
 	const [showAll, setShowAll] = useState(false);
 	const toggleShowAll = () => setShowAll((cur) => !cur);
 
 	const historyElements = [...history]
 		.reverse()
-		.map((element) => (
-			<HistoryElement historyEntry={element} key={element.review_entry_id} />
+		.map((session) => (
+			<HistoryElement entries={session} key={session[0].review_entry_id} />
 		));
 
 	return (
@@ -48,15 +44,17 @@ export default function TermReviewHistory({
 }
 
 type HistoryElementProps = {
-	historyEntry: ReviewSessionEntry;
+	entries: Term["history"][number];
 };
 
-function HistoryElement({ historyEntry }: HistoryElementProps) {
+function HistoryElement({ entries }: HistoryElementProps) {
+	const firstEntry = entries[0];
+
 	return (
 		<S.HistorySession>
 			<S.HistorySessionBlock>
 				<S.Direction>
-					{historyEntry.direction === "forwards" ? (
+					{firstEntry.direction === "forwards" ? (
 						<BiArrowToRight
 							title="Reviewed front to back"
 							fill={colors.blue.main}
@@ -71,17 +69,19 @@ function HistoryElement({ historyEntry }: HistoryElementProps) {
 					)}
 				</S.Direction>
 
-				<span title={dayjs(historyEntry.created_at).format("MMMM DD, YYYY (HH:mm)")}>
-					{timeSince(historyEntry.created_at)}
+				<span title={dayjs(firstEntry.created_at).format("MMMM DD, YYYY (HH:mm)")}>
+					{timeSince(firstEntry.created_at * 1000)}
 				</span>
 			</S.HistorySessionBlock>
 
 			<S.HistorySessionBlock>
-				<PassfailIcon
-					key={`passfailicon-${historyEntry.review_entry_id}`}
-					passfail={historyEntry.passfail}
-					index={0} // NOTE: temporarily forcing index=0 during refactor effort
-				/>
+				{entries.map((entry) => (
+					<PassfailIcon
+						key={`passfailicon-${entry.review_entry_id}`}
+						passfail={entry.passfail}
+						index={entry.review_entry_id}
+					/>
+				))}
 			</S.HistorySessionBlock>
 		</S.HistorySession>
 	);
