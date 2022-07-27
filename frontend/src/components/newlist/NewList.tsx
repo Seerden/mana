@@ -20,7 +20,9 @@ function NewList() {
 
 					<S.Languages>
 						<S.Language>
-							<S.LanguageLabel htmlFor="from">Original language</S.LanguageLabel>
+							<S.LanguageLabel htmlFor="from_language">
+								Original language
+							</S.LanguageLabel>
 							<S.LanguageInput
 								onBlur={handleBlur}
 								type="text"
@@ -31,7 +33,9 @@ function NewList() {
 						<S.LanguageIcon />
 
 						<S.Language>
-							<S.LanguageLabel>Target language</S.LanguageLabel>
+							<S.LanguageLabel htmlFor="to_language">
+								Target language
+							</S.LanguageLabel>
 							<S.LanguageInput
 								onBlur={handleBlur}
 								type="text"
