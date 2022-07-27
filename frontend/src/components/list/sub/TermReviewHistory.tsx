@@ -14,7 +14,7 @@ export default function TermReviewHistory({ history }: { history: Term["history"
 	const historyElements = [...history]
 		.reverse()
 		.map((session) => (
-			<HistoryElement entries={session} key={session[0].review_entry_id} />
+			<TermHistoryEntry entries={session} key={session[0].review_entry_id} />
 		));
 
 	return (
@@ -47,7 +47,7 @@ type HistoryElementProps = {
 	entries: Term["history"][number];
 };
 
-function HistoryElement({ entries }: HistoryElementProps) {
+function TermHistoryEntry({ entries }: HistoryElementProps) {
 	const firstEntry = entries[0];
 
 	return (
