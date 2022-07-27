@@ -6,19 +6,6 @@ import { filterFalsy } from "../helpers/filterFalsyValues";
 import { isValidNewList } from "../helpers/validate-new-list";
 import NewListTerm from "../sub/NewListTerm";
 
-/*
-   TODO: numTerms is a piece of intermediate state, the changing of which
-   triggers some updates in other pieces of state. This is not declarative at
-   all and I dislike it strongly. Refactor the control flow of this component to
-   be more declarative.
-
-   Something similar can be said about the flow of:
-   - initializing newList from recoil state,
-   - setting newList.owner and newList.terms in an effect
-   - updating termInputs based on changes made to newList
-   It's like a cascading waterfall of state sewage.
-*/
-
 const defaultNewList: NewListWithTermsInput = {
 	from_language: "",
 	to_language: "",
