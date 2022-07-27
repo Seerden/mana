@@ -23,7 +23,17 @@ const App = () => {
 	return (
 		<>
 			<QueryClientProvider client={client}>
-				<ReactQueryDevtools initialIsOpen={false} />
+				<ReactQueryDevtools
+					initialIsOpen={false}
+					panelProps={{
+						style: {
+							maxWidth: "40vw",
+							bottom: 0,
+							left: 0,
+						},
+					}}
+					position="bottom-right"
+				/>
 				<RecoilRoot>
 					<S.App>
 						<ThemeProvider theme={theme}>
