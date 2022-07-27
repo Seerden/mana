@@ -80,7 +80,7 @@ type ReviewSession {
 }
 
 type ReviewSessionEntry {
-  created_at: Int!
+  created_at: Float!
   direction: String!
   passfail: String!
   review_entry_id: Int!
@@ -110,7 +110,7 @@ input ReviewSessionInput {
 type Term {
   from_language: String!
   from_value: String!
-  history(populate: Boolean): [ReviewSessionEntry!]
+  history(populate: Boolean): [[ReviewSessionEntry!]!]
   list_id: Int!
   saturation(populate: Boolean): TermSaturation
   term_id: Int!
