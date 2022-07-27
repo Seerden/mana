@@ -27,7 +27,7 @@ export const ExpandButton = styled.button`
 	color: ${(p) => p.theme.colors.light.white};
 	padding: 0.5rem;
 	margin: 0.5rem 0;
-	width: 100px;
+	width: 12rem;
 
 	transition: all 50ms ease;
 
