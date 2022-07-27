@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import ListDeleteButton from "./ListDeleteButton";
+import ListDeleteButton from "../sub/ListDeleteButton";
 
 export default {
 	component: ListDeleteButton,
