@@ -38,7 +38,7 @@ export class TermResolver {
       return resolveTermSaturation({ term, populate });
    }
 
-   @FieldResolver(() => [ReviewSessionEntry], { nullable: true })
+   @FieldResolver(() => [[ReviewSessionEntry]], { nullable: true })
    async history(
       @Root() term: Term,
       @Arg("populate", { nullable: true }) populate?: boolean
