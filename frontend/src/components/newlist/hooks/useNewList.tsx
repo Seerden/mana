@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { NewListWithTermsInput } from "../../../gql/codegen-output";
 import { useMutateCreateList } from "../../../gql/hooks/list/useCreateList";
 import { filterFalsy } from "../helpers/filterFalsyValues";
+import { isValidNewList } from "../helpers/validate-new-list";
 import NewListTerm from "../sub/NewListTerm";
 
 /*
@@ -114,20 +115,6 @@ export function useNewList() {
 		},
 		[newList]
 	);
-
-	function isValidNewList(newList: NewListWithTermsInput) {
-		const fields = ["name", "from_language", "to_language"];
-
-		const fieldsAreValid = fields.every(
-			(entry) =>
-				entry in newList &&
-				(typeof newList[entry] == "string" || Array.isArray(newList[entry]))
-		);
-
-		const hasTerms = filterFalsy(newList.terms)?.length > 0;
-
-		return fieldsAreValid && hasTerms;
-	}
 
 	/**
 	 * - validate `newList`
