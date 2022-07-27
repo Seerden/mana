@@ -1,8 +1,6 @@
-import { newListState } from "components/newlist/state/newList.atom";
 import type { FocusIndex } from "components/newlist/types/newList.types";
 import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRecoilState } from "recoil";
 import { NewListWithTermsInput } from "../../../gql/codegen-output";
 import { useMutateCreateList } from "../../../gql/hooks/list/useCreateList";
 import { filterFalsy } from "../helpers/filterFalsyValues";
@@ -21,6 +19,13 @@ import NewListTerm from "../sub/NewListTerm";
    It's like a cascading waterfall of state sewage.
 */
 
+const defaultNewList: NewListWithTermsInput = {
+	from_language: "",
+	to_language: "",
+	name: "",
+	terms: [],
+};
+
 /** Hook that handles functionality for the NewList form component. */
 export function useNewList() {
 	const { params, navigate } = useRouteProps();
@@ -38,13 +43,14 @@ export function useNewList() {
 
 	const [focussedInput, setFocussedInput] = useState<FocusIndex>();
 
-	const [newList, setNewList] = useRecoilState(newListState);
+	const [newList, setNewList] = useState<NewListWithTermsInput>(defaultNewList);
 
 	const termInputs: JSX.Element[] = useMemo(() => {
 		return Array(numTerms)
 			.fill(null)
 			.map((_, i) => (
 				<NewListTerm
+					setNewList={setNewList}
 					key={`term-${i + 1}`}
 					index={i}
 					autoFocus={i === focussedInput?.index + 1}
@@ -60,7 +66,7 @@ export function useNewList() {
 			...cur,
 			terms: new Array(numTerms),
 		}));
-	}, [params, numTerms]);
+	}, [numTerms]);
 
 	/** Keydown listener for tab-key presses:
 	 * Add 10 new rows if user presses the tab key while they're

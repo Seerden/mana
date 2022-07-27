@@ -1,7 +1,5 @@
-import { newListState } from "components/newlist/state/newList.atom";
 import type { FocusIndex } from "components/newlist/types/newList.types";
 import React from "react";
-import { useSetRecoilState } from "recoil";
 import * as S from "./NewListTerm.style";
 
 type NewListTermProps = {
@@ -9,11 +7,15 @@ type NewListTermProps = {
 	focussedInput?: FocusIndex;
 	setFocussedInput: React.Dispatch<React.SetStateAction<FocusIndex | undefined>>;
 	autoFocus: boolean;
+	setNewList: React.Dispatch<any>; // TODO: type this properly
 };
 
-function NewListTerm({ index, setFocussedInput, autoFocus }: NewListTermProps) {
-	const setNewList = useSetRecoilState(newListState);
-
+function NewListTerm({
+	index,
+	setFocussedInput,
+	autoFocus,
+	setNewList,
+}: NewListTermProps) {
 	function handleTermBlur(e: React.FocusEvent<HTMLInputElement>, idx: number) {
 		setFocussedInput((cur) => ({ ...cur, index: -1 }));
 		const { name, value } = e.target; // name is "from_value" | "to_value"
