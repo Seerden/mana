@@ -1,5 +1,6 @@
 import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { NewListWithTermsInput } from "../../../gql/codegen-output";
 import { useMutateCreateList } from "../../../gql/hooks/list/useCreateList";
 import { filterFalsy } from "../helpers/filterFalsyValues";
@@ -53,10 +54,33 @@ export function useNewList() {
 
 	/** Keydown listener for tab-key presses:
 	 * Add 10 new rows if user presses the tab key while they're
-	 * on the last term input. Autofocus the first newly added term. */
+	 * on the last term input. Autofocus the first newly added term.
+	 *
+	 * NOTE: case study: scrolling an element into view
+	 * - addRows() adds new (empty) term inputs. The last visible one of these
+	 *   becomes focusRef.current(). It's quite likely that these new inputs are
+	 *   below the current viewport bottom, and thus we want to scroll the
+	 *   element into view. There's a bunch of ways to do this:
+	 *    1. requestAnimationFrame(() => {
+	 *          scrollIntoView logic here
+	 *       })
+	 *    2. flushSync(() => { addRows() })
+	 *       // the rows have been added, so scrolling to the bottom scrolls to
+	 *       // the last synchronously added element
+	 *    3. window.setTimeout(() => {
+	 *          // scroll logic here
+	 *       }, **some small number**)
+	 */
 	function tabListener(e: KeyboardEvent) {
 		if (!e.shiftKey && e.key === "Tab" && e.target === focusRef.current) {
-			addRows();
+			flushSync(() => {
+				addRows();
+			});
+
+			window.scrollTo({
+				top: focusRef.current.getBoundingClientRect().top + 100,
+				behavior: "smooth",
+			});
 		}
 	}
 
