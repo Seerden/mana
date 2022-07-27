@@ -1,6 +1,5 @@
-import type { FocusIndex } from "components/newlist/types/newList.types";
 import useRouteProps from "hooks/useRouteProps";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { NewListWithTermsInput } from "../../../gql/codegen-output";
 import { useMutateCreateList } from "../../../gql/hooks/list/useCreateList";
 import { filterFalsy } from "../helpers/filterFalsyValues";
@@ -43,44 +42,36 @@ export function useNewList() {
 		}));
 	}
 
-	const [focussedInput, setFocussedInput] = useState<FocusIndex>();
-
 	const [newList, setNewList] = useState<NewListWithTermsInput>(defaultNewList);
+
+	const focusRef = useRef<HTMLInputElement>();
 
 	const termInputs: JSX.Element[] = useMemo(() => {
 		const termCount = newList.terms.length;
 
-		return Array(termCount)
+		return Array(termCount + 5)
 			.fill(null)
-			.map((_, i) => (
-				<NewListTerm
-					setNewList={setNewList}
-					key={`term-${i + 1}`}
-					index={i}
-					autoFocus={i === focussedInput?.index + 1}
-					setFocussedInput={setFocussedInput}
-				/>
-			));
-	}, [newList, focussedInput, setFocussedInput]);
+			.map((_, i) => {
+				return (
+					<NewListTerm
+						setNewList={setNewList}
+						isHidden={i >= termCount}
+						key={`term-${i + 1}`}
+						index={i}
+						ref={i === termCount - 1 ? focusRef : null}
+					/>
+				);
+			});
+	}, [newList]);
 
 	/** Keydown listener for tab-key presses:
 	 * Add 10 new rows if user presses the tab key while they're
 	 * on the last term input. Autofocus the first newly added term. */
-	const tabListener = useCallback(
-		(e: KeyboardEvent) => {
-			if (
-				!e.shiftKey &&
-				e.key === "Tab" &&
-				focussedInput?.index === termInputs.length - 1 &&
-				focussedInput?.side === "to"
-			) {
-				e.preventDefault();
-				addRows();
-				setFocussedInput((cur) => ({ index: cur?.index, side: "from" }));
-			}
-		},
-		[focussedInput, termInputs]
-	);
+	function tabListener(e: KeyboardEvent) {
+		if (!e.shiftKey && e.key === "Tab" && e.target === focusRef.current) {
+			addRows();
+		}
+	}
 
 	useEffect(() => {
 		window.addEventListener("keydown", tabListener);

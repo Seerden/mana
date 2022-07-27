@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const termHeight = "1.8rem";
 
@@ -21,7 +21,7 @@ export const TermIndex = styled.div`
 	transition: all 50ms linear;
 `;
 
-export const Term = styled.div`
+export const Term = styled.div<{ isHidden?: boolean }>`
 	&:nth-last-of-type(1) {
 		margin-bottom: 2rem;
 	}
@@ -42,6 +42,12 @@ export const Term = styled.div`
 			color: #111;
 		}
 	}
+
+	${(p) =>
+		p.isHidden &&
+		css`
+			display: none;
+		`}
 `;
 
 export const TermInputs = styled.div`
