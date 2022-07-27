@@ -1,5 +1,26 @@
 import styled from "styled-components";
 
+const termHeight = "1.8rem";
+
+export const TermIndex = styled.div`
+	padding: 0.3rem 0;
+	display: flex;
+	text-align: center;
+	height: ${termHeight};
+	width: 2rem;
+	justify-content: center;
+	align-items: center;
+	font-size: 0.9rem;
+	display: inline-block;
+	border-radius: 4px 0 0 4px;
+	user-select: none;
+
+	background-color: #111;
+	color: azure;
+
+	transition: all 50ms linear;
+`;
+
 export const Term = styled.div`
 	&:nth-last-of-type(1) {
 		margin-bottom: 2rem;
@@ -14,27 +35,13 @@ export const Term = styled.div`
 	&:not(:nth-of-type(-n + 2)) {
 		margin-top: 0.5rem;
 	}
-`;
 
-const termHeight = "1.8rem";
-
-export const TermIndex = styled.div<{ isFocussed?: boolean }>`
-	padding: 0.3rem 0;
-	display: flex;
-	text-align: center;
-	height: ${termHeight};
-	width: 2rem;
-	justify-content: center;
-	align-items: center;
-	font-size: 0.9rem;
-	display: inline-block;
-	border-radius: 4px 0 0 4px;
-	user-select: none;
-
-	background-color: ${(p) => (p.isFocussed ? "deepskyblue" : "#111")};
-	color: ${(p) => (p.isFocussed ? "#111" : "azure")};
-
-	transition: all 50ms linear;
+	&:focus-within {
+		${TermIndex} {
+			background-color: deepskyblue;
+			color: #111;
+		}
+	}
 `;
 
 export const TermInputs = styled.div`

@@ -1,6 +1,6 @@
 import { newListState } from "components/newlist/state/newList.atom";
 import type { FocusIndex } from "components/newlist/types/newList.types";
-import React, { useMemo } from "react";
+import React from "react";
 import { useSetRecoilState } from "recoil";
 import * as S from "./NewListTerm.style";
 
@@ -11,14 +11,8 @@ type NewListTermProps = {
 	autoFocus: boolean;
 };
 
-function NewListTerm({
-	index,
-	setFocussedInput,
-	focussedInput,
-	autoFocus,
-}: NewListTermProps) {
+function NewListTerm({ index, setFocussedInput, autoFocus }: NewListTermProps) {
 	const setNewList = useSetRecoilState(newListState);
-	const isFocussed = useMemo(() => focussedInput?.index === index, [focussedInput]);
 
 	function handleTermBlur(e: React.FocusEvent<HTMLInputElement>, idx: number) {
 		setFocussedInput((cur) => ({ ...cur, index: -1 }));
@@ -60,7 +54,7 @@ function NewListTerm({
 
 	return (
 		<S.Term>
-			<S.TermIndex isFocussed={isFocussed}>{index + 1}</S.TermIndex>
+			<S.TermIndex>{index + 1}</S.TermIndex>
 
 			<S.TermInputs>
 				<S.TermInput {...inputProps} autoFocus={autoFocus} name="from_value" />

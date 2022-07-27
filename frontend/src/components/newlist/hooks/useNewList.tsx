@@ -48,7 +48,6 @@ export function useNewList() {
 					key={`term-${i + 1}`}
 					index={i}
 					autoFocus={i === focussedInput?.index + 1}
-					focussedInput={focussedInput}
 					setFocussedInput={setFocussedInput}
 				/>
 			));
