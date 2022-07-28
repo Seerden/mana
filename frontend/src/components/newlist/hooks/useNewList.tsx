@@ -32,6 +32,7 @@ export function useNewList() {
 
 	const [newList, setNewList] = useState<NewListWithTermsInput>(defaultNewList);
 
+	// TODO: If scrolling to window.scrollY + n, I don't think we need focusRef anymore.
 	const focusRef = useRef<HTMLInputElement>();
 
 	const termInputs: JSX.Element[] = useMemo(() => {
@@ -78,7 +79,7 @@ export function useNewList() {
 			});
 
 			window.scrollTo({
-				top: focusRef.current.getBoundingClientRect().top + 100,
+				top: window.scrollY + 100,
 				behavior: "smooth",
 			});
 		}
@@ -90,7 +91,7 @@ export function useNewList() {
 		return () => {
 			window.removeEventListener("keydown", tabListener);
 		};
-	}, [tabListener]);
+	});
 
 	/**
 	 * Form input blur handler that updates a given newList field differently depending
