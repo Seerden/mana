@@ -32,7 +32,7 @@ export const Term = styled.div<{ isHidden?: boolean }>`
 	display: flex;
 	align-items: center;
 
-	&:not(:nth-of-type(-n + 2)) {
+	&:not(:nth-of-type(1)) {
 		margin-top: 0.5rem;
 	}
 
@@ -64,8 +64,7 @@ export const TermInput = styled.input`
 	font-size: 0.85rem;
 	border: none;
 	background-color: #2a2a2a;
-	border-radius: 0 0 5px 0;
-	box-shadow: 0 0 0.5rem 0 #111;
+	border-radius: 0 0 10px 0;
 	border: 1px solid #111;
 
 	transition: all 100ms linear, outline 5ms ease-in, box-shadow 0ms linear;
@@ -81,6 +80,7 @@ export const TermInput = styled.input`
 		border-radius: 0;
 		outline: 2px solid deepskyblue;
 		box-shadow: 0 0 0.5rem black;
-		transform: scale(1.02);
+		transform: scale(1.01);
+		z-index: 10;
 	}
 `;
