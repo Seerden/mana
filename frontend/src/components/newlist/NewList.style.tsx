@@ -121,8 +121,15 @@ export const Buttons = styled.section`
 	display: flex;
 	flex-direction: row;
 	gap: 1rem;
-
+	position: sticky;
+	// NOTE: with how the Header is currently implemented, 'top' has to be at
+	// least as large as the header's height
+	top: 75px;
 	place-self: flex-start;
+
+	padding: 0.8rem 3rem;
+	background-color: #191919;
+	border-radius: 5px;
 `;
 
 export const Button = styled.input`
@@ -130,7 +137,7 @@ export const Button = styled.input`
 
 	color: #111;
 	width: max-content;
-	margin-top: 1rem;
+	margin: 0;
 `;
 
 export const Terms = styled.section`
