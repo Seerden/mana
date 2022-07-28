@@ -3,14 +3,14 @@ import styled, { css } from "styled-components";
 
 export const HeaderWrapper = styled.header`
 	box-shadow: 0 3px 0 -2px #333;
-	position: sticky;
+	position: fixed;
 	top: 0;
 	left: 0;
 	padding: 1rem;
 
 	background-color: #111;
 	z-index: 10;
-	height: max-content;
+	height: 75px;
 	width: 100%;
 	font-size: 1.3rem;
 `;
@@ -44,8 +44,6 @@ export const LogoutButton = styled.button`
 		box-shadow: 0 0 0.5rem black;
 	}
 `;
-
-const hoverColor = "white";
 
 export const HeaderNavLink = styled(NavLink)<{ $isActive?: boolean }>`
 	position: relative;
