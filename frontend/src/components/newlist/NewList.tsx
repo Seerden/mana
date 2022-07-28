@@ -6,7 +6,7 @@ function NewList() {
 
 	return (
 		<div>
-			<div className="PageHeader">New List</div>
+			<S.Title>New List</S.Title>
 
 			<S.Form>
 				<S.NameAndLanguages>

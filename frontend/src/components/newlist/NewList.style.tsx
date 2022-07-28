@@ -1,6 +1,10 @@
 import { BiArrowToRight } from "react-icons/bi";
 import styled from "styled-components";
-import { sharedButtonStyle } from "../../helpers/theme/theme";
+import { sharedButtonStyle, sharedPageTitleStyle } from "../../helpers/theme/theme";
+
+export const Title = styled.h1`
+	${sharedPageTitleStyle};
+`;
 
 export const Form = styled.form`
 	display: flex;
