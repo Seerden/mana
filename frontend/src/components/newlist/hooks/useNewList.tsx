@@ -146,11 +146,38 @@ export function useNewList() {
 		[newList]
 	);
 
+	const buttonsRef = useRef<HTMLElement>();
+	const [isStuck, setIsStuck] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (!buttonsRef.current) {
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				setIsStuck(!entry.isIntersecting);
+			},
+			{
+				rootMargin: "-126px 0px 0px 0px", // the Buttons element has style `top: 125px`. Set the rootMargin here to a more negative value than this.
+				threshold: [1],
+			}
+		);
+
+		observer.observe(buttonsRef.current);
+
+		return () => {
+			buttonsRef?.current && observer.unobserve(buttonsRef?.current);
+		};
+	}, [buttonsRef]);
+
 	return {
 		handleBlur,
 		addRows,
 		handleSubmit,
 		termInputs,
 		newList,
+		buttonsRef,
+		isStuck,
 	} as const;
 }
