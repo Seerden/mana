@@ -12,32 +12,33 @@ function NewList() {
 				<S.NameAndLanguages>
 					<S.NameLabel>List name</S.NameLabel>
 					<S.NameInput
-						onBlur={handleBlur}
+						onChange={handleBlur}
 						type="text"
 						name="name"
 						placeholder="week 3 vocabulary"
 					/>
 
+					<S.NameLabel>Languages</S.NameLabel>
 					<S.Languages>
 						<S.Language>
 							<S.LanguageLabel htmlFor="from_language">
 								Original language
 							</S.LanguageLabel>
 							<S.LanguageInput
-								onBlur={handleBlur}
+								onChange={handleBlur}
 								type="text"
 								name="from_language"
 								placeholder="Klingon"
 							/>
 						</S.Language>
-						<S.LanguageIcon />
+						<S.LanguageIcon size={25} />
 
 						<S.Language>
 							<S.LanguageLabel htmlFor="to_language">
 								Target language
 							</S.LanguageLabel>
 							<S.LanguageInput
-								onBlur={handleBlur}
+								onChange={handleBlur}
 								type="text"
 								name="to_language"
 								placeholder="Elvish"
