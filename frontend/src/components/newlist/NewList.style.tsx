@@ -1,6 +1,11 @@
 import { FaLongArrowAltRight } from "react-icons/fa";
-import styled from "styled-components";
-import { sharedButtonStyle, sharedPageTitleStyle } from "../../helpers/theme/theme";
+import styled, { css } from "styled-components";
+import {
+	sharedButtonStyle,
+	sharedPageTitleStyle,
+	subsectionHeaderStyle,
+	tempSectionStyle,
+} from "../../helpers/theme/theme";
 
 export const Title = styled.h1`
 	${sharedPageTitleStyle};
@@ -9,25 +14,59 @@ export const Title = styled.h1`
 export const Form = styled.form`
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+
+	max-width: 40rem;
 
 	@media screen and (max-width: 1280px) {
 		max-width: 50rem;
 	}
 
-	max-width: 40rem;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	@media screen and (min-width: 1920px) {
+		display: grid;
+		grid-template-areas:
+			"title title"
+			"terms meta"
+			"terms buttons"
+			"terms _";
+		grid-template-columns: repeat(2, max-content);
+		max-width: max-content;
+		grid-gap: 0 4rem;
+	}
+
 	margin: 0 auto;
 `;
 
 // Should be renamed to Header or something
-export const NameAndLanguages = styled.section`
+export const Section = styled.section`
+	${tempSectionStyle};
 	width: 100%;
+	margin-top: 0;
 `;
 
-export const NameLabel = styled.label`
+export const MetaSection = styled(Section)`
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+
+	@media screen and (min-width: 1280px) {
+		display: flex;
+		flex-direction: row;
+		gap: 2rem;
+		grid-area: meta;
+	}
+`;
+
+export const NameSubsection = styled.div`
+	@media screen and (min-width: 1920px) {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+`;
+
+export const SectionLabel = styled.label`
+	${subsectionHeaderStyle}
+
 	font-size: 1.5rem;
 	margin-bottom: 0.2rem;
 
@@ -55,10 +94,6 @@ export const LanguageLabel = styled.label`
 	z-index: 1;
 	padding: 0.4rem 0.9rem;
 	outline: 3px solid #111;
-
-	::placeholder {
-		font-style: italic;
-	}
 `;
 
 export const Input = styled.input`
@@ -77,7 +112,7 @@ export const Input = styled.input`
 	width: 100%;
 
 	box-shadow: 0 0 0.4rem black;
-	padding: 0.75rem 1rem;
+	padding: 0.45rem 0.6rem;
 
 	transition: all 80ms linear;
 
@@ -92,10 +127,13 @@ export const Input = styled.input`
 		}
 	}
 
-	&:focus {
+	&:focus,
+	&:active {
 		border: 2px solid black;
-		border-radius: 5px;
-		background-color: #555;
+		border-radius: 0;
+		box-shadow: 0 0 0.4rem black;
+
+		transition: all ease-in 35ms;
 
 		&::placeholder {
 			opacity: 0;
@@ -108,28 +146,35 @@ export const NameInput = styled(Input)`
 `;
 
 export const LanguageInput = styled(Input)`
-	padding: 0.75rem 0.5rem;
+	padding: 0.45rem 0.5rem;
+	font-size: 0.9rem;
 `;
 
 export const LanguageIcon = styled(FaLongArrowAltRight)`
 	fill: ${(p) => p.theme.colors.blue.main};
-	margin-top: 1.5rem;
+	margin-top: 1.7rem;
 	padding: 0;
 `;
 
-export const Buttons = styled.section`
+export const Buttons = styled.section<{ isStuck?: boolean }>`
 	display: flex;
 	flex-direction: row;
 	gap: 1rem;
+	border: 3px solid transparent;
 	position: sticky;
-	// NOTE: with how the Header is currently implemented, 'top' has to be at
-	// least as large as the header's height
-	top: 75px;
+	top: 125px;
 	place-self: flex-start;
 
 	padding: 0.8rem 3rem;
 	background-color: #191919;
-	border-radius: 5px;
+
+	${(p) =>
+		p.isStuck &&
+		css`
+			transform: translateX(-30px);
+			border-color: #444;
+			border-radius: 0;
+		`}
 `;
 
 export const Button = styled.input`
@@ -140,23 +185,16 @@ export const Button = styled.input`
 	margin: 0;
 `;
 
-export const Terms = styled.section`
-	width: 100%;
-`;
-
 export const TermsHeader = styled.div`
 	display: flex;
 	margin: 0 auto;
+	margin-left: ${indexWidth};
 	border-radius: 0 0 5px 0;
 `;
 
 export const TermsHeaderSide = styled.span`
-	display: inline-block;
-	width: 50%;
-	padding: 0.75rem 0.5rem;
+	overflow: hidden;
+	width: calc(50% - 0.6rem); // the 0.6rem is presumably 2*some padding width somewhere
 	background-color: #111;
-
-	&:nth-of-type(even) {
-		width: calc(50% - #${indexWidth});
-	}
+	padding: 0.4rem 0.8rem;
 `;
