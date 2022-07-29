@@ -117,6 +117,7 @@ export const Input = styled.input`
 	&:not(:focus) {
 		&::placeholder {
 			color: #aaa;
+			font-size: 0.85rem;
 		}
 	}
 
@@ -156,7 +157,12 @@ export const Buttons = styled.section<{ isStuck?: boolean }>`
 	border: 3px solid transparent;
 	position: sticky;
 	top: 125px;
-	place-self: flex-start;
+
+	place-self: flex-end;
+
+	@media screen and (min-width: 1920px) {
+		place-self: flex-start;
+	}
 
 	padding: 0.8rem 0;
 
