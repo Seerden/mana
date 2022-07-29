@@ -23,7 +23,7 @@ function NewList() {
 					<div>
 						<S.SectionLabel>Languages</S.SectionLabel>
 						<S.Languages>
-							<S.Language>
+							<div>
 								<S.LanguageLabel htmlFor="from_language">
 									Original language
 								</S.LanguageLabel>
@@ -33,10 +33,10 @@ function NewList() {
 									name="from_language"
 									placeholder="Klingon"
 								/>
-							</S.Language>
+							</div>
 							<S.LanguageIcon size={25} />
 
-							<S.Language>
+							<div>
 								<S.LanguageLabel htmlFor="to_language">
 									Target language
 								</S.LanguageLabel>
@@ -46,7 +46,7 @@ function NewList() {
 									name="to_language"
 									placeholder="Elvish"
 								/>
-							</S.Language>
+							</div>
 						</S.Languages>
 					</div>
 				</S.MetaSection>
@@ -60,8 +60,8 @@ function NewList() {
 					<S.SectionLabel>Terms</S.SectionLabel>
 					{newList.from_language && newList.to_language && (
 						<S.TermsHeader>
-							<S.TermsHeaderSide>{`in ${newList.from_language}`}</S.TermsHeaderSide>
-							<S.TermsHeaderSide>{`in ${newList.to_language}`}</S.TermsHeaderSide>
+							<S.TermsHeaderSide>{`${newList.from_language} definition`}</S.TermsHeaderSide>
+							<S.TermsHeaderSide>{`${newList.to_language} definition`}</S.TermsHeaderSide>
 						</S.TermsHeader>
 					)}
 					{termInputs}
