@@ -29,17 +29,22 @@ export const Form = styled.form`
 			"terms buttons"
 			"terms _";
 		grid-template-columns: repeat(2, max-content);
-		max-width: max-content;
+		max-width: 80%;
 		grid-gap: 0 4rem;
 	}
 
 	margin: 0 auto;
 `;
 
-// Should be renamed to Header or something
 export const Section = styled.section`
 	${tempSectionStyle};
 	width: 100%;
+
+	@media screen and (min-width: 1920px) {
+		min-width: 700px;
+		max-width: 1280px;
+	}
+
 	margin-top: 0;
 `;
 
