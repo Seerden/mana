@@ -38,7 +38,12 @@ export function useNewList() {
 	const termInputs: JSX.Element[] = useMemo(() => {
 		const termCount = newList.terms.length;
 
-		return Array(termCount + 5)
+		// Add termCount+1 entries. The last one will get `display:none`. We do
+		// this because this way, when tabbing on the last one (thereby triggering
+		// tabListener), the hidden element will become focused (and at the same
+		// time un-hide), which removes the need for complicated tab-index/focus
+		// state.
+		return Array(termCount + 1)
 			.fill(null)
 			.map((_, i) => {
 				return (
