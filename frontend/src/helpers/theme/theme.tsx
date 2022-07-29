@@ -70,6 +70,10 @@ export const sharedButtonStyle = css`
 		background-color: #444;
 		color: azure;
 	}
+
+	&:focus {
+		outline: 1px solid white;
+	}
 `;
 
 // Matches old .Link class
