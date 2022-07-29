@@ -13,6 +13,11 @@ export const HeaderWrapper = styled.header`
 	height: 75px;
 	width: 100%;
 	font-size: 1.3rem;
+
+	display: flex;
+	align-items: center;
+
+	border-bottom: 3px solid #222;
 `;
 
 export const HeaderContent = styled.nav`
