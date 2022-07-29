@@ -1,18 +1,17 @@
 import React, { forwardRef, Ref } from "react";
+import { NewListWithTermsInput } from "../../../gql/codegen-output";
 import * as S from "./NewListTerm.style";
 
 type NewListTermProps = {
 	index: number;
 	isHidden?: boolean;
-	setNewList: React.Dispatch<any>; // TODO: type this properly
+	setNewList: React.Dispatch<React.SetStateAction<NewListWithTermsInput>>;
 };
 
 const NewListTerm = forwardRef(
 	({ index, setNewList, isHidden }: NewListTermProps, ref: Ref<HTMLInputElement>) => {
 		function handleTermBlur(e: React.FocusEvent<HTMLInputElement>, idx: number) {
 			const { name, value } = e.target; // name is "from_value" | "to_value"
-
-			if (!value) return;
 
 			setNewList((cur) => {
 				const termsCopy = cur.terms.slice();
