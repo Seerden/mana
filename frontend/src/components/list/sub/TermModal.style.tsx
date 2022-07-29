@@ -201,7 +201,7 @@ export const TermModal = styled.div`
 	color: white;
 	border: 2px solid #333;
 	box-shadow: 10px 10px 0 -2px #444;
-	width: 50%;
+	width: 40vw;
 	margin: 0 auto;
 	left: 25%;
 	overflow-y: auto;

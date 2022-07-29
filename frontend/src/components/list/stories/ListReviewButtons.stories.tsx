@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import ListReviewButtons from "./ListReviewButtons";
+import ListReviewButtons from "../sub/ListReviewButtons";
 
 export default {
 	component: ListReviewButtons,

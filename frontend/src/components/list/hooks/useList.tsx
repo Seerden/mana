@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useQueryListsById } from "gql/hooks/list/useQueryLists";
 import useRouteProps from "hooks/useRouteProps";
 import { useEffect } from "react";
+import { useQueryListsById } from "../../../gql/hooks/list/useQueryLists";
 
 function useList() {
 	const { params } = useRouteProps();

@@ -1,23 +1,21 @@
 import dayjs from "dayjs";
 import { useState } from "react";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
-import { v4 as uuidv4 } from "uuid";
-import { ReviewSessionEntry } from "../../../gql/codegen-output";
+import { Term } from "../../../gql/codegen-output";
 import { colors } from "../../../helpers/theme/colors";
 import { timeSince } from "../../../helpers/time";
 import PassfailIcon from "../../_shared/PassfailIcon";
 import * as S from "./TermReviewHistory.style";
 
-export default function TermReviewHistory({
-	history,
-}: {
-	history: ReviewSessionEntry[];
-}) {
+export default function TermReviewHistory({ history }: { history: Term["history"] }) {
 	const [showAll, setShowAll] = useState(false);
+	const toggleShowAll = () => setShowAll((cur) => !cur);
 
 	const historyElements = [...history]
 		.reverse()
-		.map((element) => <HistoryElement historyEntry={element} key={uuidv4()} />);
+		.map((session) => (
+			<TermHistoryEntry entries={session} key={session[0].review_entry_id} />
+		));
 
 	return (
 		<>
@@ -27,12 +25,14 @@ export default function TermReviewHistory({
 						You've reviewed this term {historyElements.length} time
 						{historyElements.length === 1 ? "" : "s"}
 					</S.Description>
+
 					{historyElements.length > 1 && (
-						<S.ExpandButton onClick={() => setShowAll(!showAll)}>
-							{!showAll ? "Showing one" : "Showing all"}
+						<S.ExpandButton onClick={toggleShowAll}>
+							{showAll ? "Showing all sessions" : "Showing latest session"}
 						</S.ExpandButton>
 					)}
 				</S.Header>
+
 				{historyElements.length > 0 && (
 					<S.HistoryContent>
 						{showAll ? historyElements : historyElements[0]}
@@ -44,15 +44,17 @@ export default function TermReviewHistory({
 }
 
 type HistoryElementProps = {
-	historyEntry: ReviewSessionEntry;
+	entries: Term["history"][number];
 };
 
-function HistoryElement({ historyEntry }: HistoryElementProps) {
+function TermHistoryEntry({ entries }: HistoryElementProps) {
+	const firstEntry = entries[0];
+
 	return (
 		<S.HistorySession>
 			<S.HistorySessionBlock>
 				<S.Direction>
-					{historyEntry.direction === "forwards" ? (
+					{firstEntry.direction === "forwards" ? (
 						<BiArrowToRight
 							title="Reviewed front to back"
 							fill={colors.blue.main}
@@ -61,27 +63,25 @@ function HistoryElement({ historyEntry }: HistoryElementProps) {
 					) : (
 						<BiArrowToLeft
 							title="Reviewed back to front"
-							// TODO: add to green theme value
-							fill="limegreen"
+							fill="limegreen" // TODO: add to green theme value
 							size={18}
 						/>
 					)}
 				</S.Direction>
 
-				<span title={dayjs(historyEntry.created_at).format("MMMM DD, YYYY (HH:mm)")}>
-					{timeSince(historyEntry.created_at)}
+				<span title={dayjs(firstEntry.created_at).format("MMMM DD, YYYY (HH:mm)")}>
+					{timeSince(firstEntry.created_at * 1000)}
 				</span>
 			</S.HistorySessionBlock>
 
 			<S.HistorySessionBlock>
-				<div key={uuidv4()}>
+				{entries.map((entry) => (
 					<PassfailIcon
-						key={`passfailicon-${historyEntry.review_entry_id}`}
-						passfail={historyEntry.passfail}
-						// TODO: temporarily force index=0 during refactor effort
-						index={0}
+						key={`passfailicon-${entry.review_entry_id}`}
+						passfail={entry.passfail}
+						index={entry.review_entry_id}
 					/>
-				</div>
+				))}
 			</S.HistorySessionBlock>
 		</S.HistorySession>
 	);

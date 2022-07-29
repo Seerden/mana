@@ -110,7 +110,6 @@ export type MutationLoginArgs = {
 export type MutationUpdateListArgs = {
   list_id: Scalars['Float'];
   payload: ListUpdatePayloadInput;
-  user_id: Scalars['Float'];
 };
 
 
@@ -188,7 +187,7 @@ export type ReviewSession = {
 
 export type ReviewSessionEntry = {
   __typename?: 'ReviewSessionEntry';
-  created_at: Scalars['Int'];
+  created_at: Scalars['Float'];
   direction: Scalars['String'];
   passfail: Scalars['String'];
   review_entry_id: Scalars['Int'];
@@ -219,7 +218,7 @@ export type Term = {
   __typename?: 'Term';
   from_language: Scalars['String'];
   from_value: Scalars['String'];
-  history?: Maybe<Array<ReviewSessionEntry>>;
+  history?: Maybe<Array<Array<ReviewSessionEntry>>>;
   list_id: Scalars['Int'];
   saturation?: Maybe<TermSaturation>;
   term_id: Scalars['Int'];
@@ -452,7 +451,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteUser?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   login?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
   logout?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
-  updateList?: Resolver<Maybe<ResolversTypes['List']>, ParentType, ContextType, RequireFields<MutationUpdateListArgs, 'list_id' | 'payload' | 'user_id'>>;
+  updateList?: Resolver<Maybe<ResolversTypes['List']>, ParentType, ContextType, RequireFields<MutationUpdateListArgs, 'list_id' | 'payload'>>;
   updateListLanguage?: Resolver<Maybe<ResolversTypes['List']>, ParentType, ContextType, RequireFields<MutationUpdateListLanguageArgs, 'payload'>>;
   updatePassword?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdatePasswordArgs, 'currentPassword' | 'newPassword'>>;
   updateTermValues?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<MutationUpdateTermValuesArgs, 'updateOptions'>>;
@@ -483,7 +482,7 @@ export type ReviewSessionResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type ReviewSessionEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSessionEntry'] = ResolversParentTypes['ReviewSessionEntry']> = {
-  created_at?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  created_at?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   direction?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   passfail?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   review_entry_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -496,7 +495,7 @@ export type ReviewSessionEntryResolvers<ContextType = any, ParentType extends Re
 export type TermResolvers<ContextType = any, ParentType extends ResolversParentTypes['Term'] = ResolversParentTypes['Term']> = {
   from_language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   from_value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  history?: Resolver<Maybe<Array<ResolversTypes['ReviewSessionEntry']>>, ParentType, ContextType, RequireFields<TermHistoryArgs, never>>;
+  history?: Resolver<Maybe<Array<Array<ResolversTypes['ReviewSessionEntry']>>>, ParentType, ContextType, RequireFields<TermHistoryArgs, never>>;
   list_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   saturation?: Resolver<Maybe<ResolversTypes['TermSaturation']>, ParentType, ContextType, RequireFields<TermSaturationArgs, never>>;
   term_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;

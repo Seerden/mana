@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { List } from "../../../gql/codegen-output";
-import ListTitleBar from "./ListTitleBar";
+import ListTitleBar from "../sub/ListTitleBar";
 
 export default {
 	component: ListTitleBar,

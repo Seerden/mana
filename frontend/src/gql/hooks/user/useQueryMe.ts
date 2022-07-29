@@ -22,7 +22,6 @@ type Options = {
 export function useQueryMe(options: Options) {
 	return useQuery<User>(["me"], async () => queryMeRequest(), {
 		retry: false,
-		enabled: false,
 		onSuccess: (user) => options.onSuccess?.(user),
 	});
 }

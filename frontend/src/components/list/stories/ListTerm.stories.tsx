@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { RecoilRoot } from "recoil";
 import { Term } from "../../../gql/codegen-output";
-import ListTerm from "./ListTerm";
+import ListTerm from "../sub/ListTerm";
 
 export default {
 	component: ListTerm,
