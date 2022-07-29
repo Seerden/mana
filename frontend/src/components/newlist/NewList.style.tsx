@@ -198,6 +198,10 @@ export const TermsHeader = styled.div`
 	margin: 0 auto;
 	margin-left: ${indexWidth};
 	border-radius: 0 0 5px 0;
+
+	padding: 0.3rem 0;
+	font-size: 1rem;
+	font-weight: 500;
 `;
 
 export const TermsHeaderSide = styled.span`
