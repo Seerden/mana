@@ -2,8 +2,16 @@ import { useNewList } from "./hooks/useNewList";
 import * as S from "./NewList.style";
 
 function NewList() {
-	const { handleBlur, addRows, handleSubmit, termInputs, newList, buttonsRef, isStuck } =
-		useNewList();
+	const {
+		handleBlur,
+		addRows,
+		handleSubmit,
+		termInputs,
+		newList,
+		buttonsRef,
+		isStuck,
+		isSubmitDisabled,
+	} = useNewList();
 
 	return (
 		<S.Form>
@@ -52,7 +60,12 @@ function NewList() {
 
 			<S.Buttons style={{ gridArea: "buttons" }} ref={buttonsRef} isStuck={isStuck}>
 				<S.Button onClick={() => addRows()} type="button" value="Add rows" />
-				<S.Button onClick={handleSubmit} type="button" value="Create list" />
+				<S.Button
+					onClick={handleSubmit}
+					disabled={isSubmitDisabled}
+					type="button"
+					value="Create list"
+				/>
 			</S.Buttons>
 
 			<S.Section style={{ gridArea: "terms" }}>
