@@ -8,12 +8,12 @@
 ### List name
 
 -  [x] don't center "List name" title/header
--  [ ] consider using "List name" as placeholder instead of "week 3 vocabulary"
+-  [-] consider using "List name" as placeholder instead of "week 3 vocabulary"
    -  [x] updated placeholder string
 -  [x] use different color for input -- white is too harsh
--  [ ] slightly decrease placeholder font size so that it fits on large
+-  [x] slightly decrease placeholder font size so that it fits on large
        viewports (width >= 1920px)
--  [ ] also use justify-content: space-between on medium viewports (where name
+-  [x] also use justify-content: space-between on medium viewports (where name
        and languages are side-by-side, but terms is below it)
 
 ### Languages
@@ -24,13 +24,13 @@
 
 ### Buttons
 
--  [] left-align buttons on width >= 1920px (and remove left-padding
-   accordingly), but keep right alignment on smaller viewports
+-  [x] left-align buttons on width >= 1920px (and remove left-padding
+       accordingly), but keep right alignment on smaller viewports
 -  consider more buttons
    -  in addition to 'add rows', add 'remove empty rows'
    -  display number of rows to-be-added with 'Add rows' button
    -  [x] make button bar sticky/fixed
--  [ ] add outline style to buttons
+-  [x] add outline style to buttons
 
 ### Terms
 
@@ -38,11 +38,14 @@
        with term index number
 -  [x] right box-shadow of from_value overlaps with left box-shadow of to_value
 -  [x] don't scale input up so much on :active
--  [ ] TermsHeader: match `to_language` label width to `term.to_value` width
+-  [x] TermsHeader: match `to_language` label width to `term.to_value` width
+   -  matching this with hard-coded padding right now. Probably want to use
+      proper variables.
 
 ## Functionality
 
 -  [ ] prevent submission of invalid list:
    -  [ ] disable 'create list' button if newList isn't valid
    -  [ ] validate `name` and `languages` to have length > 0.
--  [ ] fix terms clearing out when adding new rows
+-  [-] ~~fix terms clearing out when adding new rows~~
+   -  already fixed
