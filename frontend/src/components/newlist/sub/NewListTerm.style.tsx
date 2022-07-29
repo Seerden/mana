@@ -22,19 +22,12 @@ export const TermIndex = styled.div`
 `;
 
 export const Term = styled.div<{ isHidden?: boolean }>`
-	&:nth-last-of-type(1) {
-		margin-bottom: 2rem;
-	}
-
 	display: flex;
 	flex-direction: row;
-	margin: 0 auto;
 	display: flex;
 	align-items: center;
 
-	&:not(:nth-of-type(1)) {
-		margin-top: 0.5rem;
-	}
+	margin-bottom: 0.4rem;
 
 	&:focus-within {
 		${TermIndex} {
