@@ -56,7 +56,7 @@ export function useNewList() {
 					/>
 				);
 			});
-	}, [newList]);
+	}, [newList.terms]);
 
 	/** Keydown listener for tab-key presses:
 	 * Add 10 new rows if user presses the tab key while they're
@@ -151,6 +151,7 @@ export function useNewList() {
 		[newList]
 	);
 
+	/** Functionality for isStuck state for the Buttons section. */
 	const buttonsRef = useRef<HTMLElement>();
 	const [isStuck, setIsStuck] = useState<boolean>(false);
 
