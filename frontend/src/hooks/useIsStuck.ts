@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
  * that returns true when the observer detects an intersection, and false
  * otherwise.
  */
-export default function useIsStuck(
+export default function useIsIntersecting(
 	ref: React.MutableRefObject<Element>,
 	options?: IntersectionObserverInit
 ) {

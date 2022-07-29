@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { NewListWithTermsInput } from "../../../gql/codegen-output";
 import { useMutateCreateList } from "../../../gql/hooks/list/useCreateList";
-import useIsStuck from "../../../hooks/useIsStuck";
+import useIsIntersecting from "../../../hooks/useIsStuck";
 import { filterValidNewTerms, isValidNewList } from "../helpers/validate-new-list";
 import NewListTerm from "../sub/NewListTerm";
 
@@ -153,7 +153,7 @@ export function useNewList() {
 	);
 
 	const buttonsRef = useRef<HTMLElement>();
-	const [isStuck] = useIsStuck(buttonsRef, {
+	const [isStuck] = useIsIntersecting(buttonsRef, {
 		// The Buttons element (which is buttonsRef.current) has `top: 125px`, and we
 		// need the top rootMargin to be more negative than this to trigger the
 		// intersection event.
