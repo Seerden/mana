@@ -57,11 +57,9 @@ export const MetaSection = styled(Section)`
 `;
 
 export const NameSubsection = styled.div`
-	@media screen and (min-width: 1920px) {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-	}
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 `;
 
 export const SectionLabel = styled.label`
@@ -165,12 +163,13 @@ export const Buttons = styled.section<{ isStuck?: boolean }>`
 	top: 125px;
 	place-self: flex-start;
 
-	padding: 0.8rem 3rem;
-	background-color: #191919;
+	padding: 0.8rem 0;
 
 	${(p) =>
 		p.isStuck &&
 		css`
+			background-color: #191919;
+			padding: 0.8rem 3rem;
 			transform: translateX(-30px);
 			border-color: #444;
 			border-radius: 0;
@@ -197,4 +196,8 @@ export const TermsHeaderSide = styled.span`
 	width: calc(50% - 0.6rem); // the 0.6rem is presumably 2*some padding width somewhere
 	background-color: #111;
 	padding: 0.4rem 0.8rem;
+
+	&:nth-of-type(2) {
+		width: calc(50% + 0.6rem);
+	}
 `;
