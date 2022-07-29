@@ -81,17 +81,12 @@ export const Languages = styled.div`
 	align-items: center;
 `;
 
-export const Language = styled.div``;
-
 export const LanguageLabel = styled.label`
-	position: relative;
-	display: block;
 	width: 100%;
 	font-weight: 500;
-	background-color: #111;
-	z-index: 1;
-	padding: 0.4rem 0.9rem;
-	outline: 3px solid #111;
+	background-color: #191919;
+	padding: 0.3rem 0.1rem;
+	margin-top: 0.4rem;
 `;
 
 export const Input = styled.input`
