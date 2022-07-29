@@ -191,6 +191,9 @@ export const Button = styled.input`
 `;
 
 export const TermsHeader = styled.div`
+	position: sticky;
+	top: 75px; // should match Header height
+
 	display: flex;
 	margin: 0 auto;
 	margin-left: ${indexWidth};
