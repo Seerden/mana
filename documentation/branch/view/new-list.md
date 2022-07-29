@@ -44,7 +44,7 @@
 
 ## Functionality
 
--  [ ] prevent submission of invalid list:
+-  [x] prevent submission of invalid list:
    -  [ ] disable 'create list' button if newList isn't valid
    -  [ ] validate `name` and `languages` to have length > 0.
 -  [-] ~~fix terms clearing out when adding new rows~~
