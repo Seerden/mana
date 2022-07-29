@@ -3,8 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { NewListWithTermsInput } from "../../../gql/codegen-output";
 import { useMutateCreateList } from "../../../gql/hooks/list/useCreateList";
-import { filterFalsy } from "../helpers/filterFalsyValues";
-import { isValidNewList } from "../helpers/validate-new-list";
+import { filterValidNewTerms, isValidNewList } from "../helpers/validate-new-list";
 import NewListTerm from "../sub/NewListTerm";
 
 const defaultNewList: NewListWithTermsInput = {
@@ -31,6 +30,7 @@ export function useNewList() {
 	}
 
 	const [newList, setNewList] = useState<NewListWithTermsInput>(defaultNewList);
+	const isSubmitDisabled = useMemo(() => !isValidNewList(newList), [newList]);
 
 	// TODO: If scrolling to window.scrollY + n, I don't think we need focusRef anymore.
 	const focusRef = useRef<HTMLInputElement>();
@@ -135,7 +135,7 @@ export function useNewList() {
 
 			if (!isValidNewList(newList)) return;
 
-			const terms = filterFalsy(newList.terms);
+			const terms = filterValidNewTerms(newList.terms);
 
 			const list: NewListWithTermsInput = {
 				...newList,
@@ -185,5 +185,6 @@ export function useNewList() {
 		newList,
 		buttonsRef,
 		isStuck,
+		isSubmitDisabled,
 	} as const;
 }

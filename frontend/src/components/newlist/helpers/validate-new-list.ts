@@ -1,5 +1,4 @@
 import { NewListWithTermsInput } from "../../../gql/codegen-output";
-import { filterFalsy } from "./filterFalsyValues";
 
 export function isValidNewList(newList: NewListWithTermsInput) {
 	const fields = ["name", "from_language", "to_language"];
@@ -8,7 +7,15 @@ export function isValidNewList(newList: NewListWithTermsInput) {
 		if (!newList[field]?.length) return false;
 	}
 
-	const hasTerms = filterFalsy(newList.terms)?.length > 0;
+	const validTerms = newList.terms.filter(({ from_value, to_value }) => {
+		return from_value.length && to_value.length;
+	});
 
-	return !!hasTerms;
+	return !!validTerms?.length;
+}
+
+export function filterValidNewTerms(terms: NewListWithTermsInput["terms"]) {
+	return terms.filter(({ from_value, to_value }) => {
+		return from_value?.length && to_value?.length;
+	});
 }
