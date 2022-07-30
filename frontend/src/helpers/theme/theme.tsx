@@ -11,6 +11,7 @@ export const tempSectionStyle = css`
 	border: 3px solid ${(p) => p.theme.colors.dark.grey.darker};
 	padding: 1rem;
 	width: 800px;
+	max-width: 100%;
 	margin-top: 1rem;
 `;
 
