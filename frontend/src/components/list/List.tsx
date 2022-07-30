@@ -1,4 +1,5 @@
 import useList from "components/list/hooks/useList";
+import { Page } from "../../helpers/theme/snippets";
 import { useListUpdate } from "./hooks/useListUpdate";
 import ListReviewButtons from "./sub/ListReviewButtons";
 import ListTerms from "./sub/ListTerms";
@@ -11,7 +12,7 @@ function List() {
 	if (!list) return <></>;
 
 	return (
-		<div className="PageWrapper">
+		<Page>
 			<ListTitleBar
 				list={list}
 				handleListTitleBlur={handleListTitleBlur}
@@ -21,7 +22,7 @@ function List() {
 			<ListReviewButtons />
 
 			<ListTerms list={list} />
-		</div>
+		</Page>
 	);
 }
 
