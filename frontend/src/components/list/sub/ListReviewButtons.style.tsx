@@ -20,6 +20,8 @@ export const Header = styled.header`
 
 export const ReviewLink = styled(Link)`
 	${sharedLinkStyle}
+	display: block;
+	width: max-content;
 
 	&:not(:nth-of-type(1)) {
 		margin-left: 0.5rem;
