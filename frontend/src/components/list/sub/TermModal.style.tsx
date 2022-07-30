@@ -1,4 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
+import { subsectionHeaderStyle } from "../../../helpers/theme/theme";
 
 const deleteButtonStyle = css`
 	padding: 0.2rem 0.5rem;
@@ -24,7 +25,6 @@ const deleteButtonStyle = css`
 	}
 `;
 
-// __delete--confirm
 export const ConfirmDeleteLabel = styled.div`
 	background-color: transparent;
 	display: inline-flex;
@@ -35,7 +35,6 @@ export const ConfirmDeleteLabel = styled.div`
 	padding: 0 0.5rem;
 `;
 
-// __delete--confirm-yes, -no
 export const ConfirmDeleteButton = styled.button<{ confirm?: true }>`
 	${deleteButtonStyle}
 
@@ -62,11 +61,9 @@ export const DeleteButtonWrapper = styled.div`
 `;
 
 export const Input = styled.input<{ confirming?: boolean }>`
-	display: block;
 	width: 450px;
 	max-width: 100%;
 	border-radius: 0 3px 3px 3px;
-	margin: 0;
 	outline: none;
 	padding: 0.7rem 1rem;
 	background-color: #191919; // TODO: make theme value
@@ -79,9 +76,8 @@ export const Input = styled.input<{ confirming?: boolean }>`
 
 	transition: all 50ms linear;
 
-	// Set 'confirming'-specific styles
-	${({ confirming }) =>
-		confirming &&
+	${(p) =>
+		p.confirming &&
 		css`
 			border: 3px solid white;
 			background-color: orangered;
@@ -91,7 +87,6 @@ export const Input = styled.input<{ confirming?: boolean }>`
 		`}
 
 	&:focus {
-		background-color: #191919; // TODO: is this necessary?
 		color: ${(p) => p.theme.colors.light.tint};
 		border: 3px solid transparent;
 		box-shadow: 0px 4px 0 -2px transparent, 0 -4px 0 -2px transparent,
@@ -99,11 +94,14 @@ export const Input = styled.input<{ confirming?: boolean }>`
 			8px 8px 0 -5px ${(p) => p.theme.colors.dark.grey.dark};
 		border-radius: 0px;
 	}
+
+	@media screen and (max-width: 768px) {
+		max-width: 80%;
+	}
 `;
 
 export const TermSaturation = styled.span`
 	display: flex;
-	// background-color: #222;
 	justify-content: center;
 	width: 2rem;
 	height: 100%;
@@ -111,8 +109,8 @@ export const TermSaturation = styled.span`
 `;
 
 export const TermSide = styled.div`
-	display: grid;
-	grid-template-columns: repeat(2, max-content);
+	display: flex;
+	gap: 1.5rem;
 	align-items: center;
 `;
 
@@ -132,12 +130,7 @@ export const Section = styled.section`
 `;
 
 export const Header = styled.header`
-	font-size: 1.6rem;
-	font-weight: 600;
-	width: max-content;
-	border-bottom: 2px solid white;
-	background-color: #222;
-	margin-bottom: 0.5rem;
+	${subsectionHeaderStyle}
 `;
 
 export const CloseModalButton = styled.button`
@@ -174,7 +167,7 @@ const fadeIn = keyframes`
    }
 `;
 
-export const ModalWrapper = styled.div`
+export const ModalWrapper = styled.aside`
 	animation: 100ms linear ${fadeIn};
 	animation-fill-mode: forwards;
 	position: fixed;
@@ -201,14 +194,12 @@ export const TermModal = styled.div`
 	color: white;
 	border: 2px solid #333;
 	box-shadow: 10px 10px 0 -2px #444;
-	width: 40vw;
+	width: 40%;
 	margin: 0 auto;
-	left: 25%;
+	left: 30%;
 	overflow-y: auto;
 
 	@media screen and (max-height: 900px) {
-		top: 0;
-		height: 100vh;
 		background-color: rgba(0, 0, 0, 0.815);
 	}
 

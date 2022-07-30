@@ -53,7 +53,7 @@ function TermModal({ setOpen, term, handleTermEdit }: TermModalProps) {
 						</S.CloseModalButton>
 					</S.HeaderContainer>
 
-					<S.Label htmlFor="front">Front:</S.Label>
+					<S.Label htmlFor="front">{term.from_language} definition</S.Label>
 					<S.TermSide>
 						<S.Input
 							tabIndex={1}
@@ -71,7 +71,7 @@ function TermModal({ setOpen, term, handleTermEdit }: TermModalProps) {
 						</S.TermSaturation>
 					</S.TermSide>
 
-					<S.Label htmlFor="back">Back:</S.Label>
+					<S.Label htmlFor="back">{term.to_language} definition</S.Label>
 					<S.TermSide>
 						<S.Input
 							name="back"
