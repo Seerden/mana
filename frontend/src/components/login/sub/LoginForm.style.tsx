@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { sharedButtonStyle } from "../../../helpers/theme/theme";
 
 const maxWidth = "800px";
 const showPassWidth = "2.5rem";
@@ -109,10 +108,6 @@ export const Buttons = styled.div`
 	justify-content: space-between;
 `;
 
-export const LoginButton = styled.input`
-	${sharedButtonStyle};
-`;
-
 export const RegisterLink = styled(Link)`
 	display: flex;
 	margin-left: auto;
@@ -122,6 +117,8 @@ export const RegisterLink = styled(Link)`
 	text-decoration: none;
 	align-items: center;
 	height: 2rem;
+	border-radius: 4px;
+	padding: 0.35rem 0.65rem;
 
 	transition: all 80ms linear;
 
