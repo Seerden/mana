@@ -6,7 +6,7 @@ import ListTerms from "./sub/ListTerms";
 import ListTitleBar from "./sub/ListTitleBar";
 
 function List() {
-	const { handleListTitleBlur, handleDelete } = useListUpdate();
+	const { handleListTitleBlur, handleDelete, handleListTitleChange } = useListUpdate();
 	const { list } = useList();
 
 	if (!list) return <></>;
@@ -15,6 +15,7 @@ function List() {
 		<Page>
 			<ListTitleBar
 				list={list}
+				handleListTitleChange={handleListTitleChange}
 				handleListTitleBlur={handleListTitleBlur}
 				handleDelete={handleDelete}
 			/>

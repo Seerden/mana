@@ -21,6 +21,7 @@ const mockList: List = {
 export const Basic: ComponentStory<typeof ListTitleBar> = (props) => (
 	<ListTitleBar
 		handleDelete={() => ({})}
+		handleListTitleChange={() => ({})}
 		handleListTitleBlur={() => ({})}
 		list={mockList}
 	/>
