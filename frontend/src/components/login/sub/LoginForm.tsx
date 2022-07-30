@@ -1,4 +1,5 @@
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { Button } from "../../../helpers/theme/shared/Button";
 import * as S from "./LoginForm.style";
 
 const LoginForm = ({
@@ -64,7 +65,9 @@ const LoginForm = ({
 					</S.FormField>
 
 					<S.Buttons>
-						<S.LoginButton type="button" onClick={handleLogin} value="Log in" />
+						<Button type="button" onClick={handleLogin}>
+							Log in
+						</Button>
 
 						<S.RegisterLink to="/register">Register</S.RegisterLink>
 					</S.Buttons>
