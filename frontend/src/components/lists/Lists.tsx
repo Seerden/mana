@@ -32,9 +32,9 @@ function Lists() {
 
 				<div>It appears you don't have any lists.</div>
 
-				<S.UserPageLink to={`${userString}/lists/new`}>
+				<S.NewListLink to={`${userString}/lists/new`}>
 					Create a new list
-				</S.UserPageLink>
+				</S.NewListLink>
 			</div>
 		);
 	}
@@ -50,9 +50,9 @@ function Lists() {
 					</Link>
 				</div>
 
-				<S.UserPageLink to={`${userString}/lists/new`}>
+				<S.NewListLink to={`${userString}/lists/new`}>
 					Create a new list
-				</S.UserPageLink>
+				</S.NewListLink>
 
 				<S.Header>
 					<S.Filter>
