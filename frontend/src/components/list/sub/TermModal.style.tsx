@@ -25,7 +25,6 @@ const deleteButtonStyle = css`
 	}
 `;
 
-// __delete--confirm
 export const ConfirmDeleteLabel = styled.div`
 	background-color: transparent;
 	display: inline-flex;
@@ -36,7 +35,6 @@ export const ConfirmDeleteLabel = styled.div`
 	padding: 0 0.5rem;
 `;
 
-// __delete--confirm-yes, -no
 export const ConfirmDeleteButton = styled.button<{ confirm?: true }>`
 	${deleteButtonStyle}
 
@@ -78,7 +76,6 @@ export const Input = styled.input<{ confirming?: boolean }>`
 
 	transition: all 50ms linear;
 
-	// Set 'confirming'-specific styles
 	${(p) =>
 		p.confirming &&
 		css`
@@ -105,7 +102,6 @@ export const Input = styled.input<{ confirming?: boolean }>`
 
 export const TermSaturation = styled.span`
 	display: flex;
-	// background-color: #222;
 	justify-content: center;
 	width: 2rem;
 	height: 100%;
