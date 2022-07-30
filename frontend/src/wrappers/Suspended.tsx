@@ -1,5 +1,5 @@
-import { ReactChildren, Suspense } from "react";
+import { PropsWithChildren, Suspense } from "react";
 
-export default function Suspended({ children }: { children: ReactChildren }) {
-	return <Suspense fallback={<></>}>{children}</Suspense>;
+export default function Suspended(props: PropsWithChildren) {
+	return <Suspense fallback={<></>}>{props.children}</Suspense>;
 }

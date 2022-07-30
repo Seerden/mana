@@ -1,33 +1,28 @@
-import { newListState } from "components/newlist/state/newList.atom";
-import type { FocusIndex } from "components/newlist/types/newList.types";
-import React, { memo, useMemo } from "react";
-import { useSetRecoilState } from "recoil";
+import React, { forwardRef, Ref } from "react";
+import { NewListWithTermsInput } from "../../../gql/codegen-output";
 import * as S from "./NewListTerm.style";
 
 type NewListTermProps = {
 	index: number;
-	focussedInput?: FocusIndex;
-	setFocussedInput: React.Dispatch<React.SetStateAction<FocusIndex | undefined>>;
-	autoFocus: boolean;
+	isHidden?: boolean;
+	setNewList: React.Dispatch<React.SetStateAction<NewListWithTermsInput>>;
 };
 
-const NewListTerm = memo(
-	({ index, setFocussedInput, focussedInput, autoFocus }: NewListTermProps) => {
-		const setNewList = useSetRecoilState(newListState);
-		const isFocussed = useMemo(() => focussedInput?.index === index, [focussedInput]);
-
+const NewListTerm = forwardRef(
+	({ index, setNewList, isHidden }: NewListTermProps, ref: Ref<HTMLInputElement>) => {
 		function handleTermBlur(e: React.FocusEvent<HTMLInputElement>, idx: number) {
-			setFocussedInput((cur) => ({ ...cur, index: -1 }));
-			const { name, value } = e.target; // name is "from" | "to"
-
-			if (!value) return;
+			const { name, value } = e.target; // name is "from_value" | "to_value"
 
 			setNewList((cur) => {
 				const termsCopy = cur.terms.slice();
 
 				if (!termsCopy[idx]) {
-					termsCopy[idx] = { to: "", from: "" };
-					console.log("1");
+					termsCopy[idx] = {
+						to_value: "",
+						from_value: "",
+						from_language: "",
+						to_language: "",
+					};
 				}
 
 				if (value !== termsCopy[idx][name]) {
@@ -39,24 +34,18 @@ const NewListTerm = memo(
 			});
 		}
 
-		const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-			e.persist();
-			setFocussedInput({ side: e.currentTarget.name, index } as FocusIndex);
-		};
-
 		const inputProps: Partial<React.InputHTMLAttributes<HTMLInputElement>> = {
-			onFocus: (e) => handleFocus(e),
 			onBlur: (e) => handleTermBlur(e, index),
 			type: "text",
 		};
 
 		return (
-			<S.Term>
-				<S.TermIndex isFocussed={isFocussed}>{index + 1}</S.TermIndex>
+			<S.Term isHidden={isHidden}>
+				<S.TermIndex>{index + 1}</S.TermIndex>
 
 				<S.TermInputs>
-					<S.TermInput {...inputProps} autoFocus={autoFocus} name="from" />
-					<S.TermInput {...inputProps} name="to" />
+					<S.TermInput {...inputProps} name="from_value" />
+					<S.TermInput {...inputProps} name="to_value" ref={ref ?? null} />
 				</S.TermInputs>
 			</S.Term>
 		);

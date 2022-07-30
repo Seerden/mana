@@ -42,7 +42,7 @@ const iconsLabelDirectionProps = css`
 	width: ${pickerWidth};
 	padding: 0rem 0.6rem;
 	display: flex;
-	justify-content: center;
+	justify-content: space-around;
 	border-radius: 5px;
 `;
 
@@ -96,6 +96,11 @@ export const DirectionButton = styled.button`
 	align-items: center;
 	gap: 0.5rem;
 	align-items: center;
+`;
+
+export const OperatorButton = styled(DirectionButton)`
+	min-width: 2rem;
+	justify-content: center;
 `;
 
 export const Filter = styled.div<{ borderColor?: string }>`

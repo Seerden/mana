@@ -1,92 +1,116 @@
-import { BiArrowToRight } from "react-icons/bi";
-import styled from "styled-components";
-import { sharedButtonStyle } from "../../helpers/theme/theme";
+import { FaLongArrowAltRight } from "react-icons/fa";
+import styled, { css } from "styled-components";
+import {
+	sharedButtonStyle,
+	sharedPageTitleStyle,
+	subsectionHeaderStyle,
+	tempSectionStyle,
+} from "../../helpers/theme/theme";
+
+export const Title = styled.h1`
+	${sharedPageTitleStyle};
+`;
 
 export const Form = styled.form`
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+
+	max-width: 40rem;
 
 	@media screen and (max-width: 1280px) {
 		max-width: 50rem;
 	}
 
-	max-width: 40rem;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	@media screen and (min-width: 1920px) {
+		display: grid;
+		grid-template-areas:
+			"title title"
+			"terms meta"
+			"terms buttons"
+			"terms _";
+		grid-template-columns: repeat(2, max-content);
+		max-width: 80%;
+		grid-gap: 0 4rem;
+	}
+
 	margin: 0 auto;
 `;
 
-// Should be renamed to Header or something
-export const NameAndLanguages = styled.section`
-	display: flex;
+export const Section = styled.section`
+	${tempSectionStyle};
 	width: 100%;
-	margin: 0 auto;
-	justify-content: center;
-	align-items: center;
+
+	@media screen and (min-width: 1920px) {
+		min-width: 700px;
+		max-width: 1280px;
+	}
+
+	margin-top: 0;
+`;
+
+export const MetaSection = styled(Section)`
+	display: flex;
 	flex-direction: column;
-`;
+	gap: 1rem;
 
-export const NameLabel = styled.label`
-	font-size: 1.5rem;
-`;
-
-export const NameInput = styled.input`
-	width: 100%;
-	padding: 1rem;
-	font-size: 1.2rem;
-	box-shadow: -0.4rem 0.4rem 0 -0.2rem #111;
-	border-radius: 3px;
-`;
-
-const languageWidth = "40%";
-const languageGap = "0.5rem";
-const languageIconWidth = "2rem";
-// $language-padding: 1rem;
-const indexWidth = "2rem";
-
-export const Languages = styled.div`
-	width: 100%;
-	background-color: #222;
-	border-radius: 5px;
-	padding: 1rem 0;
-	justify-content: center;
-	margin-top: 1rem;
-	display: flex;
-	gap: ${languageGap};
-	align-items: center;
-	box-shadow: -0.4rem 0.4rem 0 -0.2rem #111;
-`;
-
-export const Language = styled.div`
-	width: ${languageWidth};
-`;
-
-export const LanguageLabel = styled.label`
-	position: relative;
-	display: block;
-	width: 100%;
-	font-weight: 500;
-	background-color: #111;
-	z-index: 1;
-	padding: 0.4rem 0.9rem;
-	outline: 3px solid #111;
-
-	::placeholder {
-		font-style: italic;
+	@media screen and (min-width: 1280px) {
+		display: flex;
+		flex-direction: row;
+		gap: 2rem;
+		grid-area: meta;
 	}
 `;
 
-export const LanguageInput = styled.input`
-	background-color: #333;
+export const NameSubsection = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+`;
+
+export const SectionLabel = styled.label`
+	${subsectionHeaderStyle}
+
+	font-size: 1.5rem;
+	margin-bottom: 0.2rem;
+
+	&:not(:nth-of-type(1)) {
+		margin-top: 0.8rem;
+	}
+`;
+
+const indexWidth = "2rem";
+
+export const Languages = styled.div`
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+`;
+
+export const LanguageLabel = styled.label`
+	width: 100%;
+	font-weight: 500;
+	background-color: #191919;
+	padding: 0.3rem 0.1rem;
+	margin-top: 0.4rem;
+`;
+
+export const Input = styled.input`
 	outline: none;
-	border: none;
-	color: azure;
-	border-radius: 2px;
-	box-shadow: 0 0 0.4rem black;
-	padding: 0.75rem $language-padding;
 	border: 2px solid transparent;
+
+	font-size: 1rem;
+
+	background-color: #333;
+	color: azure;
+
+	border-radius: 2px;
+
+	display: inline-block;
+	z-index: 0;
+	width: 100%;
+
+	box-shadow: 0 0 0.4rem black;
+	padding: 0.45rem 0.6rem;
 
 	transition: all 80ms linear;
 
@@ -98,65 +122,95 @@ export const LanguageInput = styled.input`
 	&:not(:focus) {
 		&::placeholder {
 			color: #aaa;
+			font-size: 0.85rem;
 		}
 	}
 
-	&:focus {
+	&:focus,
+	&:active {
 		border: 2px solid black;
-		background-color: #eee;
-		color: #111;
-		border-radius: 5px;
+		border-radius: 0;
+		box-shadow: 0 0 0.4rem black;
+
+		transition: all ease-in 35ms;
+
 		&::placeholder {
-			color: black;
+			opacity: 0;
 		}
 	}
-
-	display: inline-block;
-
-	z-index: 0;
-	width: 100%;
 `;
 
-export const LanguageIcon = styled(BiArrowToRight)`
-	width: ${languageIconWidth};
+export const NameInput = styled(Input)`
+	max-width: 18rem;
+`;
+
+export const LanguageInput = styled(Input)`
+	padding: 0.45rem 0.5rem;
+	font-size: 0.9rem;
+`;
+
+export const LanguageIcon = styled(FaLongArrowAltRight)`
+	fill: ${(p) => p.theme.colors.blue.main};
+	margin-top: 1.7rem;
 	padding: 0;
 `;
 
-export const Buttons = styled.section`
-	width: 100%;
+export const Buttons = styled.section<{ isStuck?: boolean }>`
 	display: flex;
 	flex-direction: row;
-	justify-content: space-around;
-
 	gap: 1rem;
+	border: 3px solid transparent;
+	position: sticky;
+	top: 125px;
+
+	place-self: flex-end;
+
+	@media screen and (min-width: 1920px) {
+		place-self: flex-start;
+	}
+
+	padding: 0.8rem 0;
+
+	${(p) =>
+		p.isStuck &&
+		css`
+			background-color: #191919;
+			padding: 0.8rem 3rem;
+			transform: translateX(-30px);
+			border-color: #444;
+			border-radius: 0;
+		`}
 `;
 
 export const Button = styled.input`
 	${sharedButtonStyle};
 
-	display: inline-block;
 	color: #111;
-	width: 15rem;
-	margin-top: 1rem;
-`;
-
-export const Terms = styled.section`
-	width: 100%;
+	width: max-content;
+	margin: 0;
 `;
 
 export const TermsHeader = styled.div`
+	position: sticky;
+	top: 75px; // should match Header height
+
 	display: flex;
 	margin: 0 auto;
+	margin-left: ${indexWidth};
 	border-radius: 0 0 5px 0;
+
+	padding: 0.3rem 0;
+	font-size: 1rem;
+	font-weight: 500;
 `;
 
 export const TermsHeaderSide = styled.span`
-	display: inline-block;
-	width: 50%;
-	padding: 0.75rem 0.5rem;
+	overflow: hidden;
+	width: calc(50% - 0.6rem); // the 0.6rem is presumably 2*some padding width somewhere
 	background-color: #111;
+	padding: 0.4rem 0.8rem;
 
-	&:nth-of-type(even) {
-		width: calc(50% - #${indexWidth});
+	&:nth-of-type(2) {
+		width: calc(50% + 0.6rem);
 	}
 `;

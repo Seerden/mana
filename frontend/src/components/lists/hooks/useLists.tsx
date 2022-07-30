@@ -1,5 +1,5 @@
-import { useQueryListsByUser } from "gql/hooks/lists-query";
 import React, { useCallback, useMemo, useState } from "react";
+import useQueryListsByUser from "../../../gql/hooks/list/useQueryListsByUser";
 import ListsItem from "../sub/ListsItem";
 
 const useLists = () => {
@@ -23,30 +23,12 @@ const useLists = () => {
 		[setSortBy]
 	);
 
-	const listsElement = useMemo(() => {
-		return (
-			Array.isArray(lists) &&
-			lists.map((list) => {
-				const { name, reviewDates, lastReviewed, created, _id } = list;
-				return {
-					name,
-					reviewDates,
-					lastReviewed,
-					created,
-					element: <ListsItem key={_id} list={list} />,
-				};
-			})
-		);
-	}, [lists]);
-
 	const filteredListsElement = useMemo(() => {
-		if (!Array.isArray(listsElement)) return [];
-
-		return listsElement
-			.filter((l) => l.name.toLowerCase().includes(filter.toLowerCase()))
+		return lists
+			?.filter((l) => l.name.toLowerCase().includes(filter.toLowerCase()))
 			.sort((a, b) => (a[sortBy] < b[sortBy] ? -1 : 1)) // TODO: sort by lowercase, sort out undefined cases (lastReviewed may be undefined)
-			.map((l) => l.element);
-	}, [listsElement, filter, sortBy]);
+			.map((l) => <ListsItem key={l.list_id} list={l} />);
+	}, [lists, filter, sortBy]);
 
 	return {
 		lists,

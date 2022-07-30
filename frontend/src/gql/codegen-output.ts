@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -11,39 +11,18 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: any;
-};
-
-
-export type ErrorOrSuccess = {
-  __typename?: 'ErrorOrSuccess';
-  error?: Maybe<Scalars['String']>;
-  success?: Maybe<Scalars['String']>;
-};
-
-export type Id = {
-  __typename?: 'Id';
-  _id: Scalars['String'];
-};
-
-export type IdInput = {
-  _id: Scalars['String'];
 };
 
 export type List = {
   __typename?: 'List';
-  _id: Scalars['ID'];
-  owner: Scalars['String'];
+  created_at: Scalars['Float'];
+  from_language: Scalars['String'];
+  last_reviewed?: Maybe<Scalars['Float']>;
+  list_id: Scalars['Float'];
   name: Scalars['String'];
-  from: Scalars['String'];
-  to: Scalars['String'];
-  terms: Array<Term>;
-  sessions?: Maybe<Array<ReviewSession>>;
-  created: Scalars['DateTime'];
-  lastReviewed: Scalars['DateTime'];
-  setMembership: Array<Scalars['String']>;
-  reviewDates?: Maybe<ListState>;
+  terms: Array<Maybe<Term>>;
+  to_language: Scalars['String'];
+  user_id: Scalars['Float'];
 };
 
 
@@ -51,103 +30,74 @@ export type ListTermsArgs = {
   populate?: Maybe<Scalars['Boolean']>;
 };
 
-export type ListState = {
-  __typename?: 'ListState';
-  forwards: Array<Scalars['DateTime']>;
-  backwards: Array<Scalars['DateTime']>;
+export type ListAndTerms = {
+  __typename?: 'ListAndTerms';
+  list: List;
+  terms: Array<Maybe<Term>>;
 };
 
-export type ListUpdateActionInput = {
-  type: Scalars['String'];
+export type ListLanguageUpdateInput = {
+  from_language?: Maybe<Scalars['String']>;
+  list_id: Scalars['Int'];
+  to_language?: Maybe<Scalars['String']>;
 };
 
 export type ListUpdatePayloadInput = {
-  name?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
 };
 
-export type MaybeList = {
-  __typename?: 'MaybeList';
-  list?: Maybe<List>;
-  error?: Maybe<Scalars['String']>;
-};
-
-export type MaybeReviewSession = {
-  __typename?: 'MaybeReviewSession';
-  savedReviewSession?: Maybe<ReviewSession>;
-  error?: Maybe<Scalars['String']>;
-};
-
-export type MaybeUser = {
-  __typename?: 'MaybeUser';
-  error?: Maybe<Scalars['String']>;
-  user?: Maybe<User>;
+export type Message = {
+  __typename?: 'Message';
+  message: Scalars['String'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  deleteList: SuccessOrError;
-  /** Add a list document to the database, append its ._id to its parent user's .lists array */
-  createList: MaybeList;
-  updateList: MaybeList;
-  createReviewSession: MaybeReviewSession;
-  updateTerms: Scalars['Int'];
-  editTerms: Scalars['Int'];
-  createTerms: ErrorOrSuccess;
-  deleteTermsFromList: ErrorOrSuccess;
-  createUser: MaybeUser;
-  /** Login mutation */
-  login: MaybeUser;
-};
-
-
-export type MutationDeleteListArgs = {
-  listId: Scalars['String'];
+  createList: ListAndTerms;
+  createSession: ReviewSession;
+  createTerms: Array<Term>;
+  createUser: User;
+  deleteList: ListAndTerms;
+  deleteTerms: Array<Term>;
+  deleteUser: User;
+  login: User;
+  logout: Message;
+  updateList?: Maybe<List>;
+  updateListLanguage?: Maybe<List>;
+  updatePassword: User;
+  updateTermValues: Array<Term>;
+  updateUsername: User;
 };
 
 
 export type MutationCreateListArgs = {
-  newList: NewListFromClientInput;
+  newList: NewListWithTermsInput;
 };
 
 
-export type MutationUpdateListArgs = {
-  payload: ListUpdatePayloadInput;
-  action: ListUpdateActionInput;
-  listId: Scalars['String'];
-};
-
-
-export type MutationCreateReviewSessionArgs = {
-  termUpdateArray: Array<TermUpdateObject>;
-  newReviewSession: ReviewSessionBaseInput;
-};
-
-
-export type MutationUpdateTermsArgs = {
-  updateObj: Array<TermUpdateObject>;
-};
-
-
-export type MutationEditTermsArgs = {
-  updateObj: Array<TermEditObject>;
+export type MutationCreateSessionArgs = {
+  entries: Array<ReviewSessionEntryInput>;
+  session: ReviewSessionInput;
 };
 
 
 export type MutationCreateTermsArgs = {
-  terms: Array<NewTermFromClient>;
-};
-
-
-export type MutationDeleteTermsFromListArgs = {
-  ids: Array<Scalars['String']>;
-  remainingTermIds?: Maybe<Array<Scalars['String']>>;
-  listId: Scalars['String'];
+  terms: Array<TermWithoutIdInput>;
 };
 
 
 export type MutationCreateUserArgs = {
-  password: Scalars['String'];
-  username: Scalars['String'];
+  userInput: UserInput;
+};
+
+
+export type MutationDeleteListArgs = {
+  listIds: Array<Scalars['Int']>;
+};
+
+
+export type MutationDeleteTermsArgs = {
+  termIds: Array<Scalars['Int']>;
 };
 
 
@@ -156,193 +106,184 @@ export type MutationLoginArgs = {
   username: Scalars['String'];
 };
 
-export type NewListFromClientInput = {
-  owner: Scalars['String'];
+
+export type MutationUpdateListArgs = {
+  list_id: Scalars['Float'];
+  payload: ListUpdatePayloadInput;
+};
+
+
+export type MutationUpdateListLanguageArgs = {
+  payload: ListLanguageUpdateInput;
+};
+
+
+export type MutationUpdatePasswordArgs = {
+  currentPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+};
+
+
+export type MutationUpdateTermValuesArgs = {
+  updateOptions: Array<TermUpdateInput>;
+};
+
+
+export type MutationUpdateUsernameArgs = {
+  username: Scalars['String'];
+};
+
+export type NewListWithTermsInput = {
+  from_language: Scalars['String'];
   name: Scalars['String'];
-  from: Scalars['String'];
-  to: Scalars['String'];
-  terms: Array<NewListTermInput>;
-};
-
-export type NewListTermInput = {
-  from: Scalars['String'];
-  to: Scalars['String'];
-};
-
-/** New term created client-side, excludes history and saturation fields, since those don't exist yet for the term */
-export type NewTermFromClient = {
-  to: Scalars['String'];
-  from: Scalars['String'];
-  languages: TermLanguagesInput;
-  owner: Scalars['String'];
-  saturation: TermSaturationInput;
-  listMembership: Array<Scalars['String']>;
+  terms: Array<TermWithoutIdsInput>;
+  to_language: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  /** Find lists by user */
-  listsByUser: Array<List>;
-  /** Query lists by id */
   listsById: Array<List>;
-  reviewSessionsByUser: Array<ReviewSession>;
+  listsByUser: Array<List>;
+  me?: Maybe<User>;
+  sessionEntriesByTermIds: Array<TermIdWithEntries>;
+  sessionsById: Array<Maybe<ReviewSession>>;
+  sessionsByUser: Array<Maybe<ReviewSession>>;
   users: Array<User>;
-  /** Returns currently logged in user.  */
-  me: MaybeUser;
-};
-
-
-export type QueryListsByUserArgs = {
-  populate?: Maybe<Array<Scalars['String']>>;
-  owner: Scalars['String'];
 };
 
 
 export type QueryListsByIdArgs = {
-  populate?: Maybe<Array<Scalars['String']>>;
-  ids: Array<Scalars['String']>;
+  list_ids: Array<Scalars['Int']>;
 };
 
 
-export type QueryReviewSessionsByUserArgs = {
-  owner: Scalars['String'];
+export type QuerySessionEntriesByTermIdsArgs = {
+  termIds: Array<Scalars['Int']>;
 };
 
-export type ReviewDate = {
-  __typename?: 'ReviewDate';
-  start: Scalars['DateTime'];
-  end: Scalars['DateTime'];
+
+export type QuerySessionsByIdArgs = {
+  sessionIds: Array<Scalars['Int']>;
+  user_id: Scalars['Float'];
 };
 
-export type ReviewDateInput = {
-  start: Scalars['DateTime'];
-  end: Scalars['DateTime'];
+
+export type QuerySessionsByUserArgs = {
+  user_id: Scalars['Float'];
 };
 
 export type ReviewSession = {
   __typename?: 'ReviewSession';
-  owner: Scalars['String'];
-  listIds?: Maybe<Array<Id>>;
-  date: ReviewDate;
-  terms: ReviewSessionTerms;
-  settings: ReviewSettings;
-  passfail: Array<Scalars['String']>;
-  timePerCard: Array<Scalars['Int']>;
-  _id: Scalars['ID'];
-};
-
-export type ReviewSessionBaseInput = {
-  owner: Scalars['String'];
-  listIds?: Maybe<Array<IdInput>>;
-  date: ReviewDateInput;
-  terms: ReviewSessionTermsInput;
-  settings: ReviewSettingsInput;
-  passfail: Array<Scalars['String']>;
-  timePerCard: Array<Scalars['Int']>;
-};
-
-export type ReviewSessionTerms = {
-  __typename?: 'ReviewSessionTerms';
-  listId: Scalars['String'];
-  termIds: Array<Scalars['String']>;
-};
-
-export type ReviewSessionTermsInput = {
-  listId: Scalars['String'];
-  termIds: Array<Scalars['String']>;
-};
-
-export type ReviewSettings = {
-  __typename?: 'ReviewSettings';
   direction: Scalars['String'];
-  n: Scalars['Float'];
-  sessionStart: Scalars['DateTime'];
-  sessionEnd: Scalars['DateTime'];
-  started: Scalars['Boolean'];
-  ended: Scalars['Boolean'];
+  end_date?: Maybe<Scalars['Int']>;
+  list_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  n: Scalars['Int'];
+  review_session_id: Scalars['Float'];
+  saturation_threshold?: Maybe<Scalars['Int']>;
+  set_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  start_date: Scalars['Int'];
+  user_id: Scalars['Int'];
 };
 
-export type ReviewSettingsInput = {
+export type ReviewSessionEntry = {
+  __typename?: 'ReviewSessionEntry';
+  created_at: Scalars['Float'];
   direction: Scalars['String'];
-  n: Scalars['Float'];
-  sessionStart: Scalars['DateTime'];
-  sessionEnd: Scalars['DateTime'];
-  started: Scalars['Boolean'];
-  ended: Scalars['Boolean'];
+  passfail: Scalars['String'];
+  review_entry_id: Scalars['Int'];
+  review_session_id: Scalars['Int'];
+  term_id: Scalars['Int'];
+  time_on_card: Scalars['Int'];
 };
 
-export type SuccessOrError = {
-  __typename?: 'SuccessOrError';
-  success?: Maybe<Scalars['Boolean']>;
-  error?: Maybe<Scalars['Boolean']>;
+export type ReviewSessionEntryInput = {
+  direction: Scalars['String'];
+  passfail: Scalars['String'];
+  term_id: Scalars['Int'];
+  time_on_card: Scalars['Int'];
+};
+
+export type ReviewSessionInput = {
+  direction: Scalars['String'];
+  end_date?: Maybe<Scalars['Int']>;
+  list_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  n: Scalars['Int'];
+  saturation_threshold?: Maybe<Scalars['Int']>;
+  set_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  start_date: Scalars['Int'];
+  user_id: Scalars['Int'];
 };
 
 export type Term = {
   __typename?: 'Term';
-  _id: Scalars['ID'];
-  owner: Scalars['String'];
-  languages?: Maybe<TermLanguages>;
-  to: Scalars['String'];
-  from: Scalars['String'];
-  history: Array<Maybe<TermHistory>>;
-  saturation: TermSaturation;
-  listMembership: Array<Maybe<List>>;
+  from_language: Scalars['String'];
+  from_value: Scalars['String'];
+  history?: Maybe<Array<Array<ReviewSessionEntry>>>;
+  list_id: Scalars['Int'];
+  saturation?: Maybe<TermSaturation>;
+  term_id: Scalars['Int'];
+  to_language: Scalars['String'];
+  to_value: Scalars['String'];
+  user_id: Scalars['Int'];
 };
 
-export type TermEditObject = {
-  _id: Scalars['String'];
-  to?: Maybe<Scalars['String']>;
-  from?: Maybe<Scalars['String']>;
+
+export type TermHistoryArgs = {
+  populate?: Maybe<Scalars['Boolean']>;
 };
 
-export type TermHistory = {
-  __typename?: 'TermHistory';
-  date: Scalars['DateTime'];
-  content: Array<Scalars['String']>;
-  direction: Scalars['String'];
+
+export type TermSaturationArgs = {
+  populate?: Maybe<Scalars['Boolean']>;
 };
 
-export type TermHistoryInput = {
-  date: Scalars['DateTime'];
-  content: Array<Scalars['String']>;
-  direction: Scalars['String'];
-};
-
-export type TermLanguages = {
-  __typename?: 'TermLanguages';
-  from?: Maybe<Scalars['String']>;
-  to?: Maybe<Scalars['String']>;
-};
-
-export type TermLanguagesInput = {
-  from?: Maybe<Scalars['String']>;
-  to?: Maybe<Scalars['String']>;
+export type TermIdWithEntries = {
+  __typename?: 'TermIdWithEntries';
+  entries: Array<ReviewSessionEntry>;
+  term_id: Scalars['Int'];
 };
 
 export type TermSaturation = {
   __typename?: 'TermSaturation';
-  forwards?: Maybe<Scalars['Float']>;
-  backwards?: Maybe<Scalars['Float']>;
+  backwards: Scalars['Int'];
+  forwards: Scalars['Int'];
+  last_updated: Scalars['Float'];
+  term_id: Scalars['Int'];
 };
 
-export type TermSaturationInput = {
-  forwards?: Maybe<Scalars['Float']>;
-  backwards?: Maybe<Scalars['Float']>;
+export type TermUpdateInput = {
+  from_value?: Maybe<Scalars['String']>;
+  term_id: Scalars['Int'];
+  to_value?: Maybe<Scalars['String']>;
 };
 
-export type TermUpdateObject = {
-  _id: Scalars['String'];
-  history?: Maybe<TermHistoryInput>;
-  saturation?: Maybe<TermSaturationInput>;
+export type TermWithoutIdInput = {
+  from_language: Scalars['String'];
+  from_value: Scalars['String'];
+  list_id: Scalars['Int'];
+  to_language: Scalars['String'];
+  to_value: Scalars['String'];
+  user_id: Scalars['Int'];
+};
+
+export type TermWithoutIdsInput = {
+  from_language: Scalars['String'];
+  from_value: Scalars['String'];
+  to_language: Scalars['String'];
+  to_value: Scalars['String'];
 };
 
 export type User = {
   __typename?: 'User';
-  _id: Scalars['String'];
-  username: Scalars['String'];
-  lists?: Maybe<Array<List>>;
-  currentSession: Scalars['String'];
+  created_at: Scalars['Float'];
   password: Scalars['String'];
+  user_id: Scalars['Float'];
+  username: Scalars['String'];
+};
+
+export type UserInput = {
+  password: Scalars['String'];
+  username: Scalars['String'];
 };
 
 
@@ -423,266 +364,179 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
-  ErrorOrSuccess: ResolverTypeWrapper<ErrorOrSuccess>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Id: ResolverTypeWrapper<Id>;
-  IdInput: IdInput;
   List: ResolverTypeWrapper<List>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  ListState: ResolverTypeWrapper<ListState>;
-  ListUpdateActionInput: ListUpdateActionInput;
-  ListUpdatePayloadInput: ListUpdatePayloadInput;
-  MaybeList: ResolverTypeWrapper<MaybeList>;
-  MaybeReviewSession: ResolverTypeWrapper<MaybeReviewSession>;
-  MaybeUser: ResolverTypeWrapper<MaybeUser>;
-  Mutation: ResolverTypeWrapper<{}>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  NewListFromClientInput: NewListFromClientInput;
-  NewListTermInput: NewListTermInput;
-  NewTermFromClient: NewTermFromClient;
-  Query: ResolverTypeWrapper<{}>;
-  ReviewDate: ResolverTypeWrapper<ReviewDate>;
-  ReviewDateInput: ReviewDateInput;
-  ReviewSession: ResolverTypeWrapper<ReviewSession>;
-  ReviewSessionBaseInput: ReviewSessionBaseInput;
-  ReviewSessionTerms: ResolverTypeWrapper<ReviewSessionTerms>;
-  ReviewSessionTermsInput: ReviewSessionTermsInput;
-  ReviewSettings: ResolverTypeWrapper<ReviewSettings>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
-  ReviewSettingsInput: ReviewSettingsInput;
-  SuccessOrError: ResolverTypeWrapper<SuccessOrError>;
+  String: ResolverTypeWrapper<Scalars['String']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  ListAndTerms: ResolverTypeWrapper<ListAndTerms>;
+  ListLanguageUpdateInput: ListLanguageUpdateInput;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  ListUpdatePayloadInput: ListUpdatePayloadInput;
+  Message: ResolverTypeWrapper<Message>;
+  Mutation: ResolverTypeWrapper<{}>;
+  NewListWithTermsInput: NewListWithTermsInput;
+  Query: ResolverTypeWrapper<{}>;
+  ReviewSession: ResolverTypeWrapper<ReviewSession>;
+  ReviewSessionEntry: ResolverTypeWrapper<ReviewSessionEntry>;
+  ReviewSessionEntryInput: ReviewSessionEntryInput;
+  ReviewSessionInput: ReviewSessionInput;
   Term: ResolverTypeWrapper<Term>;
-  TermEditObject: TermEditObject;
-  TermHistory: ResolverTypeWrapper<TermHistory>;
-  TermHistoryInput: TermHistoryInput;
-  TermLanguages: ResolverTypeWrapper<TermLanguages>;
-  TermLanguagesInput: TermLanguagesInput;
+  TermIdWithEntries: ResolverTypeWrapper<TermIdWithEntries>;
   TermSaturation: ResolverTypeWrapper<TermSaturation>;
-  TermSaturationInput: TermSaturationInput;
-  TermUpdateObject: TermUpdateObject;
+  TermUpdateInput: TermUpdateInput;
+  TermWithoutIdInput: TermWithoutIdInput;
+  TermWithoutIdsInput: TermWithoutIdsInput;
   User: ResolverTypeWrapper<User>;
+  UserInput: UserInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  DateTime: Scalars['DateTime'];
-  ErrorOrSuccess: ErrorOrSuccess;
-  String: Scalars['String'];
-  Id: Id;
-  IdInput: IdInput;
   List: List;
-  ID: Scalars['ID'];
-  Boolean: Scalars['Boolean'];
-  ListState: ListState;
-  ListUpdateActionInput: ListUpdateActionInput;
-  ListUpdatePayloadInput: ListUpdatePayloadInput;
-  MaybeList: MaybeList;
-  MaybeReviewSession: MaybeReviewSession;
-  MaybeUser: MaybeUser;
-  Mutation: {};
-  Int: Scalars['Int'];
-  NewListFromClientInput: NewListFromClientInput;
-  NewListTermInput: NewListTermInput;
-  NewTermFromClient: NewTermFromClient;
-  Query: {};
-  ReviewDate: ReviewDate;
-  ReviewDateInput: ReviewDateInput;
-  ReviewSession: ReviewSession;
-  ReviewSessionBaseInput: ReviewSessionBaseInput;
-  ReviewSessionTerms: ReviewSessionTerms;
-  ReviewSessionTermsInput: ReviewSessionTermsInput;
-  ReviewSettings: ReviewSettings;
   Float: Scalars['Float'];
-  ReviewSettingsInput: ReviewSettingsInput;
-  SuccessOrError: SuccessOrError;
+  String: Scalars['String'];
+  Boolean: Scalars['Boolean'];
+  ListAndTerms: ListAndTerms;
+  ListLanguageUpdateInput: ListLanguageUpdateInput;
+  Int: Scalars['Int'];
+  ListUpdatePayloadInput: ListUpdatePayloadInput;
+  Message: Message;
+  Mutation: {};
+  NewListWithTermsInput: NewListWithTermsInput;
+  Query: {};
+  ReviewSession: ReviewSession;
+  ReviewSessionEntry: ReviewSessionEntry;
+  ReviewSessionEntryInput: ReviewSessionEntryInput;
+  ReviewSessionInput: ReviewSessionInput;
   Term: Term;
-  TermEditObject: TermEditObject;
-  TermHistory: TermHistory;
-  TermHistoryInput: TermHistoryInput;
-  TermLanguages: TermLanguages;
-  TermLanguagesInput: TermLanguagesInput;
+  TermIdWithEntries: TermIdWithEntries;
   TermSaturation: TermSaturation;
-  TermSaturationInput: TermSaturationInput;
-  TermUpdateObject: TermUpdateObject;
+  TermUpdateInput: TermUpdateInput;
+  TermWithoutIdInput: TermWithoutIdInput;
+  TermWithoutIdsInput: TermWithoutIdsInput;
   User: User;
-};
-
-export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
-  name: 'DateTime';
-}
-
-export type ErrorOrSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['ErrorOrSuccess'] = ResolversParentTypes['ErrorOrSuccess']> = {
-  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  success?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type IdResolvers<ContextType = any, ParentType extends ResolversParentTypes['Id'] = ResolversParentTypes['Id']> = {
-  _id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+  UserInput: UserInput;
 };
 
 export type ListResolvers<ContextType = any, ParentType extends ResolversParentTypes['List'] = ResolversParentTypes['List']> = {
-  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  owner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  created_at?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  from_language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  last_reviewed?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  list_id?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  to?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  terms?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<ListTermsArgs, never>>;
-  sessions?: Resolver<Maybe<Array<ResolversTypes['ReviewSession']>>, ParentType, ContextType>;
-  created?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  lastReviewed?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  setMembership?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewDates?: Resolver<Maybe<ResolversTypes['ListState']>, ParentType, ContextType>;
+  terms?: Resolver<Array<Maybe<ResolversTypes['Term']>>, ParentType, ContextType, RequireFields<ListTermsArgs, never>>;
+  to_language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user_id?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ListStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListState'] = ResolversParentTypes['ListState']> = {
-  forwards?: Resolver<Array<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  backwards?: Resolver<Array<ResolversTypes['DateTime']>, ParentType, ContextType>;
+export type ListAndTermsResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListAndTerms'] = ResolversParentTypes['ListAndTerms']> = {
+  list?: Resolver<ResolversTypes['List'], ParentType, ContextType>;
+  terms?: Resolver<Array<Maybe<ResolversTypes['Term']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MaybeListResolvers<ContextType = any, ParentType extends ResolversParentTypes['MaybeList'] = ResolversParentTypes['MaybeList']> = {
-  list?: Resolver<Maybe<ResolversTypes['List']>, ParentType, ContextType>;
-  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type MaybeReviewSessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MaybeReviewSession'] = ResolversParentTypes['MaybeReviewSession']> = {
-  savedReviewSession?: Resolver<Maybe<ResolversTypes['ReviewSession']>, ParentType, ContextType>;
-  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type MaybeUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['MaybeUser'] = ResolversParentTypes['MaybeUser']> = {
-  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  deleteList?: Resolver<ResolversTypes['SuccessOrError'], ParentType, ContextType, RequireFields<MutationDeleteListArgs, 'listId'>>;
-  createList?: Resolver<ResolversTypes['MaybeList'], ParentType, ContextType, RequireFields<MutationCreateListArgs, 'newList'>>;
-  updateList?: Resolver<ResolversTypes['MaybeList'], ParentType, ContextType, RequireFields<MutationUpdateListArgs, 'payload' | 'action' | 'listId'>>;
-  createReviewSession?: Resolver<ResolversTypes['MaybeReviewSession'], ParentType, ContextType, RequireFields<MutationCreateReviewSessionArgs, 'termUpdateArray' | 'newReviewSession'>>;
-  updateTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationUpdateTermsArgs, 'updateObj'>>;
-  editTerms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationEditTermsArgs, 'updateObj'>>;
-  createTerms?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationCreateTermsArgs, 'terms'>>;
-  deleteTermsFromList?: Resolver<ResolversTypes['ErrorOrSuccess'], ParentType, ContextType, RequireFields<MutationDeleteTermsFromListArgs, 'ids' | 'listId'>>;
-  createUser?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
-  login?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
+  createList?: Resolver<ResolversTypes['ListAndTerms'], ParentType, ContextType, RequireFields<MutationCreateListArgs, 'newList'>>;
+  createSession?: Resolver<ResolversTypes['ReviewSession'], ParentType, ContextType, RequireFields<MutationCreateSessionArgs, 'entries' | 'session'>>;
+  createTerms?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<MutationCreateTermsArgs, 'terms'>>;
+  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'userInput'>>;
+  deleteList?: Resolver<ResolversTypes['ListAndTerms'], ParentType, ContextType, RequireFields<MutationDeleteListArgs, 'listIds'>>;
+  deleteTerms?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<MutationDeleteTermsArgs, 'termIds'>>;
+  deleteUser?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  login?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
+  logout?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
+  updateList?: Resolver<Maybe<ResolversTypes['List']>, ParentType, ContextType, RequireFields<MutationUpdateListArgs, 'list_id' | 'payload'>>;
+  updateListLanguage?: Resolver<Maybe<ResolversTypes['List']>, ParentType, ContextType, RequireFields<MutationUpdateListLanguageArgs, 'payload'>>;
+  updatePassword?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdatePasswordArgs, 'currentPassword' | 'newPassword'>>;
+  updateTermValues?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<MutationUpdateTermValuesArgs, 'updateOptions'>>;
+  updateUsername?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUsernameArgs, 'username'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  listsByUser?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByUserArgs, 'owner'>>;
-  listsById?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByIdArgs, 'ids'>>;
-  reviewSessionsByUser?: Resolver<Array<ResolversTypes['ReviewSession']>, ParentType, ContextType, RequireFields<QueryReviewSessionsByUserArgs, 'owner'>>;
+  listsById?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByIdArgs, 'list_ids'>>;
+  listsByUser?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType>;
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  sessionEntriesByTermIds?: Resolver<Array<ResolversTypes['TermIdWithEntries']>, ParentType, ContextType, RequireFields<QuerySessionEntriesByTermIdsArgs, 'termIds'>>;
+  sessionsById?: Resolver<Array<Maybe<ResolversTypes['ReviewSession']>>, ParentType, ContextType, RequireFields<QuerySessionsByIdArgs, 'sessionIds' | 'user_id'>>;
+  sessionsByUser?: Resolver<Array<Maybe<ResolversTypes['ReviewSession']>>, ParentType, ContextType, RequireFields<QuerySessionsByUserArgs, 'user_id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
-  me?: Resolver<ResolversTypes['MaybeUser'], ParentType, ContextType>;
-};
-
-export type ReviewDateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewDate'] = ResolversParentTypes['ReviewDate']> = {
-  start?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  end?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ReviewSessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSession'] = ResolversParentTypes['ReviewSession']> = {
-  owner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  listIds?: Resolver<Maybe<Array<ResolversTypes['Id']>>, ParentType, ContextType>;
-  date?: Resolver<ResolversTypes['ReviewDate'], ParentType, ContextType>;
-  terms?: Resolver<ResolversTypes['ReviewSessionTerms'], ParentType, ContextType>;
-  settings?: Resolver<ResolversTypes['ReviewSettings'], ParentType, ContextType>;
-  passfail?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  timePerCard?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
-  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSessionTermsResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSessionTerms'] = ResolversParentTypes['ReviewSessionTerms']> = {
-  listId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  termIds?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSettingsResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSettings'] = ResolversParentTypes['ReviewSettings']> = {
   direction?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  n?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  sessionStart?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  sessionEnd?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  started?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  ended?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  end_date?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  list_ids?: Resolver<Maybe<Array<Maybe<ResolversTypes['Int']>>>, ParentType, ContextType>;
+  n?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  review_session_id?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  saturation_threshold?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  set_ids?: Resolver<Maybe<Array<Maybe<ResolversTypes['Int']>>>, ParentType, ContextType>;
+  start_date?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  user_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SuccessOrErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['SuccessOrError'] = ResolversParentTypes['SuccessOrError']> = {
-  success?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  error?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+export type ReviewSessionEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSessionEntry'] = ResolversParentTypes['ReviewSessionEntry']> = {
+  created_at?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  direction?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  passfail?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  review_entry_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  review_session_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  term_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  time_on_card?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TermResolvers<ContextType = any, ParentType extends ResolversParentTypes['Term'] = ResolversParentTypes['Term']> = {
-  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  owner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  languages?: Resolver<Maybe<ResolversTypes['TermLanguages']>, ParentType, ContextType>;
-  to?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  history?: Resolver<Array<Maybe<ResolversTypes['TermHistory']>>, ParentType, ContextType>;
-  saturation?: Resolver<ResolversTypes['TermSaturation'], ParentType, ContextType>;
-  listMembership?: Resolver<Array<Maybe<ResolversTypes['List']>>, ParentType, ContextType>;
+  from_language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  from_value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  history?: Resolver<Maybe<Array<Array<ResolversTypes['ReviewSessionEntry']>>>, ParentType, ContextType, RequireFields<TermHistoryArgs, never>>;
+  list_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  saturation?: Resolver<Maybe<ResolversTypes['TermSaturation']>, ParentType, ContextType, RequireFields<TermSaturationArgs, never>>;
+  term_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  to_language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  to_value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TermHistoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['TermHistory'] = ResolversParentTypes['TermHistory']> = {
-  date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  content?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  direction?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type TermLanguagesResolvers<ContextType = any, ParentType extends ResolversParentTypes['TermLanguages'] = ResolversParentTypes['TermLanguages']> = {
-  from?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  to?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+export type TermIdWithEntriesResolvers<ContextType = any, ParentType extends ResolversParentTypes['TermIdWithEntries'] = ResolversParentTypes['TermIdWithEntries']> = {
+  entries?: Resolver<Array<ResolversTypes['ReviewSessionEntry']>, ParentType, ContextType>;
+  term_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TermSaturationResolvers<ContextType = any, ParentType extends ResolversParentTypes['TermSaturation'] = ResolversParentTypes['TermSaturation']> = {
-  forwards?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
-  backwards?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  backwards?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  forwards?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  last_updated?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  term_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  _id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  lists?: Resolver<Maybe<Array<ResolversTypes['List']>>, ParentType, ContextType>;
-  currentSession?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  created_at?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user_id?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
-  DateTime?: GraphQLScalarType;
-  ErrorOrSuccess?: ErrorOrSuccessResolvers<ContextType>;
-  Id?: IdResolvers<ContextType>;
   List?: ListResolvers<ContextType>;
-  ListState?: ListStateResolvers<ContextType>;
-  MaybeList?: MaybeListResolvers<ContextType>;
-  MaybeReviewSession?: MaybeReviewSessionResolvers<ContextType>;
-  MaybeUser?: MaybeUserResolvers<ContextType>;
+  ListAndTerms?: ListAndTermsResolvers<ContextType>;
+  Message?: MessageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  ReviewDate?: ReviewDateResolvers<ContextType>;
   ReviewSession?: ReviewSessionResolvers<ContextType>;
-  ReviewSessionTerms?: ReviewSessionTermsResolvers<ContextType>;
-  ReviewSettings?: ReviewSettingsResolvers<ContextType>;
-  SuccessOrError?: SuccessOrErrorResolvers<ContextType>;
+  ReviewSessionEntry?: ReviewSessionEntryResolvers<ContextType>;
   Term?: TermResolvers<ContextType>;
-  TermHistory?: TermHistoryResolvers<ContextType>;
-  TermLanguages?: TermLanguagesResolvers<ContextType>;
+  TermIdWithEntries?: TermIdWithEntriesResolvers<ContextType>;
   TermSaturation?: TermSaturationResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };

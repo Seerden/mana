@@ -1,35 +1,41 @@
 import SaturationFilter from "components/SaturationFilter/SaturationFilter";
-import useList from "../hooks/useList";
+import { List } from "../../../gql/codegen-output";
+import { useListFilter } from "../hooks/useListFilter";
+import ListTerm from "./ListTerm";
 import * as S from "./ListTerms.style";
 
-type ListTermsProps = Partial<ReturnType<typeof useList>>;
+type ListTermsProps = {
+	list: List;
+};
 
-const ListTerms = ({ filter, setFilter, termsToDisplay, list }: ListTermsProps) => {
-	const showingString = filter.saturation.level
-		? "Showing filtered list"
-		: "Showing all terms";
+function ListTerms({ list }: ListTermsProps) {
+	const { visibleTermIds, label, highlightColor } = useListFilter();
 
 	return (
 		<S.ListTerms>
 			<S.Header>Terms</S.Header>
 
 			<S.FilterInfo>
-				{list && list.sessions?.length > 0 && (
-					<SaturationFilter {...{ filter, setFilter }} />
-				)}
-				<S.FilterString>{showingString}</S.FilterString>
+				{/* {!!list.last_reviewed && <SaturationFilter {...{ filter, setFilter }} />} */}
+				{<SaturationFilter />}
+				<S.FilterString style={{ borderRightColor: highlightColor }}>
+					{label}
+				</S.FilterString>
 			</S.FilterInfo>
 
 			{/* TODO: Loading terms... isn't styuled, but AllFiltered _is_. Why not use a variable for the string to display, and display both _with_ styles? */}
-			{!termsToDisplay && <>Loading terms...</>}
+			{!visibleTermIds && <>Loading terms...</>}
 
-			{termsToDisplay?.length === 0 && (
+			{visibleTermIds?.length === 0 && (
 				<S.AllFiltered>All terms were filtered out</S.AllFiltered>
 			)}
 
-			{termsToDisplay?.length > 0 && termsToDisplay}
+			{visibleTermIds?.length > 0 &&
+				list.terms
+					.filter((t) => visibleTermIds.includes(t.term_id))
+					.map((t) => <ListTerm key={t.term_id} term={t} idx={t.term_id} />)}
 		</S.ListTerms>
 	);
-};
+}
 
 export default ListTerms;

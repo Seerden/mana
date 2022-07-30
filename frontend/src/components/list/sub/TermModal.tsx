@@ -1,17 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import { useEffect } from "react";
+import { Term } from "../../../gql/codegen-output";
+import useTermModal from "../hooks/useTermModal";
 import * as S from "./TermModal.style";
 import TermReviewHistory from "./TermReviewHistory";
 
-const TermModal = ({
-	handleConfirmClick,
-	setOpen,
-	term,
-	handleTermEdit,
-	confirmingDelete,
-	setConfirmingDelete,
-}) => {
+type TermModalProps = {
+	setOpen: (val: boolean) => void;
+	term: Term;
+	handleTermEdit: (e: any) => void; // TODO: type this
+};
+
+function TermModal({ setOpen, term, handleTermEdit }: TermModalProps) {
+	const { handleDeleteTerm, confirmingDelete, setConfirmingDelete } = useTermModal(
+		term.term_id
+	);
+
 	function closeModal(e) {
 		if (e.currentTarget === e.target) {
 			setOpen(false);
@@ -53,8 +58,8 @@ const TermModal = ({
 						<S.Input
 							tabIndex={1}
 							name="front"
-							data-side="from"
-							defaultValue={term.from}
+							data-field="from_value"
+							defaultValue={term.from_value}
 							onBlur={handleTermEdit}
 							{...sharedInputProps}
 						/>
@@ -70,10 +75,9 @@ const TermModal = ({
 					<S.TermSide>
 						<S.Input
 							name="back"
-							//@ts-ignore
-							data-side="to"
+							data-field="to_value"
 							tabIndex={2}
-							defaultValue={term.to}
+							defaultValue={term.to_value}
 							onBlur={handleTermEdit}
 							{...sharedInputProps}
 						/>
@@ -86,10 +90,12 @@ const TermModal = ({
 					</S.TermSide>
 				</S.Section>
 
-				<S.Section>
-					<header> History </header>
-					<TermReviewHistory history={term.history} />
-				</S.Section>
+				{term.history?.length > 0 && (
+					<S.Section>
+						<header> History </header>
+						<TermReviewHistory history={term.history} />
+					</S.Section>
+				)}
 
 				<S.DeleteButtonWrapper>
 					{!confirmingDelete ? (
@@ -99,10 +105,7 @@ const TermModal = ({
 					) : (
 						<>
 							<S.ConfirmDeleteLabel>Delete?</S.ConfirmDeleteLabel>
-							<S.ConfirmDeleteButton
-								confirm
-								onClick={(e) => handleConfirmClick(e, { type: "delete" })}
-							>
+							<S.ConfirmDeleteButton confirm onClick={() => handleDeleteTerm()}>
 								Yes
 							</S.ConfirmDeleteButton>
 							<S.ConfirmDeleteButton onClick={() => setConfirmingDelete(false)}>
@@ -114,6 +117,6 @@ const TermModal = ({
 			</S.TermModal>
 		</>
 	);
-};
+}
 
 export default TermModal;

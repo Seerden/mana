@@ -1,5 +1,4 @@
-import { Key, memo, useState } from "react";
-import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
+import { Key } from "react";
 import { Term } from "../../../gql/codegen-output";
 import SaturationIcon from "../../SaturationFilter/SaturationIcon";
 import { useListTerm } from "../hooks/useListTerm";
@@ -9,76 +8,39 @@ import TermModal from "./TermModal";
 interface TermPropsInterface {
 	idx: number;
 	term: Term;
-	key: Key;
-	handleTermDelete(idx: number): void;
+	key?: Key;
 }
 
-const ListTerm = memo(
-	({ handleTermDelete, term: termFromProps, idx }: TermPropsInterface) => {
-		const [term, setTerm] = useState<typeof termFromProps>(() => termFromProps);
-		const {
-			open,
-			setOpen,
-			selectingTerms,
-			selected,
-			handleSelect,
-			handleConfirmClick,
-			handleTermEdit,
-			confirmingDelete,
-			setConfirmingDelete,
-		} = useListTerm({ term, handleTermDelete, idx, setTerm });
+function ListTerm({ term, idx }: TermPropsInterface) {
+	const { open, setOpen, handleTermEdit } = useListTerm({ term, idx });
 
-		return (
-			<div className="ListTerm">
-				<S.Term title="Click to expand" onClick={() => setOpen(true)}>
-					<S.TermIndex>{idx + 1}</S.TermIndex>
-					<span>{term.from}</span>
-					<span>{term.to}</span>
+	return (
+		<>
+			<S.Term title="Click to expand" onClick={() => setOpen(true)}>
+				<S.TermIndex>{idx + 1}</S.TermIndex>
+				<span>{term.from_value}</span>
+				<span>{term.to_value}</span>
 
-					<S.TermSaturation>
-						<SaturationIcon
-							direction="forwards"
-							saturation={{
-								forwards: term.saturation?.forwards,
-								backwards: term.saturation?.backwards,
-							}}
-						/>
-					</S.TermSaturation>
-					<S.TermSaturation>
-						<SaturationIcon
-							direction="backwards"
-							saturation={{
-								backwards: term.saturation?.backwards,
-								forwards: term.saturation?.forwards,
-							}}
-						/>
-					</S.TermSaturation>
-
-					{selectingTerms ? (
-						<S.TermSelect selected={selected} onClick={handleSelect}>
-							{selected ? <ImCheckboxChecked /> : <ImCheckboxUnchecked />}
-						</S.TermSelect>
-					) : (
-						""
-					)}
-				</S.Term>
-
-				{open && (
-					<TermModal
-						{...{
-							handleConfirmClick,
-							setOpen,
-							term,
-							handleTermEdit,
-							confirmingDelete,
-							setConfirmingDelete,
-						}}
+				<S.TermSaturation>
+					<SaturationIcon
+						direction="forwards"
+						saturation={term.saturation?.forwards}
 					/>
-				)}
-			</div>
-		);
-	}
-);
+				</S.TermSaturation>
+				<S.TermSaturation>
+					<SaturationIcon
+						direction="backwards"
+						saturation={term.saturation?.backwards}
+					/>
+				</S.TermSaturation>
+			</S.Term>
+
+			{open && (
+				<TermModal setOpen={setOpen} term={term} handleTermEdit={handleTermEdit} />
+			)}
+		</>
+	);
+}
 
 export default ListTerm;
 

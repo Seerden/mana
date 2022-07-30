@@ -1,21 +1,28 @@
 import useList from "components/list/hooks/useList";
+import { useListUpdate } from "./hooks/useListUpdate";
 import ListReviewButtons from "./sub/ListReviewButtons";
 import ListTerms from "./sub/ListTerms";
 import ListTitleBar from "./sub/ListTitleBar";
 
 function List() {
-	const { list, termsToDisplay, filter, handleListTitleBlur, handleDelete, setFilter } =
-		useList();
+	const { handleListTitleBlur, handleDelete } = useListUpdate();
+	const { list } = useList();
+
+	if (!list) return <></>;
 
 	return (
 		<div className="PageWrapper">
-			{list && (
-				<>
-					<ListTitleBar {...{ handleListTitleBlur, list, handleDelete }} />
-					<ListReviewButtons />
-					<ListTerms {...{ filter, setFilter, termsToDisplay, list }} />
-				</>
-			)}
+			<>
+				<ListTitleBar
+					list={list}
+					handleListTitleBlur={handleListTitleBlur}
+					handleDelete={handleDelete}
+				/>
+
+				<ListReviewButtons />
+
+				<ListTerms list={list} />
+			</>
 		</div>
 	);
 }

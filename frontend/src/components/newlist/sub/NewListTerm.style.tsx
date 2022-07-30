@@ -1,24 +1,8 @@
-import styled from "styled-components";
-
-export const Term = styled.div`
-	&:nth-last-of-type(1) {
-		margin-bottom: 2rem;
-	}
-
-	display: flex;
-	flex-direction: row;
-	margin: 0 auto;
-	display: flex;
-	align-items: center;
-
-	&:not(:nth-of-type(-n + 2)) {
-		margin-top: 0.5rem;
-	}
-`;
+import styled, { css } from "styled-components";
 
 const termHeight = "1.8rem";
 
-export const TermIndex = styled.div<{ isFocussed?: boolean }>`
+export const TermIndex = styled.div`
 	padding: 0.3rem 0;
 	display: flex;
 	text-align: center;
@@ -31,10 +15,32 @@ export const TermIndex = styled.div<{ isFocussed?: boolean }>`
 	border-radius: 4px 0 0 4px;
 	user-select: none;
 
-	background-color: ${(p) => (p.isFocussed ? "deepskyblue" : "#111")};
-	color: ${(p) => (p.isFocussed ? "#111" : "azure")};
+	background-color: #111;
+	color: azure;
 
 	transition: all 50ms linear;
+`;
+
+export const Term = styled.div<{ isHidden?: boolean }>`
+	display: flex;
+	flex-direction: row;
+	display: flex;
+	align-items: center;
+
+	margin-bottom: 0.4rem;
+
+	&:focus-within {
+		${TermIndex} {
+			background-color: deepskyblue;
+			color: #111;
+		}
+	}
+
+	${(p) =>
+		p.isHidden &&
+		css`
+			display: none;
+		`}
 `;
 
 export const TermInputs = styled.div`
@@ -51,8 +57,7 @@ export const TermInput = styled.input`
 	font-size: 0.85rem;
 	border: none;
 	background-color: #2a2a2a;
-	border-radius: 0 0 5px 0;
-	box-shadow: 0 0 0.5rem 0 #111;
+	border-radius: 0 0 10px 0;
 	border: 1px solid #111;
 
 	transition: all 100ms linear, outline 5ms ease-in, box-shadow 0ms linear;
@@ -68,6 +73,7 @@ export const TermInput = styled.input`
 		border-radius: 0;
 		outline: 2px solid deepskyblue;
 		box-shadow: 0 0 0.5rem black;
-		transform: scale(1.02);
+		transform: scale(1.01);
+		z-index: 10;
 	}
 `;

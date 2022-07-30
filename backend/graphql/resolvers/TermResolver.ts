@@ -1,26 +1,48 @@
-import { Arg, Int, Mutation, Resolver } from "type-graphql";
-import { NewTerm } from "../types/input_types/term";
-import { Term } from "../types/Term";
+import { Arg, FieldResolver, Int, Mutation, Resolver, Root } from "type-graphql";
+import { ReviewSessionEntry } from "../types/ReviewSessionEntry";
+import { Term, TermSaturation, TermUpdateInput, TermWithoutId } from "../types/Term";
 import { createTerms } from "./term/create-terms";
 import { deleteTerms } from "./term/delete-terms";
+import { resolveTermHistory } from "./term/resolve-history";
+import { resolveTermSaturation } from "./term/resolve-saturation";
+import { updateTermValues } from "./term/update-terms";
 
 // We currently don't query terms by themselves,
 //  only as part of their parent list's queries,
 //   but this might change in the future
 
-@Resolver()
+@Resolver(() => Term)
 export class TermResolver {
    @Mutation(() => [Term])
-   async createTerms(@Arg("terms", () => [NewTerm]) terms: NewTerm[]) {
-      return await createTerms(terms);
+   async createTerms(@Arg("terms", () => [TermWithoutId]) terms: TermWithoutId[]) {
+      return await createTerms({ terms });
    }
 
-   // TODO: does this return Term[]? Or does deleting return another type of object?
    @Mutation(() => [Term])
    async deleteTerms(@Arg("termIds", () => [Int]) termIds: number[]) {
       return await deleteTerms(termIds);
    }
 
-   // TODO: implement mutations for updating terms. Review-related mutations
-   // will be in ReviewSessionResolver from now on.
+   @Mutation(() => [Term])
+   async updateTermValues(
+      @Arg("updateOptions", () => [TermUpdateInput]) updateOptions: [TermUpdateInput]
+   ) {
+      return updateTermValues({ updateOptions });
+   }
+
+   @FieldResolver(() => TermSaturation, { nullable: true })
+   async saturation(
+      @Root() term: Term,
+      @Arg("populate", { nullable: true }) populate?: boolean
+   ) {
+      return resolveTermSaturation({ term, populate });
+   }
+
+   @FieldResolver(() => [[ReviewSessionEntry]], { nullable: true })
+   async history(
+      @Root() term: Term,
+      @Arg("populate", { nullable: true }) populate?: boolean
+   ) {
+      return resolveTermHistory({ term, populate });
+   }
 }

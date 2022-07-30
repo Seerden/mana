@@ -24,6 +24,6 @@ export class ReviewSessionEntry extends ReviewSessionEntryInput {
    @Field(() => Int)
    review_entry_id: number;
 
-   @Field(() => Int)
+   @Field()
    created_at: number;
 }

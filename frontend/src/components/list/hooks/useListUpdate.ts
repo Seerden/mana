@@ -1,81 +1,68 @@
-import { listState } from "components/list/state/listAtoms";
-import { List } from "gql/codegen-output";
-import { useMutateDeleteList, useMutateUpdateList } from "gql/hooks/list-mutate";
-import { DeleteTermsVariables, useMutateDeleteTerms } from "gql/hooks/term-query";
+import { useQueryClient } from "@tanstack/react-query";
 import useRouteProps from "hooks/useRouteProps";
-import { useCallback, useEffect } from "react";
-import { useSetRecoilState } from "recoil";
+import { FocusEventHandler, useCallback } from "react";
+import { useMutateDeleteList } from "../../../gql/hooks/list/useDeleteList";
+import { useQueryListsById } from "../../../gql/hooks/list/useQueryLists";
+import { useMutateUpdateList } from "../../../gql/hooks/list/useUpdateList";
 
-export function useListUpdate(list, setList) {
-	const setListAtom = useSetRecoilState(listState);
+// TODO: type these arguments
+export function useListUpdate() {
+	const client = useQueryClient();
 	const { params, navigate } = useRouteProps();
+
+	const list_id = +params.id;
+	const { data: lists } = useQueryListsById([list_id]);
+	const list = lists?.[0];
+
 	const { mutate: mutateUpdateList } = useMutateUpdateList();
-	const { mutate: mutateDeleteTerms } = useMutateDeleteTerms();
-	const { mutate: mutateDeleteList, data: listDeleteResponse } = useMutateDeleteList(
-		params.id
-	);
+	const { mutate: mutateDeleteList } = useMutateDeleteList();
 
-	useEffect(() => {
-		if (listDeleteResponse?.success) {
-			navigate(`/u/${params.username}/lists`, { replace: true });
-		}
-	}, [listDeleteResponse]);
-
-	const handleListTitleBlur = useCallback(
+	const handleListTitleBlur: FocusEventHandler<HTMLHeadingElement> = useCallback(
 		(e) => {
 			e.persist();
+
+			if (!e.currentTarget.innerText) {
+				// change e.currentTarget in DOM without React's knowing so
+				// TODO: instead of doing it like this, do
+				// client.setQueryData(['list', list_id], () => ({...list})) to
+				// force-update cache. If the title HTML element renders {list.name}
+				// then it should update properly
+				e.currentTarget.innerText = list.name;
+			}
+
 			const { innerText } = e.currentTarget;
-
-			if (list?.terms?.length > 0) {
-				if (!innerText) {
-					// change e.currentTarget in DOM without React's knowing so
-					e.currentTarget.innerText = list.name;
-				}
-
-				if (innerText && innerText !== list.name) {
-					const updatedList: List = { ...list, name: innerText };
-					if (updatedList.terms?.length > 0) {
-						setList(updatedList);
-
-						mutateUpdateList({
-							listId: params.id,
-							action: { type: "name" },
-							payload: { name: innerText },
-						});
+			if (innerText !== list.name) {
+				mutateUpdateList(
+					{
+						list_id: +params.id,
+						payload: { name: innerText },
+					},
+					{
+						onSuccess: (updatedList) => {
+							client.setQueryData(["listsById", list_id], () => [
+								{
+									...updatedList,
+								},
+							]);
+						},
 					}
-				}
+				);
 			}
 		},
-		[list, setList]
+		[list]
 	);
 
-	function handleTermDelete(idx: number) {
-		if (list?.terms.length) {
-			const updatedList: List = { ...list, terms: [...list.terms] }; // need to spread the .terms property since otherwise it's not a (deep?/shallow?) copy
-
-			if (updatedList.terms) {
-				const termId = updatedList.terms[idx]._id;
-				updatedList.terms.splice(idx, 1);
-				setList(updatedList);
-				setListAtom(updatedList);
-
-				const variables: DeleteTermsVariables = {
-					listId: params.id,
-					ids: [termId],
-					remainingTermIds: updatedList.terms.map((term) => term._id),
-				};
-
-				mutateDeleteTerms(variables);
-			}
-		}
-	}
-
-	/**
-	 * Trigger the API to DELETE the entire list
-	 */
+	/** Sends the mutation to delete the list and its terms entirely. */
+	// TODO: rename ->handleListDelete
 	function handleDelete() {
-		mutateDeleteList();
+		mutateDeleteList(+params.id, {
+			onSuccess: ({ list }) => {
+				if (list?.list_id) {
+					navigate(`/u/${params.username}/lists`, { replace: true });
+				}
+			},
+		});
 	}
 
-	return { handleTermDelete, handleListTitleBlur, handleDelete } as const;
+	return { handleListTitleBlur, handleDelete } as const;
 }

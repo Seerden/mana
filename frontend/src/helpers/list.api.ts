@@ -1,10 +1,7 @@
-import { Term } from "gql/codegen-output";
-
 type Direction = "forwards" | "backwards";
 
-/**
- * Takes a list, returns all its sessions with the specified direction, and its length.
- * @param {Object} listObj
+/** Takes a list, returns all its sessions with the specified direction, and its
+ * length.
  */
 export const extractSessionsByDirection = (list, direction: Direction) => {
 	// @todo: sessions currently don't exist as list.sessions entries.
@@ -12,14 +9,6 @@ export const extractSessionsByDirection = (list, direction: Direction) => {
 		(sess) => sess.direction === direction
 	);
 	return [sessionsByDirection.length, sessionsByDirection];
-};
-
-/**
- * Extract all sessions with a given direction from a term's history
- * @param {Object} term
- */
-export const termSessionsByDirection = (term: Term, direction: Direction) => {
-	return term.history!.filter((session) => session?.direction === direction);
 };
 
 export const colorMap = {
@@ -30,13 +19,6 @@ export const colorMap = {
 	4: "blueviolet",
 };
 
-export const colorBySaturation = (
-	saturation: { forwards: number; backwards: number } | number | undefined | string,
-	direction: Direction | undefined = undefined
-) => {
-	if (typeof saturation === "number" || typeof saturation === "string") {
-		return colorMap[Number(saturation)];
-	} else if (direction && saturation) {
-		return colorMap[saturation[direction]];
-	}
+export const colorBySaturation = (level: number) => {
+	return level >= 0 ? colorMap[level] : "#333";
 };

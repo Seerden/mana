@@ -1,4 +1,5 @@
-import { useMutateRegisterUser } from "gql/hooks/user-query";
+import { UserInput } from "gql/codegen-output";
+import { useCreateUser } from "gql/hooks/user/useCreateUser";
 import { useLogin } from "hooks/useLogin";
 import useRouteProps from "hooks/useRouteProps";
 import { useCallback, useEffect, useState } from "react";
@@ -22,29 +23,27 @@ function newUserValidationMessage(newUser: NewUserFormValues) {
 
 /** Functionality for ./Register.tsx */
 export function useRegister() {
-	const { data, mutate: mutateRegisterUser } = useMutateRegisterUser();
+	const { data, error, mutate } = useCreateUser();
 	const [message, setMessage] = useState<string>(null);
 	const { login } = useLogin();
 	const { navigate } = useRouteProps();
 
-	// TODO: this should be inside the onSuccess of useMutateRegisterUser()
+	// TODO: this should be inside the onSuccess of useCreateUser()
 	useEffect(() => {
 		if (!data) return;
 
-		const { createUser } = data;
-
-		const { error, user } = createUser;
-
 		if (error) setMessage(error);
 
-		if (user) {
-			login(user.username);
-			navigate(`/u/${user.username}`);
+		const { username } = data;
+
+		if (username) {
+			login(username);
+			navigate(`/u/${username}`);
 		}
 	}, [data]);
 
 	const [newUser, setNewUser] = useState<
-		NewUser & { repeatPassword: NewUser["password"] }
+		UserInput & { repeatPassword: UserInput["password"] }
 	>({
 		username: "",
 		password: "",
@@ -55,10 +54,7 @@ export function useRegister() {
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const { name, value } = e.target;
 
-			setNewUser((current) => {
-				current[name] = value;
-				return current;
-			});
+			setNewUser((current) => ({ ...current, [name]: value }));
 		},
 		[newUser, setNewUser]
 	);
@@ -69,9 +65,9 @@ export function useRegister() {
 		if (message) {
 			setMessage(message);
 		} else {
-			mutateRegisterUser(newUser);
+			mutate(newUser);
 		}
 	}, [newUser, setMessage]);
 
-	return { handleSubmit, handleChange, user: data?.createUser?.user, message } as const;
+	return { handleSubmit, handleChange, user: data, message } as const;
 }

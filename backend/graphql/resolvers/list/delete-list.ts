@@ -2,23 +2,25 @@ import { sql } from "../../../db/init";
 import { List, ListAndTerms } from "../../types/List";
 import { Term } from "../../types/Term";
 
-// TODO: trycatch, typing
-export async function deleteListsById(listIds: number[]): Promise<ListAndTerms> {
+export async function deleteListsById(
+   user_id: number,
+   listIds: number[]
+): Promise<ListAndTerms> {
    return await sql.begin(async (sql) => {
-      // TODO: currently, we don't have an `on delete cascade` definition in
-      // `lists`, so terms have to be deleted _first_, and then lists.
+      // NOTE: deleting terms and list separately is easier than writing a
+      // complex query.
       const terms = await sql<[Term?]>`delete from terms where list_id in ${sql(
          listIds
-      )} returning *`;
+      )} and user_id=${user_id} returning *`;
       const [list] = await sql<[List?]>`delete from lists where list_id in ${sql(
          listIds
-      )} returning *`;
+      )} and user_id=${user_id} returning *`;
 
       return { list, terms };
    });
 }
 
-// TODO: trycatch, typing
+// TODO: add sql options object for testing
 export async function deleteListsByUser(user_id: number) {
-   return await sql`delete from lists where user_id = ${user_id}`;
+   return sql<[List?]>`delete from lists where user_id = ${user_id} returning *`;
 }

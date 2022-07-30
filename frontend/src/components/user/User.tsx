@@ -1,4 +1,3 @@
-import UserSessions from "components/sessions/UserSessions";
 import useRouteProps from "../../hooks/useRouteProps";
 import cs from "./User.module.scss";
 
@@ -11,10 +10,6 @@ const User = () => {
 			<div className="User">
 				<div className={cs.Title}>/u/{username}'s profile</div>
 			</div>
-
-			<section>
-				<UserSessions />
-			</section>
 		</div>
 	);
 };

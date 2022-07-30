@@ -8,7 +8,7 @@ interface ListTitleBarProps {
 	handleDelete: () => void;
 }
 
-const ListTitleBar = ({ handleListTitleBlur, list, handleDelete }: ListTitleBarProps) => {
+function ListTitleBar({ list, handleListTitleBlur, handleDelete }: ListTitleBarProps) {
 	return (
 		<S.TitleBar>
 			<S.TitleBarHeader>
@@ -19,14 +19,15 @@ const ListTitleBar = ({ handleListTitleBlur, list, handleDelete }: ListTitleBarP
 				>
 					{list.name}
 				</S.ListName>
+
 				<S.ListLanguages>
-					({list.from} to {list.to})
+					({list.from_language} to {list.to_language})
 				</S.ListLanguages>
 			</S.TitleBarHeader>
 
-			<ListDeleteButton {...{ handleDelete }} />
+			<ListDeleteButton handleDelete={handleDelete} />
 		</S.TitleBar>
 	);
-};
+}
 
 export default ListTitleBar;

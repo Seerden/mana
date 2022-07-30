@@ -2,68 +2,83 @@ import { useNewList } from "./hooks/useNewList";
 import * as S from "./NewList.style";
 
 function NewList() {
-	const { handleBlur, addRows, handleSubmit, termInputs, newList } = useNewList();
+	const {
+		handleBlur,
+		addRows,
+		handleSubmit,
+		termInputs,
+		newList,
+		buttonsRef,
+		isStuck,
+		isSubmitDisabled,
+	} = useNewList();
 
 	return (
-		<div>
-			<div className="PageHeader">New List</div>
-
-			<S.Form>
-				<S.NameAndLanguages>
-					<S.NameLabel>List name</S.NameLabel>
+		<S.Form>
+			<S.Title style={{ gridArea: "title" }}>New List</S.Title>
+			<S.MetaSection>
+				<S.NameSubsection>
+					<S.SectionLabel htmlFor="name">List name</S.SectionLabel>
 					<S.NameInput
-						onBlur={handleBlur}
+						onChange={handleBlur}
 						type="text"
 						name="name"
-						placeholder="week 3 vocabulary"
+						placeholder="Chapter 3: Basic Sentences"
 					/>
+				</S.NameSubsection>
 
+				<div>
+					<S.SectionLabel>Languages</S.SectionLabel>
 					<S.Languages>
-						<S.Language>
-							<S.LanguageLabel htmlFor="from">Original language</S.LanguageLabel>
+						<div>
+							<S.LanguageLabel htmlFor="from_language">
+								Original language
+							</S.LanguageLabel>
 							<S.LanguageInput
-								onBlur={handleBlur}
+								onChange={handleBlur}
 								type="text"
-								name="from"
+								name="from_language"
 								placeholder="Klingon"
 							/>
-						</S.Language>
-						<S.LanguageIcon />
+						</div>
+						<S.LanguageIcon size={25} />
 
-						<S.Language>
-							<S.LanguageLabel>Target language</S.LanguageLabel>
+						<div>
+							<S.LanguageLabel htmlFor="to_language">
+								Target language
+							</S.LanguageLabel>
 							<S.LanguageInput
-								onBlur={handleBlur}
+								onChange={handleBlur}
 								type="text"
-								name="to"
+								name="to_language"
 								placeholder="Elvish"
 							/>
-						</S.Language>
+						</div>
 					</S.Languages>
-				</S.NameAndLanguages>
+				</div>
+			</S.MetaSection>
 
-				<S.Buttons>
-					<S.Button onClick={() => addRows()} type="button" value="Add rows" />
-					<S.Button onClick={handleSubmit} type="button" value="Create list" />
-				</S.Buttons>
+			<S.Buttons style={{ gridArea: "buttons" }} ref={buttonsRef} isStuck={isStuck}>
+				<S.Button onClick={() => addRows()} type="button" value="Add rows" />
+				<S.Button
+					onClick={handleSubmit}
+					disabled={isSubmitDisabled}
+					type="button"
+					value="Create list"
+				/>
+			</S.Buttons>
 
-				<S.Terms>
-					{termInputs.length && (
-						<>
-							<S.TermsHeader>
-								{newList && (
-									<>
-										<S.TermsHeaderSide>{newList.from}</S.TermsHeaderSide>
-										<S.TermsHeaderSide>{newList.to}</S.TermsHeaderSide>
-									</>
-								)}
-							</S.TermsHeader>
-							{termInputs}
-						</>
-					)}
-				</S.Terms>
-			</S.Form>
-		</div>
+			<S.Section style={{ gridArea: "terms" }}>
+				<S.SectionLabel>Terms</S.SectionLabel>
+				{newList.from_language && newList.to_language && (
+					<S.TermsHeader>
+						<S.TermsHeaderSide>{`${newList.from_language} definition`}</S.TermsHeaderSide>
+						<S.TermsHeaderSide>{`${newList.to_language} definition`}</S.TermsHeaderSide>
+					</S.TermsHeader>
+				)}
+				{termInputs}
+			</S.Section>
+		</S.Form>
 	);
 }
 

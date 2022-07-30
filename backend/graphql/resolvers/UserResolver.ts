@@ -3,7 +3,7 @@ import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { destroySession } from "../../lib/destroy-session";
 import { UserId } from "../helpers/insert-user-id";
 import { Roles } from "../helpers/roles";
-import { User } from "../types/User";
+import { User, UserInput } from "../types/User";
 import { Message } from "../types/utility/message";
 import { createUser } from "./user/create-user";
 import { deleteUser } from "./user/delete-user";
@@ -20,17 +20,14 @@ export class UserResolver {
       return queryAllUsers();
    }
 
-   @Query(() => User)
-   async me(@UserId() user_id: number) {
-      return queryMe(user_id);
+   @Query(() => User, { nullable: true })
+   async me(@UserId() user_id: number, @Ctx() ctx: ExpressContext) {
+      return queryMe(user_id, ctx);
    }
 
    @Mutation(() => User)
-   async createUser(
-      @Arg("username") username: string,
-      @Arg("password") password: string
-   ) {
-      return createUser({ username, password });
+   async createUser(@Arg("userInput") userInput: UserInput) {
+      return createUser(userInput);
    }
 
    @Mutation(() => User)
@@ -48,11 +45,7 @@ export class UserResolver {
    }
 
    @Mutation(() => User)
-   async updateUsername(
-      @UserId() user_id: number,
-      @Arg("username")
-      username: string
-   ) {
+   async updateUsername(@UserId() user_id: number, @Arg("username") username: string) {
       return updateUsername(user_id, username);
    }
 

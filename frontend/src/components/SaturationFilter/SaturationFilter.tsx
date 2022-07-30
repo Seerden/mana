@@ -1,75 +1,55 @@
-import { FilterInterface } from "components/list/types/list.types";
 import { colorBySaturation } from "helpers/list.api";
-import React, { memo } from "react";
+import { Initial } from "./FilterButtons";
 import { useSaturationFilter } from "./hooks/useSaturationFilter";
 import * as S from "./SaturationFilter.style";
+import { FilterStep } from "./types/filter-types";
 
-interface SaturationFilterProps {
-	filter: FilterInterface;
-	setFilter: React.Dispatch<React.SetStateAction<FilterInterface>>;
-}
-
-const SaturationFilter = memo(({ setFilter }: SaturationFilterProps) => {
+function SaturationFilter() {
 	const {
-		filterDisplayState,
-		setFilterDisplayState,
-		saturationFilter,
-		setSaturationFilter,
-		icons,
+		filterStep,
+		termFilter,
+		cycleFilterStep,
+		resetFilterStep,
+		resetTermFilter,
+		thresholdButtons,
+		operatorButtons,
 		directionButtons,
-	} = useSaturationFilter(setFilter);
+	} = useSaturationFilter();
+
+	const color = termFilter ? colorBySaturation(termFilter.value) ?? "#333" : "#333";
 
 	return (
-		<>
-			<S.SaturationFilter>
-				{filterDisplayState === "initial" && (
-					<>
-						<S.FilterLabelButton
-							onClick={() => setFilterDisplayState("level")}
-							borderAndShadowColor={
-								saturationFilter
-									? colorBySaturation(saturationFilter.level) ?? "#333"
-									: "#333"
-							}
-						>
-							Filter by saturation level
-							<S.ResetButton
-								type="button"
-								value="Reset"
-								onClick={(e) => {
-									e.stopPropagation();
-									setSaturationFilter({
-										level: undefined,
-										direction: "any",
-									});
-								}}
-							/>
-						</S.FilterLabelButton>
-					</>
-				)}
+		<S.SaturationFilter>
+			{filterStep === FilterStep.INITIAL && (
+				<Initial
+					color={color}
+					onStartClick={() => {
+						resetTermFilter();
+						cycleFilterStep();
+					}}
+					onResetClick={(e) => {
+						e.stopPropagation();
+						resetFilterStep();
+						resetTermFilter();
+					}}
+				/>
+			)}
 
-				{filterDisplayState === "level" && (
-					<S.FilterIcons
-						borderColor={
-							saturationFilter ? colorBySaturation(saturationFilter.level) : "#333"
-						}
-					>
-						{icons}
-					</S.FilterIcons>
-				)}
+			{filterStep === FilterStep.OPERATOR && (
+				<S.FilterIcons borderColor={color}>{operatorButtons}</S.FilterIcons>
+			)}
 
-				{filterDisplayState === "direction" && (
-					<S.Filter
-						borderColor={
-							saturationFilter ? colorBySaturation(saturationFilter.level) : "#333"
-						}
-					>
-						<S.Direction>{directionButtons}</S.Direction>
-					</S.Filter>
-				)}
-			</S.SaturationFilter>
-		</>
+			{filterStep === FilterStep.LEVEL && (
+				<S.FilterIcons borderColor={color}>{thresholdButtons}</S.FilterIcons>
+			)}
+
+			{filterStep === FilterStep.DIRECTION && (
+				<S.Filter borderColor={color}>
+					<S.Direction>{directionButtons}</S.Direction>
+				</S.Filter>
+			)}
+		</S.SaturationFilter>
 	);
-});
+}
 
 export default SaturationFilter;

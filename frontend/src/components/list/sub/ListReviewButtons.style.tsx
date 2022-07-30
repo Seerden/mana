@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
 import {
 	sharedLinkStyle,
 	subsectionHeaderStyle,
 	tempSectionStyle,
-} from "../../../helpers/theme/theme";
+} from "helpers/theme/theme";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 // TODO: If we don't add any styles beyond extending a snippet, should we just
 // define a component for the snippet and re-use that? That's much less flexible

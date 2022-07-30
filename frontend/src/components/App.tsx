@@ -1,11 +1,11 @@
-import ReviewPage from "components/review/ReviewPage";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import User from "components/user/User";
-import { QueryClientProvider } from "react-query";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
 import { theme } from "../helpers/theme/theme";
-import useQueryClient from "../hooks/useQueryClient";
+import useInitializeQueryClient from "../hooks/useQueryClient";
 import Private from "../wrappers/Private";
 import * as S from "./App.style";
 import Home from "./Home/Home";
@@ -18,16 +18,27 @@ import NewList from "./newlist/NewList";
 import Register from "./register/Register";
 
 const App = () => {
-	const [client] = useQueryClient();
+	const client = useInitializeQueryClient();
 
 	return (
 		<>
 			<QueryClientProvider client={client}>
+				<ReactQueryDevtools
+					initialIsOpen={false}
+					panelProps={{
+						style: {
+							maxWidth: "40vw",
+							bottom: 0,
+							left: 0,
+						},
+					}}
+					position="bottom-right"
+				/>
 				<RecoilRoot>
-					<S.App>
-						<ThemeProvider theme={theme}>
-							<Router>
-								<Header />
+					<ThemeProvider theme={theme}>
+						<Router>
+							<Header />
+							<S.App>
 								<div className="App">
 									<Routes>
 										{/* home route */}
@@ -79,14 +90,6 @@ const App = () => {
 															</Private>
 														}
 													/>
-													<Route
-														path="review"
-														element={
-															<Private>
-																<ReviewPage />
-															</Private>
-														}
-													/>
 												</Route>
 											</Route>
 										</Route>
@@ -96,9 +99,9 @@ const App = () => {
 									</Routes>
 								</div>
 								<Footer />
-							</Router>
-						</ThemeProvider>
-					</S.App>
+							</S.App>
+						</Router>
+					</ThemeProvider>
 				</RecoilRoot>
 			</QueryClientProvider>
 		</>

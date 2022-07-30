@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { List } from "gql/codegen-output";
 
-export function colorByLastReviewDate(reviewDate: Date | null) {
+export function colorByLastReviewDate(reviewDate: number | Date | null) {
 	const day = 3600 * 24 * 1000;
 
 	if (reviewDate) {
@@ -24,22 +24,25 @@ export function colorByLastReviewDate(reviewDate: Date | null) {
 
 /** Return the most recent date from list.reviewDates, by comparing the last entry from .forwards to .backwards */
 export function getLastReviewDate(list: List) {
-	if (list.reviewDates) {
-		const { forwards, backwards } = list.reviewDates;
-		const last = (arr: Date[] | []) => arr && arr[arr.length - 1];
-		const [lastForwards, lastBackwards] = [last(forwards), last(backwards)];
+	return new Date();
 
-		if (!lastForwards) {
-			if (lastBackwards) {
-				return lastBackwards;
-			}
-			return null;
-		}
+	// TODO: commented out since this functionality is currently broken pending rework
+	// if (list.reviewDates) {
+	// 	const { forwards, backwards } = list.reviewDates;
+	// 	const last = (arr: Date[] | []) => arr && arr[arr.length - 1];
+	// 	const [lastForwards, lastBackwards] = [last(forwards), last(backwards)];
 
-		if (!lastBackwards) {
-			return lastForwards;
-		}
+	// 	if (!lastForwards) {
+	// 		if (lastBackwards) {
+	// 			return lastBackwards;
+	// 		}
+	// 		return null;
+	// 	}
 
-		return lastForwards > lastBackwards ? lastForwards : lastBackwards;
-	}
+	// 	if (!lastBackwards) {
+	// 		return lastForwards;
+	// 	}
+
+	// 	return Math.max(lastForwards, lastBackwards);
+	// }
 }
