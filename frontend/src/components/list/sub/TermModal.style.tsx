@@ -1,65 +1,6 @@
 import styled, { css, keyframes } from "styled-components";
 import { subsectionHeaderStyle } from "../../../helpers/theme/theme";
 
-const deleteButtonStyle = css`
-	padding: 0.2rem 0.5rem;
-	display: block;
-	margin-left: auto;
-	transition: all 70ms linear;
-
-	background-color: #333;
-	border: 2px solid transparent;
-	border-radius: 2px;
-	outline: none;
-	color: azure;
-	font-size: 0.7rem;
-	width: 100px;
-	margin-top: 1rem;
-	height: 25px;
-	justify-content: center;
-
-	&:hover {
-		background-color: orangered;
-		transform: translateY(-3px);
-		box-shadow: 0 0 0.5rem black;
-	}
-`;
-
-export const ConfirmDeleteLabel = styled.div`
-	background-color: transparent;
-	display: inline-flex;
-	justify-content: center;
-	font-size: 0.8rem;
-	height: 20px;
-	margin-bottom: 0;
-	padding: 0 0.5rem;
-`;
-
-export const ConfirmDeleteButton = styled.button<{ confirm?: true }>`
-	${deleteButtonStyle}
-
-	background-color: #111;
-	display: inline-flex;
-	width: max-content;
-	margin-top: 0.3rem;
-	height: 25px;
-
-	&:hover {
-		background-color: ${(p) => (p.confirm ? "seagreen" : "orangered")};
-	}
-`;
-
-export const DeleteButton = styled.button`
-	${deleteButtonStyle}
-`;
-
-export const DeleteButtonWrapper = styled.div`
-	height: 60px;
-	width: max-content;
-	display: block;
-	margin-left: auto;
-`;
-
 export const Input = styled.input<{ confirming?: boolean }>`
 	width: 450px;
 	max-width: 100%;
