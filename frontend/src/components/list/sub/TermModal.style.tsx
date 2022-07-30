@@ -112,6 +112,7 @@ export const TermSide = styled.div`
 	display: flex;
 	gap: 1.5rem;
 	align-items: center;
+	min-width: 300px; // don't care about overflow if viewport can't fit this
 `;
 
 export const Label = styled.label`
