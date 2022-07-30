@@ -59,7 +59,6 @@ export const Term = styled.li`
 
 	@media screen and (max-width: 768px), screen and (max-height: 700px) {
 		grid-template-columns: 1fr;
-		width: 90%;
 		justify-content: center;
 		display: grid;
 		margin: 0 auto;
