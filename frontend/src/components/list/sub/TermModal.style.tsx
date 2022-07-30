@@ -1,4 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
+import { subsectionHeaderStyle } from "../../../helpers/theme/theme";
 
 const deleteButtonStyle = css`
 	padding: 0.2rem 0.5rem;
@@ -133,12 +134,7 @@ export const Section = styled.section`
 `;
 
 export const Header = styled.header`
-	font-size: 1.6rem;
-	font-weight: 600;
-	width: max-content;
-	border-bottom: 2px solid white;
-	background-color: #222;
-	margin-bottom: 0.5rem;
+	${subsectionHeaderStyle}
 `;
 
 export const CloseModalButton = styled.button`
