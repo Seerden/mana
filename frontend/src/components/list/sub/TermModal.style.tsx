@@ -174,7 +174,7 @@ const fadeIn = keyframes`
    }
 `;
 
-export const ModalWrapper = styled.div`
+export const ModalWrapper = styled.aside`
 	animation: 100ms linear ${fadeIn};
 	animation-fill-mode: forwards;
 	position: fixed;
