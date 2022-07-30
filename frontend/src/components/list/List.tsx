@@ -12,17 +12,15 @@ function List() {
 
 	return (
 		<div className="PageWrapper">
-			<>
-				<ListTitleBar
-					list={list}
-					handleListTitleBlur={handleListTitleBlur}
-					handleDelete={handleDelete}
-				/>
+			<ListTitleBar
+				list={list}
+				handleListTitleBlur={handleListTitleBlur}
+				handleDelete={handleDelete}
+			/>
 
-				<ListReviewButtons />
+			<ListReviewButtons />
 
-				<ListTerms list={list} />
-			</>
+			<ListTerms list={list} />
 		</div>
 	);
 }
