@@ -28,8 +28,8 @@ export const TermSaturation = styled.span`
 	}
 `;
 
-export const TermValue = styled.span`
-	display: inline-block;
+export const TermValue = styled.span<{ lang: string }>`
+	display: flex;
 	word-wrap: break-word;
 	max-width: 100%;
 
@@ -38,6 +38,14 @@ export const TermValue = styled.span`
 		padding: 0 1rem;
 		justify-self: center;
 		width: 100%;
+	}
+
+	&::before {
+		content: "${(p) => p.lang.slice(0, 2).toUpperCase()}";
+		font-size: 0.76rem;
+		color: #777;
+		margin-right: 0.35rem;
+		align-self: center;
 	}
 `;
 

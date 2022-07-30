@@ -18,8 +18,8 @@ function ListTerm({ term, idx }: TermPropsInterface) {
 		<>
 			<S.Term title="Click to expand" onClick={() => setOpen(true)}>
 				<S.TermIndex>{idx + 1}</S.TermIndex>
-				<span>{term.from_value}</span>
-				<span>{term.to_value}</span>
+				<S.TermValue lang={term.from_language}>{term.from_value}</S.TermValue>
+				<S.TermValue lang={term.to_language}>{term.to_value}</S.TermValue>
 
 				<S.TermSaturation>
 					<SaturationIcon
