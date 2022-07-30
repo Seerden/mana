@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { sharedButtonStyle, sharedHeadingStyle } from "../../helpers/theme/theme";
+import {
+	sharedButtonStyle,
+	sharedHeadingStyle,
+	sharedPageTitleStyle,
+} from "../../helpers/theme/theme";
 
 export const NewListLink = styled(Link)`
 	${sharedButtonStyle};
@@ -17,6 +21,10 @@ export const Header = styled.header`
 	padding: 1rem 2.5rem;
 	outline: 1px solid #363636;
 	box-shadow: 0 0 1rem 0.1rem black;
+`;
+
+export const Title = styled.h1`
+	${sharedPageTitleStyle}
 `;
 
 export const Heading = styled.header`

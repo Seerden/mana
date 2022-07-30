@@ -42,13 +42,12 @@ function Lists() {
 	if (lists?.length > 0) {
 		return (
 			<div className="PageWrapper">
-				<div className="PageHeader">
-					Lists by
-					{/* TODO: does .Link have any styles? */}
+				<S.Title>
+					Lists by {/* TODO: does .Link have any styles? */}
 					<Link className="Link" to={userString}>
 						{userString}
 					</Link>
-				</div>
+				</S.Title>
 
 				<S.NewListLink to={`${userString}/lists/new`}>
 					Create a new list
