@@ -4,7 +4,6 @@ import { tempSectionStyle } from "../../../helpers/theme/theme";
 
 const regularPadding = "0.5rem 1rem";
 
-// .List__TitleBar
 export const TitleBar = styled.section`
 	${tempSectionStyle};
 
@@ -17,7 +16,6 @@ export const TitleBar = styled.section`
 	align-items: center;
 `;
 
-// &__header
 export const TitleBarHeader = styled.header`
 	display: flex;
 `;
@@ -30,7 +28,6 @@ export const EditIcon = styled(AiOutlineEdit)`
 	top: 5px;
 `;
 
-// &--listname
 export const ListName = styled.input`
 	min-width: 5rem;
 	padding: 0.7rem 1.8rem;
@@ -55,7 +52,6 @@ export const ListName = styled.input`
 	}
 `;
 
-// &--languages
 export const ListLanguages = styled.span`
 	margin-bottom: 0;
 	background-color: #282828;
