@@ -30,6 +30,7 @@ export const TermSaturation = styled.span`
 
 export const TermValue = styled.span<{ lang: string }>`
 	display: flex;
+	font-size: 0.9rem;
 	word-wrap: break-word;
 	max-width: 100%;
 
@@ -38,6 +39,7 @@ export const TermValue = styled.span<{ lang: string }>`
 		padding: 0 1rem;
 		justify-self: center;
 		width: 100%;
+		font-size: 0.95rem;
 	}
 
 	&::before {
