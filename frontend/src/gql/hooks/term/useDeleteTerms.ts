@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Term } from "gql/codegen-output";
 import { gql } from "graphql-request";
-import requestClient from "../../../components/newlist/helpers/request-client";
+import requestClient from "../../../helpers/request-client";
 
 const deleteTerms = gql`
 	mutation ($termIds: [Int!]!) {

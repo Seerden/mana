@@ -1,5 +1,5 @@
 import { GraphQLClient } from "graphql-request";
-import { uri } from "../../../helpers/graphql-uri";
+import { uri } from "./graphql-uri";
 
 const requestClient = new GraphQLClient(uri, {
 	credentials: "include",

@@ -35,10 +35,10 @@ const App = () => {
 					position="bottom-right"
 				/>
 				<RecoilRoot>
-					<S.App>
-						<ThemeProvider theme={theme}>
-							<Router>
-								<Header />
+					<ThemeProvider theme={theme}>
+						<Router>
+							<Header />
+							<S.App>
 								<div className="App">
 									<Routes>
 										{/* home route */}
@@ -99,9 +99,9 @@ const App = () => {
 									</Routes>
 								</div>
 								<Footer />
-							</Router>
-						</ThemeProvider>
-					</S.App>
+							</S.App>
+						</Router>
+					</ThemeProvider>
 				</RecoilRoot>
 			</QueryClientProvider>
 		</>

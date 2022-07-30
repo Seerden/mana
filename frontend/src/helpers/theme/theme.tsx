@@ -56,19 +56,30 @@ export const sharedButtonStyle = css`
 
 	transition: all 80ms linear;
 
-	&:not(:active):hover {
-		background-color: #333333;
-		color: white;
-		transform: translateY(-2px);
-		box-shadow: 0 5px 0 -4px deepskyblue, 0 0 0.5rem black;
-	}
-	&:hover {
-		box-shadow: 0 3px 0 -1px black;
+	&:not(:disabled) {
+		&:not(:active):hover {
+			background-color: #333;
+			color: white;
+			transform: translateY(-2px);
+			box-shadow: 0 5px 0 -4px deepskyblue, 0 0 0.5rem black;
+		}
+		&:hover {
+			box-shadow: 0 3px 0 -1px black;
+		}
+
+		&:active {
+			background-color: #444;
+			color: azure;
+		}
+
+		&:focus {
+			outline: 1px solid white;
+		}
 	}
 
-	&:active {
-		background-color: #444;
-		color: azure;
+	&:disabled {
+		background-color: #555;
+		color: #888;
 	}
 `;
 

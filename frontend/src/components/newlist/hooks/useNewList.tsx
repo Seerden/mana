@@ -1,25 +1,18 @@
-import { newListState } from "components/newlist/state/newList.atom";
-import type { FocusIndex } from "components/newlist/types/newList.types";
 import useRouteProps from "hooks/useRouteProps";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { NewListWithTermsInput } from "../../../gql/codegen-output";
 import { useMutateCreateList } from "../../../gql/hooks/list/useCreateList";
-import { filterFalsy } from "../helpers/filterFalsyValues";
+import useIsIntersecting from "../../../hooks/useIsStuck";
+import { filterValidNewTerms, isValidNewList } from "../helpers/validate-new-list";
 import NewListTerm from "../sub/NewListTerm";
 
-/*
-   TODO: numTerms is a piece of intermediate state, the changing of which
-   triggers some updates in other pieces of state. This is not declarative at
-   all and I dislike it strongly. Refactor the control flow of this component to
-   be more declarative.
-
-   Something similar can be said about the flow of:
-   - initializing newList from recoil state,
-   - setting newList.owner and newList.terms in an effect
-   - updating termInputs based on changes made to newList
-   It's like a cascading waterfall of state sewage.
-*/
+const defaultNewList: NewListWithTermsInput = {
+	from_language: "",
+	to_language: "",
+	name: "",
+	terms: new Array(10), // 10 term inputs by default
+};
 
 /** Hook that handles functionality for the NewList form component. */
 export function useNewList() {
@@ -29,58 +22,74 @@ export function useNewList() {
 		onSuccess: () => navigate(`/u/${params.username}/lists`),
 	});
 
-	const [numTerms, setNumTerms] = useState<number>(10);
-
-	/** Add a number (`count`) of rows (= empty terms) to the newList form. */
+	/** Add some amount of rows (i.e. empty terms) to newList. */
 	function addRows(count = 10) {
-		setNumTerms((current) => current + count);
-	}
-
-	const [focussedInput, setFocussedInput] = useState<FocusIndex>();
-
-	const [newList, setNewList] = useRecoilState(newListState);
-
-	const termInputs: JSX.Element[] = useMemo(() => {
-		return Array(numTerms)
-			.fill(null)
-			.map((_, i) => (
-				<NewListTerm
-					key={`term-${i + 1}`}
-					index={i}
-					autoFocus={i === focussedInput?.index + 1}
-					focussedInput={focussedInput}
-					setFocussedInput={setFocussedInput}
-				/>
-			));
-	}, [newList, numTerms, focussedInput, setFocussedInput]);
-
-	useEffect(() => {
-		/*  newList is initialized completely empty.
-            on mount, we can populate .owner and .terms  */
 		setNewList((cur) => ({
 			...cur,
-			terms: new Array(numTerms),
+			terms: cur.terms.concat(new Array(count)),
 		}));
-	}, [params, numTerms]);
+	}
+
+	const [newList, setNewList] = useState<NewListWithTermsInput>(defaultNewList);
+	const isSubmitDisabled = useMemo(() => !isValidNewList(newList), [newList]);
+
+	// TODO: If scrolling to window.scrollY + n, I don't think we need focusRef anymore.
+	const focusRef = useRef<HTMLInputElement>();
+
+	const termInputs: JSX.Element[] = useMemo(() => {
+		const termCount = newList.terms.length;
+
+		// Add termCount+1 entries. The last one will get `display:none`. We do
+		// this because this way, when tabbing on the last one (thereby triggering
+		// tabListener), the hidden element will become focused (and at the same
+		// time un-hide), which removes the need for complicated tab-index/focus
+		// state.
+		return Array(termCount + 1)
+			.fill(null)
+			.map((_, i) => {
+				return (
+					<NewListTerm
+						setNewList={setNewList}
+						isHidden={i >= termCount}
+						key={`term-${i + 1}`}
+						index={i}
+						ref={i === termCount - 1 ? focusRef : null}
+					/>
+				);
+			});
+	}, [newList.terms]);
 
 	/** Keydown listener for tab-key presses:
 	 * Add 10 new rows if user presses the tab key while they're
-	 * on the last term input. Autofocus the first newly added term. */
-	const tabListener = useCallback(
-		(e: KeyboardEvent) => {
-			if (
-				!e.shiftKey &&
-				e.key === "Tab" &&
-				focussedInput?.index === termInputs.length - 1 &&
-				focussedInput?.side === "to"
-			) {
-				e.preventDefault();
+	 * on the last term input. Autofocus the first newly added term.
+	 *
+	 * NOTE: case study: scrolling an element into view
+	 * - addRows() adds new (empty) term inputs. The last visible one of these
+	 *   becomes focusRef.current(). It's quite likely that these new inputs are
+	 *   below the current viewport bottom, and thus we want to scroll the
+	 *   element into view. There's a bunch of ways to do this:
+	 *    1. requestAnimationFrame(() => {
+	 *          scrollIntoView logic here
+	 *       })
+	 *    2. flushSync(() => { addRows() })
+	 *       // the rows have been added, so scrolling to the bottom scrolls to
+	 *       // the last synchronously added element
+	 *    3. window.setTimeout(() => {
+	 *          // scroll logic here
+	 *       }, **some small number**)
+	 */
+	function tabListener(e: KeyboardEvent) {
+		if (!e.shiftKey && e.key === "Tab" && e.target === focusRef.current) {
+			flushSync(() => {
 				addRows();
-				setFocussedInput((cur) => ({ index: cur?.index, side: "from" }));
-			}
-		},
-		[focussedInput, termInputs]
-	);
+			});
+
+			window.scrollTo({
+				top: window.scrollY + 100,
+				behavior: "smooth",
+			});
+		}
+	}
 
 	useEffect(() => {
 		window.addEventListener("keydown", tabListener);
@@ -88,7 +97,7 @@ export function useNewList() {
 		return () => {
 			window.removeEventListener("keydown", tabListener);
 		};
-	}, [tabListener]);
+	});
 
 	/**
 	 * Form input blur handler that updates a given newList field differently depending
@@ -117,40 +126,40 @@ export function useNewList() {
 	);
 
 	/**
-	 * Submit handler that submits the newly created list if and only if all fields are filled
-	 * out as required and there is at least one term in the list.
+	 * - validate `newList`
+	 * - filter out empty term inputs
+	 * - send `mutateCreateList` mutation
 	 */
 	const handleSubmit = useCallback(
 		(e: React.MouseEvent<HTMLInputElement>) => {
 			e.preventDefault();
 
-			const fields = ["name", "from_language", "to_language"];
+			if (!isValidNewList(newList)) return;
 
-			if (
-				fields.every(
-					(entry) =>
-						entry in newList &&
-						(typeof newList[entry] == "string" || Array.isArray(newList[entry]))
-				)
-			) {
-				const nonNullTerms = filterFalsy(newList.terms || []);
+			const terms = filterValidNewTerms(newList.terms);
 
-				if (nonNullTerms.length > 0) {
-					const list: NewListWithTermsInput = {
-						...newList,
-						terms: nonNullTerms.map((t) => ({
-							...t,
-							from_language: newList.from_language,
-							to_language: newList.to_language,
-						})),
-					};
+			const list: NewListWithTermsInput = {
+				...newList,
+				terms: terms.map((t) => ({
+					...t,
+					from_language: newList.from_language,
+					to_language: newList.to_language,
+				})),
+			};
 
-					mutateCreateList(list);
-				}
-			}
+			mutateCreateList(list);
 		},
-		[newList, setNewList]
+		[newList]
 	);
+
+	const buttonsRef = useRef<HTMLElement>();
+	const [isStuck] = useIsIntersecting(buttonsRef, {
+		// The Buttons element (which is buttonsRef.current) has `top: 125px`, and we
+		// need the top rootMargin to be more negative than this to trigger the
+		// intersection event.
+		rootMargin: "-126px 0px 0px 0px",
+		threshold: [1],
+	});
 
 	return {
 		handleBlur,
@@ -158,5 +167,8 @@ export function useNewList() {
 		handleSubmit,
 		termInputs,
 		newList,
+		buttonsRef,
+		isStuck,
+		isSubmitDisabled,
 	} as const;
 }

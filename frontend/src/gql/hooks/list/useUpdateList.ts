@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import requestClient from "../../../components/newlist/helpers/request-client";
+import requestClient from "../../../helpers/request-client";
 import { List, ListUpdatePayloadInput } from "../../codegen-output";
 import { listWithTermsFragment } from "../../fragments/list-fragments";
 
