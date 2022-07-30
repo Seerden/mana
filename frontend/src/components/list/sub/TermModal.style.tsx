@@ -62,11 +62,9 @@ export const DeleteButtonWrapper = styled.div`
 `;
 
 export const Input = styled.input<{ confirming?: boolean }>`
-	display: block;
 	width: 450px;
 	max-width: 100%;
 	border-radius: 0 3px 3px 3px;
-	margin: 0;
 	outline: none;
 	padding: 0.7rem 1rem;
 	background-color: #191919; // TODO: make theme value
@@ -80,8 +78,8 @@ export const Input = styled.input<{ confirming?: boolean }>`
 	transition: all 50ms linear;
 
 	// Set 'confirming'-specific styles
-	${({ confirming }) =>
-		confirming &&
+	${(p) =>
+		p.confirming &&
 		css`
 			border: 3px solid white;
 			background-color: orangered;
@@ -91,13 +89,16 @@ export const Input = styled.input<{ confirming?: boolean }>`
 		`}
 
 	&:focus {
-		background-color: #191919; // TODO: is this necessary?
 		color: ${(p) => p.theme.colors.light.tint};
 		border: 3px solid transparent;
 		box-shadow: 0px 4px 0 -2px transparent, 0 -4px 0 -2px transparent,
 			-8px -8px 0 -6px ${(p) => p.theme.colors.dark.grey.regular},
 			8px 8px 0 -5px ${(p) => p.theme.colors.dark.grey.dark};
 		border-radius: 0px;
+	}
+
+	@media screen and (max-width: 768px) {
+		max-width: 80%;
 	}
 `;
 
@@ -111,8 +112,8 @@ export const TermSaturation = styled.span`
 `;
 
 export const TermSide = styled.div`
-	display: grid;
-	grid-template-columns: repeat(2, max-content);
+	display: flex;
+	gap: 1.5rem;
 	align-items: center;
 `;
 
@@ -201,14 +202,12 @@ export const TermModal = styled.div`
 	color: white;
 	border: 2px solid #333;
 	box-shadow: 10px 10px 0 -2px #444;
-	width: 40vw;
+	width: 40%;
 	margin: 0 auto;
-	left: 25%;
+	left: 30%;
 	overflow-y: auto;
 
 	@media screen and (max-height: 900px) {
-		top: 0;
-		height: 100vh;
 		background-color: rgba(0, 0, 0, 0.815);
 	}
 
