@@ -1,5 +1,6 @@
 import useList from "components/list/hooks/useList";
 import { Page } from "../../helpers/theme/snippets";
+import { Title } from "../lists/Lists.style";
 import { useListUpdate } from "./hooks/useListUpdate";
 import ListReviewButtons from "./sub/ListReviewButtons";
 import ListTerms from "./sub/ListTerms";
@@ -13,6 +14,7 @@ function List() {
 
 	return (
 		<Page>
+			<Title>List "{list.name}"</Title>
 			<ListTitleBar
 				list={list}
 				handleListTitleChange={handleListTitleChange}
