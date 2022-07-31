@@ -50,6 +50,10 @@ export const ListName = styled.input`
 			transition: all 45ms ease-out;
 		}
 	}
+
+	&:hover:not(:focus) {
+		text-decoration: underline;
+	}
 `;
 
 export const ListLanguages = styled.span`
