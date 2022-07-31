@@ -44,6 +44,9 @@ export function useListUpdate() {
 			}
 
 			const { value } = e.currentTarget;
+
+			if (!value) return;
+
 			mutateUpdateList(
 				{
 					list_id: +params.id,
