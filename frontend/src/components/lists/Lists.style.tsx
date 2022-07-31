@@ -2,9 +2,19 @@ import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 import {
 	sharedButtonStyle,
-	sharedHeadingStyle,
 	sharedPageTitleStyle,
+	subsectionHeaderStyle,
+	tempSectionStyle,
 } from "../../helpers/theme/theme";
+
+export const Wrapper = styled.div`
+	margin: 0 auto;
+	width: max-content;
+`;
+
+export const Section = styled.div`
+	${tempSectionStyle}
+`;
 
 export const NewListLink = styled(Link)`
 	${sharedButtonStyle};
@@ -28,9 +38,7 @@ export const Title = styled.h1`
 `;
 
 export const Heading = styled.header`
-	${sharedHeadingStyle};
-
-	margin-top: 1rem;
+	${subsectionHeaderStyle};
 `;
 
 export const Lists = styled.div`
