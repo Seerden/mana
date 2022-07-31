@@ -41,7 +41,7 @@ function Lists() {
 
 	if (lists?.length > 0) {
 		return (
-			<div className="PageWrapper">
+			<S.Wrapper>
 				<S.Title>
 					Lists by {/* TODO: does .Link have any styles? */}
 					<Link className="Link" to={userString}>
@@ -53,37 +53,41 @@ function Lists() {
 					Create a new list
 				</S.NewListLink>
 
-				<S.Header>
-					<S.Filter>
-						<S.FilterLabel htmlFor="filter">Filter lists by name</S.FilterLabel>
+				<S.Section>
+					<S.Heading>Lists filter</S.Heading>
+					<S.Header>
+						<S.Filter>
+							<S.FilterLabel htmlFor="filter">Filter lists by name</S.FilterLabel>
+							<S.FilterInput
+								type="text"
+								autoFocus
+								placeholder="e.g. 'vocabulary'"
+								name="filter"
+								value={filter}
+								onChange={handleFilterChange}
+							/>
+						</S.Filter>
+						<S.Sort>
+							<S.SortLabel htmlFor="sort">Sort lists by</S.SortLabel>
+							<S.SortSelect
+								onChange={handleSelectChange}
+								value={sortBy}
+								name="sort"
+							>
+								<option value="name">name</option>
+								<option value="created">creation date</option>
+								<option value="last_reviewed">last review date</option>
+							</S.SortSelect>
+						</S.Sort>
+					</S.Header>
+				</S.Section>
 
-						<S.FilterInput
-							type="text"
-							autoFocus
-							placeholder="e.g. 'vocabulary'"
-							name="filter"
-							value={filter}
-							onChange={handleFilterChange}
-						/>
-					</S.Filter>
-
-					<S.Sort>
-						<S.SortLabel htmlFor="sort">Sort lists by</S.SortLabel>
-
-						<S.SortSelect onChange={handleSelectChange} value={sortBy} name="sort">
-							<option value="name">name</option>
-							<option value="created">creation date</option>
-							<option value="last_reviewed">last review date</option>
-						</S.SortSelect>
-					</S.Sort>
-				</S.Header>
-
-				<section>
+				<S.Section>
 					<S.Heading>All lists</S.Heading>
 
 					<S.Lists>{filteredListsElement}</S.Lists>
-				</section>
-			</div>
+				</S.Section>
+			</S.Wrapper>
 		);
 	}
 }
