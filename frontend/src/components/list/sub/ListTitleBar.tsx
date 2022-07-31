@@ -25,7 +25,7 @@ function ListTitleBar({
 						onBlur={handleListTitleBlur}
 						value={list.name}
 					/>
-					<S.EditIcon title="Change the list's title by clicking it" />
+					<S.EditIcon title="Change the list's title by clicking or focusing on this field" />
 				</div>
 
 				<S.ListLanguages>
