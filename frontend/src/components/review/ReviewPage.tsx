@@ -2,17 +2,11 @@ import {
 	reviewSettingsState,
 	reviewStageState,
 } from "components/review/state/review-atoms";
-import React, { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import PostReview from "./sub/PostReview";
 import PreReview from "./sub/PreReview";
 import Review from "./sub/Review";
-
-const mapReviewStageToComponent = {
-	before: PreReview,
-	started: Review,
-	after: PostReview,
-};
 
 /**
  * ReviewPage controls which component is rendered depending on the current review stage
@@ -26,10 +20,6 @@ function ReviewPage() {
 	const resetReviewStage = useResetRecoilState(reviewStageState);
 	const resetReviewSettings = useResetRecoilState(reviewSettingsState);
 
-	const ReviewStageToRender = useMemo(() => {
-		return mapReviewStageToComponent[reviewStage] as React.ElementType;
-	}, [reviewStage]);
-
 	useEffect(() => {
 		resetReviewStage();
 
@@ -39,7 +29,14 @@ function ReviewPage() {
 		};
 	}, []);
 
-	return <ReviewStageToRender />;
+	switch (reviewStage) {
+		case "before":
+			return <PreReview />;
+		case "started":
+			return <Review />;
+		case "after":
+			return <PostReview />;
+	}
 }
 
 export default ReviewPage;
