@@ -5,6 +5,10 @@ import {
    ReviewSessionEntryInput,
 } from "../../types/ReviewSessionEntry";
 
+type EntryInputWithId = ReviewSessionEntryInput & {
+   review_session_id: ReviewSession["review_session_id"];
+};
+
 export async function createReviewSession(
    session: ReviewSessionInput,
    entries: ReviewSessionEntryInput[]
@@ -19,9 +23,10 @@ export async function createReviewSession(
 
       const reviewId = insertedSession.review_session_id;
 
-      const entriesWithId: Array<
-         ReviewSessionEntryInput & { review_session_id: number }
-      > = entries.map((entry) => ({ ...entry, review_session_id: reviewId }));
+      const entriesWithId: EntryInputWithId[] = entries.map((entry) => ({
+         ...entry,
+         review_session_id: reviewId,
+      }));
 
       const insertedEntries = await createReviewSessionEntries(entriesWithId);
 
@@ -30,10 +35,6 @@ export async function createReviewSession(
 
    return { session: newSession, entries: newEntries };
 }
-
-type EntryInputWithId = ReviewSessionEntryInput & {
-   review_session_id: ReviewSession["review_session_id"];
-};
 
 async function createReviewSessionEntries(entries: EntryInputWithId[]) {
    const insertedEntries = await sql<
