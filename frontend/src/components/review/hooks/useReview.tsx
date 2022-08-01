@@ -1,5 +1,5 @@
 import { makeReviewList } from "components/review/helpers/review-helpers";
-import { Term, TermUpdateObject } from "gql/codegen-output";
+import { Term } from "gql/codegen-output";
 import { useCreateReviewSessionMutation } from "gql/hooks/reviewSession-query";
 import { makeNewSaturationLevels } from "helpers/srs/saturation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -47,7 +47,7 @@ export function useReview() {
 	} = useReviewState();
 
 	const { mutate: mutateCreateReviewSession, data: mutateResponse } =
-		useCreateReviewSessionMutation(() => setReviewStage("after"));
+		useCreateReviewSessionMutation();
 
 	const initialTerms = useMemo(() => {
 		return makeReviewList(termsToReview, reviewSettings.n);
@@ -63,7 +63,12 @@ export function useReview() {
 
 	useEffect(() => {
 		if (reviewSettings.sessionEnd && !mutateResponse) {
-			mutateCreateReviewSession({ newReviewSession, termUpdateArray });
+			mutateCreateReviewSession(
+				{ newReviewSession, termUpdateArray },
+				{
+					onSuccess: () => setReviewStage("after"),
+				}
+			);
 		}
 	}, [mutateResponse, reviewSettings.sessionEnd]);
 
@@ -94,14 +99,14 @@ export function useReview() {
 				const { passfail, currentTerm } = action;
 				setTermUpdateArray((cur) =>
 					cur.map((term) => {
-						if (term._id === currentTerm._id) {
+						if (term.term_id === currentTerm.term_id) {
 							return {
 								...term,
 								history: {
 									...term.history,
 									content: [...term.history?.content, passfail],
 								},
-							} as TermUpdateObject; // if we don't alias the return, it'll think the date doesn't exist
+							} as any; // if we don't alias the return, it'll think the date doesn't exist
 						}
 						return term;
 					})
@@ -138,7 +143,7 @@ export function useReview() {
 									...entry.history,
 									date: new Date(),
 								},
-							} as TermUpdateObject)
+							} as any)
 					)
 				);
 				break;

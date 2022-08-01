@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
 	MaybeReviewSession,
 	ReviewSession,
@@ -11,7 +12,6 @@ import {
 import request from "graphql-request";
 import useRouteProps from "hooks/useRouteProps";
 import { useState } from "react";
-import { useMutation, useQuery } from "react-query";
 
 type ReviewSessionVariables = {
 	newReviewSession: ReviewSessionBaseInput;
@@ -20,22 +20,18 @@ type ReviewSessionVariables = {
 
 const uri = process.env.GRAPHQL_URI;
 
-export function useCreateReviewSessionMutation(onSuccess?: () => void) {
+export function useCreateReviewSessionMutation() {
 	const { mutate, data, ...rest } = useMutation<
 		MaybeReviewSession,
 		any,
 		ReviewSessionVariables
-	>(
-		"createReviewSession",
-		async ({ newReviewSession, termUpdateArray }) => {
-			const response = await request(uri, createReviewSessionMutation, {
-				newReviewSession,
-				termUpdateArray,
-			});
-			return response;
-		},
-		{ onSuccess: () => onSuccess?.() }
-	);
+	>(["createReviewSession"], async ({ newReviewSession, termUpdateArray }) => {
+		const response = await request(uri, createReviewSessionMutation, {
+			newReviewSession,
+			termUpdateArray,
+		});
+		return response;
+	});
 
 	return { mutate, data, ...rest };
 }
