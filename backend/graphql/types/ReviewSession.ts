@@ -1,4 +1,4 @@
-import { Field, InputType, Int, ObjectType } from "type-graphql";
+import { Field, Float, InputType, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
 @InputType("ReviewSessionInput")
@@ -6,10 +6,10 @@ export class ReviewSessionInput {
    @Field(() => Int)
    user_id: number;
 
-   @Field(() => Int)
+   @Field(() => Float)
    start_date: number;
 
-   @Field(() => Int, { nullable: true })
+   @Field(() => Float, { nullable: true })
    end_date?: number;
 
    @Field()
