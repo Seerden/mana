@@ -17,13 +17,13 @@ function TermModal({ setOpen, term, handleTermEdit }: TermModalProps) {
 		term.term_id
 	);
 
-	function closeModal(e) {
+	function closeModal(e: React.MouseEvent<HTMLElement>) {
 		if (e.currentTarget === e.target) {
 			setOpen(false);
 		}
 	}
 
-	function handleKeydown(e) {
+	function handleKeydown(e: KeyboardEvent) {
 		if (e.code === "Escape") {
 			setOpen(false);
 		}
