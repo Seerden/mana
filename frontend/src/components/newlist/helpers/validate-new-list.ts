@@ -1,7 +1,9 @@
 import { NewListWithTermsInput } from "../../../gql/codegen-output";
 
 export function isValidNewList(newList: NewListWithTermsInput) {
-	const fields = ["name", "from_language", "to_language"];
+	const fields = ["name", "from_language", "to_language"] as Array<
+		keyof NewListWithTermsInput
+	>;
 
 	for (const field of fields) {
 		if (!newList[field]?.length) return false;
