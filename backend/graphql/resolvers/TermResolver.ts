@@ -9,7 +9,7 @@ import {
 } from "../types/Term";
 import { createTerms } from "./term/create-terms";
 import { deleteTerms } from "./term/delete-terms";
-import { getTermsForReview } from "./term/get-terms";
+import { queryTermsForReview } from "./term/get-terms";
 import { resolveTermHistory } from "./term/resolve-history";
 import { resolveTermSaturation } from "./term/resolve-saturation";
 import { updateTermValues } from "./term/update-terms";
@@ -21,8 +21,8 @@ import { updateTermValues } from "./term/update-terms";
 @Resolver(() => Term)
 export class TermResolver {
    @Query(() => [Term])
-   async getTermsForReview(@Arg("reviewParams") reviewParams: ReviewParamsInput) {
-      return getTermsForReview({ filter: reviewParams });
+   async queryTermsForReview(@Arg("reviewParams") reviewParams: ReviewParamsInput) {
+      return queryTermsForReview({ filter: reviewParams });
    }
 
    @Mutation(() => [Term])

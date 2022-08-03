@@ -14,7 +14,7 @@ const idsFields: Array<keyof Options["filter"]> = ["term_ids", "list_ids", "set_
  * terms belonging to these ids. If multiple ids fields specified, prioritize
  * termIds > listIds > setIds.
  */
-export async function getTermsForReview({ filter, sql = instance }: Options) {
+export async function queryTermsForReview({ filter, sql = instance }: Options) {
    const idsField = idsFields.find((x) => filter[x]?.length);
 
    switch (idsField) {
