@@ -25,7 +25,7 @@ const NewListTerm = forwardRef(
 					};
 				}
 
-				if (value !== termsCopy[idx][name]) {
+				if (value !== termsCopy[idx][name as keyof typeof termsCopy[number]]) {
 					termsCopy[idx] = { ...termsCopy[idx], [name]: value };
 					return { ...cur, terms: termsCopy };
 				}
