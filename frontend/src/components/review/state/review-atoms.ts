@@ -7,11 +7,6 @@ export const reviewStageState = atom<ReviewStage>({
 	default: "before",
 });
 
-export const termsToReviewState = atom<Array<Term>>({
-	key: "termsToReviewState",
-	default: [] as Term[],
-});
-
 export const reviewCardTermsState = atom<Term[]>({
 	default: [],
 	key: "reviewCardTerms",

@@ -1,7 +1,7 @@
 import { selector } from "recoil";
-import { termsToReviewState } from "./review-atoms";
+import { reviewCardTermsState } from "./review-atoms";
 
 export const numTermsToReviewState = selector({
 	key: "numTermsToReviewState",
-	get: ({ get }) => get(termsToReviewState).length,
+	get: ({ get }) => get(reviewCardTermsState).length,
 });
