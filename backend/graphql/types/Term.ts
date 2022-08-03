@@ -59,8 +59,8 @@ export class TermSaturation {
    last_updated: number; // timestamp
 }
 
-@InputType("TermsForReviewInput")
-export class TermsForReviewInput {
+@InputType("ReviewParamsInput")
+export class ReviewParamsInput {
    @Field(() => [Float], { nullable: "itemsAndList" })
    term_ids?: number[];
 
@@ -69,10 +69,4 @@ export class TermsForReviewInput {
 
    @Field(() => [Float], { nullable: "itemsAndList" })
    set_ids?: number[];
-
-   @Field(() => Int, { nullable: true })
-   min_saturation?: number;
-
-   @Field(() => Int, { nullable: true })
-   max_saturation?: number;
 }
