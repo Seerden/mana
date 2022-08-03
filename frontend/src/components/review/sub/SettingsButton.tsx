@@ -12,10 +12,11 @@ export default function SettingsButton({ value, onClick, selected, field }: Butt
 		<S.SettingsButton
 			type="button"
 			field={field}
+			name={field}
 			value={value}
 			selected={selected}
-			onClick={() => {
-				onClick();
+			onClick={(e) => {
+				onClick(e);
 			}}
 		/>
 	);
