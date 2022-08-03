@@ -105,7 +105,11 @@ export function useNewList() {
 	 */
 	const handleBlur = useCallback(
 		(e: React.FocusEvent<HTMLInputElement>) => {
-			const { name, value } = e.currentTarget;
+			const { name, value } = e.currentTarget as {
+				name: keyof NewListWithTermsInput;
+				value: string;
+			};
+
 			if (value === newList[name]) return;
 
 			/*  @fixme: seems like if we blur the same field twice, it will get pushed to the array twice.
