@@ -1,13 +1,14 @@
 import Login from "components/login/Login";
 import { useLogin } from "hooks/useLogin";
 import useRouteProps from "hooks/useRouteProps";
+import { PropsWithChildren } from "react";
 
-const Private = ({ children }) => {
+const Private = (props: PropsWithChildren<any>): any => {
 	const { currentUser, isLoggedIn } = useLogin();
 	const { params } = useRouteProps();
 
 	if (isLoggedIn && currentUser === params.username) {
-		return children;
+		return props.children;
 	} else {
 		return <Login />;
 	}
