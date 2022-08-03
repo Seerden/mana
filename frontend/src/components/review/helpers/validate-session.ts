@@ -13,8 +13,9 @@ export function isValidReviewSession(session: Partial<ReviewSessionInput>) {
 		!list_ids?.length &&
 		!set_ids?.length &&
 		!(typeof saturation_threshold === "number")
-	)
+	) {
 		return false;
+	}
 
 	return (
 		isDirection(direction) &&
