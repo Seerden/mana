@@ -1,26 +1,18 @@
-import {
-	reviewSettingsState,
-	termsToReviewState,
-	timePerCardState,
-} from "components/review/state/review-atoms";
 import dayjs from "dayjs";
 import { useEffect } from "react";
-import { useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import useRouteProps from "../../../hooks/useRouteProps";
+import { reviewSessionState } from "../state/review-session";
 
 export function usePostReview() {
 	const { navigate, params } = useRouteProps();
 	const formatDate = (date: Date) => dayjs(date).format("HH:mm:ss");
-	const { sessionStart, sessionEnd } = useRecoilValue(reviewSettingsState);
-	const resetTermsToReview = useResetRecoilState(termsToReviewState);
-	const timePerCard = useRecoilValue(timePerCardState);
-	const reviewSettings = useRecoilValue(reviewSettingsState);
-	const resetTimePerCard = useResetRecoilState(timePerCardState);
+	const { start_date, end_date } = useRecoilValue(reviewSessionState);
 
 	useEffect(() => {
 		return () => {
-			resetTermsToReview();
-			resetTimePerCard();
+			// on unmount, we want to reset cardTerms, reviewSession,
+			// reviewEntries. But do we not want to do this from ReviewPage instead?
 		};
 	}, []);
 
@@ -28,9 +20,7 @@ export function usePostReview() {
 		navigate,
 		params,
 		formatDate,
-		sessionStart,
-		sessionEnd,
-		timePerCard,
-		reviewSettings,
+		start_date,
+		end_date,
 	} as const;
 }
