@@ -1,7 +1,7 @@
 import {
-	sharedLinkStyle,
-	subsectionHeaderStyle,
-	tempSectionStyle,
+   sharedLinkStyle,
+   subsectionHeaderStyle,
+   tempSectionStyle
 } from "helpers/theme/theme";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
