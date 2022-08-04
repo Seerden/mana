@@ -1,8 +1,8 @@
-import { reviewSettingsState } from "components/review/state/review-atoms";
 import { numTermsToReviewState } from "components/review/state/review-selectors";
 import useTimer from "hooks/useTimer";
 import { memo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { reviewSessionState } from "../state/review-session";
 import * as S from "./ReviewInfo.style";
 
 type ReviewInfoProps = {
@@ -14,9 +14,9 @@ type ReviewInfoProps = {
 
 // Probably worth memoizing because of usage of useTimer().
 const ReviewInfo = memo(({ completion }: ReviewInfoProps) => {
-	const [reviewSettings] = useRecoilState(reviewSettingsState);
+	const [reviewSession] = useRecoilState(reviewSessionState);
 	const numTermsToReview = useRecoilValue(numTermsToReviewState);
-	const { sessionStart: start, n } = reviewSettings;
+	const { start_date: start, n } = reviewSession;
 	const { timeSinceStart, title } = useTimer({ start });
 
 	return (
