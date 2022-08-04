@@ -1,11 +1,25 @@
 import { Term } from "gql/codegen-output";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
-export function useReviewCard(direction: Direction, term: Term, setBackWasShown) {
-	const [side, setSide] = useState(direction === "forwards" ? "from" : "to");
+const duration = 250; // match keyframes animation duration TODO: use theme variable for this
+
+enum ValueFields {
+	TO = "to_value",
+	FROM = "from_value",
+}
+
+export function useReviewCard(
+	direction: Direction,
+	term: Term,
+	setBackWasShown: Dispatch<SetStateAction<boolean>>
+) {
+	const [side, setSide] = useState(
+		direction === "forwards" ? ValueFields.FROM : ValueFields.TO
+	);
 	const [flipping, setFlipping] = useState(false);
 	const [fade, setFade] = useState(false);
-	const toggleSide = () => setSide((cur) => (cur === "from" ? "to" : "from"));
+	const toggleSide = () =>
+		setSide((cur) => (cur === ValueFields.FROM ? ValueFields.TO : ValueFields.FROM));
 	const timeouts = useRef<any[]>([]);
 
 	useEffect(() => {
@@ -21,7 +35,7 @@ export function useReviewCard(direction: Direction, term: Term, setBackWasShown)
 
 	useEffect(() => {
 		// When a new term is shown, reset card state
-		setSide(direction === "forwards" ? "from" : "to");
+		setSide(direction === "forwards" ? ValueFields.FROM : ValueFields.TO);
 		setFade(true);
 		timeouts.current.push(
 			setTimeout(() => {
@@ -37,7 +51,6 @@ export function useReviewCard(direction: Direction, term: Term, setBackWasShown)
 	}
 
 	function flip() {
-		const duration = 250; // match keyframes animation duration
 		setBackWasShown(true);
 		setFlipping(true);
 		timeouts.current.push(setTimeout(() => setFlipping(false), duration));
