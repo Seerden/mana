@@ -12,7 +12,7 @@ export const TermIndex = styled.span`
 	font-size: 0.8rem;
 	color: #777;
 
-	@media screen and (max-width: 768px), screen and (max-height: 700px) {
+	@media screen and (max-width: 768px) {
 		display: none;
 	}
 `;
