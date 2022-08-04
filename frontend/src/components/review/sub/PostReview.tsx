@@ -1,29 +1,14 @@
-import { convertDateListToDeltaTime } from "components/review/helpers/review-helpers";
 import { Link } from "react-router-dom";
 import { usePostReview } from "../hooks/usePostReview";
 
 export default function PostReview() {
-	const {
-		navigate,
-		params,
-		formatDate,
-		sessionStart,
-		sessionEnd,
-		timePerCard,
-		reviewSettings,
-	} = usePostReview();
+	const { navigate, params, formatDate, start_date, end_date } = usePostReview();
 
 	return (
 		<div>
 			<h2>Session completed.</h2>
-			<div>Started at {formatDate(sessionStart)}</div>
-			<div>Completed at {formatDate(sessionEnd)}</div>
-			<div>
-				Time per card:{" "}
-				{JSON.stringify(
-					convertDateListToDeltaTime(timePerCard, reviewSettings.sessionStart)
-				)}
-			</div>
+			<div>Started at {formatDate(new Date(start_date))}</div>
+			<div>Completed at {formatDate(new Date(end_date))}</div>
 
 			<button>
 				<Link to={`/u/${params.username}/list/${params.id}`}>Back to list</Link>
