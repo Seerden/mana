@@ -14,6 +14,9 @@ export class ReviewSessionEntryInput {
 
    @Field()
    direction: string;
+
+   @Field()
+   created_at: number;
 }
 
 @ObjectType()
@@ -23,7 +26,4 @@ export class ReviewSessionEntry extends ReviewSessionEntryInput {
 
    @Field(() => Int)
    review_entry_id: number;
-
-   @Field()
-   created_at: number;
 }
