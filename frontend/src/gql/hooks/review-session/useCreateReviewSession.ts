@@ -4,9 +4,17 @@ import { gql } from "graphql-request";
 import requestClient from "../../../helpers/request-client";
 
 export const createReviewSessionMutation = gql`
-	mutation ($session: ReviewSessionInput!, $entries: [ReviewSessionEntryInput!]!) {
+	mutation (
+		$session: ReviewSessionWithoutUserIdInput!
+		$entries: [ReviewSessionEntryInput!]!
+	) {
 		createSession(session: $session, entries: $entries) {
-			review_session_id
+			session {
+				review_session_id
+			}
+			entries {
+				review_entry_id
+			}
 		}
 	}
 `;
