@@ -1,6 +1,11 @@
 import { ReviewSessionEntryInput } from "../../../gql/codegen-output";
 import { SessionEntryWithoutTimeOnCard } from "../types/review.types";
-import { entriesWithTimeOnCard, shuffleArray, shuffleRepeatedly } from "./review-helpers";
+import {
+	entriesWithTimeOnCard,
+	shuffleArray,
+	shuffleFirstEntry,
+	shuffleRepeatedly,
+} from "./review-helpers";
 
 describe("shuffleArray", () => {
 	const list = [1, 2, 3];
@@ -139,4 +144,53 @@ describe("entriesWithTimeOnCard", () => {
 
 	const result = entriesWithTimeOnCard(0, entries);
 	expect(result).toStrictEqual(expected);
+});
+
+describe("shuffleFirstEntry", () => {
+	const list = [{ a: { b: "bob" } }, 2, 3];
+	const result = shuffleFirstEntry(list);
+
+	test("returns a list of unchanged length", () => {
+		expect(result).toHaveLength(list.length);
+	});
+
+	test("returns a list with the same entries", () => {
+		for (const entry of list) {
+			expect(
+				result.filter((x) => JSON.stringify(x) === JSON.stringify(entry))
+			).toHaveLength(1);
+		}
+	});
+
+	describe("actually shuffles the list", () => {
+		const results: Array<typeof list[number]>[] = [];
+
+		let i = 0;
+		while (i < 1e4) {
+			const result = shuffleFirstEntry(list);
+			results.push(result);
+			i++;
+		}
+
+		test("sometimes puts the first entry in its original position", () => {
+			expect(
+				results.some((x) => JSON.stringify(x) === JSON.stringify(list))
+			).toBeTruthy();
+		});
+
+		test("sometimes puts the first entry somewhere else", () => {
+			expect(
+				results.some((x) => JSON.stringify(x) !== JSON.stringify(list))
+			).toBeTruthy();
+		});
+	});
+
+	test("returns a copy of the original list if given a list of length 1", () => {
+		const list = [1];
+		const result = shuffleFirstEntry(list);
+		expect(result).toEqual(list);
+		expect(result).not.toBe(list);
+		expect(result === list).toBeFalsy();
+		expect(result[0]).toBe(list[0]);
+	});
 });
