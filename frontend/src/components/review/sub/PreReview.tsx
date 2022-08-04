@@ -1,7 +1,41 @@
+import { ReviewParamsInput } from "../../../gql/codegen-output";
+import useRouteProps from "../../../hooks/useRouteProps";
 import usePreReview from "../hooks/usePreReview";
 import * as S from "./PreReview.style";
 
-export default function PreReview() {
+function getBaseType(params: ReviewParamsInput) {
+	if ("list_ids" in params) {
+		return "List";
+	}
+
+	if ("set_ids" in params) {
+		return "Set";
+	}
+
+	if ("term_ids" in params) {
+		return "Terms";
+	}
+}
+
+function InitialListSetOrTerms({ initialSettings }: PreReviewProps) {
+	const reviewBaseType = getBaseType(initialSettings);
+	const { params } = useRouteProps();
+
+	return (
+		<>
+			<div>
+				{/* Just listing the id here, but ideally we want a little pop-up card, instead. */}
+				{reviewBaseType} review {params.id}
+			</div>
+		</>
+	);
+}
+
+type PreReviewProps = {
+	initialSettings?: ReviewParamsInput;
+};
+
+export default function PreReview({ initialSettings }: PreReviewProps) {
 	const { nButtons, directionButtons, handleReviewStartClick } = usePreReview();
 
 	return (
@@ -10,6 +44,14 @@ export default function PreReview() {
 
 			<form>
 				<S.SettingsList>
+					<li>
+						{/* TODO: conditionally render either
+                     1. a list/term/set selector if no initial settings specified
+                     2. a description of the selected initial settings  */}
+						<S.SettingsLabel>Select a list, set, or terms here.</S.SettingsLabel>
+						<InitialListSetOrTerms initialSettings={initialSettings} />
+					</li>
+
 					<li>
 						<S.SettingsLabel htmlFor="n">Number of cycles:</S.SettingsLabel>
 						<S.SettingsTip>
