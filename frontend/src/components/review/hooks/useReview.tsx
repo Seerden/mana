@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ReviewSessionWithoutUserIdInput, Term } from "../../../gql/codegen-output";
 import useCreateReviewSession from "../../../gql/hooks/review-session/useCreateReviewSession";
-import { entriesWithTimeOnCard } from "../helpers/review-helpers";
-import { shuffleCurrentTerm } from "../helpers/shuffle-card";
+import { entriesWithTimeOnCard, shuffleFirstEntry } from "../helpers/review-helpers";
 import { SessionEntryWithoutTimeOnCard } from "../types/review.types";
 import { useReviewState } from "./useReviewState";
 
@@ -109,7 +108,7 @@ export function useReview({ cardTerms }: UseReviewOptions) {
 			case "pass":
 				return setRemainingTerms((current) => current.slice(1));
 			case "fail":
-				return setRemainingTerms((current) => shuffleCurrentTerm(current));
+				return setRemainingTerms((current) => shuffleFirstEntry(current));
 		}
 	}
 

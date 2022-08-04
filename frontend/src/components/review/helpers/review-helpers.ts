@@ -1,6 +1,34 @@
 import { ReviewSessionEntryInput } from "gql/codegen-output";
 import { SessionEntryWithoutTimeOnCard } from "../types/review.types";
 
+/**
+ * Shuffle the first entry of an array back into the array at a random spot. If
+ * it's the only entry, return (a copy of) the given array.
+ *
+ * @note For render purposes (returning a different item in the case that the
+ * array has length 1, allowing React to think it got a different object if
+ * passed as a prop), we do a JSON parse/stringify. Note that this doesn't
+ * accomplish what we want in the case that every property of the entry is a
+ * complex object. We don't have any usecases like this though, as far as I know.
+ */
+export function shuffleFirstEntry<T>(array: T[]): T[] {
+	let result: T[] = [];
+
+	if (!array.length) return [];
+
+	if (array.length === 1) {
+		result = array;
+	} else {
+		const newIndex = Math.floor((array.length + 1) * Math.random());
+		const arrayCopy = array.slice();
+		const firstEntry = arrayCopy.shift();
+		arrayCopy.splice(newIndex, 0, firstEntry);
+		result = arrayCopy;
+	}
+
+	return result.map((entry) => JSON.parse(JSON.stringify(entry)));
+}
+
 export function shuffleArray<T>(array: T[]) {
 	const arrayCopy = [...array]; // swap is done in-place, so keeping a copy is simply for convenience
 
