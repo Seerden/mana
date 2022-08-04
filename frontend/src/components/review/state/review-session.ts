@@ -1,7 +1,10 @@
 import { atom } from "recoil";
-import { ReviewSessionEntryInput, ReviewSessionInput } from "../../../gql/codegen-output";
+import {
+	ReviewSessionEntryInput,
+	ReviewSessionWithoutUserIdInput,
+} from "../../../gql/codegen-output";
 
-export const reviewSessionState = atom<Partial<ReviewSessionInput>>({
+export const reviewSessionState = atom<Partial<ReviewSessionWithoutUserIdInput>>({
 	default: {},
 	key: "reviewSessionState",
 });
