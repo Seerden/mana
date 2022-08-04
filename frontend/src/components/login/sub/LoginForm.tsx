@@ -1,5 +1,17 @@
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { UserInput } from "../../../gql/codegen-output";
 import * as S from "./LoginForm.style";
+
+type LoginFormProps = {
+	authError: any;
+	user: UserInput;
+	setUser: React.Dispatch<React.SetStateAction<UserInput>>;
+	showPass: boolean;
+	setShowPass: React.Dispatch<React.SetStateAction<boolean>>;
+	message: any;
+	handleFormBlur: (...args: any) => void;
+	handleLogin: (args?: any) => void;
+};
 
 const LoginForm = ({
 	authError,
@@ -10,7 +22,7 @@ const LoginForm = ({
 	message,
 	handleFormBlur,
 	handleLogin,
-}) => {
+}: LoginFormProps) => {
 	return (
 		<div className="PageWrapper">
 			<main>
