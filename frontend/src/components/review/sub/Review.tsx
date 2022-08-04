@@ -1,6 +1,7 @@
 import { useReview } from "components/review/hooks/useReview";
 import useRouteProps from "hooks/useRouteProps";
 import { Link } from "react-router-dom";
+import { Term } from "../../../gql/codegen-output";
 import * as S from "./Review.style";
 import ReviewCard from "./ReviewCard";
 import ReviewInfo from "./ReviewInfo";
@@ -35,8 +36,8 @@ export default function Review({ cardTerms }: ReviewProps) {
 			{remainingTerms.length > 0 && (
 				<>
 					<ReviewCard
-						term={...remainingTerms[0]}
-						direction={reviewSettings.direction}
+						term={remainingTerms[0]}
+						direction={reviewSession.direction as Direction}
 						setBackWasShown={setBackWasShown}
 					/>
 
