@@ -1,5 +1,10 @@
 import { Arg, Authorized, Int, Mutation, Query, Resolver } from "type-graphql";
-import { ReviewSession, ReviewSessionInput } from "../types/ReviewSession";
+import { UserId } from "../helpers/insert-user-id";
+import {
+   ReviewSession,
+   ReviewSessionWithoutUserId,
+   SessionAndEntries,
+} from "../types/ReviewSession";
 import { ReviewSessionEntryInput } from "../types/ReviewSessionEntry";
 import { createReviewSession } from "./review-session/create-review-session";
 
@@ -20,11 +25,12 @@ export class ReviewSessionResolver {
       // fetch review sessions by user_id
    }
 
-   @Mutation(() => ReviewSession)
+   @Mutation(() => SessionAndEntries)
    async createSession(
-      @Arg("session") session: ReviewSessionInput,
+      @UserId() user_id: number,
+      @Arg("session") session: ReviewSessionWithoutUserId,
       @Arg("entries", () => [ReviewSessionEntryInput]) entries: ReviewSessionEntryInput[]
    ) {
-      return createReviewSession(session, entries);
+      return createReviewSession({ session: { ...session, user_id }, entries });
    }
 }
