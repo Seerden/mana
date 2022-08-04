@@ -1,36 +1,32 @@
-import { ReviewSessionEntryInput, Term } from "gql/codegen-output";
+import { ReviewSessionEntryInput } from "gql/codegen-output";
 import { SessionEntryWithoutTimeOnCard } from "../types/review.types";
 
-/** TODO: this can be named much more generically */
-function shuffleTerms(terms: Term[]) {
-	const termsCopy = [...terms]; // swap is done in-place, so keeping a copy is simply for convenience
-	const indices: number[] = [];
+export function shuffleArray<T>(array: T[]) {
+	const arrayCopy = [...array]; // swap is done in-place, so keeping a copy is simply for convenience
 
-	let i = termsCopy.length - 1;
+	let i = arrayCopy.length - 1;
 	while (i > 0) {
 		// take item at i-th index and swap it in-place with a random item in [0, i] (can 'swap' with itself), then decrement i
 		const j = Math.floor((i + 1) * Math.random());
-		[termsCopy[i], termsCopy[j]] = [termsCopy[j], termsCopy[i]];
-		indices.push(j);
+		[arrayCopy[i], arrayCopy[j]] = [arrayCopy[j], arrayCopy[i]];
 		i -= 1;
 	}
-	return termsCopy;
+	return arrayCopy;
 }
 
 /**
- * Build a Knuth shuffled list n times and concatenate
- * @param n integer number of shuffled copies of the list to concatenate
+ * Build a Knuth shuffled list n times and concatenate.
+ * @param n integer number of shuffled copies of the array to concatenate.
  */
-export function makeReviewList(terms: Term[], n: number) {
-	let shuffled: Term[] = [];
-
+export function shuffleRepeatedly<T>(array: T[], n: number) {
 	let i = 0;
+	const shuffled = [];
 	while (i < n) {
-		shuffled = [...shuffled, ...shuffleTerms(terms)];
+		shuffled.push(shuffleArray<T>(array));
 		i++;
 	}
 
-	return shuffled;
+	return shuffled.flat();
 }
 
 /**

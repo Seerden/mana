@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { makeReviewList } from "../../../components/review/helpers/review-helpers";
+import { shuffleRepeatedly } from "../../../components/review/helpers/review-helpers";
 import requestClient from "../../../helpers/request-client";
 import {
 	Query,
@@ -31,7 +31,7 @@ export default function useQueryTermsForReview(
 		async () => termsForReviewRequest(params),
 		{
 			enabled: false,
-			select: (terms) => makeReviewList(terms, n),
+			select: (terms) => shuffleRepeatedly(terms, n),
 		}
 	);
 }
