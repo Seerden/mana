@@ -1,5 +1,7 @@
-import { Term } from "gql/codegen-output";
+import { ReviewSessionEntryInput, Term } from "gql/codegen-output";
+import { SessionEntryWithoutTimeOnCard } from "../types/review.types";
 
+/** TODO: this can be named much more generically */
 function shuffleTerms(terms: Term[]) {
 	const termsCopy = [...terms]; // swap is done in-place, so keeping a copy is simply for convenience
 	const indices: number[] = [];
@@ -31,16 +33,29 @@ export function makeReviewList(terms: Term[], n: number) {
 	return shuffled;
 }
 
-export function convertDateListToDeltaTime(list: Date[], start: Date) {
-	const timeDeltaArray: number[] = [];
+/**
+ * Add time_on_card values to a list of session entries, derived from a session
+ * start_date.
+ *
+ * Does not mutate in place. Returns a new array.
+ */
+export function entriesWithTimeOnCard(
+	start_date: number,
+	entries: SessionEntryWithoutTimeOnCard[]
+) {
+	return entries.reduce((acc, entry) => {
+		let time_on_card: number;
 
-	for (let i = 0; i < list.length; i++) {
-		if (i === 0) {
-			timeDeltaArray.push(list[i].valueOf() - start.valueOf());
+		// first entry's time_on_card is compared to the review session's start_date
+		if (!acc.length) {
+			time_on_card = entry.created_at - start_date;
+			// all other time_on_card values are by comparison to the previous entry's time_on_card
 		} else {
-			timeDeltaArray.push(list[i].valueOf() - list[i - 1].valueOf());
+			time_on_card = entry.created_at - acc.at(-1).created_at;
 		}
-	}
 
-	return timeDeltaArray;
+		acc.push({ ...entry, time_on_card });
+
+		return acc;
+	}, [] as Array<ReviewSessionEntryInput>);
 }
