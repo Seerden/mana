@@ -25,12 +25,17 @@ export const TitleBarHeader = styled.header`
 
 	@media screen and (max-width: 768px) {
 		flex-flow: column-reverse wrap;
+
+		display: grid;
+		grid-template-areas:
+			"lang . ."
+			"title . button";
 	}
 
 	align-items: stretch;
 
 	${DeleteButtonWrapper} {
-		float: unset;
+		grid-area: button;
 		place-self: flex-end;
 	}
 `;
@@ -82,4 +87,5 @@ export const ListLanguages = styled.span`
 	max-width: max-content;
 	font-weight: 500;
 	border-radius: 0 8px 8px 0;
+	grid-area: lang;
 `;

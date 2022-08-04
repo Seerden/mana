@@ -24,6 +24,7 @@ function ListTitleBar({
 						display: "flex",
 						alignItems: "stretch",
 						maxWidth: "max-content",
+						gridArea: "title",
 					}}
 				>
 					<S.ListName
