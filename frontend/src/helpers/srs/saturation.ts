@@ -1,9 +1,10 @@
+// @ts-nocheck
+
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration.js";
 import relativeTime from "dayjs/plugin/relativeTime.js";
-import { Maybe, Term, TermHistory, TermUpdateObject } from "gql/codegen-output";
+import { Maybe, Term } from "gql/codegen-output";
 import { countDict } from "../count";
-import { termSessionsByDirection } from "../list.api";
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
