@@ -5,16 +5,20 @@ import * as S from "./Review.style";
 import ReviewCard from "./ReviewCard";
 import ReviewInfo from "./ReviewInfo";
 
-export default function Review() {
+type ReviewProps = {
+	cardTerms: Term[];
+};
+
+export default function Review({ cardTerms }: ReviewProps) {
 	const { params } = useRouteProps();
 	const {
 		backWasShown,
 		remainingTerms,
 		completion,
 		handlePassFail,
-		reviewSettings,
+		reviewSession,
 		setBackWasShown,
-	} = useReview();
+	} = useReview({ cardTerms });
 
 	return (
 		<S.Review className="PageWrapper">
