@@ -18,7 +18,14 @@ function ListTitleBar({
 	return (
 		<S.TitleBar>
 			<S.TitleBarHeader>
-				<div style={{ position: "relative" }}>
+				<div
+					style={{
+						position: "relative",
+						display: "flex",
+						alignItems: "stretch",
+						maxWidth: "max-content",
+					}}
+				>
 					<S.ListName
 						type="text"
 						onChange={handleListTitleChange}
@@ -31,8 +38,8 @@ function ListTitleBar({
 				<S.ListLanguages>
 					({list.from_language} to {list.to_language})
 				</S.ListLanguages>
+				<DeleteToggleButton handler={handleDelete} initialText={"Delete list"} />
 			</S.TitleBarHeader>
-			<DeleteToggleButton handler={handleDelete} initialText={"Delete list"} />
 		</S.TitleBar>
 	);
 }

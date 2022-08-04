@@ -1,23 +1,38 @@
 import { AiOutlineEdit } from "react-icons/ai";
 import styled from "styled-components";
 import { tempSectionStyle } from "../../../helpers/theme/theme";
+import { DeleteButtonWrapper } from "../../_shared/DeleteToggle.style";
 
 const regularPadding = "0.5rem 1rem";
 
 export const TitleBar = styled.section`
 	${tempSectionStyle};
 
-	height: 60px;
+	min-height: 60px;
+	height: max-content;
 	margin-bottom: 0;
 	padding: 0;
 	border: none;
-	display: flex;
+
 	justify-content: space-between;
 	align-items: center;
 `;
 
 export const TitleBarHeader = styled.header`
 	display: flex;
+
+	flex-flow: row wrap;
+
+	@media screen and (max-width: 768px) {
+		flex-flow: column-reverse wrap;
+	}
+
+	align-items: stretch;
+
+	${DeleteButtonWrapper} {
+		float: unset;
+		place-self: flex-end;
+	}
 `;
 
 export const EditIcon = styled(AiOutlineEdit)`
@@ -63,6 +78,8 @@ export const ListLanguages = styled.span`
 	padding: ${regularPadding};
 	display: inline-flex;
 	align-items: center;
+	min-width: max-content;
+	max-width: max-content;
 	font-weight: 500;
 	border-radius: 0 8px 8px 0;
 `;
