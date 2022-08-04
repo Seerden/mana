@@ -1,14 +1,7 @@
-import {
-	passfailState,
-	reviewSettingsState,
-	reviewStageState,
-	termsToReviewState,
-	termUpdateArrayState,
-	timePerCardState,
-} from "components/review/state/review-atoms";
+import { reviewStageState } from "components/review/state/review-atoms";
 import { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import useReviewSession from "./useReviewSession";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { reviewEntriesState, reviewSessionState } from "../state/review-session";
 
 /**
  * useReview has so many pieces of interconnected state, it's pretty much a BIG BALL OF MUD.
@@ -16,26 +9,27 @@ import useReviewSession from "./useReviewSession";
  * and return the things useReview needs, if only just to reduce LOC in useReview
  */
 export function useReviewState() {
-	const [reviewSettings, setReviewSettings] = useRecoilState(reviewSettingsState);
-	const termsToReview = useRecoilValue(termsToReviewState);
 	const setReviewStage = useSetRecoilState(reviewStageState);
-	const setPassfail = useSetRecoilState(passfailState);
-	const setTimePerCard = useSetRecoilState(timePerCardState);
-	const [termUpdateArray, setTermUpdateArray] = useRecoilState(termUpdateArrayState);
-	const newReviewSession = useReviewSession();
 	const [backWasShown, setBackWasShown] = useState<boolean>(false);
 
+	// reviewSession state starts out without properties.
+	// Before moving on from PreReview (where all the settings are selected), we
+	// validate that all required fields are present. Both typing and validation
+	// are easier like this than when initializing with stub values
+	const [reviewSession, setReviewSession] = useRecoilState(reviewSessionState);
+
+	// reviewEntries state will track all of the entries throughout the
+	// application. Every time a user interacts with a card (pass/fail events),
+	// an item it pushed to this array.
+	const [reviewEntries, setReviewEntries] = useRecoilState(reviewEntriesState);
+
 	return {
-		reviewSettings,
-		setReviewSettings,
-		termsToReview,
 		setReviewStage,
-		setPassfail,
-		setTimePerCard,
-		termUpdateArray,
-		setTermUpdateArray,
-		newReviewSession,
 		backWasShown,
 		setBackWasShown,
+		reviewSession,
+		reviewEntries,
+		setReviewSession,
+		setReviewEntries,
 	} as const;
 }
