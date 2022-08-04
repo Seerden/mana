@@ -19,7 +19,7 @@ function shuffleTerms(terms: Term[]) {
  * Build a Knuth shuffled list n times and concatenate
  * @param n integer number of shuffled copies of the list to concatenate
  */
-export function makeReviewList(terms: Term[], n: number): any[] {
+export function makeReviewList(terms: Term[], n: number) {
 	let shuffled: Term[] = [];
 
 	let i = 0;
