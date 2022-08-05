@@ -1,7 +1,6 @@
 import { Location } from "history";
 import { ReviewParamsInput } from "../../../gql/codegen-output";
-
-const allowedQueryParams = ["list_ids", "set_ids", "term_ids"];
+import { idsFields } from "./ids-fields";
 
 enum PageTypes {
 	LIST = "list",
@@ -34,11 +33,14 @@ function getPageType({ pathname }: Location, params: Record<string, string>) {
  */
 export function makeNaiveReviewParams(search: URLSearchParams) {
 	return Array.from(search.entries())
-		.filter(([k, v]) => allowedQueryParams.includes(k))
+		.filter(([k, v]) => idsFields.includes(k as any))
 		.reduce(
 			(acc, [k, v]: [k: keyof ReviewParamsInput, v: string]) => {
 				let newValue: number | number[];
 
+				// This if-else is a remnant from when there were non-*_ids fields
+				// in reviewParams, like min_saturation. Keep it here in case we end
+				// up extending reviewParams.
 				if (k.includes("_ids")) {
 					if (k in acc) {
 						newValue = (acc[k] as number[]).concat(+v); // can append to existing array
