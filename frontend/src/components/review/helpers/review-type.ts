@@ -35,24 +35,31 @@ function getPageType({ pathname }: Location, params: Record<string, string>) {
 export function makeNaiveReviewParams(search: URLSearchParams) {
 	return Array.from(search.entries())
 		.filter(([k, v]) => allowedQueryParams.includes(k))
-		.reduce((acc, [k, v]: [k: keyof ReviewParamsInput, v: string]) => {
-			let newValue: number | number[];
+		.reduce(
+			(acc, [k, v]: [k: keyof ReviewParamsInput, v: string]) => {
+				let newValue: number | number[];
 
-			if (k.includes("_ids")) {
-				if (k in acc) {
-					newValue = (acc[k] as number[]).concat(+v); // can append to existing array
+				if (k.includes("_ids")) {
+					if (k in acc) {
+						newValue = (acc[k] as number[]).concat(+v); // can append to existing array
+					} else {
+						newValue = [+v]; // have to create array since we initialize as {}
+					}
 				} else {
-					newValue = [+v]; // have to create array since we initialize as {}
+					newValue = +v; // just a number
 				}
-			} else {
-				newValue = +v; // just a number
-			}
 
-			return {
-				...acc,
-				[k]: newValue,
-			};
-		}, {} as ReviewParamsInput);
+				return {
+					...acc,
+					[k]: newValue,
+				};
+			},
+			{
+				list_ids: [],
+				set_ids: [],
+				term_ids: [],
+			} as ReviewParamsInput
+		);
 }
 
 /**
