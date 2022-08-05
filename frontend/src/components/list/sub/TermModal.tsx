@@ -2,6 +2,7 @@
 import SaturationIcon from "components/SaturationFilter/SaturationIcon";
 import { useEffect } from "react";
 import { Term } from "../../../gql/codegen-output";
+import DeleteToggleButton from "../../_shared/DeleteToggle";
 import useTermModal from "../hooks/useTermModal";
 import * as S from "./TermModal.style";
 import TermReviewHistory from "./TermReviewHistory";
@@ -97,23 +98,12 @@ function TermModal({ setOpen, term, handleTermEdit }: TermModalProps) {
 					</S.Section>
 				)}
 
-				<S.DeleteButtonWrapper>
-					{!confirmingDelete ? (
-						<S.DeleteButton onClick={() => setConfirmingDelete(true)}>
-							Delete this term
-						</S.DeleteButton>
-					) : (
-						<>
-							<S.ConfirmDeleteLabel>Delete?</S.ConfirmDeleteLabel>
-							<S.ConfirmDeleteButton confirm onClick={() => handleDeleteTerm()}>
-								Yes
-							</S.ConfirmDeleteButton>
-							<S.ConfirmDeleteButton onClick={() => setConfirmingDelete(false)}>
-								No
-							</S.ConfirmDeleteButton>
-						</>
-					)}
-				</S.DeleteButtonWrapper>
+				<div style={{ maxHeight: 60, height: 60 }}>
+					<DeleteToggleButton
+						handler={handleDeleteTerm}
+						initialText={"Delete this term"}
+					/>
+				</div>
 			</S.TermModal>
 		</>
 	);

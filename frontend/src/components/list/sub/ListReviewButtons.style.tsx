@@ -1,7 +1,7 @@
 import {
-	sharedLinkStyle,
-	subsectionHeaderStyle,
-	tempSectionStyle,
+   sharedLinkStyle,
+   subsectionHeaderStyle,
+   tempSectionStyle
 } from "helpers/theme/theme";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -20,6 +20,8 @@ export const Header = styled.header`
 
 export const ReviewLink = styled(Link)`
 	${sharedLinkStyle}
+	display: block;
+	width: max-content;
 
 	&:not(:nth-of-type(1)) {
 		margin-left: 0.5rem;

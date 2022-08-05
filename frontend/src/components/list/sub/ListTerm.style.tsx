@@ -12,7 +12,7 @@ export const TermIndex = styled.span`
 	font-size: 0.8rem;
 	color: #777;
 
-	@media screen and (max-width: 768px), screen and (max-height: 700px) {
+	@media screen and (max-width: 768px) {
 		display: none;
 	}
 `;
@@ -28,8 +28,9 @@ export const TermSaturation = styled.span`
 	}
 `;
 
-export const TermValue = styled.span`
-	display: inline-block;
+export const TermValue = styled.span<{ lang: string }>`
+	display: flex;
+	font-size: 0.9rem;
 	word-wrap: break-word;
 	max-width: 100%;
 
@@ -38,6 +39,15 @@ export const TermValue = styled.span`
 		padding: 0 1rem;
 		justify-self: center;
 		width: 100%;
+		font-size: 0.95rem;
+	}
+
+	&::before {
+		content: "${(p) => p.lang.slice(0, 2).toUpperCase()}";
+		font-size: 0.76rem;
+		color: #777;
+		margin-right: 0.35rem;
+		align-self: center;
 	}
 `;
 
@@ -59,7 +69,6 @@ export const Term = styled.li`
 
 	@media screen and (max-width: 768px), screen and (max-height: 700px) {
 		grid-template-columns: 1fr;
-		width: 90%;
 		justify-content: center;
 		display: grid;
 		margin: 0 auto;

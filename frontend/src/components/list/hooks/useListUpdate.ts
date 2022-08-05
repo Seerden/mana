@@ -17,37 +17,51 @@ export function useListUpdate() {
 	const { mutate: mutateUpdateList } = useMutateUpdateList();
 	const { mutate: mutateDeleteList } = useMutateDeleteList();
 
-	const handleListTitleBlur: FocusEventHandler<HTMLHeadingElement> = useCallback(
+	const handleListTitleChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			// Optimistically change list title, but don't submit it yet.{
+			client.setQueryData(["listsById", list_id], () => [
+				{
+					...list,
+					name: e.currentTarget.value,
+				},
+			]);
+		},
+		[list]
+	);
+
+	const handleListTitleBlur: FocusEventHandler<HTMLInputElement> = useCallback(
 		(e) => {
 			e.persist();
 
-			if (!e.currentTarget.innerText) {
+			if (!e.currentTarget.value) {
 				// change e.currentTarget in DOM without React's knowing so
 				// TODO: instead of doing it like this, do
 				// client.setQueryData(['list', list_id], () => ({...list})) to
 				// force-update cache. If the title HTML element renders {list.name}
 				// then it should update properly
-				e.currentTarget.innerText = list.name;
+				e.currentTarget.value = list.name;
 			}
 
-			const { innerText } = e.currentTarget;
-			if (innerText !== list.name) {
-				mutateUpdateList(
-					{
-						list_id: +params.id,
-						payload: { name: innerText },
+			const { value } = e.currentTarget;
+
+			if (!value) return;
+
+			mutateUpdateList(
+				{
+					list_id: +params.id,
+					payload: { name: value },
+				},
+				{
+					onSuccess: (updatedList) => {
+						client.setQueryData(["listsById", list_id], () => [
+							{
+								...updatedList,
+							},
+						]);
 					},
-					{
-						onSuccess: (updatedList) => {
-							client.setQueryData(["listsById", list_id], () => [
-								{
-									...updatedList,
-								},
-							]);
-						},
-					}
-				);
-			}
+				}
+			);
 		},
 		[list]
 	);
@@ -64,5 +78,5 @@ export function useListUpdate() {
 		});
 	}
 
-	return { handleListTitleBlur, handleDelete } as const;
+	return { handleListTitleBlur, handleDelete, handleListTitleChange } as const;
 }

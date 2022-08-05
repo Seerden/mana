@@ -11,6 +11,7 @@ export const tempSectionStyle = css`
 	border: 3px solid ${(p) => p.theme.colors.dark.grey.darker};
 	padding: 1rem;
 	width: 800px;
+	max-width: 100%;
 	margin-top: 1rem;
 `;
 
@@ -27,7 +28,7 @@ export const sharedLinkStyle = css`
 	--color: ${(p) => p.theme.colors.blue.main};
 
 	display: inline-block;
-	padding: 0.3em 0.6em;
+	padding: 0.4rem 0.7rem;
 	background-color: ${(p) => p.theme.colors.dark.grey.darker};
 	border-radius: 2px;
 	color: var(--color);
