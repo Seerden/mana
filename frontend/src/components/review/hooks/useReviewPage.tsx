@@ -17,7 +17,7 @@ export default function useReviewPage() {
 
 	const [reviewParams, idsField] = useMemo(() => {
 		const reviewParams = makeReviewParams(search, location, params);
-		const idsField = idsFields.find((f) => reviewParams[f].length);
+		const idsField = idsFields.find((f) => reviewParams[f]?.length);
 
 		return [reviewParams, idsField] as const;
 	}, [location, search, params]);
