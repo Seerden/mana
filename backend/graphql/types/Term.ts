@@ -49,10 +49,10 @@ export class TermSaturation {
    @Field(() => Int)
    term_id: number;
 
-   @Field(() => Int)
+   @Field(() => Int, { nullable: true })
    forwards: number;
 
-   @Field(() => Int)
+   @Field(() => Int, { nullable: true })
    backwards: number;
 
    @Field()
