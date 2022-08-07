@@ -2,11 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
 import { shuffleRepeatedly } from "../../../components/review/helpers/review-helpers";
 import requestClient from "../../../helpers/request-client";
-import {
-	Query,
-	ReviewParamsInput,
-	ReviewSessionWithoutUserIdInput,
-} from "../../codegen-output";
+import { Query, ReviewParamsInput } from "../../codegen-output";
 import { termPropsFragment } from "../../fragments/term-fragments";
 
 const termsForReviewQuery = gql`
@@ -22,10 +18,7 @@ const termsForReviewRequest = async (params: ReviewParamsInput) =>
 	(await requestClient.request(termsForReviewQuery, { reviewParams: params }))
 		.queryTermsForReview;
 
-export default function useQueryTermsForReview(
-	{ n }: Partial<ReviewSessionWithoutUserIdInput>,
-	params: ReviewParamsInput
-) {
+export default function useQueryTermsForReview(n: number, params: ReviewParamsInput) {
 	return useQuery<Query["queryTermsForReview"]>(
 		["termsForReview"],
 		async () => termsForReviewRequest(params),
