@@ -47,6 +47,8 @@ export async function getTermsFromSuperIds({
 }) {
    const ids = set_ids.length ? await getListIdsFromSetIds(set_ids) : list_ids;
 
+   if (!ids.length) return [];
+
    return await sql<Term[]>`
          select * from terms where ${ids}::integer[] && array[list_id]::integer[]
       `;
