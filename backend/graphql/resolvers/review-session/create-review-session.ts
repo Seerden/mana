@@ -2,13 +2,10 @@ import { WithSQL } from "../../../custom_types/with-sql.types";
 import { sql as instance } from "../../../db/init";
 import { ReviewSession, ReviewSessionInput } from "../../types/ReviewSession";
 import {
+   EntryInputWithId,
    ReviewSessionEntry,
    ReviewSessionEntryInput,
 } from "../../types/ReviewSessionEntry";
-
-type EntryInputWithId = ReviewSessionEntryInput & {
-   review_session_id: ReviewSession["review_session_id"];
-};
 
 export async function createReviewSession({
    sql = instance,
