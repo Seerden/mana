@@ -137,8 +137,8 @@ type TermIdWithEntries {
 }
 
 type TermSaturation {
-  backwards: Int!
-  forwards: Int!
+  backwards: Int
+  forwards: Int
   last_updated: Float!
   term_id: Int!
 }
