@@ -15,7 +15,7 @@ const idsFields: Array<keyof Options["filter"]> = ["term_ids", "list_ids", "set_
  * termIds > listIds > setIds.
  */
 export async function queryTermsForReview({ filter, sql = instance }: Options) {
-   const idsField = idsFields.find((x) => filter[x]?.length);
+   const idsField = idsFields.find((field) => filter[field]?.length);
 
    switch (idsField) {
       case "term_ids":
