@@ -1,8 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { isValidReviewSession } from "../helpers/validate-session";
-import { reviewStageState } from "../state/review-atoms";
-import { reviewSessionState } from "../state/review-session";
+import { reviewSessionState, reviewStageState } from "../state/review-atoms";
 import SettingsButton from "../sub/SettingsButton";
 
 /**
@@ -32,6 +31,7 @@ export default function usePreReview() {
 
 		if (!isValidReviewSession(sessionWithDate)) {
 			console.log({ sessionWithDate });
+			// TODO: properly handle this by popping up a message or something
 			return;
 		}
 

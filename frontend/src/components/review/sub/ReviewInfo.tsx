@@ -2,7 +2,7 @@ import { numTermsToReviewState } from "components/review/state/review-selectors"
 import useTimer from "hooks/useTimer";
 import { memo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { reviewSessionState } from "../state/review-session";
+import { reviewSessionState } from "../state/review-atoms";
 import * as S from "./ReviewInfo.style";
 
 type ReviewInfoProps = {

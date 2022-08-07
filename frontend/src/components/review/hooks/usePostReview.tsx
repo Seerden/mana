@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import useRouteProps from "../../../hooks/useRouteProps";
-import { reviewSessionState } from "../state/review-session";
+import { reviewSessionState } from "../state/review-atoms";
 
 export function usePostReview() {
 	const { navigate, params } = useRouteProps();

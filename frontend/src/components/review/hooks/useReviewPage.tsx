@@ -4,8 +4,7 @@ import useQueryTermsForReview from "../../../gql/hooks/term/useQueryTermsForRevi
 import useRouteProps from "../../../hooks/useRouteProps";
 import { idsFields } from "../helpers/ids-fields";
 import { makeReviewParams } from "../helpers/review-type";
-import { reviewStageState } from "../state/review-atoms";
-import { reviewSessionState } from "../state/review-session";
+import { reviewSessionState, reviewStageState } from "../state/review-atoms";
 
 export default function useReviewPage() {
 	const reviewStage = useRecoilValue(reviewStageState),
@@ -23,7 +22,7 @@ export default function useReviewPage() {
 	}, [location, search, params]);
 
 	const { data: cardTerms, refetch } = useQueryTermsForReview(
-		reviewSession,
+		reviewSession.n,
 		reviewParams
 	);
 
