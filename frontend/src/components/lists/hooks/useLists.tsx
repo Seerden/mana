@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { List } from "../../../gql/codegen-output";
 import useQueryListsByUser from "../../../gql/hooks/list/useQueryListsByUser";
 import ListsItem from "../sub/ListsItem";
 
 const useLists = () => {
 	const [filter, setFilter] = useState<string>("");
-	const [sortBy, setSortBy] = useState<string>("name"); // @todo: refine type
+	const [sortBy, setSortBy] = useState<keyof List>("name"); // @todo: refine type
 	const { data: lists } = useQueryListsByUser();
 
 	const handleFilterChange = useCallback(
@@ -18,7 +19,7 @@ const useLists = () => {
 
 	const handleSelectChange = useCallback(
 		(e: React.ChangeEvent<HTMLSelectElement>): void => {
-			setSortBy(e.currentTarget.value);
+			setSortBy(e.currentTarget.value as keyof List);
 		},
 		[setSortBy]
 	);

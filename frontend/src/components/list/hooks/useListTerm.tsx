@@ -21,7 +21,7 @@ export function useListTerm({ term, idx }: Props) {
 		const { value } = e.target;
 		const { field } = e.currentTarget.dataset; // 'from_value' | 'to_value'
 
-		if (!value || term[field] === value) return;
+		if (!value || term[field as keyof Term] === value) return;
 
 		mutateUpdateTerms(
 			{

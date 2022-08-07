@@ -1,22 +1,6 @@
 import { colorBySaturation } from "helpers/list.api";
 import React from "react";
 
-function makeTooltip(direction, saturation) {
-	if (saturation) {
-		if (!(typeof saturation[direction] === "number")) {
-			return "Not enough reviews to judge memorization. Get on it!";
-		}
-
-		if (saturation < 2) {
-			return `${direction}: Review soon!`;
-		}
-
-		return `${direction}: No need to review yet`;
-	}
-
-	return `${direction}: No need to review yet`;
-}
-
 interface SaturationIconProps {
 	direction?: "forwards" | "backwards";
 	saturation?: number;
@@ -41,7 +25,7 @@ function SaturationIcon({ direction, saturation, style }: SaturationIconProps) {
 
 	return (
 		<span
-			title={direction ? makeTooltip(direction, saturation) : ""}
+			title={/* TODO: add tooltip based on saturation level */ ""}
 			style={saturationIconStyle}
 		/>
 	);

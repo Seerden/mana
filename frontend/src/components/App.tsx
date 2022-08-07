@@ -16,6 +16,7 @@ import Lists from "./lists/Lists";
 import Login from "./login/Login";
 import NewList from "./newlist/NewList";
 import Register from "./register/Register";
+import ReviewPage from "./review/ReviewPage";
 
 const App = () => {
 	const client = useInitializeQueryClient();
@@ -90,6 +91,8 @@ const App = () => {
 															</Private>
 														}
 													/>
+
+													<Route path="review" element={<ReviewPage />} />
 												</Route>
 											</Route>
 										</Route>

@@ -35,7 +35,7 @@ type Message {
 
 type Mutation {
   createList(newList: NewListWithTermsInput!): ListAndTerms!
-  createSession(entries: [ReviewSessionEntryInput!]!, session: ReviewSessionInput!): ReviewSession!
+  createSession(entries: [ReviewSessionEntryInput!]!, session: ReviewSessionWithoutUserIdInput!): SessionAndEntries!
   createTerms(terms: [TermWithoutIdInput!]!): [Term!]!
   createUser(userInput: UserInput!): User!
   deleteList(listIds: [Int!]!): ListAndTerms!
@@ -61,21 +61,28 @@ type Query {
   listsById(list_ids: [Int!]!): [List!]!
   listsByUser: [List!]!
   me: User
+  queryTermsForReview(reviewParams: ReviewParamsInput!): [Term!]!
   sessionEntriesByTermIds(termIds: [Int!]!): [TermIdWithEntries!]!
   sessionsById(sessionIds: [Int!]!, user_id: Float!): [ReviewSession]!
   sessionsByUser(user_id: Float!): [ReviewSession]!
   users: [User!]!
 }
 
+input ReviewParamsInput {
+  list_ids: [Float]
+  set_ids: [Float]
+  term_ids: [Float]
+}
+
 type ReviewSession {
   direction: String!
-  end_date: Int
+  end_date: Float
   list_ids: [Int]
   n: Int!
   review_session_id: Float!
   saturation_threshold: Int
   set_ids: [Int]
-  start_date: Int!
+  start_date: Float!
   user_id: Int!
 }
 
@@ -90,21 +97,26 @@ type ReviewSessionEntry {
 }
 
 input ReviewSessionEntryInput {
+  created_at: Float!
   direction: String!
   passfail: String!
   term_id: Int!
   time_on_card: Int!
 }
 
-input ReviewSessionInput {
+input ReviewSessionWithoutUserIdInput {
   direction: String!
-  end_date: Int
+  end_date: Float
   list_ids: [Int]
   n: Int!
   saturation_threshold: Int
   set_ids: [Int]
-  start_date: Int!
-  user_id: Int!
+  start_date: Float!
+}
+
+type SessionAndEntries {
+  entries: [ReviewSessionEntry!]!
+  session: ReviewSession!
 }
 
 type Term {

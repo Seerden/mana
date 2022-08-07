@@ -1,4 +1,4 @@
-import { Field, InputType, Int, ObjectType } from "type-graphql";
+import { Field, Float, InputType, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
 @InputType("TermWithoutIdsInput")
@@ -57,4 +57,16 @@ export class TermSaturation {
 
    @Field()
    last_updated: number; // timestamp
+}
+
+@InputType("ReviewParamsInput")
+export class ReviewParamsInput {
+   @Field(() => [Float], { nullable: "itemsAndList" })
+   term_ids?: number[];
+
+   @Field(() => [Float], { nullable: "itemsAndList" })
+   list_ids?: number[];
+
+   @Field(() => [Float], { nullable: "itemsAndList" })
+   set_ids?: number[];
 }

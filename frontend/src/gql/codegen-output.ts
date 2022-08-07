@@ -54,7 +54,7 @@ export type Message = {
 export type Mutation = {
   __typename?: 'Mutation';
   createList: ListAndTerms;
-  createSession: ReviewSession;
+  createSession: SessionAndEntries;
   createTerms: Array<Term>;
   createUser: User;
   deleteList: ListAndTerms;
@@ -77,7 +77,7 @@ export type MutationCreateListArgs = {
 
 export type MutationCreateSessionArgs = {
   entries: Array<ReviewSessionEntryInput>;
-  session: ReviewSessionInput;
+  session: ReviewSessionWithoutUserIdInput;
 };
 
 
@@ -145,6 +145,7 @@ export type Query = {
   listsById: Array<List>;
   listsByUser: Array<List>;
   me?: Maybe<User>;
+  queryTermsForReview: Array<Term>;
   sessionEntriesByTermIds: Array<TermIdWithEntries>;
   sessionsById: Array<Maybe<ReviewSession>>;
   sessionsByUser: Array<Maybe<ReviewSession>>;
@@ -154,6 +155,11 @@ export type Query = {
 
 export type QueryListsByIdArgs = {
   list_ids: Array<Scalars['Int']>;
+};
+
+
+export type QueryQueryTermsForReviewArgs = {
+  reviewParams: ReviewParamsInput;
 };
 
 
@@ -172,16 +178,22 @@ export type QuerySessionsByUserArgs = {
   user_id: Scalars['Float'];
 };
 
+export type ReviewParamsInput = {
+  list_ids?: Maybe<Array<Maybe<Scalars['Float']>>>;
+  set_ids?: Maybe<Array<Maybe<Scalars['Float']>>>;
+  term_ids?: Maybe<Array<Maybe<Scalars['Float']>>>;
+};
+
 export type ReviewSession = {
   __typename?: 'ReviewSession';
   direction: Scalars['String'];
-  end_date?: Maybe<Scalars['Int']>;
+  end_date?: Maybe<Scalars['Float']>;
   list_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
   n: Scalars['Int'];
   review_session_id: Scalars['Float'];
   saturation_threshold?: Maybe<Scalars['Int']>;
   set_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  start_date: Scalars['Int'];
+  start_date: Scalars['Float'];
   user_id: Scalars['Int'];
 };
 
@@ -197,21 +209,27 @@ export type ReviewSessionEntry = {
 };
 
 export type ReviewSessionEntryInput = {
+  created_at: Scalars['Float'];
   direction: Scalars['String'];
   passfail: Scalars['String'];
   term_id: Scalars['Int'];
   time_on_card: Scalars['Int'];
 };
 
-export type ReviewSessionInput = {
+export type ReviewSessionWithoutUserIdInput = {
   direction: Scalars['String'];
-  end_date?: Maybe<Scalars['Int']>;
+  end_date?: Maybe<Scalars['Float']>;
   list_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
   n: Scalars['Int'];
   saturation_threshold?: Maybe<Scalars['Int']>;
   set_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  start_date: Scalars['Int'];
-  user_id: Scalars['Int'];
+  start_date: Scalars['Float'];
+};
+
+export type SessionAndEntries = {
+  __typename?: 'SessionAndEntries';
+  entries: Array<ReviewSessionEntry>;
+  session: ReviewSession;
 };
 
 export type Term = {
@@ -376,10 +394,12 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   NewListWithTermsInput: NewListWithTermsInput;
   Query: ResolverTypeWrapper<{}>;
+  ReviewParamsInput: ReviewParamsInput;
   ReviewSession: ResolverTypeWrapper<ReviewSession>;
   ReviewSessionEntry: ResolverTypeWrapper<ReviewSessionEntry>;
   ReviewSessionEntryInput: ReviewSessionEntryInput;
-  ReviewSessionInput: ReviewSessionInput;
+  ReviewSessionWithoutUserIdInput: ReviewSessionWithoutUserIdInput;
+  SessionAndEntries: ResolverTypeWrapper<SessionAndEntries>;
   Term: ResolverTypeWrapper<Term>;
   TermIdWithEntries: ResolverTypeWrapper<TermIdWithEntries>;
   TermSaturation: ResolverTypeWrapper<TermSaturation>;
@@ -404,10 +424,12 @@ export type ResolversParentTypes = {
   Mutation: {};
   NewListWithTermsInput: NewListWithTermsInput;
   Query: {};
+  ReviewParamsInput: ReviewParamsInput;
   ReviewSession: ReviewSession;
   ReviewSessionEntry: ReviewSessionEntry;
   ReviewSessionEntryInput: ReviewSessionEntryInput;
-  ReviewSessionInput: ReviewSessionInput;
+  ReviewSessionWithoutUserIdInput: ReviewSessionWithoutUserIdInput;
+  SessionAndEntries: SessionAndEntries;
   Term: Term;
   TermIdWithEntries: TermIdWithEntries;
   TermSaturation: TermSaturation;
@@ -443,7 +465,7 @@ export type MessageResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createList?: Resolver<ResolversTypes['ListAndTerms'], ParentType, ContextType, RequireFields<MutationCreateListArgs, 'newList'>>;
-  createSession?: Resolver<ResolversTypes['ReviewSession'], ParentType, ContextType, RequireFields<MutationCreateSessionArgs, 'entries' | 'session'>>;
+  createSession?: Resolver<ResolversTypes['SessionAndEntries'], ParentType, ContextType, RequireFields<MutationCreateSessionArgs, 'entries' | 'session'>>;
   createTerms?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<MutationCreateTermsArgs, 'terms'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'userInput'>>;
   deleteList?: Resolver<ResolversTypes['ListAndTerms'], ParentType, ContextType, RequireFields<MutationDeleteListArgs, 'listIds'>>;
@@ -462,6 +484,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   listsById?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType, RequireFields<QueryListsByIdArgs, 'list_ids'>>;
   listsByUser?: Resolver<Array<ResolversTypes['List']>, ParentType, ContextType>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  queryTermsForReview?: Resolver<Array<ResolversTypes['Term']>, ParentType, ContextType, RequireFields<QueryQueryTermsForReviewArgs, 'reviewParams'>>;
   sessionEntriesByTermIds?: Resolver<Array<ResolversTypes['TermIdWithEntries']>, ParentType, ContextType, RequireFields<QuerySessionEntriesByTermIdsArgs, 'termIds'>>;
   sessionsById?: Resolver<Array<Maybe<ResolversTypes['ReviewSession']>>, ParentType, ContextType, RequireFields<QuerySessionsByIdArgs, 'sessionIds' | 'user_id'>>;
   sessionsByUser?: Resolver<Array<Maybe<ResolversTypes['ReviewSession']>>, ParentType, ContextType, RequireFields<QuerySessionsByUserArgs, 'user_id'>>;
@@ -470,13 +493,13 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type ReviewSessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSession'] = ResolversParentTypes['ReviewSession']> = {
   direction?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  end_date?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  end_date?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   list_ids?: Resolver<Maybe<Array<Maybe<ResolversTypes['Int']>>>, ParentType, ContextType>;
   n?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   review_session_id?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   saturation_threshold?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   set_ids?: Resolver<Maybe<Array<Maybe<ResolversTypes['Int']>>>, ParentType, ContextType>;
-  start_date?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  start_date?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   user_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -489,6 +512,12 @@ export type ReviewSessionEntryResolvers<ContextType = any, ParentType extends Re
   review_session_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   term_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   time_on_card?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SessionAndEntriesResolvers<ContextType = any, ParentType extends ResolversParentTypes['SessionAndEntries'] = ResolversParentTypes['SessionAndEntries']> = {
+  entries?: Resolver<Array<ResolversTypes['ReviewSessionEntry']>, ParentType, ContextType>;
+  session?: Resolver<ResolversTypes['ReviewSession'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -535,6 +564,7 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   ReviewSession?: ReviewSessionResolvers<ContextType>;
   ReviewSessionEntry?: ReviewSessionEntryResolvers<ContextType>;
+  SessionAndEntries?: SessionAndEntriesResolvers<ContextType>;
   Term?: TermResolvers<ContextType>;
   TermIdWithEntries?: TermIdWithEntriesResolvers<ContextType>;
   TermSaturation?: TermSaturationResolvers<ContextType>;

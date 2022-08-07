@@ -1,8 +1,15 @@
-import { Arg, FieldResolver, Int, Mutation, Resolver, Root } from "type-graphql";
+import { Arg, FieldResolver, Int, Mutation, Query, Resolver, Root } from "type-graphql";
 import { ReviewSessionEntry } from "../types/ReviewSessionEntry";
-import { Term, TermSaturation, TermUpdateInput, TermWithoutId } from "../types/Term";
+import {
+   ReviewParamsInput,
+   Term,
+   TermSaturation,
+   TermUpdateInput,
+   TermWithoutId,
+} from "../types/Term";
 import { createTerms } from "./term/create-terms";
 import { deleteTerms } from "./term/delete-terms";
+import { queryTermsForReview } from "./term/get-terms";
 import { resolveTermHistory } from "./term/resolve-history";
 import { resolveTermSaturation } from "./term/resolve-saturation";
 import { updateTermValues } from "./term/update-terms";
@@ -13,6 +20,11 @@ import { updateTermValues } from "./term/update-terms";
 
 @Resolver(() => Term)
 export class TermResolver {
+   @Query(() => [Term])
+   async queryTermsForReview(@Arg("reviewParams") reviewParams: ReviewParamsInput) {
+      return queryTermsForReview({ filter: reviewParams });
+   }
+
    @Mutation(() => [Term])
    async createTerms(@Arg("terms", () => [TermWithoutId]) terms: TermWithoutId[]) {
       return await createTerms({ terms });

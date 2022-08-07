@@ -1,4 +1,5 @@
 import { Field, InputType, Int, ObjectType } from "type-graphql";
+import { ReviewSession } from "./ReviewSession";
 
 @ObjectType()
 @InputType()
@@ -14,7 +15,14 @@ export class ReviewSessionEntryInput {
 
    @Field()
    direction: string;
+
+   @Field()
+   created_at: number;
 }
+
+export type EntryInputWithId = ReviewSessionEntryInput & {
+   review_session_id: ReviewSession["review_session_id"];
+};
 
 @ObjectType()
 export class ReviewSessionEntry extends ReviewSessionEntryInput {
@@ -23,7 +31,4 @@ export class ReviewSessionEntry extends ReviewSessionEntryInput {
 
    @Field(() => Int)
    review_entry_id: number;
-
-   @Field()
-   created_at: number;
 }

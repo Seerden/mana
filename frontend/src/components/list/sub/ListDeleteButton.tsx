@@ -1,6 +1,6 @@
 import { useToggle } from "hooks/useToggle";
 
-const ListDeleteButton = ({ handleDelete }) => {
+const ListDeleteButton = ({ handleDelete }: { handleDelete: (args?: any) => void }) => {
 	const [confirming, toggleConfirming] = useToggle(false);
 
 	return (
