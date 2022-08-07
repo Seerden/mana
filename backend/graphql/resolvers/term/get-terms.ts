@@ -21,7 +21,7 @@ export async function queryTermsForReview({ filter, sql = instance }: Options) {
       case "term_ids":
          return await sql<Term[]>`
             select * from terms 
-            where term_id in ${sql(filter[idsField])}
+            where term_id in ${sql(filter?.[idsField] ?? [])}
          `;
       case "list_ids":
       case "term_ids":
