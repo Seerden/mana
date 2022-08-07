@@ -50,10 +50,10 @@ export class TermSaturation {
    term_id: number;
 
    @Field(() => Int, { nullable: true })
-   forwards: number;
+   forwards?: number;
 
    @Field(() => Int, { nullable: true })
-   backwards: number;
+   backwards?: number;
 
    @Field()
    last_updated: number; // timestamp
