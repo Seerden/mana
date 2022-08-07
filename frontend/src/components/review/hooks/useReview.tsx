@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ReviewSessionWithoutUserIdInput, Term } from "../../../gql/codegen-output";
 import useCreateReviewSession from "../../../gql/hooks/review-session/useCreateReviewSession";
 import { entriesWithTimeOnCard, shuffleFirstEntry } from "../helpers/review-helpers";
+import { ReviewStages } from "../state/review-atoms";
 import { SessionEntryWithoutTimeOnCard } from "../types/review.types";
 import { useReviewState } from "./useReviewState";
 
@@ -83,7 +84,7 @@ export function useReview({ cardTerms }: UseReviewOptions) {
 					),
 				};
 				mutateCreateReviewSession(mutateArgs, {
-					onSuccess: () => setReviewStage("after"),
+					onSuccess: () => setReviewStage(ReviewStages.AFTER),
 				});
 			} else {
 				updateRemainingTerms({ passfail: passOrFail });

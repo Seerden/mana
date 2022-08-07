@@ -1,7 +1,11 @@
 import { useCallback, useMemo } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { isValidReviewSession } from "../helpers/validate-session";
-import { reviewSessionState, reviewStageState } from "../state/review-atoms";
+import {
+	reviewSessionState,
+	ReviewStages,
+	reviewStageState,
+} from "../state/review-atoms";
 import SettingsButton from "../sub/SettingsButton";
 
 /**
@@ -36,7 +40,7 @@ export default function usePreReview() {
 		}
 
 		setReviewSession(sessionWithDate);
-		setReviewStage("started");
+		setReviewStage(ReviewStages.STARTED);
 	}, [reviewSession]);
 
 	const nButtons = useMemo(() => {

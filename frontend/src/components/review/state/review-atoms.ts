@@ -1,11 +1,17 @@
 import { Term } from "gql/codegen-output";
 import { atom } from "recoil";
 import { ReviewSessionWithoutUserIdInput } from "../../../gql/codegen-output";
-import { ReviewStage, SessionEntryWithoutTimeOnCard } from "../types/review.types";
+import { SessionEntryWithoutTimeOnCard } from "../types/review.types";
 
-export const reviewStageState = atom<ReviewStage>({
+export enum ReviewStages {
+	BEFORE = "before",
+	STARTED = "started",
+	AFTER = "after",
+}
+
+export const reviewStageState = atom<ReviewStages>({
 	key: "reviewStageState",
-	default: "before",
+	default: ReviewStages.BEFORE,
 });
 
 export const reviewCardTermsState = atom<Term[]>({

@@ -1,4 +1,5 @@
 import useReviewPage from "./hooks/useReviewPage";
+import { ReviewStages } from "./state/review-atoms";
 import PostReview from "./sub/PostReview";
 import PreReview from "./sub/PreReview";
 import Review from "./sub/Review";
@@ -8,12 +9,14 @@ function ReviewPage() {
 	const { reviewStage, reviewParams, cardTerms } = useReviewPage();
 
 	switch (reviewStage) {
-		case "before":
+		case ReviewStages.BEFORE:
 			return <PreReview initialSettings={reviewParams} />;
-		case "started":
+		case ReviewStages.STARTED:
 			return <Review cardTerms={cardTerms} />;
-		case "after":
+		case ReviewStages.AFTER:
 			return <PostReview />;
+		default:
+			return <></>;
 	}
 }
 
