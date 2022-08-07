@@ -25,6 +25,17 @@ export type ParsedSession = {
    passCount: number;
 };
 
+export type SessionEntriesWithMeta = {
+   term_id: number;
+   review_session_id: number;
+   saturation: TermSaturation;
+   session: ReviewSessionEntry[];
+};
+
+export type ParsedSessionWithMeta = Omit<SessionEntriesWithMeta, "session"> & {
+   session: ParsedSession;
+};
+
 enum RecentSessionIdentifier {
    CURRENT = "current",
    PREVIOUS = "previous",
@@ -32,7 +43,7 @@ enum RecentSessionIdentifier {
 }
 
 export type RecentSessions = {
-   [k in `${RecentSessionIdentifier}`]: ParsedSession;
+   [k in `${RecentSessionIdentifier}`]?: ParsedSessionWithMeta;
 };
 
 // TODO: should this be an ObjectType()?
