@@ -1,10 +1,12 @@
 import { WithSQL } from "../../../custom_types/with-sql.types";
 import { sql as instance } from "../../../db/init";
+import { getNewSaturationLevels } from "../../../lib/saturation/saturate-after-session";
 import { ReviewSession, ReviewSessionInput } from "../../types/ReviewSession";
 import {
    ReviewSessionEntry,
    ReviewSessionEntryInput,
 } from "../../types/ReviewSessionEntry";
+import { updateTermSaturation } from "../term/update-saturation";
 
 type EntryInputWithId = ReviewSessionEntryInput & {
    review_session_id: ReviewSession["review_session_id"];
@@ -19,29 +21,53 @@ export async function createReviewSession({
    entries: ReviewSessionEntryInput[];
 }>) {
    const [newSession, newEntries] = await sql.begin(async (sql) => {
-      const [insertedSession] = await sql<
-         [ReviewSession?]
-      >`insert into review_sessions ${sql(session as any)} returning *`;
-
+      const [insertedSession] = await insertReviewSession({ sql, session });
       if (!insertedSession)
          throw new Error("Failed to insert review session into database");
 
-      const reviewId = insertedSession.review_session_id;
-
-      const entriesWithId: EntryInputWithId[] = entries.map((entry) => ({
-         ...entry,
-         review_session_id: reviewId,
-      }));
-
       const insertedEntries = await createReviewSessionEntries({
-         entries: entriesWithId,
          sql,
+         entries: appendReviewIdToEntries(insertedSession.review_session_id, entries),
       });
 
-      return [insertedSession, insertedEntries] as const;
+      // TODO: update saturation
+      const reviewedTermIds = Array.from(new Set(insertedEntries.map((x) => x.term_id)));
+
+      const saturationUpdate = await getNewSaturationLevels(
+         reviewedTermIds,
+         insertedSession.direction as "forwards" | "backwards",
+         sql
+      );
+
+      const updatedSaturation = await updateTermSaturation(saturationUpdate, sql);
+
+      return [
+         insertedSession,
+         insertedEntries,
+         updatedSaturation /* is returned, but not used yet elsewhere in this function */,
+      ] as const;
    });
 
    return { session: newSession, entries: newEntries };
+}
+
+function appendReviewIdToEntries(
+   review_session_id: number,
+   entries: ReviewSessionEntryInput[]
+): EntryInputWithId[] {
+   return entries.map((entry) => ({
+      ...entry,
+      review_session_id: review_session_id,
+   }));
+}
+
+async function insertReviewSession({
+   sql = instance,
+   session,
+}: WithSQL<{ session: ReviewSessionInput }>) {
+   return await sql<[ReviewSession?]>`insert into review_sessions ${sql(
+      session as any
+   )} returning *`;
 }
 
 async function createReviewSessionEntries({
