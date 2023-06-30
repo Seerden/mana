@@ -263,8 +263,8 @@ export type TermIdWithEntries = {
 
 export type TermSaturation = {
   __typename?: 'TermSaturation';
-  backwards: Scalars['Int'];
-  forwards: Scalars['Int'];
+  backwards?: Maybe<Scalars['Int']>;
+  forwards?: Maybe<Scalars['Int']>;
   last_updated: Scalars['Float'];
   term_id: Scalars['Int'];
 };
@@ -541,8 +541,8 @@ export type TermIdWithEntriesResolvers<ContextType = any, ParentType extends Res
 };
 
 export type TermSaturationResolvers<ContextType = any, ParentType extends ResolversParentTypes['TermSaturation'] = ResolversParentTypes['TermSaturation']> = {
-  backwards?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  forwards?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  backwards?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  forwards?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   last_updated?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   term_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

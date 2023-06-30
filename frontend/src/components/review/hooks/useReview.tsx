@@ -38,8 +38,6 @@ export function useReview({ cardTerms }: UseReviewOptions) {
    */
 	const [remainingTerms, setRemainingTerms] = useState(cardTerms);
 
-	useEffect(() => {}, [remainingTerms]);
-
 	/**
 	 * Update all necessary state to move on to the next ReviewCard. This
 	 * function can either be called through a keydown event handler, or manually

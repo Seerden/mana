@@ -78,6 +78,10 @@ export function entriesWithTimeOnCard(
 			time_on_card = entry.created_at - acc.at(-1).created_at;
 		}
 
+		if (time_on_card < 0)
+			throw new Error(
+				"Invalid time on card computed" + JSON.stringify({ start_date, time_on_card })
+			);
 		acc.push({ ...entry, time_on_card });
 
 		return acc;

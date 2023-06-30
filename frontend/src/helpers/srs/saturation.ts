@@ -128,7 +128,7 @@ export function saturateSeededTerm(
 				}
 			case "2":
 				if (fail) {
-					if (fail > 2) return 0;
+					if (fail > 1) return 0;
 					return currentSession.content[0] === "pass" ? 2 : 1;
 				} else {
 					if (!previousFail) {
